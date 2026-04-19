@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
   ClipboardList,
@@ -16,6 +16,7 @@ import {
   START_HERE_RESOURCE_IDS,
   type Resource,
   type ResourceHubCategory,
+  type ResourceNotesSubCategory,
 } from "@/lib/data";
 import { trackResourceView } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -37,19 +38,78 @@ function uniqueSorted(values: string[]) {
 const selectClass =
   "w-full rounded-xl border border-input bg-white px-3 py-2.5 text-sm text-ink shadow-[inset_0_1px_1px_rgba(34,16,18,0.03)] transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25";
 
+type NotesSubCategoryFilter = "unset" | "all" | ResourceNotesSubCategory;
+
+const NOTES_SUBCATEGORY_OPTIONS: { value: "all" | ResourceNotesSubCategory; label: string }[] = [
+  { value: "all", label: "All" },
+  { value: "summary-writing", label: "Summary Writing" },
+  { value: "comprehension", label: "Comprehension" },
+  { value: "essay-writing", label: "Essay Writing" },
+  { value: "directed-writing", label: "Directed Writing" },
+  { value: "grammar", label: "Grammar" },
+];
+
+const NOTES_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string }[] = [
+  { id: "summary-writing", label: "Summary Writing" },
+  { id: "comprehension", label: "Comprehension" },
+  { id: "essay-writing", label: "Essay Writing" },
+  { id: "directed-writing", label: "Directed Writing" },
+  { id: "grammar", label: "Grammar" },
+];
+
+const topicBrowseCardClass = (active: boolean) =>
+  cn(
+    "origin-center rounded-xl border bg-white p-5 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:border-border hover:shadow-[0_4px_18px_rgba(34,16,18,0.06)]",
+    active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
+  );
+
+/** Secondary action: matches vault surfaces (border, muted fill), reads as a chip — not primary CTA. */
+const viewAllNotesChipClass =
+  "inline-flex items-center justify-center rounded-full border border-border/70 bg-muted/50 px-4 py-2 text-xs font-medium text-ink shadow-[inset_0_1px_1px_rgba(34,16,18,0.04)] transition-all hover:border-border hover:bg-white hover:shadow-[0_2px_10px_rgba(34,16,18,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25";
+
 export function ResourcesHub() {
   const [category, setCategory] = useState<ResourceHubCategory | "all">("all");
+  const [notesSubCategory, setNotesSubCategory] = useState<NotesSubCategoryFilter>("all");
   const [subject, setSubject] = useState("all");
   const [level, setLevel] = useState("all");
   const [paper, setPaper] = useState("all");
   const [year, setYear] = useState("all");
 
+  const scrollToResourceGrid = useCallback(() => {
+    document.getElementById("resource-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
   function selectCategory(next: ResourceHubCategory | "all") {
     setCategory(next);
+    setNotesSubCategory(next === "general-notes" ? "unset" : "all");
     setSubject("all");
     setLevel("all");
     setPaper("all");
     setYear("all");
+  }
+
+  const topicTapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [topicTapId, setTopicTapId] = useState<ResourceNotesSubCategory | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (topicTapTimeoutRef.current) clearTimeout(topicTapTimeoutRef.current);
+    };
+  }, []);
+
+  function pickNotesTopic(next: "all" | ResourceNotesSubCategory) {
+    setNotesSubCategory(next);
+    requestAnimationFrame(() => scrollToResourceGrid());
+  }
+
+  function handleTopicTileClick(id: ResourceNotesSubCategory) {
+    if (topicTapTimeoutRef.current) clearTimeout(topicTapTimeoutRef.current);
+    setTopicTapId(id);
+    pickNotesTopic(id);
+    topicTapTimeoutRef.current = setTimeout(() => {
+      setTopicTapId(null);
+      topicTapTimeoutRef.current = null;
+    }, 200);
   }
 
   const scoped = useMemo(
@@ -64,13 +124,17 @@ export function ResourcesHub() {
 
   const filtered = useMemo(() => {
     return scoped.filter((r) => {
+      if (category === "general-notes") {
+        if (notesSubCategory === "unset") return false;
+        if (notesSubCategory !== "all" && r.subCategory !== notesSubCategory) return false;
+      }
       if (subject !== "all" && r.subject !== subject) return false;
       if (level !== "all" && r.level !== level) return false;
       if (paper !== "all" && r.paper !== paper) return false;
       if (year !== "all" && r.year !== year) return false;
       return true;
     });
-  }, [scoped, subject, level, paper, year]);
+  }, [scoped, category, notesSubCategory, subject, level, paper, year]);
 
   const startHereResources = useMemo(() => {
     return START_HERE_RESOURCE_IDS.map((id) => resources.find((r) => r.id === id)).filter(
@@ -145,6 +209,41 @@ export function ResourcesHub() {
           })}
         </div>
 
+        {category === "general-notes" && (
+          <div className="mb-12 rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-8">
+            <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
+              Browse Notes by Topic
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
+              Choose a focus area to see matching notes, or open the full notes list.
+            </p>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {NOTES_TOPIC_BLOCKS.map((topic) => {
+                const active = notesSubCategory === topic.id;
+                return (
+                  <button
+                    key={topic.id}
+                    type="button"
+                    onClick={() => handleTopicTileClick(topic.id)}
+                    className={cn(
+                      topicBrowseCardClass(active),
+                      topicTapId === topic.id && "resource-topic-tap-active"
+                    )}
+                  >
+                    <p className="font-serif text-sm font-semibold text-ink">{topic.label}</p>
+                    <p className="mt-1.5 text-xs leading-relaxed text-slate">View notes in this area.</p>
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-6">
+              <button type="button" onClick={() => pickNotesTopic("all")} className={viewAllNotesChipClass}>
+                View all notes in this section
+              </button>
+            </div>
+          </div>
+        )}
+
         <div
           id="resource-filters"
           className="mb-12 rounded-xl border border-border/70 bg-white p-5 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-6"
@@ -208,17 +307,51 @@ export function ResourcesHub() {
               </select>
             </label>
           </div>
+          {category === "general-notes" && notesSubCategory !== "unset" && (
+            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:max-w-xs">
+              <label className="block space-y-1">
+                <span className="text-xs font-medium text-slate">Note focus</span>
+                <select
+                  className={selectClass}
+                  value={notesSubCategory}
+                  onChange={(e) => {
+                    const v = e.target.value as "all" | ResourceNotesSubCategory;
+                    setNotesSubCategory(v);
+                  }}
+                >
+                  {NOTES_SUBCATEGORY_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+          )}
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredMain.map((r) => (
-            <ResourceCard key={r.id} resource={r} />
-          ))}
-        </div>
+        <div id="resource-grid" className="scroll-mt-24 sm:scroll-mt-28">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredMain.map((r) => (
+              <ResourceCard key={r.id} resource={r} />
+            ))}
+          </div>
 
-        {filteredMain.length === 0 && (
-          <p className="py-16 text-center text-sm text-slate">No resources match these filters.</p>
-        )}
+          {category === "general-notes" && notesSubCategory === "unset" && (
+            <div className="flex flex-col items-center gap-4 py-16">
+              <p className="max-w-md text-center text-sm leading-relaxed text-slate">
+                Choose a topic above to browse notes, or open the full list.
+              </p>
+              <button type="button" onClick={() => pickNotesTopic("all")} className={viewAllNotesChipClass}>
+                View all notes in this section
+              </button>
+            </div>
+          )}
+
+          {!(category === "general-notes" && notesSubCategory === "unset") && filteredMain.length === 0 && (
+            <p className="py-16 text-center text-sm text-slate">No resources match these filters.</p>
+          )}
+        </div>
       </div>
     </section>
   );

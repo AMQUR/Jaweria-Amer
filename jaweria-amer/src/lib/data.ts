@@ -30,6 +30,14 @@ export type ResourceHubCategory =
   | "examiner-reports"
   | "checklists";
 
+/** Sub-type for vault items in `general-notes` (optional; inferred when omitted). */
+export type ResourceNotesSubCategory =
+  | "summary-writing"
+  | "comprehension"
+  | "essay-writing"
+  | "directed-writing"
+  | "grammar";
+
 export interface Resource {
   id: string;
   title: string;
@@ -41,6 +49,7 @@ export interface Resource {
   /** Hosted PDF or document URL; replace with your CDN or `/public` paths. */
   fileUrl: string;
   description: string;
+  subCategory?: ResourceNotesSubCategory;
 }
 
 export const RESOURCE_HUB_CATEGORIES: {
@@ -60,8 +69,8 @@ export const RESOURCE_HUB_CATEGORIES: {
   },
   {
     id: "yearly-past-papers",
-    label: "Yearly Past Papers",
-    blurb: "Timed papers and official mark schemes by session.",
+    label: "Past Papers (Yearlies)",
+    blurb: "Official papers, inserts, and mark schemes by session — separate from topic notes.",
   },
   {
     id: "examiner-reports",

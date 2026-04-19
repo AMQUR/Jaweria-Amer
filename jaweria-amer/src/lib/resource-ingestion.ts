@@ -1,4 +1,4 @@
-import type { Resource, ResourceHubCategory } from "./data";
+import type { Resource, ResourceHubCategory, ResourceNotesSubCategory } from "./data";
 
 const NOISE_FILENAME_TOKENS = new Set([
   "copy",
@@ -119,6 +119,21 @@ export function findFirstDuplicate(
   return null;
 }
 
+/** Match title + filename (stem) against phrase rules; order avoids ambiguous double hits. */
+export function inferGeneralNotesSubCategory(
+  resource: Pick<Resource, "title" | "fileUrl">
+): ResourceNotesSubCategory | undefined {
+  const stem = basenameFromFileUrl(resource.fileUrl).replace(/\.[a-z0-9]+$/i, "");
+  const haystack = `${resource.title} ${stem}`.toLowerCase().replace(/[-_]+/g, " ");
+
+  if (haystack.includes("directed writing")) return "directed-writing";
+  if (haystack.includes("comprehension")) return "comprehension";
+  if (haystack.includes("summary")) return "summary-writing";
+  if (haystack.includes("essay")) return "essay-writing";
+  if (haystack.includes("grammar")) return "grammar";
+  return undefined;
+}
+
 /**
  * Drops later duplicates (same normalized basename or very similar title + same session tuple).
  * Preserves first occurrence order.
@@ -141,7 +156,11 @@ export function finalizeResourcesForSite(items: readonly Resource[]): Resource[]
 
     seenIds.add(item.id);
     if (bn.length > 0) seenBasenames.add(bn);
-    out.push(item);
+    const enriched: Resource =
+      item.category === "general-notes" && item.subCategory === undefined
+        ? { ...item, subCategory: inferGeneralNotesSubCategory(item) }
+        : item;
+    out.push(enriched);
   }
   return out;
 }

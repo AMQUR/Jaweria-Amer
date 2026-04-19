@@ -170,6 +170,23 @@
   .premium-reveal-delay-4 {
     animation-delay: 0.34s;
   }
+
+  /* Resources hub — topic tile tap (transform only; ~180ms; no layout shift) */
+  @keyframes resource-topic-tap {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.01);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .resource-topic-tap-active {
+    animation: resource-topic-tap 0.18s ease-out;
+  }
 }
 
 /* Homepage workshop banner: WebKit contrast hint for small type / fine detail (scoped, not global). */
