@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const resource = resources.find((r) => r.id === id);
   if (!resource) return { title: "Resource" };
   const path = `/resources/view/${resource.id}`;
-  const displayTitle = formatDisplayTitle(resource.title);
+  const displayTitle = formatDisplayTitle(resource.title, resource.category);
   return {
     title: `${displayTitle} | Resources`,
     description: resource.description,
@@ -43,7 +43,7 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
   const resource = resources.find((r) => r.id === id);
   if (!resource) notFound();
 
-  const displayTitle = formatDisplayTitle(resource.title);
+  const displayTitle = formatDisplayTitle(resource.title, resource.category);
   const absolutePdfUrl = await publicFileAbsoluteUrl(resource.fileUrl);
   const gviewSrc = `https://docs.google.com/gview?url=${encodeURIComponent(absolutePdfUrl)}&embedded=true`;
 

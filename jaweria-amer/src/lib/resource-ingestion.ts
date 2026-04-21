@@ -1,5 +1,29 @@
 import type { Resource, ResourceHubCategory, ResourceNotesSubCategory } from "./data";
 
+/** Scored session script: `S25 (Paper 2) 46/50` — display-only, Scripts category. */
+function tryFormatExaminerReportsSessionScoreTitle(raw: string): string | null {
+  let s = raw.replace(/\s+/g, " ").trim();
+  s = s.replace(/^([SW]\d{2})-\s+/i, "$1 ");
+  const patterns: RegExp[] = [
+    /^([SW]\d{2})\s+Paper\s+([12])\s+\(\s*(\d+)\s+(\d+)\s*\)$/i,
+    /^([SW]\d{2})\s+Paper\s+([12])\s+\(\s*(\d+)\s*\/\s*(\d+)\s*\)$/i,
+    /^([SW]\d{2})\s+Paper\s+([12])\s+\(\s*(\d+)\s*_\s*(\d+)\s*\)$/i,
+    /^([SW]\d{2})\s+Paper\s+([12])\s+(\d+)\s+(\d+)$/i,
+    /^([SW]\d{2})\s+Paper\s+([12])\s+(\d+)\s*\/\s*(\d+)$/i,
+  ];
+  for (const re of patterns) {
+    const m = s.match(re);
+    if (m) {
+      const session = m[1]!.toUpperCase();
+      const paper = m[2]!;
+      const num = m[3]!;
+      const den = m[4]!;
+      return `${session} (Paper ${paper}) ${num}/${den}`;
+    }
+  }
+  return null;
+}
+
 const NOISE_FILENAME_TOKENS = new Set([
   "copy",
   "final",
@@ -45,10 +69,16 @@ export function cleanCopyOfTitlePrefix(title: string): string {
 /**
  * Human-readable label for vault UI only. Does not change stored `Resource.title`.
  * Runs after {@link cleanCopyOfTitlePrefix} (applied internally).
+ * Pass `category` so Scripts (`examiner-reports`) scored papers can use `SESSION (Paper N) score/max`.
  */
-export function formatDisplayTitle(title: string): string {
+export function formatDisplayTitle(title: string, category?: ResourceHubCategory): string {
   const t = cleanCopyOfTitlePrefix(title).replace(/\s+/g, " ").trim();
   if (!t) return t;
+
+  if (category === "examiner-reports") {
+    const sessionScore = tryFormatExaminerReportsSessionScoreTitle(t);
+    if (sessionScore) return sessionScore;
+  }
 
   // "11 1123 FOA2 P1 ScriptB" → "Paper 1 Script B (1123)"
   let m = t.match(/^(\d+)\s+1123\s+FOA2\s+P(\d)\s+Script\s*([A-Za-z])\s*$/i);
@@ -89,6 +119,10 @@ export type ScriptsVaultChip = "SCRIPT" | "SPECIMEN" | "GUIDANCE";
 export function scriptsResourceVaultChip(rawTitle: string, displayTitle: string): ScriptsVaultChip {
   const r = rawTitle.toLowerCase();
   const d = displayTitle.toLowerCase();
+
+  if (/^[sw]\d{2}\s+\(paper\s+[12]\)\s+\d+\/\d+$/i.test(displayTitle.trim())) {
+    return "SCRIPT";
+  }
 
   if (d.includes("specimen answers") || /specimen\s+answers/i.test(displayTitle)) {
     return "SPECIMEN";

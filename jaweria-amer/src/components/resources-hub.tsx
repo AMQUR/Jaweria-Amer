@@ -367,7 +367,7 @@ const scriptsChipClass =
 
 function ResourceCard({ resource }: { resource: Resource }) {
   const meta = [resource.level, resource.subject, resource.year, resource.paper].join(" · ");
-  const displayTitle = formatDisplayTitle(resource.title);
+  const displayTitle = formatDisplayTitle(resource.title, resource.category);
   const isScripts = resource.category === "examiner-reports";
   const vaultChip = isScripts ? scriptsResourceVaultChip(resource.title, displayTitle) : null;
   const { main: titleMain, secondary: titleSecondary } = isScripts
