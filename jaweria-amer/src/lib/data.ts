@@ -28,7 +28,8 @@ export type ResourceHubCategory =
   | "topical-worksheets"
   | "yearly-past-papers"
   | "examiner-reports"
-  | "checklists";
+  | "checklists"
+  | "quick-worksheets";
 
 /** Sub-type for vault items in `general-notes` (optional; inferred when omitted). */
 export type ResourceNotesSubCategory =
@@ -50,6 +51,8 @@ export interface Resource {
   fileUrl: string;
   description: string;
   subCategory?: ResourceNotesSubCategory;
+  /** When `"mcq"`, the resource view renders an interactive MCQ quiz instead of a PDF iframe. */
+  type?: "mcq";
 }
 
 export const RESOURCE_HUB_CATEGORIES: {
@@ -81,6 +84,11 @@ export const RESOURCE_HUB_CATEGORIES: {
     id: "checklists",
     label: "Checklists",
     blurb: "Rubric-aligned self-review before you submit.",
+  },
+  {
+    id: "quick-worksheets",
+    label: "Quick Worksheets — MCQs",
+    blurb: "Interactive multiple-choice assessments with instant scoring and explanations.",
   },
 ];
 
@@ -1355,6 +1363,33 @@ const resourceLibrary: Resource[] = [
     year: "Practice",
     fileUrl: "/resources/worksheet-writing-words-day-15.pdf",
     description: "Day-style vocabulary push for consistent writing improvement.",
+  },
+  // ── Quick Worksheets — MCQs ──────────────────────────────────────────
+  {
+    id: "mcq-compound-complex-sentences",
+    title: "MCQ Assessment — Compound & Complex Sentences",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Grammar",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "21 exam-level multiple-choice questions across three sections: identify clause types, apply subordination and coordination, and tackle mixed sentence-structure challenges.",
+  },
+  {
+    id: "mcq-common-grammatical-errors",
+    title: "MCQ Assessment — Common Grammatical Errors",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Grammar",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "21 exam-level multiple-choice questions covering subject-verb agreement, apostrophes, affect/effect, dangling modifiers, tense consistency, and formal register — with instant scoring and explanations.",
   },
   ...supplementalHubResources,
 ];

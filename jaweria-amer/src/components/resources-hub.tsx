@@ -4,11 +4,13 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BookOpen,
+  Brain,
   ClipboardList,
   Eye,
   FileSearch,
   FolderOpen,
   LayoutGrid,
+  ListChecks,
 } from "lucide-react";
 import {
   RESOURCE_HUB_CATEGORIES,
@@ -32,6 +34,7 @@ const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   "yearly-past-papers": FolderOpen,
   "examiner-reports": FileSearch,
   checklists: ClipboardList,
+  "quick-worksheets": Brain,
 };
 
 function uniqueSorted(values: string[]) {
@@ -369,6 +372,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
   const meta = [resource.level, resource.subject, resource.year, resource.paper].join(" · ");
   const displayTitle = formatDisplayTitle(resource.title, resource.category);
   const isScripts = resource.category === "examiner-reports";
+  const isMcq = resource.type === "mcq";
   const vaultChip = isScripts ? scriptsResourceVaultChip(resource.title, displayTitle) : null;
   const { main: titleMain, secondary: titleSecondary } = isScripts
     ? splitScriptsCardTitle(displayTitle)
@@ -376,7 +380,10 @@ function ResourceCard({ resource }: { resource: Resource }) {
 
   return (
     <article className="flex flex-col rounded-xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-border hover:shadow-[0_6px_22px_rgba(34,16,18,0.07)]">
-      {vaultChip && <span className={scriptsChipClass}>{vaultChip}</span>}
+      {isMcq && (
+        <span className={scriptsChipClass}>MCQ Assessment</span>
+      )}
+      {vaultChip && !isMcq && <span className={scriptsChipClass}>{vaultChip}</span>}
       <h3 className="font-serif text-base font-semibold leading-snug text-ink">{titleMain}</h3>
       {isScripts && titleSecondary ? (
         <p className="mt-1 text-xs font-medium tabular-nums tracking-wide text-slate">{titleSecondary}</p>
@@ -384,16 +391,29 @@ function ResourceCard({ resource }: { resource: Resource }) {
       <p className="mt-2 text-xs leading-relaxed text-slate">{meta}</p>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-slate">{resource.description}</p>
       <div className="mt-6">
-        <Link
-          href={`/resources/view/${resource.id}`}
-          onClick={() =>
-            trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
-          }
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
-        >
-          <Eye className="h-4 w-4 shrink-0" aria-hidden />
-          View Resource
-        </Link>
+        {isMcq ? (
+          <Link
+            href={`/resources/view/${resource.id}`}
+            onClick={() =>
+              trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
+            }
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
+          >
+            <ListChecks className="h-4 w-4 shrink-0" aria-hidden />
+            Take Assessment
+          </Link>
+        ) : (
+          <Link
+            href={`/resources/view/${resource.id}`}
+            onClick={() =>
+              trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
+            }
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
+          >
+            <Eye className="h-4 w-4 shrink-0" aria-hidden />
+            View Resource
+          </Link>
+        )}
       </div>
     </article>
   );
