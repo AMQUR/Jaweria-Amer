@@ -1367,7 +1367,7 @@ const resourceLibrary: Resource[] = [
   // ── Quick Worksheets — MCQs ──────────────────────────────────────────
   {
     id: "mcq-compound-complex-sentences",
-    title: "MCQ Assessment — Compound & Complex Sentences",
+    title: "5-Minute Drill: Clear Sentences & Joining",
     category: "quick-worksheets",
     type: "mcq",
     subject: "English Language 1123",
@@ -1376,7 +1376,7 @@ const resourceLibrary: Resource[] = [
     year: "Practice",
     fileUrl: "",
     description:
-      "21 exam-level multiple-choice questions across three sections: identify clause types, apply subordination and coordination, and tackle mixed sentence-structure challenges.",
+      "10 questions · 5 minutes. Sentences and fragments, commas, and quick fixes — exam-style wording, no grammar labels.",
   },
   {
     id: "mcq-common-grammatical-errors",
@@ -1389,7 +1389,7 @@ const resourceLibrary: Resource[] = [
     year: "Practice",
     fileUrl: "",
     description:
-      "21 exam-level multiple-choice questions covering subject-verb agreement, apostrophes, affect/effect, dangling modifiers, tense consistency, and formal register — with instant scoring and explanations.",
+      "21 exam-level multiple-choice questions covering agreement, apostrophes, word choice, tense, commas, and formal register — with instant scoring and explanations.",
   },
   {
     id: "mcq-sentence-comma-5min",

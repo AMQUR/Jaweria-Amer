@@ -20,304 +20,147 @@ export interface McqSet {
 export const mcqSets: Record<string, McqSet> = {
   "mcq-compound-complex-sentences": {
     id: "mcq-compound-complex-sentences",
-    title: "Compound & Complex Sentences",
+    title: "5-Minute Drill: Clear Sentences & Joining",
     description:
-      "Test your command of compound and complex sentence structures — from identifying clause types to applying subordination and coordination with precision.",
+      "10 questions · 5 minutes · exam level. Sentences and fragments, commas in real 1123-style lines, and quick fixes — plain wording, no grammar labels.",
+    timeLimit: 300,
     questions: [
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION A — Core Skill
-      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — sentence vs fragment (3)
       {
         section: "A",
-        question: "Which of the following is a compound sentence?",
+        question: "Which option is a complete sentence?",
         options: {
-          A: "Although it was raining, she went for a walk.",
-          B: "She went for a walk, and she got soaked.",
-          C: "She went for a walk in the rain.",
-          D: "She enjoyed walking in the rain because it was refreshing.",
+          A: "Running through the park in the rain.",
+          B: "Because the bell had already rung.",
+          C: "The team celebrated after the final whistle.",
+          D: "Although the coach was pleased with the effort.",
         },
-        answer: "B",
+        answer: "C",
         explanation:
-          'A compound sentence joins two independent clauses with a coordinating conjunction (FANBOYS). "She went for a walk" and "she got soaked" are both independent clauses joined by "and."',
+          'A sentence must express a full thought with a subject and a main verb. "The team celebrated after the final whistle" stands alone. A, B, and D are fragments — they do not finish the idea on their own.',
       },
       {
         section: "A",
-        question: "Which of the following is a complex sentence?",
+        question: "Which option is a fragment, not a sentence?",
         options: {
-          A: "I ran fast, yet I missed the bus.",
-          B: "The dog barked loudly.",
-          C: "She studied hard, and she passed the exam.",
-          D: "Before the match began, the coach gave a speech.",
+          A: "She closed the window before the storm arrived.",
+          B: "Hoping for better weather tomorrow.",
+          C: "They waited at the bus stop for twenty minutes.",
+          D: "The exam was harder than we expected.",
+        },
+        answer: "B",
+        explanation:
+          '"Hoping for better weather tomorrow" has no subject paired with a full statement — it cannot stand alone. The other options are complete sentences.',
+      },
+      {
+        section: "A",
+        question: "Is this a sentence or a fragment?\n\"While the audience was still clapping.\"",
+        options: {
+          A: "A sentence — it has a subject and a verb.",
+          B: "A fragment — it starts with \"While\" and does not finish the thought.",
+          C: "A sentence — it ends with a full stop.",
+          D: "A fragment — it has no verb.",
+        },
+        answer: "B",
+        explanation:
+          'The line begins with "While," so the reader expects more after the comma or full stop. On its own it is a fragment.',
+      },
+      // SECTION B — comma placement (4)
+      {
+        section: "B",
+        question:
+          "Where should the comma go?\n\"After the results were announced the hall fell silent.\"",
+        options: {
+          A: "After the results were announced, the hall fell silent.",
+          B: "After, the results were announced the hall fell silent.",
+          C: "After the results were announced the hall, fell silent.",
+          D: "No comma is needed.",
+        },
+        answer: "A",
+        explanation:
+          'When the opening part cannot stand alone as a sentence, put a comma after it: "After the results were announced, the hall fell silent."',
+      },
+      {
+        section: "B",
+        question:
+          "Which sentence is punctuated correctly? (The extra detail about the book could be removed.)",
+        options: {
+          A: "The novel which won the prize was translated into twelve languages.",
+          B: "The novel, which won the prize, was translated into twelve languages.",
+          C: "The novel which won the prize, was translated into twelve languages.",
+          D: "The novel, which won the prize was translated into twelve languages.",
+        },
+        answer: "B",
+        explanation:
+          'If the part about winning the prize is extra information, use a comma before and after it: "The novel, which won the prize, was translated..."',
+      },
+      {
+        section: "B",
+        question:
+          "Which sentence correctly joins two full ideas with a comma and \"but\"?",
+        options: {
+          A: "The plan looked simple it failed at the first step.",
+          B: "The plan looked simple, but it failed at the first step.",
+          C: "The plan looked simple but, it failed at the first step.",
+          D: "The plan looked simple but it failed at the first step.",
+        },
+        answer: "B",
+        explanation:
+          'Two full ideas joined by "but" need a comma before "but": "...simple, but it failed..."',
+      },
+      {
+        section: "B",
+        question:
+          "Which sentence avoids a comma splice? (Two full ideas need proper linking.)",
+        options: {
+          A: "The ferry was cancelled, we took the train instead.",
+          B: "The ferry was cancelled; we took the train instead.",
+          C: "The ferry was cancelled we took the train instead.",
+          D: "The ferry was cancelled, and, we took the train instead.",
+        },
+        answer: "B",
+        explanation:
+          'You cannot link two full ideas with only a comma (that is a comma splice). A semicolon is one correct fix: "The ferry was cancelled; we took the train instead."',
+      },
+      // SECTION C — exam-style correction (3)
+      {
+        section: "C",
+        question: "Which rewrite fixes the error?\n\"Because she revised every evening. She passed with confidence.\"",
+        options: {
+          A: "Because she revised every evening she passed with confidence.",
+          B: "She revised every evening. Because she passed with confidence.",
+          C: "Because she revised every evening; she passed with confidence.",
+          D: "She passed with confidence, because she revised every evening.",
         },
         answer: "D",
         explanation:
-          'A complex sentence contains one independent clause and at least one subordinate clause. "Before the match began" is the subordinate clause; "the coach gave a speech" is the independent clause.',
-      },
-      {
-        section: "A",
-        question: "Which of the following is a coordinating conjunction?",
-        options: {
-          A: "although",
-          B: "because",
-          C: "but",
-          D: "whenever",
-        },
-        answer: "C",
-        explanation:
-          'Coordinating conjunctions (FANBOYS: for, and, nor, but, or, yet, so) join two independent clauses. "But" is a coordinating conjunction; the others listed are subordinating conjunctions.',
-      },
-      {
-        section: "A",
-        question: "Which of the following is a subordinating conjunction?",
-        options: {
-          A: "and",
-          B: "or",
-          C: "yet",
-          D: "since",
-        },
-        answer: "D",
-        explanation:
-          'Subordinating conjunctions introduce subordinate clauses (e.g., since, because, although, when, if, unless). "And," "or," and "yet" are coordinating conjunctions.',
-      },
-      {
-        section: "A",
-        question: "Identify the sentence that contains a subordinate clause.",
-        options: {
-          A: "The teacher spoke clearly, and the students listened.",
-          B: "She arrived early but had to wait.",
-          C: "He stayed home because he was unwell.",
-          D: "The wind blew strongly, so we went inside.",
-        },
-        answer: "C",
-        explanation:
-          '"Because he was unwell" is a subordinate (dependent) clause — it cannot stand alone as a sentence. The main clause is "He stayed home." Options A, B, and D use coordinating conjunctions to join independent clauses.',
-      },
-      {
-        section: "A",
-        question:
-          "Which sentence correctly joins two independent clauses with a coordinating conjunction?",
-        options: {
-          A: "I was tired however I kept working.",
-          B: "I was tired; but I kept working.",
-          C: "I was tired, but I kept working.",
-          D: "I was tired although I kept working.",
-        },
-        answer: "C",
-        explanation:
-          'Two independent clauses joined by a coordinating conjunction need a comma before the conjunction: [clause], [coordinating conjunction] [clause]. "However" is a conjunctive adverb (not FANBOYS), so it cannot function this way. A semicolon before "but" is incorrect.',
-      },
-      {
-        section: "A",
-        question: "In a compound sentence, the clauses being joined must be:",
-        options: {
-          A: "one dependent and one independent",
-          B: "both dependent",
-          C: "both independent",
-          D: "both introduced by subordinating conjunctions",
-        },
-        answer: "C",
-        explanation:
-          "A compound sentence is formed by joining two or more independent clauses — each able to stand alone as a complete sentence — using a coordinating conjunction or a semicolon.",
-      },
-      {
-        section: "A",
-        question:
-          "How does a complex sentence differ from a compound sentence?",
-        options: {
-          A: "A complex sentence uses a semicolon; a compound sentence uses a comma.",
-          B: "A complex sentence contains one independent clause and one or more subordinate clauses; a compound sentence joins two independent clauses.",
-          C: "A complex sentence is always longer than a compound sentence.",
-          D: "A complex sentence must begin with a subordinating conjunction.",
-        },
-        answer: "B",
-        explanation:
-          "The defining difference is clause type, not length or punctuation. Compound: two independent clauses joined by a coordinating conjunction. Complex: one independent clause + one or more dependent (subordinate) clauses.",
-      },
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION B — Application
-      // ──────────────────────────────────────────────────────────────────
-      {
-        section: "B",
-        question:
-          'Choose the correct coordinating conjunction to join the following two independent clauses to express contrast: "She practised every day. She did not improve."',
-        options: {
-          A: "so",
-          B: "and",
-          C: "yet",
-          D: "for",
-        },
-        answer: "C",
-        explanation:
-          '"Yet" expresses contrast or an unexpected result (similar to "but"): "She practised every day, yet she did not improve." "So" shows consequence; "and" shows addition; "for" gives a reason.',
-      },
-      {
-        section: "B",
-        question:
-          'Which option correctly converts these simple sentences into a complex sentence?\n"It started to snow. They cancelled the match."',
-        options: {
-          A: "It started to snow, and they cancelled the match.",
-          B: "Because it started to snow, they cancelled the match.",
-          C: "It started to snow; they cancelled the match.",
-          D: "It started to snow so they cancelled the match.",
-        },
-        answer: "B",
-        explanation:
-          'A complex sentence requires a subordinating conjunction. "Because" introduces the subordinate clause of reason. Option A is compound; Option C is a correctly punctuated compound with a semicolon; Option D is compound but missing the necessary comma before "so."',
-      },
-      {
-        section: "B",
-        question:
-          'Identify the subordinate clause in the following sentence:\n"Although the journey was long, the family remained cheerful."',
-        options: {
-          A: "the family remained cheerful",
-          B: "the journey was long",
-          C: "Although the journey was long",
-          D: "Although",
-        },
-        answer: "C",
-        explanation:
-          'The subordinate clause is the entire phrase "Although the journey was long." It is introduced by the subordinating conjunction "although" and cannot stand alone as a complete sentence. The main (independent) clause is "the family remained cheerful."',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence correctly punctuates a complex sentence where the subordinate clause comes first?",
-        options: {
-          A: "Because she was late she missed the introduction.",
-          B: "Because she was late, she missed the introduction.",
-          C: "She missed the introduction, because she was late.",
-          D: "She missed the introduction because she was late,",
-        },
-        answer: "B",
-        explanation:
-          "When a subordinate clause fronts the sentence (appears before the main clause), it must be followed by a comma. When it follows the main clause, no comma is typically needed (ruling out C). Option D places the comma incorrectly at the end.",
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence uses a relative clause to form a complex sentence?",
-        options: {
-          A: "The boy was tall, and he won the race.",
-          B: "The boy who won the race was tall.",
-          C: "The tall boy won the race.",
-          D: "The boy ran fast; he won the race.",
-        },
-        answer: "B",
-        explanation:
-          '"Who won the race" is a relative clause — a type of subordinate clause introduced by the relative pronoun "who" — embedded within the main clause "The boy was tall." Options A and D are compound; Option C is a simple sentence with an adjective.',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence is a complex sentence containing an adverbial clause of time?",
-        options: {
-          A: "I finished my homework, and I watched television.",
-          B: "I finished my homework; I watched television.",
-          C: "I finished my homework after I had eaten dinner.",
-          D: "I finished my homework quickly.",
-        },
-        answer: "C",
-        explanation:
-          '"After I had eaten dinner" is an adverbial subordinate clause indicating when the action occurred — this is an adverbial clause of time modifying the main clause "I finished my homework." Options A and B are compound; Option D is simple.',
-      },
-      {
-        section: "B",
-        question: "Which option creates a grammatically correct compound sentence?",
-        options: {
-          A: "She sang beautifully however nobody noticed.",
-          B: "She sang beautifully, however nobody noticed.",
-          C: "She sang beautifully, yet nobody noticed.",
-          D: "She sang beautifully; but nobody noticed.",
-        },
-        answer: "C",
-        explanation:
-          '"However" is a conjunctive adverb, not a coordinating conjunction — it cannot join two independent clauses with only a comma (that creates a comma splice). "Yet" is a true coordinating conjunction and correctly takes a comma before it. A semicolon before "but" (Option D) is non-standard.',
-      },
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION C — Mixed Challenge
-      // ──────────────────────────────────────────────────────────────────
-      {
-        section: "C",
-        question:
-          'Identify the sentence type:\n"The athlete who broke the world record trained for eight years, and she dedicated her success to her coach."',
-        options: {
-          A: "Simple",
-          B: "Compound",
-          C: "Complex",
-          D: "Compound-complex",
-        },
-        answer: "D",
-        explanation:
-          'This sentence has two independent clauses joined by "and" (compound) AND a relative subordinate clause "who broke the world record" (complex). A sentence combining both features is compound-complex.',
+          'The first line is only half an idea after "Because." Putting the main idea first often reads clearly: "She passed with confidence, because she revised every evening."',
       },
       {
         section: "C",
-        question:
-          'A student wrote: "I wanted to go to the party, although I went." What error has the student made?',
+        question: "What is wrong here?\n\"I wanted to stay longer, although I left early.\"",
         options: {
-          A: "Used a coordinating conjunction instead of a subordinating conjunction",
-          B: "Used a subordinating conjunction that reverses the intended meaning",
-          C: "Failed to use a comma after the subordinate clause",
-          D: "Written two dependent clauses with no independent clause",
+          A: "The word \"although\" turns the meaning the wrong way.",
+          B: "A comma cannot appear in this sentence.",
+          C: "The sentence needs a semicolon after \"longer.\"",
+          D: "Both parts should be questions.",
+        },
+        answer: "A",
+        explanation:
+          '"Although" suggests something surprising — usually that you did not stay. If you left early because you wanted to stay longer, use a word that shows result, such as "so": "I wanted to stay longer, so I was disappointed to leave early."',
+      },
+      {
+        section: "C",
+        question: "Which sentence is written correctly?",
+        options: {
+          A: "She practised daily however her scores barely moved.",
+          B: "She practised daily, yet her scores barely moved.",
+          C: "She practised daily yet, her scores barely moved.",
+          D: "She practised daily; yet her scores barely moved.",
         },
         answer: "B",
         explanation:
-          '"Although" signals contrast or concession — it implies the action was unexpected or contrary to expectation ("although I wanted to go, I did not"). Here the student means the opposite. The correct conjunction would be "so" or "and so": "I wanted to go to the party, so I went."',
-      },
-      {
-        section: "C",
-        question: "Which sentence contains an error in joining clauses?",
-        options: {
-          A: "She was nervous, but she performed well.",
-          B: "After the rain stopped, the children went outside.",
-          C: "He tried his best, for he wanted to impress the judges.",
-          D: "Because she studied hard; she passed the exam.",
-        },
-        answer: "D",
-        explanation:
-          'A semicolon cannot follow a subordinate clause introduced by "because." The correct punctuation is a comma: "Because she studied hard, she passed the exam." Semicolons join two independent clauses; a subordinate clause is not independent.',
-      },
-      {
-        section: "C",
-        question:
-          'Which is the most effective rewrite combining these sentences using subordination (not coordination)?\n"The village was flooded. The bridge was destroyed. Many families left."',
-        options: {
-          A: "The village was flooded and the bridge was destroyed and many families left.",
-          B: "The village was flooded, so the bridge was destroyed, and many families left.",
-          C: "After the village was flooded and the bridge was destroyed, many families left.",
-          D: "Although the village was flooded, the bridge was destroyed, so many families left.",
-        },
-        answer: "C",
-        explanation:
-          'Option C uses the subordinating conjunction "after" to create an adverbial clause, logically grouping the two preceding events and linking them to the main clause. It avoids the repetitive "and…and" of Option A, the illogical causation of Option B, and the contradictory "although" in Option D.',
-      },
-      {
-        section: "C",
-        question:
-          "Which sentence contains a correctly used non-defining relative clause?",
-        options: {
-          A: "The book which I borrowed was interesting.",
-          B: "My brother, who lives in London, is a doctor.",
-          C: "The student who fails the test must retake it.",
-          D: "She returned the letter that she had opened by mistake.",
-        },
-        answer: "B",
-        explanation:
-          'A non-defining (non-restrictive) relative clause adds extra, non-essential information and is enclosed in commas. "Who lives in London" gives additional detail about "my brother" — removing it leaves the sentence still clear and complete. Options A, C, and D are defining (restrictive) relative clauses, essential to identifying which book/student/letter is meant; they do not take commas.',
-      },
-      {
-        section: "C",
-        question:
-          'Which pair of sentences is most effectively combined into a complex sentence?\nSentence 1: "The manager was unhappy."\nSentence 2: "Sales figures had fallen sharply."',
-        options: {
-          A: "The manager was unhappy, and sales figures had fallen sharply.",
-          B: "The manager was unhappy; sales figures had fallen sharply.",
-          C: "The manager was unhappy because sales figures had fallen sharply.",
-          D: "The manager was unhappy, so sales figures had fallen sharply.",
-        },
-        answer: "C",
-        explanation:
-          '"Because" introduces a subordinate clause of reason, creating a complex sentence that expresses clear cause and effect. Option D is a compound sentence that reverses the logic (it implies the manager\'s unhappiness caused the falling figures). Options A and B are compound and do not convey causation.',
+          '"Yet" can join two full ideas like "but." Use a comma before it: "She practised daily, yet her scores barely moved." "However" cannot be used like "yet" here without heavier punctuation.',
       },
     ],
   },
@@ -326,7 +169,7 @@ export const mcqSets: Record<string, McqSet> = {
     id: "mcq-common-grammatical-errors",
     title: "Common Grammatical Errors",
     description:
-      "Sharpen your grammar by identifying and correcting the most frequent errors in Cambridge English — from subject-verb agreement and apostrophes to dangling modifiers and register.",
+      "Sharpen your grammar by spotting and fixing frequent Cambridge English slips — agreement, apostrophes, word choice, tense, clear sentences, and register.",
     questions: [
       // ──────────────────────────────────────────────────────────────────
       // SECTION A — Core Skill
@@ -374,16 +217,16 @@ export const mcqSets: Record<string, McqSet> = {
       },
       {
         section: "A",
-        question: "Which sentence contains a pronoun-antecedent agreement error?",
+        question: "Which sentence is not written correctly?",
         options: {
           A: "Each of the boys brought his own lunch.",
           B: "The committee has made its decision.",
-          C: "Neither Anna nor her sisters wanted their photo taken.",
+          C: "Neither the coach nor the players was ready for the interview.",
           D: "All of the students handed in their assignments.",
         },
         answer: "C",
         explanation:
-          'In "Neither Anna nor her sisters wanted their photo taken," the verb and pronoun should agree with the subject closest to the verb: "sisters" is plural, so "their" is technically correct. However, the more common error is in constructions where "neither…nor" pairs a singular with a plural — here the sentence is actually acceptable. The intended trap is recognising that standard formal usage requires agreement with the nearest antecedent.',
+          'After "neither…nor," the verb should agree with the nearer subject. Here "players" is plural, so the verb should be "were": "Neither the coach nor the players were ready for the interview."',
       },
       {
         section: "A",
@@ -396,7 +239,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          'Direct speech requires a comma after the first quoted section, correctly placed inside the closing quotation mark. The speaker tag is set off, and the resumption of speech is correctly indicated with a lower-case letter since the sentence continues. Options A, C, and D insert unnecessary commas between the verb and its clause or complement.',
+          'Direct speech requires a comma after the first quoted section, correctly placed inside the closing quotation mark. The speaker tag is set off, and the resumption of speech is correctly indicated with a lower-case letter since the sentence continues. Options A, C, and D insert unnecessary commas between the verb and what follows.',
       },
       {
         section: "A",
@@ -409,11 +252,12 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          'The sentence opens in the past tense ("studied") then shifts to the future ("will pass"), creating an unjustified tense inconsistency within the same clause. Consistent form: "He studied hard, and he passed the exam."',
+          'The sentence opens in the past tense ("studied") then shifts to the future ("will pass"), creating an unjustified tense inconsistency. Consistent form: "He studied hard, and he passed the exam."',
       },
       {
         section: "A",
-        question: "Which sentence contains a dangling modifier?",
+        question:
+          "Which opening phrase does not match the person or thing described in the rest of the sentence?",
         options: {
           A: "Running to catch the bus, her bag fell open.",
           B: "Exhausted from the journey, she fell asleep immediately.",
@@ -422,7 +266,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "A",
         explanation:
-          'In "Running to catch the bus, her bag fell open," the participial phrase illogically modifies "her bag" — bags cannot run. The subject of the main clause must be the one performing the action in the introductory phrase. Correct: "Running to catch the bus, she felt her bag fall open."',
+          'In A, "Running to catch the bus" suggests someone ran, but the sentence says the bag fell open — as if the bag had been running. Better: "Running to catch the bus, she felt her bag fall open."',
       },
       // ──────────────────────────────────────────────────────────────────
       // SECTION B — Application
@@ -453,7 +297,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "C",
         explanation:
-          '"They\'re" is a contraction of "they are": "They are going to the concert tonight?" "Their" is possessive; "there" refers to a place or introduces a clause; "Theyre" is not a word.',
+          '"They\'re" is a contraction of "they are": "They are going to the concert tonight?" "Their" is possessive; "there" refers to a place; "Theyre" is not a word.',
       },
       {
         section: "B",
@@ -508,7 +352,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "C",
         explanation:
-          'In "He is, a talented musician," the comma incorrectly separates the linking verb from its subject complement. The relative clause in Option D ("which was published yesterday") is a non-defining clause correctly enclosed in commas. Options A and B follow standard compound/complex punctuation rules.',
+          'In "He is, a talented musician," the comma incorrectly separates the linking verb from its subject complement. In D, the extra phrase "which was published yesterday" is added information and is correctly set off by commas. Options A and B follow standard punctuation rules.',
       },
       {
         section: "B",
@@ -545,14 +389,14 @@ export const mcqSets: Record<string, McqSet> = {
         question:
           'Identify the type of error in the following sentence:\n"Running quickly down the stairs, the vase was knocked over."',
         options: {
-          A: "Subject-verb agreement error",
-          B: "Dangling modifier",
-          C: "Tense inconsistency",
-          D: "Incorrect apostrophe use",
+          A: "The verb does not match the subject.",
+          B: "The opening phrase does not match what the rest of the sentence describes.",
+          C: "The tense shifts without reason.",
+          D: "An apostrophe is in the wrong place.",
         },
         answer: "B",
         explanation:
-          'The participial phrase "Running quickly down the stairs" is a dangling modifier — it illogically implies the vase was running. The logical subject performing the action (the person running) is absent from the main clause. Correct: "Running quickly down the stairs, she knocked over the vase."',
+          '"Running quickly down the stairs" sounds like someone running, but the sentence says the vase was knocked over. Name the doer in the main part: "Running quickly down the stairs, she knocked over the vase."',
       },
       {
         section: "C",
@@ -622,7 +466,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          '"Research" is a singular noun, requiring the singular verb "has produced." The relative clause "which was conducted over three years" is a non-defining clause and correctly enclosed in commas. "Findings" (plural) correctly refers to multiple results. Only Option B combines correct subject-verb agreement, proper punctuation of the relative clause, and the appropriate plural noun.',
+          '"Research" is a singular noun, requiring the singular verb "has produced." The extra phrase "which was conducted over three years" is added information and is correctly enclosed in commas. "Findings" (plural) correctly refers to multiple results. Only Option B combines correct subject-verb agreement, proper punctuation, and the appropriate plural noun.',
       },
     ],
   },
@@ -651,7 +495,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "C",
         explanation:
-          'A complete sentence needs a subject and a verb that together express a full thought. "The dog barked loudly" has both (subject: "The dog"; verb: "barked") and makes sense on its own. The other options are fragments — they either lack a main verb or are dependent clauses that cannot stand alone.',
+          'A complete sentence needs a subject and a verb that together express a full thought. "The dog barked loudly" has both (subject: "The dog"; verb: "barked") and makes sense on its own. The other options are fragments — they either lack a main verb or do not finish the idea on their own.',
       },
       {
         section: "A",
@@ -664,7 +508,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "C",
         explanation:
-          '"Although it was raining heavily" is a dependent (subordinate) clause. It begins with a subordinating conjunction and cannot stand alone as a sentence — it leaves the reader waiting for a main clause. The other options each have an independent subject and verb.',
+          '"Although it was raining heavily" cannot stand alone as a sentence — it leaves the reader waiting for the rest of the idea. The other options each finish a full thought on their own.',
       },
       {
         section: "A",
@@ -677,7 +521,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          '"The scientists discovered a new species" is the only option with a clear subject ("The scientists") and a finite verb ("discovered") that together form a complete thought. The remaining options are phrases or dependent clauses lacking a main verb.',
+          '"The scientists discovered a new species" is the only option with a clear subject ("The scientists") and a finite verb ("discovered") that together form a complete thought. The remaining options are fragments — they do not stand alone as full sentences.',
       },
       // ──────────────────────────────────────────────────────────────────
       // SECTION B — Comma placement
@@ -708,12 +552,12 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "C",
         explanation:
-          'When an introductory adverbial phrase or clause opens a sentence, a comma follows it before the main clause. "After finishing her homework" is the introductory phrase, so the comma goes after "homework": "After finishing her homework, she went out to play."',
+          'When an opening phrase comes before the main idea, put a comma after that phrase. "After finishing her homework" is the opening part, so the comma goes after "homework": "After finishing her homework, she went out to play."',
       },
       {
         section: "B",
         question:
-          "Which sentence correctly uses a comma with a coordinating conjunction?",
+          "Which sentence correctly uses a comma before a joining word like \"but\"?",
         options: {
           A: "She wanted to go, but she was tired.",
           B: "She wanted to go but, she was tired.",
@@ -722,12 +566,12 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "A",
         explanation:
-          'When two independent clauses are joined by a coordinating conjunction (FANBOYS: for, and, nor, but, or, yet, so), a comma precedes the conjunction. "She wanted to go, but she was tired" correctly places the comma before "but". The other options misplace or omit the comma.',
+          'When two full ideas are joined by a word like "and," "but," or "yet," use a comma before that word: "She wanted to go, but she was tired." The other options misplace or omit the comma.',
       },
       {
         section: "B",
         question:
-          "Which sentence correctly uses commas around a non-defining relative clause?",
+          "My brother is a doctor. Which sentence adds where he lives, using commas correctly?",
         options: {
           A: "My brother who lives in London is a doctor.",
           B: "My brother, who lives in London, is a doctor.",
@@ -736,7 +580,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          'A non-defining (non-restrictive) relative clause adds extra information about a noun and is enclosed in commas. "My brother, who lives in London, is a doctor" correctly uses commas on both sides of the clause. Removing the clause — "My brother is a doctor" — still makes sense, confirming it is non-defining.',
+          'When the extra detail could be lifted out and the sentence still works ("My brother is a doctor"), put a comma before and after that detail: "My brother, who lives in London, is a doctor."',
       },
       // ──────────────────────────────────────────────────────────────────
       // SECTION C — Exam-style corrections
@@ -753,7 +597,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          'The original is a run-on sentence — two independent clauses joined without punctuation. A semicolon correctly separates two closely related independent clauses. Option A creates a comma splice (two independent clauses joined only by a comma, which is incorrect). Options C and D misplace punctuation.',
+          'The original is a run-on — two full sentences joined without punctuation. A semicolon correctly separates two closely related full sentences. Option A creates a comma splice (two full sentences joined only by a comma, which is incorrect). Options C and D misplace punctuation.',
       },
       {
         section: "C",
@@ -767,7 +611,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          '"The team was disappointed because the match was cancelled" combines the fragment and main idea into one correct sentence. The subordinate clause "because the match was cancelled" now follows the main clause, making the whole sentence grammatically complete. Option A keeps them as two separate (incorrect) units; Options C and D remain grammatically incomplete.',
+          '"The team was disappointed because the match was cancelled" combines the ideas into one correct sentence. The part starting with "because" explains why and follows the main idea. Option A keeps them as two separate (incorrect) units; Options C and D remain grammatically incomplete.',
       },
       {
         section: "C",
@@ -781,7 +625,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          '"Despite the rain, the match continued, and the fans cheered loudly" is correctly punctuated throughout: a comma follows the introductory phrase "Despite the rain", and a comma precedes the coordinating conjunction "and" joining two independent clauses. Option A omits the introductory comma and misplaces the second; Option C puts an incorrect comma after "Despite"; Option D misplaces the second comma.',
+          '"Despite the rain, the match continued, and the fans cheered loudly" is correctly punctuated throughout: a comma follows the opening phrase "Despite the rain", and a comma precedes "and" when it joins two full ideas. Option A omits the opening comma and misplaces the second; Option C puts an incorrect comma after "Despite"; Option D misplaces the second comma.',
       },
     ],
   },
@@ -838,7 +682,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "A",
         explanation:
-          'An em dash can introduce or emphasise information that follows a main clause. "She had one goal — to win the championship" correctly places the em dash between the general statement and the specific detail that elaborates it. The other options break the sentence at illogical points.',
+          'An em dash can introduce or emphasise information after the first part of the sentence. "She had one goal — to win the championship" correctly places the em dash between the general statement and the detail that follows. The other options break the sentence at illogical points.',
       },
       {
         section: "A",
@@ -869,12 +713,12 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "A",
         explanation:
-          'A colon after a complete clause introduces a list, explanation, or elaboration. "She loves three things: reading, hiking, and cooking" has a grammatically complete statement before the colon ("She loves three things") and a correctly formatted list after it. The other options place the colon mid-clause, which is incorrect.',
+          'A colon after a full sentence or complete first part introduces a list, explanation, or elaboration. "She loves three things: reading, hiking, and cooking" has a complete statement before the colon ("She loves three things") and a correctly formatted list after it. The other options place the colon in the wrong place.',
       },
       {
         section: "B",
         question:
-          "Which sentence uses commas correctly with an introductory clause?",
+          "Where should the comma go?\n\"When the bell rang the students left the room.\"",
         options: {
           A: "When the bell rang the students left the room.",
           B: "When the bell rang, the students left the room.",
@@ -883,7 +727,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          'An introductory dependent clause must be followed by a comma before the main clause begins. "When the bell rang, the students left the room" correctly punctuates the introductory clause "When the bell rang" with a comma. The other options either omit the comma or place it incorrectly inside the introductory clause.',
+          'When the sentence opens with a part that cannot stand alone, put a comma before the main idea. "When the bell rang, the students left the room" is correct. The other options either omit the comma or place it in the wrong spot.',
       },
       {
         section: "B",
@@ -897,7 +741,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          'A colon must follow a complete independent clause. "He was nervous for one reason: he had not prepared" places the colon after a grammatically complete statement ("He was nervous for one reason") and introduces the explanation that follows. Options A, C, and D all place the colon in the middle of a clause — before "because", after "was", or after "because" — each of which breaks the rule.',
+          'A colon must follow a complete sentence or full statement. "He was nervous for one reason: he had not prepared" places the colon after a complete first part and introduces the explanation that follows. Options A, C, and D all place the colon in the wrong place — before "because", after "was", or after "because".',
       },
       {
         section: "B",
@@ -911,7 +755,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "C",
         explanation:
-          'An appositive — a noun phrase that renames the noun before it — is enclosed in commas when it provides extra (non-essential) information. "My teacher, Mr Ahmed, taught us grammar" correctly encloses the appositive "Mr Ahmed" in commas on both sides. Option D omits the commas; Options A and B each include only one comma, which is incorrect.',
+          'When a name or title repeats who someone is, set it off with commas on both sides if the extra words could be removed. "My teacher, Mr Ahmed, taught us grammar" is correct. Option D omits the commas; Options A and B each include only one comma, which is incorrect.',
       },
       // ──────────────────────────────────────────────────────────────────
       // SECTION C — Mixed exam traps
@@ -919,16 +763,16 @@ export const mcqSets: Record<string, McqSet> = {
       {
         section: "C",
         question:
-          "Which sentence is correctly punctuated?",
+          "Which sentence wrongly adds extra punctuation after the spoken words?",
         options: {
-          A: "\"Stop right there\" the officer shouted.",
-          B: "\"Stop right there,\" the officer shouted.",
-          C: "\"Stop right there.\" the officer shouted.",
-          D: "Stop right there, the officer shouted.",
+          A: "\"Are you coming?\" Mum asked.",
+          B: "\"Are you coming?\", Mum asked.",
+          C: "\"Are you coming,\" Mum asked.",
+          D: "Mum asked, \"Are you coming?\"",
         },
         answer: "B",
         explanation:
-          'When an imperative or statement is followed by a dialogue tag, a comma (not a full stop) ends the quoted speech inside the closing quotation mark, and the tag begins in lower case. "\"Stop right there,\" the officer shouted." follows this rule correctly. Option A omits the comma; Option C uses a full stop, which would require the tag to begin with a capital; Option D omits quotation marks entirely.',
+          'Do not put a comma after the closing quotation mark when ? or ! already ends the spoken words. "\"Are you coming?\" Mum asked." is correct. Option B wrongly adds a comma after the closing quote.',
       },
       {
         section: "C",
@@ -942,7 +786,7 @@ export const mcqSets: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          '"The coach said, \"Train harder,\" and the players agreed." applies all rules correctly: a comma follows the dialogue tag; the spoken words begin with a capital; a comma inside the closing quotation mark separates the speech from the continuing sentence; and "and" continues the main clause in lower case. Option A lacks a capital and a comma inside the quotes; Option C omits the comma after "said"; Option D creates a sentence fragment after the full stop.',
+          '"The coach said, \"Train harder,\" and the players agreed." applies all rules correctly: a comma follows the dialogue tag; the spoken words begin with a capital; a comma inside the closing quotation mark separates the speech from what follows; and "and" continues in lower case because the sentence is not finished. Option A lacks a capital and a comma inside the quotes; Option C omits the comma after "said"; Option D creates a fragment after the full stop.',
       },
     ],
   },
