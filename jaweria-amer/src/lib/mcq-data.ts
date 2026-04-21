@@ -167,306 +167,143 @@ export const mcqSets: Record<string, McqSet> = {
 
   "mcq-common-grammatical-errors": {
     id: "mcq-common-grammatical-errors",
-    title: "Common Grammatical Errors",
+    title: "5-Minute Drill: Common Errors",
     description:
-      "Sharpen your grammar by spotting and fixing frequent Cambridge English slips — agreement, apostrophes, word choice, tense, clear sentences, and register.",
+      "10 questions · 5 minutes. Quick checks on words, tense, and punctuation that often cost marks — plain wording throughout.",
+    timeLimit: 300,
     questions: [
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION A — Core Skill
-      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — Basic Accuracy (3)
       {
         section: "A",
-        question:
-          "Which sentence contains a subject-verb agreement error?",
+        question: "Which sentence is written correctly?",
         options: {
-          A: "The team is preparing for the match.",
-          B: "Every student must bring their own pen.",
-          C: "Neither of the answers are correct.",
-          D: "The news is disturbing.",
-        },
-        answer: "C",
-        explanation:
-          '"Neither" takes a singular verb: "Neither of the answers is correct." When "neither" is the subject, the verb must be singular regardless of the prepositional phrase ("of the answers") that follows.',
-      },
-      {
-        section: "A",
-        question: "Which sentence uses the apostrophe incorrectly?",
-        options: {
-          A: "The dog's collar was red.",
-          B: "It's raining heavily outside.",
-          C: "The students' results were excellent.",
-          D: "The cat licked it's paws.",
-        },
-        answer: "D",
-        explanation:
-          '"It\'s" (with apostrophe) is a contraction meaning "it is." The possessive form of "it" carries no apostrophe: "The cat licked its paws." This is one of the most frequently penalised errors in Cambridge marking.',
-      },
-      {
-        section: "A",
-        question:
-          'Which sentence uses "affect" and "effect" correctly?',
-        options: {
-          A: "The cold weather effected her health badly.",
-          B: "What affect will this decision have on the team?",
-          C: "The new policy will affect everyone in the department.",
-          D: "She was unable to effect her mood through music.",
-        },
-        answer: "C",
-        explanation:
-          '"Affect" is typically a verb meaning to influence; "effect" is typically a noun meaning result or outcome. "The new policy will affect everyone" uses "affect" correctly as a verb. Note: "effect" can function as a verb meaning "to bring about," but that usage is formal and rare.',
-      },
-      {
-        section: "A",
-        question: "Which sentence is not written correctly?",
-        options: {
-          A: "Each of the boys brought his own lunch.",
-          B: "The committee has made its decision.",
-          C: "Neither the coach nor the players was ready for the interview.",
-          D: "All of the students handed in their assignments.",
-        },
-        answer: "C",
-        explanation:
-          'After "neither…nor," the verb should agree with the nearer subject. Here "players" is plural, so the verb should be "were": "Neither the coach nor the players were ready for the interview."',
-      },
-      {
-        section: "A",
-        question: "Which sentence is correctly punctuated?",
-        options: {
-          A: 'The teacher said, that the exam would be difficult.',
-          B: '"I will be late," he said, "because of the traffic."',
-          C: "She asked whether, she should bring an umbrella.",
-          D: "He replied that he was, very tired.",
+          A: "Neither of the answers are correct.",
+          B: "Neither of the answers is correct.",
+          C: "Neither of the answers were correct.",
+          D: "Neither of the answers be correct.",
         },
         answer: "B",
         explanation:
-          'Direct speech requires a comma after the first quoted section, correctly placed inside the closing quotation mark. The speaker tag is set off, and the resumption of speech is correctly indicated with a lower-case letter since the sentence continues. Options A, C, and D insert unnecessary commas between the verb and what follows.',
+          'Use a singular verb with "neither of": "Neither of the answers is correct."',
       },
       {
         section: "A",
-        question: "Which sentence has an error in tense consistency?",
+        question: "Which sentence is written correctly?",
         options: {
-          A: "She walked to the park and sat on a bench.",
-          B: "He studied hard, and he will pass the exam.",
-          C: "They finished their work before the deadline.",
-          D: "The teacher entered the room and began the lesson.",
+          A: "Its raining; we should take umbrellas.",
+          B: "It's raining; we should take umbrellas.",
+          C: "Its' raining; we should take umbrellas.",
+          D: "Its raining we should take umbrellas.",
         },
         answer: "B",
         explanation:
-          'The sentence opens in the past tense ("studied") then shifts to the future ("will pass"), creating an unjustified tense inconsistency. Consistent form: "He studied hard, and he passed the exam."',
+          '"It\'s" means "it is"; "its" (no apostrophe) shows possession.',
       },
       {
         section: "A",
-        question:
-          "Which opening phrase does not match the person or thing described in the rest of the sentence?",
-        options: {
-          A: "Running to catch the bus, her bag fell open.",
-          B: "Exhausted from the journey, she fell asleep immediately.",
-          C: "Having studied all night, he felt confident in the exam.",
-          D: "Walking through the park, they noticed a beautiful sunrise.",
-        },
-        answer: "A",
-        explanation:
-          'In A, "Running to catch the bus" suggests someone ran, but the sentence says the bag fell open — as if the bag had been running. Better: "Running to catch the bus, she felt her bag fall open."',
-      },
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION B — Application
-      // ──────────────────────────────────────────────────────────────────
-      {
-        section: "B",
-        question:
-          'Choose the correct word to complete the sentence:\n"The results of the experiment had a significant _____ on the research team."',
+        question: "Which word fits best?\n\"The new rules will _____ everyone in Year 11.\"",
         options: {
           A: "affect",
           B: "effect",
-          C: "effecting",
-          D: "affecting",
-        },
-        answer: "B",
-        explanation:
-          '"Effect" functions as a noun here (preceded by the article "a" and the adjective "significant"), meaning result or impact. "Affect" is a verb and cannot follow "a significant."',
-      },
-      {
-        section: "B",
-        question:
-          'Choose the correct option to complete the sentence:\n"_____ going to the concert tonight?"',
-        options: {
-          A: "Their",
-          B: "There",
-          C: "They're",
-          D: "Theyre",
-        },
-        answer: "C",
-        explanation:
-          '"They\'re" is a contraction of "they are": "They are going to the concert tonight?" "Their" is possessive; "there" refers to a place; "Theyre" is not a word.',
-      },
-      {
-        section: "B",
-        question:
-          'Which correctly completes the sentence?\n"The principal addressed _____ students and _____ parents at the ceremony."',
-        options: {
-          A: "the student's and their",
-          B: "the students and there",
-          C: "the students and their",
-          D: "the students' and their",
-        },
-        answer: "C",
-        explanation:
-          '"Students" here is a plain plural noun (no possession is being shown), so no apostrophe is needed. "Their" is the correct possessive pronoun referring to the students\' parents. Option D incorrectly apostrophises "students" as if it were possessive.',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence demonstrates correct subject-verb agreement with a collective noun?",
-        options: {
-          A: "The jury have reached their verdict.",
-          B: "The jury has reached its verdict.",
-          C: "The jury have reached its verdict.",
-          D: "The jury has reached their verdict.",
-        },
-        answer: "B",
-        explanation:
-          'In formal written English, collective nouns (jury, team, committee) are treated as singular units, requiring a singular verb ("has") and singular pronoun ("its"). While British English permits treating collective nouns as plural, Option B is most formally consistent and is the form Cambridge rewards in written examination responses.',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence uses the apostrophe correctly for plural possession?",
-        options: {
-          A: "The boys' jackets were left in the hallway.",
-          B: "The boy's jackets were left in the hallway.",
-          C: "The boys jackets were left in the hallway.",
-          D: "The boy's jacket's were left in the hallway.",
+          C: "affects",
+          D: "effects",
         },
         answer: "A",
         explanation:
-          'When indicating plural possession (multiple boys), the apostrophe follows the plural "s": "boys\'." Option B implies one boy with multiple jackets; Option C omits the apostrophe entirely; Option D incorrectly apostrophises the plural noun "jackets."',
+          'You need a verb meaning "influence": "will affect everyone."',
+      },
+      // SECTION B — Common Exam Errors (4)
+      {
+        section: "B",
+        question: "Which sentence mixes past and future without a clear reason?",
+        options: {
+          A: "She walked home and made dinner.",
+          B: "He studied all night, and he will pass easily.",
+          C: "They finished early and caught the bus.",
+          D: "The bell rang and the lesson began.",
+        },
+        answer: "B",
+        explanation:
+          'Past "studied" clashes with future "will pass"; use one time frame or add a clear link.',
       },
       {
         section: "B",
-        question: "Which sentence contains an unnecessary or incorrect comma?",
+        question: "Which sentence is written correctly?",
         options: {
-          A: "She left early, but her friends stayed until midnight.",
-          B: "Although it was cold, they decided to swim.",
-          C: "He is, a talented musician, who performs regularly.",
-          D: "The report, which was published yesterday, caused controversy.",
+          A: "There were less students on the bus today.",
+          B: "She has fewer money than her sister.",
+          C: "There were fewer students on the bus today.",
+          D: "She has fewer time to finish than him.",
         },
         answer: "C",
         explanation:
-          'In "He is, a talented musician," the comma incorrectly separates the linking verb from its subject complement. In D, the extra phrase "which was published yesterday" is added information and is correctly set off by commas. Options A and B follow standard punctuation rules.',
+          'Use "fewer" with things you can count ("students"); "less" with amounts like time or money.',
       },
       {
         section: "B",
-        question: "Which sentence contains no grammatical error?",
+        question: "Which sentence would lose marks in a formal exam answer?",
         options: {
-          A: "She don't know the answer to the question.",
-          B: "Between you and I, this plan will not work.",
-          C: "The data shows a clear upward trend.",
-          D: "He should of called before arriving.",
-        },
-        answer: "C",
-        explanation:
-          'Option A: "don\'t" should be "doesn\'t" (subject-verb agreement with "she"). Option B: "between you and I" is incorrect — prepositions take object pronouns: "between you and me." Option D: "should of" is a misspelling of "should have." Option C is grammatically correct.',
-      },
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION C — Mixed Challenge
-      // ──────────────────────────────────────────────────────────────────
-      {
-        section: "C",
-        question:
-          "Which sentence contains a double negative?",
-        options: {
-          A: "She hardly ever speaks in class.",
-          B: "He didn't say nothing about the meeting.",
-          C: "They rarely go out on weekdays.",
-          D: "She scarcely understood the question.",
+          A: "The committee met for two hours before voting.",
+          B: "The committee was gonna vote after a long chat.",
+          C: "The committee has issued its final statement.",
+          D: "The findings support the board's recommendation.",
         },
         answer: "B",
         explanation:
-          '"Didn\'t say nothing" contains two negatives ("didn\'t" + "nothing"), which cancel each other out in standard English to produce a positive meaning ("he said something"). Correct forms: "He didn\'t say anything" or "He said nothing." Options A, C, and D use single negatives correctly ("hardly," "rarely," "scarcely").',
+          "\"Gonna\" and \"chat\" are too informal; the other sentences fit serious exam English.",
       },
       {
-        section: "C",
-        question:
-          'Identify the type of error in the following sentence:\n"Running quickly down the stairs, the vase was knocked over."',
+        section: "B",
+        question: "Which sentence is written correctly?",
         options: {
-          A: "The verb does not match the subject.",
-          B: "The opening phrase does not match what the rest of the sentence describes.",
-          C: "The tense shifts without reason.",
-          D: "An apostrophe is in the wrong place.",
+          A: "The jury has reached its verdict.",
+          B: "The jury have reached their verdict.",
+          C: "The jury has reached their verdict.",
+          D: "The jury have reached its verdict.",
+        },
+        answer: "A",
+        explanation:
+          'Treat "jury" as one unit in formal writing: singular verb "has" and "its."',
+      },
+      // SECTION C — Fix the Sentence (3)
+      {
+        section: "C",
+        question: "Which version fixes the mistake?\n\"Running for the bus, her books fell on the steps.\"",
+        options: {
+          A: "Running for the bus, her books dropped on the steps.",
+          B: "Running for the bus, she dropped her books on the steps.",
+          C: "Her books, running for the bus, fell on the steps.",
+          D: "She was running for the bus her books fell on the steps.",
         },
         answer: "B",
         explanation:
-          '"Running quickly down the stairs" sounds like someone running, but the sentence says the vase was knocked over. Name the doer in the main part: "Running quickly down the stairs, she knocked over the vase."',
+          'The person running should follow the opening phrase: "she dropped her books."',
       },
       {
         section: "C",
-        question:
-          "Which sentence incorrectly uses a formal register in written English?",
+        question: "Which sentence is written correctly?",
         options: {
-          A: "The committee deliberated at length before reaching a decision.",
-          B: "The scientist enquired into the phenomenon with great precision.",
-          C: "The new policy gonna affect all employees from next month.",
-          D: "The governor addressed the assembly with measured authority.",
-        },
-        answer: "C",
-        explanation:
-          '"Gonna" is a colloquial contraction of "going to" and is inappropriate in formal written English. It should be replaced with "is going to." Options A, B, and D use formal register vocabulary and syntax consistently.',
-      },
-      {
-        section: "C",
-        question:
-          'Which sentence contains an error in the use of "who" or "whom"?',
-        options: {
-          A: "The candidate who scored highest was awarded the scholarship.",
-          B: "To whom should I address this complaint?",
-          C: "The teacher who I most admire has retired.",
-          D: "Whom do you think will win the prize?",
-        },
-        answer: "D",
-        explanation:
-          'In Option D, "who" is the subject of "will win the prize" — it performs the action, so the subject form "who" is correct: "Who do you think will win the prize?" "Whom" is the object form. In Option C, "who" is also correct as the object of "admire" is debated, but "whom I most admire" is formally preferred. D is the clearest error: using "whom" where "who" is required as a subject.',
-      },
-      {
-        section: "C",
-        question:
-          'Which sentence correctly avoids the common confusion of "less" and "fewer"?',
-        options: {
-          A: "There were less students in the hall today.",
-          B: "She has fewer money than her brother.",
-          C: "There were fewer students in the hall today.",
-          D: "She has less books on her shelf than him.",
-        },
-        answer: "C",
-        explanation:
-          '"Fewer" is used with countable nouns (students, books, chairs); "less" is used with uncountable nouns (money, time, water). "Fewer students" is correct because individual students can be counted. Options A and D misuse "less" with countable nouns; Option B misuses "fewer" with the uncountable noun "money."',
-      },
-      {
-        section: "C",
-        question:
-          'A student wrote: "The data are quite clear on this matter; the evidence clearly shows that the results supports our hypothesis." Identify the grammatical error.',
-        options: {
-          A: '"Data are" should be "data is"',
-          B: '"Results supports" should be "results support"',
-          C: "The semicolon is incorrectly used",
-          D: '"Clearly shows" should be "clearly show"',
+          A: "The research, carried out over three years, have produced useful results.",
+          B: "The research, carried out over three years, has produced useful results.",
+          C: "The research carried out over three years have produced useful results.",
+          D: "The research, carried out over three years has produced useful results.",
         },
         answer: "B",
         explanation:
-          '"Results" is a plural noun, so it requires the plural verb "support," not "supports." Subject-verb agreement: "the results support our hypothesis." Note: "data" is technically a Latin plural (datum/data), so "data are" in Option A is formally correct, not an error.',
+          '"Research" is singular here, so use "has produced"; keep commas around the added phrase.',
       },
       {
         section: "C",
-        question:
-          "Which sentence best demonstrates correct formal English with no grammatical errors?",
+        question: "Where is the mistake?\n\"The evidence shows that the results supports our idea.\"",
         options: {
-          A: "The research, which was conducted over three years, have produced significant findings.",
-          B: "The research, which was conducted over three years, has produced significant findings.",
-          C: "The research which was conducted over three years have produced significant findings.",
-          D: "The research, which was conducted over three years, have produced significant finding.",
+          A: "\"Evidence shows\" should be \"evidence show.\"",
+          B: "\"Results supports\" should be \"results support.\"",
+          C: "The word \"that\" should be removed.",
+          D: "\"Our idea\" should be \"us idea.\"",
         },
         answer: "B",
         explanation:
-          '"Research" is a singular noun, requiring the singular verb "has produced." The extra phrase "which was conducted over three years" is added information and is correctly enclosed in commas. "Findings" (plural) correctly refers to multiple results. Only Option B combines correct subject-verb agreement, proper punctuation, and the appropriate plural noun.',
+          'Plural "results" needs "support," not "supports."',
       },
     ],
   },

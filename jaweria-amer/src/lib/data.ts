@@ -1380,7 +1380,7 @@ const resourceLibrary: Resource[] = [
   },
   {
     id: "mcq-common-grammatical-errors",
-    title: "MCQ Assessment — Common Grammatical Errors",
+    title: "5-Minute Drill: Common Errors",
     category: "quick-worksheets",
     type: "mcq",
     subject: "English Language 1123",
@@ -1389,7 +1389,7 @@ const resourceLibrary: Resource[] = [
     year: "Practice",
     fileUrl: "",
     description:
-      "21 exam-level multiple-choice questions covering agreement, apostrophes, word choice, tense, commas, and formal register — with instant scoring and explanations.",
+      "10 exam-style multiple-choice questions on common grammar and wording mistakes, with instant scoring and explanations.",
   },
   {
     id: "mcq-sentence-comma-5min",
