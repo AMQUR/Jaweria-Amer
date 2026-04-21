@@ -55,7 +55,6 @@ function inferDiskFolder(absPath: string): DiskFolder {
   const scriptsRoot = SCRIPTS_DOWNLOAD_FOLDER.toLowerCase();
   if (scriptsRoot.length > 0 && p.startsWith(scriptsRoot)) return "examiner-reports";
   if (p.includes("past papers") && p.includes("marking schemes")) return "past-papers";
-  if (p.includes("past papers") && p.includes("er- ecr")) return "examiner-reports";
   if (p.includes("past papers") && p.includes("solved solutions")) return "worksheets";
   if (p.includes("summary writing") && p.includes("past papers")) return "notes";
   if (p.includes("summary writing")) return "notes";
