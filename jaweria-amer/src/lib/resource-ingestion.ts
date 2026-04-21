@@ -32,6 +32,125 @@ export function basenameFromFileUrl(fileUrl: string): string {
   return parts[parts.length - 1] ?? clean;
 }
 
+/** Strip repeated Google-Drive-style "Copy of " prefixes from the start of a title only. */
+export function cleanCopyOfTitlePrefix(title: string): string {
+  let t = title.trim();
+  const prefix = /^copy\s+of\s+/i;
+  while (prefix.test(t)) {
+    t = t.replace(prefix, "").trim();
+  }
+  return t;
+}
+
+/**
+ * Human-readable label for vault UI only. Does not change stored `Resource.title`.
+ * Runs after {@link cleanCopyOfTitlePrefix} (applied internally).
+ */
+export function formatDisplayTitle(title: string): string {
+  const t = cleanCopyOfTitlePrefix(title).replace(/\s+/g, " ").trim();
+  if (!t) return t;
+
+  // "11 1123 FOA2 P1 ScriptB" → "Paper 1 Script B (1123)"
+  let m = t.match(/^(\d+)\s+1123\s+FOA2\s+P(\d)\s+Script\s*([A-Za-z])\s*$/i);
+  if (m) {
+    return `Paper ${m[2]} Script ${m[3]!.toUpperCase()} (1123)`;
+  }
+
+  // "1123 FOA2 P1 ScriptB" (no leading index)
+  m = t.match(/^1123\s+FOA2\s+P(\d)\s+Script\s*([A-Za-z])\s*$/i);
+  if (m) {
+    return `Paper ${m[1]} Script ${m[2]!.toUpperCase()} (1123)`;
+  }
+
+  // "1123 SpecimenAnswers P2" / "1123 Specimen Answers P2" → "Specimen Answers Paper 2 (1123)"
+  m = t.match(/^1123\s+(?:SpecimenAnswers|Specimen\s+Answers)\s+P(\d)\s*$/i);
+  if (m) {
+    return `Specimen Answers Paper ${m[1]} (1123)`;
+  }
+
+  // "NN 1123 FOA2 …" (advice, marking guidance, formative feedback, etc.)
+  m = t.match(/^\d+\s+1123\s+FOA2\s+(.+)$/i);
+  if (m) {
+    const rest = m[1]!.replace(/\bFOA2\b/gi, "").replace(/\s+/g, " ").trim();
+    if (rest.length > 0) return `${rest} (1123)`;
+  }
+
+  // Drop stray syllabus-framework tokens; collapse spaces
+  return t.replace(/\bFOA2\b/gi, "").replace(/\s+/g, " ").trim() || t;
+}
+
+/** Vault chip for Scripts (`examiner-reports`) cards — display only. */
+export type ScriptsVaultChip = "SCRIPT" | "SPECIMEN" | "GUIDANCE";
+
+/**
+ * Classify a Scripts resource for the small label chip (SCRIPT / SPECIMEN / GUIDANCE).
+ * Uses raw + formatted title heuristics.
+ */
+export function scriptsResourceVaultChip(rawTitle: string, displayTitle: string): ScriptsVaultChip {
+  const r = rawTitle.toLowerCase();
+  const d = displayTitle.toLowerCase();
+
+  if (d.includes("specimen answers") || /specimen\s+answers/i.test(displayTitle)) {
+    return "SPECIMEN";
+  }
+
+  if (/paper\s+\d+\s+script\s+[a-z]/i.test(displayTitle)) {
+    return "SCRIPT";
+  }
+  if (/candidate response|examiner candidate response/i.test(r) || /examiner candidate/i.test(d)) {
+    return "SCRIPT";
+  }
+  if (
+    /paper\s*\d+\s*\(|s\d+[- ]*paper|narrative essay|letter writing|answer script/i.test(r) ||
+    /paper\s*\d+\s*\(/i.test(displayTitle)
+  ) {
+    return "SCRIPT";
+  }
+
+  if (
+    /principal examiner|examiner report\b|marking guidance|\badvice\b|formative feedback|using past papers/i.test(
+      r
+    ) ||
+    /principal examiner|examiner report\b|marking guidance|\badvice\b|formative feedback|using past papers/i.test(d)
+  ) {
+    return "GUIDANCE";
+  }
+
+  if (r.includes("specimen") && !r.includes("ecr")) {
+    return "SPECIMEN";
+  }
+
+  return "GUIDANCE";
+}
+
+/**
+ * Split {@link formatDisplayTitle} output into a primary heading and optional secondary line
+ * (syllabus code, session snippet, or score line in parentheses).
+ */
+export function splitScriptsCardTitle(display: string): { main: string; secondary: string | null } {
+  const d = display.trim();
+  const m1123 = d.match(/^(.+?)\s+\((1123)\)\s*$/);
+  if (m1123) {
+    return { main: m1123[1]!.trim(), secondary: "1123" };
+  }
+  const m = d.match(/^(.+?)\s+\(([^)]+)\)\s*$/);
+  if (m) {
+    const inner = m[2]!.trim();
+    if (
+      inner === "1123" ||
+      /^(nov|may\/june)\s/i.test(inner) ||
+      /^specimen$/i.test(inner) ||
+      /^\d{4}$/.test(inner) ||
+      /\d+\s*out\s*of\s*\d+/i.test(inner) ||
+      /^qp\s*\d+/i.test(inner) ||
+      /^\d+_\d+/.test(inner)
+    ) {
+      return { main: m[1]!.trim(), secondary: inner };
+    }
+  }
+  return { main: d, secondary: null };
+}
+
 export function normalizeFilenameKey(name: string): string {
   const base = name.replace(/\.[a-z0-9]+$/i, "").toLowerCase();
   const noParens = base.replace(/\(\s*\d+\s*\)/g, " ");
@@ -156,10 +275,11 @@ export function finalizeResourcesForSite(items: readonly Resource[]): Resource[]
 
     seenIds.add(item.id);
     if (bn.length > 0) seenBasenames.add(bn);
+    const withCleanTitle: Resource = { ...item, title: cleanCopyOfTitlePrefix(item.title) };
     const enriched: Resource =
-      item.category === "general-notes" && item.subCategory === undefined
-        ? { ...item, subCategory: inferGeneralNotesSubCategory(item) }
-        : item;
+      withCleanTitle.category === "general-notes" && withCleanTitle.subCategory === undefined
+        ? { ...withCleanTitle, subCategory: inferGeneralNotesSubCategory(withCleanTitle) }
+        : withCleanTitle;
     out.push(enriched);
   }
   return out;
@@ -282,19 +402,22 @@ export function paperLabelFromVariant(variant: string | null, docKind: CaieDocKi
 export function humanizeResourceTitleFromFilename(filename: string): string {
   const base = basenameFromFileUrl(filename);
   const inferred = inferCaieFromBasename(base);
+  let raw: string;
   if (inferred.sessionLabel && inferred.docKind !== "other") {
     const paper = inferred.variant != null ? paperLabelFromVariant(inferred.variant, inferred.docKind) : "";
     const kind = docKindLabel(inferred.docKind);
-    if (inferred.docKind === "er") return `${inferred.sessionLabel} — ${kind}`;
-    if (inferred.docKind === "ecr") return `${inferred.sessionLabel} — examiner candidate responses`;
-    return `${inferred.sessionLabel} — ${kind}${paper ? ` — ${paper}` : ""}`;
+    if (inferred.docKind === "er") raw = `${inferred.sessionLabel} — ${kind}`;
+    else if (inferred.docKind === "ecr") raw = `${inferred.sessionLabel} — examiner candidate responses`;
+    else raw = `${inferred.sessionLabel} — ${kind}${paper ? ` — ${paper}` : ""}`;
+  } else {
+    const stem = base.replace(/\.[a-z0-9]+$/i, "");
+    const words = stem
+      .replace(/[_-]+/g, " ")
+      .replace(/\(\s*\d+\s*\)/g, "")
+      .trim();
+    raw = words.replace(/\s+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || stem;
   }
-  const stem = base.replace(/\.[a-z0-9]+$/i, "");
-  const words = stem
-    .replace(/[_-]+/g, " ")
-    .replace(/\(\s*\d+\s*\)/g, "")
-    .trim();
-  return words.replace(/\s+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()) || stem;
+  return cleanCopyOfTitlePrefix(raw);
 }
 
 export function slugifyFileStem(stem: string): string {

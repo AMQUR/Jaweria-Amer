@@ -19,6 +19,11 @@ import {
   type ResourceNotesSubCategory,
 } from "@/lib/data";
 import { trackResourceView } from "@/lib/analytics";
+import {
+  formatDisplayTitle,
+  scriptsResourceVaultChip,
+  splitScriptsCardTitle,
+} from "@/lib/resource-ingestion";
 import { cn } from "@/lib/utils";
 
 const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
@@ -357,19 +362,32 @@ export function ResourcesHub() {
   );
 }
 
+const scriptsChipClass =
+  "mb-2 inline-flex w-fit rounded-md border border-border/60 bg-muted/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
+
 function ResourceCard({ resource }: { resource: Resource }) {
   const meta = [resource.level, resource.subject, resource.year, resource.paper].join(" · ");
+  const displayTitle = formatDisplayTitle(resource.title);
+  const isScripts = resource.category === "examiner-reports";
+  const vaultChip = isScripts ? scriptsResourceVaultChip(resource.title, displayTitle) : null;
+  const { main: titleMain, secondary: titleSecondary } = isScripts
+    ? splitScriptsCardTitle(displayTitle)
+    : { main: displayTitle, secondary: null as string | null };
 
   return (
     <article className="flex flex-col rounded-xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-border hover:shadow-[0_6px_22px_rgba(34,16,18,0.07)]">
-      <h3 className="font-serif text-base font-semibold leading-snug text-ink">{resource.title}</h3>
+      {vaultChip && <span className={scriptsChipClass}>{vaultChip}</span>}
+      <h3 className="font-serif text-base font-semibold leading-snug text-ink">{titleMain}</h3>
+      {isScripts && titleSecondary ? (
+        <p className="mt-1 text-xs font-medium tabular-nums tracking-wide text-slate">{titleSecondary}</p>
+      ) : null}
       <p className="mt-2 text-xs leading-relaxed text-slate">{meta}</p>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-slate">{resource.description}</p>
       <div className="mt-6">
         <Link
           href={`/resources/view/${resource.id}`}
           onClick={() =>
-            trackResourceView(resource.id, resource.title, { interaction: "hub_listing" })
+            trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
           }
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
         >

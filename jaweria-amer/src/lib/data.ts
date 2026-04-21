@@ -74,8 +74,8 @@ export const RESOURCE_HUB_CATEGORIES: {
   },
   {
     id: "examiner-reports",
-    label: "Examiner Reports",
-    blurb: "Principal examiner feedback and band-level insight.",
+    label: "Scripts",
+    blurb: "Real student scripts with examiner-style feedback and examples.",
   },
   {
     id: "checklists",
