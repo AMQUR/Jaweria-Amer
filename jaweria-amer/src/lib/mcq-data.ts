@@ -12,6 +12,8 @@ export interface McqSet {
   id: string;
   title: string;
   description: string;
+  /** Optional time limit in seconds — displayed in the resource viewer header. */
+  timeLimit?: number;
   questions: McqQuestion[];
 }
 
@@ -621,6 +623,326 @@ export const mcqSets: Record<string, McqSet> = {
         answer: "B",
         explanation:
           '"Research" is a singular noun, requiring the singular verb "has produced." The relative clause "which was conducted over three years" is a non-defining clause and correctly enclosed in commas. "Findings" (plural) correctly refers to multiple results. Only Option B combines correct subject-verb agreement, proper punctuation of the relative clause, and the appropriate plural noun.',
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // 5-MINUTE DRILL: SENTENCES & COMMAS
+  // ══════════════════════════════════════════════════════════════════════
+  "mcq-sentence-comma-5min": {
+    id: "mcq-sentence-comma-5min",
+    title: "5-Minute Drill: Sentences & Commas",
+    description:
+      "10 questions · 5 minutes. Identify sentences vs fragments, place commas correctly, and fix common exam errors — built from real 1123 marking patterns.",
+    timeLimit: 300,
+    questions: [
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — Identify sentence vs fragment
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "A",
+        question: "Which of the following is a complete sentence?",
+        options: {
+          A: "Running through the park every morning.",
+          B: "Because she was tired.",
+          C: "The dog barked loudly.",
+          D: "After the long and exhausting journey.",
+        },
+        answer: "C",
+        explanation:
+          'A complete sentence needs a subject and a verb that together express a full thought. "The dog barked loudly" has both (subject: "The dog"; verb: "barked") and makes sense on its own. The other options are fragments — they either lack a main verb or are dependent clauses that cannot stand alone.',
+      },
+      {
+        section: "A",
+        question: "Which of the following is a fragment, not a sentence?",
+        options: {
+          A: "She finished her homework before dinner.",
+          B: "The concert was very loud.",
+          C: "Although it was raining heavily.",
+          D: "They arrived at the station on time.",
+        },
+        answer: "C",
+        explanation:
+          '"Although it was raining heavily" is a dependent (subordinate) clause. It begins with a subordinating conjunction and cannot stand alone as a sentence — it leaves the reader waiting for a main clause. The other options each have an independent subject and verb.',
+      },
+      {
+        section: "A",
+        question: "Identify the sentence.",
+        options: {
+          A: "During the summer holidays in July.",
+          B: "The scientists discovered a new species.",
+          C: "Working hard to meet the deadline.",
+          D: "Before the sun had even risen.",
+        },
+        answer: "B",
+        explanation:
+          '"The scientists discovered a new species" is the only option with a clear subject ("The scientists") and a finite verb ("discovered") that together form a complete thought. The remaining options are phrases or dependent clauses lacking a main verb.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION B — Comma placement
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "B",
+        question:
+          "Which sentence uses commas correctly when listing items?",
+        options: {
+          A: "She bought apples oranges, and bananas.",
+          B: "She bought apples, oranges, and bananas.",
+          C: "She bought, apples, oranges and bananas.",
+          D: "She bought apples, oranges and, bananas.",
+        },
+        answer: "B",
+        explanation:
+          'In a list of three or more items, commas separate each item. "She bought apples, oranges, and bananas" places commas correctly between all items. Option A is missing the comma after "apples"; Option C puts an incorrect comma after "bought"; Option D places the comma in the wrong position before "bananas".',
+      },
+      {
+        section: "B",
+        question:
+          "Where should the comma be placed in this sentence?\n\"After finishing her homework she went out to play.\"",
+        options: {
+          A: "After \"finishing\"",
+          B: "After \"she\"",
+          C: "After \"homework\"",
+          D: "No comma is needed.",
+        },
+        answer: "C",
+        explanation:
+          'When an introductory adverbial phrase or clause opens a sentence, a comma follows it before the main clause. "After finishing her homework" is the introductory phrase, so the comma goes after "homework": "After finishing her homework, she went out to play."',
+      },
+      {
+        section: "B",
+        question:
+          "Which sentence correctly uses a comma with a coordinating conjunction?",
+        options: {
+          A: "She wanted to go, but she was tired.",
+          B: "She wanted to go but, she was tired.",
+          C: "She wanted, to go but she was tired.",
+          D: "She, wanted to go but she was tired.",
+        },
+        answer: "A",
+        explanation:
+          'When two independent clauses are joined by a coordinating conjunction (FANBOYS: for, and, nor, but, or, yet, so), a comma precedes the conjunction. "She wanted to go, but she was tired" correctly places the comma before "but". The other options misplace or omit the comma.',
+      },
+      {
+        section: "B",
+        question:
+          "Which sentence correctly uses commas around a non-defining relative clause?",
+        options: {
+          A: "My brother who lives in London is a doctor.",
+          B: "My brother, who lives in London, is a doctor.",
+          C: "My brother, who lives in London is a doctor.",
+          D: "My brother who lives, in London, is a doctor.",
+        },
+        answer: "B",
+        explanation:
+          'A non-defining (non-restrictive) relative clause adds extra information about a noun and is enclosed in commas. "My brother, who lives in London, is a doctor" correctly uses commas on both sides of the clause. Removing the clause — "My brother is a doctor" — still makes sense, confirming it is non-defining.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION C — Exam-style corrections
+      // ──────────────────────────────════════════════════════════════════
+      {
+        section: "C",
+        question:
+          "Choose the correctly punctuated version of the following:\n\"The teacher explained the lesson the students took notes.\"",
+        options: {
+          A: "The teacher explained the lesson, the students took notes.",
+          B: "The teacher explained the lesson; the students took notes.",
+          C: "The teacher explained, the lesson the students took notes.",
+          D: "The teacher explained the lesson the students, took notes.",
+        },
+        answer: "B",
+        explanation:
+          'The original is a run-on sentence — two independent clauses joined without punctuation. A semicolon correctly separates two closely related independent clauses. Option A creates a comma splice (two independent clauses joined only by a comma, which is incorrect). Options C and D misplace punctuation.',
+      },
+      {
+        section: "C",
+        question:
+          "Which of the following fixes the fragment by turning it into a complete sentence?",
+        options: {
+          A: "Because the match was cancelled. The team was disappointed.",
+          B: "The team was disappointed because the match was cancelled.",
+          C: "Because the match was cancelled, and the team was disappointed.",
+          D: "The team, because the match was cancelled.",
+        },
+        answer: "B",
+        explanation:
+          '"The team was disappointed because the match was cancelled" combines the fragment and main idea into one correct sentence. The subordinate clause "because the match was cancelled" now follows the main clause, making the whole sentence grammatically complete. Option A keeps them as two separate (incorrect) units; Options C and D remain grammatically incomplete.',
+      },
+      {
+        section: "C",
+        question:
+          "Which sentence is correctly punctuated throughout?",
+        options: {
+          A: "Despite the rain the match continued and the fans, cheered loudly.",
+          B: "Despite the rain, the match continued, and the fans cheered loudly.",
+          C: "Despite, the rain the match continued and the fans cheered loudly.",
+          D: "Despite the rain, the match continued and the fans, cheered loudly.",
+        },
+        answer: "B",
+        explanation:
+          '"Despite the rain, the match continued, and the fans cheered loudly" is correctly punctuated throughout: a comma follows the introductory phrase "Despite the rain", and a comma precedes the coordinating conjunction "and" joining two independent clauses. Option A omits the introductory comma and misplaces the second; Option C puts an incorrect comma after "Despite"; Option D misplaces the second comma.',
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // 5-MINUTE DRILL: PUNCTUATION
+  // ══════════════════════════════════════════════════════════════════════
+  "mcq-punctuation-5min": {
+    id: "mcq-punctuation-5min",
+    title: "5-Minute Drill: Punctuation",
+    description:
+      "10 questions · 5 minutes. Dialogue format, em dashes, colons, and comma rules — the marks most students leave on the table.",
+    timeLimit: 300,
+    questions: [
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — Dialogue format + em dash
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "A",
+        question: "Which sentence correctly punctuates dialogue?",
+        options: {
+          A: "Sara said, \"I cannot believe it.\"",
+          B: "Sara said \"I cannot believe it.\"",
+          C: "Sara said, I cannot believe it.",
+          D: "\"Sara said, I cannot believe it.\"",
+        },
+        answer: "A",
+        explanation:
+          'When a dialogue tag (e.g. "Sara said") introduces speech, it is followed by a comma, and the spoken words are enclosed in double quotation marks. The full stop goes inside the closing quotation mark. Option A follows all three rules correctly.',
+      },
+      {
+        section: "A",
+        question:
+          "Which sentence correctly punctuates the following dialogue?\n(The speaker tag comes AFTER the spoken words.)",
+        options: {
+          A: "\"I cannot believe it,\" Sara said.",
+          B: "\"I cannot believe it.\" Sara said.",
+          C: "\"I cannot believe it\" Sara said.",
+          D: "I cannot believe it, Sara said.",
+        },
+        answer: "A",
+        explanation:
+          'When a dialogue tag follows the spoken words, a comma (not a full stop) ends the quoted speech inside the quotation marks, and the tag begins with a lower-case letter. "\"I cannot believe it,\" Sara said." is the only option that applies all these rules correctly.',
+      },
+      {
+        section: "A",
+        question:
+          "Which sentence uses the em dash correctly?",
+        options: {
+          A: "She had one goal — to win the championship.",
+          B: "She had one goal to — win the championship.",
+          C: "She had — one goal to win the championship.",
+          D: "She had one goal to win — the championship.",
+        },
+        answer: "A",
+        explanation:
+          'An em dash can introduce or emphasise information that follows a main clause. "She had one goal — to win the championship" correctly places the em dash between the general statement and the specific detail that elaborates it. The other options break the sentence at illogical points.',
+      },
+      {
+        section: "A",
+        question:
+          "Which sentence correctly uses em dashes to enclose a parenthetical remark?",
+        options: {
+          A: "The project — which took three years — was finally complete.",
+          B: "The project — which took three years, was finally complete.",
+          C: "The project, which took three years — was finally complete.",
+          D: "The project which — took three years — was finally complete.",
+        },
+        answer: "A",
+        explanation:
+          'Em dashes used to enclose parenthetical information must appear on both sides of the inserted remark, mirroring the way commas or brackets work. "The project — which took three years — was finally complete" places the dashes symmetrically around "which took three years". The other options are asymmetric or split the sentence illogically.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION B — Colon + comma rules
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "B",
+        question:
+          "Which sentence uses the colon correctly?",
+        options: {
+          A: "She loves three things: reading, hiking, and cooking.",
+          B: "She loves: three things reading, hiking, and cooking.",
+          C: "She loves three things reading: hiking and cooking.",
+          D: "She loves three things, reading: hiking and cooking.",
+        },
+        answer: "A",
+        explanation:
+          'A colon after a complete clause introduces a list, explanation, or elaboration. "She loves three things: reading, hiking, and cooking" has a grammatically complete statement before the colon ("She loves three things") and a correctly formatted list after it. The other options place the colon mid-clause, which is incorrect.',
+      },
+      {
+        section: "B",
+        question:
+          "Which sentence uses commas correctly with an introductory clause?",
+        options: {
+          A: "When the bell rang the students left the room.",
+          B: "When the bell rang, the students left the room.",
+          C: "When, the bell rang the students left the room.",
+          D: "When the bell rang the students, left the room.",
+        },
+        answer: "B",
+        explanation:
+          'An introductory dependent clause must be followed by a comma before the main clause begins. "When the bell rang, the students left the room" correctly punctuates the introductory clause "When the bell rang" with a comma. The other options either omit the comma or place it incorrectly inside the introductory clause.',
+      },
+      {
+        section: "B",
+        question:
+          "Which sentence correctly uses a colon to introduce an explanation?",
+        options: {
+          A: "He was nervous: because he had not prepared.",
+          B: "He was nervous for one reason: he had not prepared.",
+          C: "He was: nervous because he had not prepared.",
+          D: "He was nervous because: he had not prepared.",
+        },
+        answer: "B",
+        explanation:
+          'A colon must follow a complete independent clause. "He was nervous for one reason: he had not prepared" places the colon after a grammatically complete statement ("He was nervous for one reason") and introduces the explanation that follows. Options A, C, and D all place the colon in the middle of a clause — before "because", after "was", or after "because" — each of which breaks the rule.',
+      },
+      {
+        section: "B",
+        question:
+          "Which of the following correctly punctuates a sentence with an appositive?",
+        options: {
+          A: "My teacher, Mr Ahmed taught us grammar.",
+          B: "My teacher Mr Ahmed, taught us grammar.",
+          C: "My teacher, Mr Ahmed, taught us grammar.",
+          D: "My teacher Mr Ahmed taught us grammar.",
+        },
+        answer: "C",
+        explanation:
+          'An appositive — a noun phrase that renames the noun before it — is enclosed in commas when it provides extra (non-essential) information. "My teacher, Mr Ahmed, taught us grammar" correctly encloses the appositive "Mr Ahmed" in commas on both sides. Option D omits the commas; Options A and B each include only one comma, which is incorrect.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION C — Mixed exam traps
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "C",
+        question:
+          "Which sentence is correctly punctuated?",
+        options: {
+          A: "\"Stop right there\" the officer shouted.",
+          B: "\"Stop right there,\" the officer shouted.",
+          C: "\"Stop right there.\" the officer shouted.",
+          D: "Stop right there, the officer shouted.",
+        },
+        answer: "B",
+        explanation:
+          'When an imperative or statement is followed by a dialogue tag, a comma (not a full stop) ends the quoted speech inside the closing quotation mark, and the tag begins in lower case. "\"Stop right there,\" the officer shouted." follows this rule correctly. Option A omits the comma; Option C uses a full stop, which would require the tag to begin with a capital; Option D omits quotation marks entirely.',
+      },
+      {
+        section: "C",
+        question:
+          "Identify the sentence that is correctly punctuated throughout.",
+        options: {
+          A: "The coach said, \"train harder\" and the players agreed.",
+          B: "The coach said, \"Train harder,\" and the players agreed.",
+          C: "The coach said \"Train harder,\" and the players agreed.",
+          D: "The coach said, \"Train harder.\" And the players agreed.",
+        },
+        answer: "B",
+        explanation:
+          '"The coach said, \"Train harder,\" and the players agreed." applies all rules correctly: a comma follows the dialogue tag; the spoken words begin with a capital; a comma inside the closing quotation mark separates the speech from the continuing sentence; and "and" continues the main clause in lower case. Option A lacks a capital and a comma inside the quotes; Option C omits the comma after "said"; Option D creates a sentence fragment after the full stop.',
       },
     ],
   },

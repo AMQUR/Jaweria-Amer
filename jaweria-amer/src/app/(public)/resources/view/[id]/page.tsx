@@ -77,7 +77,11 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/70">{resource.description}</p>
           {isMcq && mcqSet && (
             <p className="mt-3 text-sm font-medium text-white/80">
-              {mcqSet.questions.length} questions · 3 sections · instant scoring
+              {mcqSet.questions.length} questions
+              {mcqSet.timeLimit
+                ? ` · ${mcqSet.timeLimit / 60} minutes`
+                : " · 3 sections"}
+              {" · instant scoring"}
             </p>
           )}
         </div>

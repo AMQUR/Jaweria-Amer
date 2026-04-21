@@ -1391,6 +1391,32 @@ const resourceLibrary: Resource[] = [
     description:
       "21 exam-level multiple-choice questions covering subject-verb agreement, apostrophes, affect/effect, dangling modifiers, tense consistency, and formal register — with instant scoring and explanations.",
   },
+  {
+    id: "mcq-sentence-comma-5min",
+    title: "5-Minute Drill: Sentences & Commas",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Grammar",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "10 questions · 5 minutes. Identify sentences vs fragments, place commas correctly, and fix common exam errors — built from real 1123 marking patterns.",
+  },
+  {
+    id: "mcq-punctuation-5min",
+    title: "5-Minute Drill: Punctuation",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Punctuation",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "10 questions · 5 minutes. Dialogue format, em dashes, colons, and comma rules — the marks most students leave on the table.",
+  },
   ...supplementalHubResources,
 ];
 
