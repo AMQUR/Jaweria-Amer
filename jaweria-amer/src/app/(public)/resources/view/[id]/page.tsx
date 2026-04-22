@@ -6,7 +6,6 @@ import { ResourceViewTracker } from "@/components/analytics/resource-view-tracke
 import { McqViewer } from "@/components/mcq-viewer";
 import { getPublicMcqSets, getPublicResources } from "@/lib/public-cms";
 import { formatDisplayTitle } from "@/lib/resource-ingestion";
-import { publicFileAbsoluteUrl } from "@/lib/public-asset-url";
 
 type Params = Promise<{ id: string }>;
 export const dynamic = "force-dynamic";
@@ -57,19 +56,32 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
   if (isMcq && !mcq) {
     console.error("Missing MCQ set:", resource.id);
   }
-  const validPdfUrl =
-    !isMcq && typeof resource.fileUrl === "string" && resource.fileUrl.startsWith("/resources/")
-      ? resource.fileUrl
-      : null;
+  if (!isMcq && !resource?.fileUrl) {
+    return (
+      <div className="min-h-screen bg-cream">
+        <ResourceViewTracker id={resource.id} title={displayTitle} />
+        <section className="border-b border-border/70 bg-crimson pb-8 pt-24 text-white sm:pt-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <Link
+              href="/resources"
+              className="mb-6 inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-rose"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden />
+              Back to resources
+            </Link>
+            <h1 className="font-serif text-2xl font-bold leading-snug sm:text-3xl">{displayTitle}</h1>
+          </div>
+        </section>
+        <div className="p-6 text-center">
+          <p>File not found.</p>
+        </div>
+      </div>
+    );
+  }
 
-  // Only resolve the PDF URL for non-MCQ resources
-  const gviewSrc = isMcq
-    ? null
-    : validPdfUrl
-      ? await publicFileAbsoluteUrl(validPdfUrl).then(
-        (abs) => `https://docs.google.com/gview?url=${encodeURIComponent(abs)}&embedded=true`
-        )
-      : null;
+  if (!isMcq && resource.fileUrl) {
+    console.log("PDF URL:", resource.fileUrl);
+  }
 
   return (
     <div className="min-h-screen bg-cream">
@@ -111,17 +123,15 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
               This assessment is not properly configured.
             </p>
           </div>
-        ) : gviewSrc ? (
-          <iframe
-            title={displayTitle}
-            src={gviewSrc!}
-            className="h-[80vh] w-full rounded-xl border border-border/80 bg-white shadow-sm"
-            allow="fullscreen"
-          />
         ) : (
-          <p className="py-24 text-center text-sm text-slate">
-            This resource file is unavailable right now. Please contact us if you need immediate access.
-          </p>
+          <div className="w-full h-[90vh]">
+            <iframe
+              title={displayTitle}
+              src={resource.fileUrl}
+              className="h-full w-full rounded-xl border border-border/80 bg-white shadow-sm"
+              allow="fullscreen"
+            />
+          </div>
         )}
       </div>
     </div>
