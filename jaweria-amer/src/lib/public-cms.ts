@@ -51,14 +51,14 @@ async function getSanitizedOrRawStatic(): Promise<Resource[]> {
   if (sanitized.length > 0) {
     return sanitized;
   }
-  if (base.length > 0) {
-    console.warn("public-cms: sanitized static was empty; using raw static resource list for public display");
-    return base;
-  }
-  return [];
+  // Never return [] — always serve raw static as last resort
+  console.warn("public-cms: sanitized static was empty; using raw static resource list for public display");
+  return base;
 }
 
 export async function getPublicResources(): Promise<Resource[]> {
+  const rawStatic = getStaticResources();
+
   try {
     const cmsData = await getCmsResources();
     const cmsResources = cmsData?.filter((item) => !item.deleted && item.visibility === "published") ?? [];
@@ -83,21 +83,24 @@ export async function getPublicResources(): Promise<Resource[]> {
     );
 
     const staticRes = await getSanitizedOrRawStatic();
+    const byId = new Map<string, Resource>();
+    for (const r of staticRes) {
+      if (r?.id) byId.set(r.id, r);
+    }
     if (Array.isArray(fromCms) && fromCms.length > 0) {
-      const byId = new Map<string, Resource>();
-      for (const r of staticRes) {
-        if (r?.id) byId.set(r.id, r);
-      }
       for (const r of fromCms) {
         if (r?.id) byId.set(r.id, r);
       }
-      return Array.from(byId.values());
+    } else {
+      console.error("CMS public list empty after sanitize, using static fallback");
     }
-    console.error("CMS public list empty after sanitize, using static fallback");
-    return staticRes;
+    const merged = Array.from(byId.values());
+    // Never return [] — raw static is the absolute last resort
+    return merged.length > 0 ? merged : rawStatic;
   } catch (error) {
     console.error("CMS failed, using static fallback", error);
-    return getSanitizedOrRawStatic();
+    const fallback = await getSanitizedOrRawStatic();
+    return fallback.length > 0 ? fallback : rawStatic;
   }
 }
 
