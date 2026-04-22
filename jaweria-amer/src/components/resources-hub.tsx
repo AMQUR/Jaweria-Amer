@@ -46,6 +46,10 @@ const TOPICALS_SECTION_ORDER = [
   "General Writing",
   "General Reading",
 ] as const;
+const GUIDED_SECTION_ORDER = [
+  ...TOPICALS_SECTION_ORDER,
+  "Specimen",
+] as const;
 
 const START_PATHWAYS: {
   id: string;
@@ -114,6 +118,22 @@ const topicBrowseCardClass = (active: boolean) =>
     active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
   );
 
+const previewPillClass = (active: boolean) =>
+  cn(
+    "rounded-xl border bg-white px-4 py-3 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:border-border hover:shadow-[0_4px_18px_rgba(34,16,18,0.06)]",
+    active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
+  );
+
+function sortSections(values: string[]) {
+  return [...values].sort((a, b) => {
+    const ai = GUIDED_SECTION_ORDER.indexOf(a as (typeof GUIDED_SECTION_ORDER)[number]);
+    const bi = GUIDED_SECTION_ORDER.indexOf(b as (typeof GUIDED_SECTION_ORDER)[number]);
+    const av = ai === -1 ? Number.MAX_SAFE_INTEGER : ai;
+    const bv = bi === -1 ? Number.MAX_SAFE_INTEGER : bi;
+    return av === bv ? a.localeCompare(b) : av - bv;
+  });
+}
+
 export function ResourcesHub() {
   const [category, setCategory] = useState<ResourceHubCategory | "all">("all");
   const [notesSubCategory, setNotesSubCategory] = useState<NotesSubCategoryFilter>("unset");
@@ -145,6 +165,15 @@ export function ResourcesHub() {
     () => (category === "all" ? [] : resources.filter((r) => r.category === category)),
     [category]
   );
+  const guidedPreviewResources = useMemo(() => {
+    if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
+    return scopedForFilters.filter((r) => {
+      if (subject !== "all" && r.subject !== subject) return false;
+      if (level !== "all" && r.level !== level) return false;
+      if (year !== "all" && r.year !== year) return false;
+      return true;
+    });
+  }, [category, scopedForFilters, subject, level, year]);
 
   const subjectOptions = useMemo(() => uniqueSorted(scopedForFilters.map((r) => r.subject)), [scopedForFilters]);
   const levelOptions = useMemo(() => uniqueSorted(scopedForFilters.map((r) => r.level)), [scopedForFilters]);
@@ -175,14 +204,27 @@ export function ResourcesHub() {
       )
     );
 
-    return [...sections].sort((a, b) => {
-      const ai = TOPICALS_SECTION_ORDER.indexOf(a as (typeof TOPICALS_SECTION_ORDER)[number]);
-      const bi = TOPICALS_SECTION_ORDER.indexOf(b as (typeof TOPICALS_SECTION_ORDER)[number]);
-      const av = ai === -1 ? Number.MAX_SAFE_INTEGER : ai;
-      const bv = bi === -1 ? Number.MAX_SAFE_INTEGER : bi;
-      return av === bv ? a.localeCompare(b) : av - bv;
-    });
+    return sortSections(sections);
   }, [category, paper, scopedForFilters]);
+
+  const guidedPaperSections = useMemo(() => {
+    if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
+    return ["Paper 1", "Paper 2"]
+      .map((paperName) => {
+        const sections = sortSections(
+          Array.from(
+            new Set(
+              guidedPreviewResources
+                .filter((r) => r.paper === paperName)
+                .map((r) => r.section)
+                .filter((value): value is string => Boolean(value))
+            )
+          )
+        );
+        return { paper: paperName, sections };
+      })
+      .filter((entry) => entry.sections.length > 0);
+  }, [category, guidedPreviewResources]);
 
   function selectCategory(next: ResourceHubCategory | "all") {
     setCategory(next);
@@ -253,11 +295,11 @@ export function ResourcesHub() {
     selectCategory("all");
   }
 
-  let emptyState = "Choose a category above to start exploring resources.";
+  let emptyState = "";
   if (category === "general-notes" && notesSubCategory === "unset") {
     emptyState = "Choose a notes topic above to see the files in that area.";
   } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && paper === "all") {
-    emptyState = "Select Paper 1 or Paper 2 to continue.";
+    emptyState = "Choose a paper to begin targeted practice.";
   } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all") {
     emptyState = "Select a section to see the matching files.";
   } else if (category !== "all") {
@@ -367,127 +409,196 @@ export function ResourcesHub() {
           </div>
         )}
 
-        <div
-          id="resource-filters"
-          className="mb-12 rounded-xl border border-border/70 bg-white p-5 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-6"
-        >
-          <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Refine</p>
-              <h2 className="mt-1 font-serif text-lg font-semibold text-ink">Filters</h2>
-            </div>
-            <button
-              type="button"
-              onClick={resetFilters}
-              className="self-start text-xs font-medium text-slate underline-offset-4 transition-colors hover:text-ink sm:self-auto"
-            >
-              Reset all
-            </button>
-          </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            <label className="block space-y-1">
-              <span className="text-xs font-medium text-slate">Subject</span>
-              <select className={selectClass} value={subject} onChange={(e) => setSubject(e.target.value)}>
-                <option value="all">All subjects</option>
-                {subjectOptions.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block space-y-1">
-              <span className="text-xs font-medium text-slate">Level</span>
-              <select className={selectClass} value={level} onChange={(e) => setLevel(e.target.value)}>
-                <option value="all">All levels</option>
-                {levelOptions.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block space-y-1">
-              <span className="text-xs font-medium text-slate">
-                {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? "Step 1: Paper" : "Paper"}
-              </span>
-              <select
-                className={selectClass}
-                value={paper}
-                onChange={(e) => {
-                  setPaper(e.target.value);
-                  setSection("all");
-                }}
+        {category !== "all" && (
+          <div
+            id="resource-filters"
+            className="mb-12 rounded-xl border border-border/70 bg-white p-5 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-6"
+          >
+            <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Refine</p>
+                <h2 className="mt-1 font-serif text-lg font-semibold text-ink">Filters</h2>
+              </div>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="self-start text-xs font-medium text-slate underline-offset-4 transition-colors hover:text-ink sm:self-auto"
               >
-                <option value="all">
-                  {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)
-                    ? "Select a paper"
-                    : "All papers"}
-                </option>
-                {paperOptions.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="block space-y-1">
-              <span className="text-xs font-medium text-slate">
-                {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? "Step 2: Section" : "Year"}
-              </span>
-              {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? (
-                <select className={selectClass} value={section} onChange={(e) => setSection(e.target.value)}>
-                  <option value="all">Select a section</option>
-                  {sectionOptions.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <select className={selectClass} value={year} onChange={(e) => setYear(e.target.value)}>
-                  <option value="all">All years</option>
-                  {yearOptions.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              )}
-            </label>
-          </div>
-          {category === "general-notes" && (
-            <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:max-w-xs">
+                Reset all
+              </button>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <label className="block space-y-1">
-                <span className="text-xs font-medium text-slate">Note focus</span>
-                <select
-                  className={selectClass}
-                  value={notesSubCategory}
-                  onChange={(e) => setNotesSubCategory(e.target.value as NotesSubCategoryFilter)}
-                >
-                  <option value="unset">Choose a topic</option>
-                  {NOTES_SUBCATEGORY_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
+                <span className="text-xs font-medium text-slate">Subject</span>
+                <select className={selectClass} value={subject} onChange={(e) => setSubject(e.target.value)}>
+                  <option value="all">All subjects</option>
+                  {subjectOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
                     </option>
                   ))}
                 </select>
               </label>
+              <label className="block space-y-1">
+                <span className="text-xs font-medium text-slate">Level</span>
+                <select className={selectClass} value={level} onChange={(e) => setLevel(e.target.value)}>
+                  <option value="all">All levels</option>
+                  {levelOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block space-y-1">
+                <span className="text-xs font-medium text-slate">
+                  {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? "Step 1: Paper" : "Paper"}
+                </span>
+                <select
+                  className={selectClass}
+                  value={paper}
+                  onChange={(e) => {
+                    setPaper(e.target.value);
+                    setSection("all");
+                  }}
+                >
+                  <option value="all">
+                    {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)
+                      ? "Select a paper"
+                      : "All papers"}
+                  </option>
+                  {paperOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="block space-y-1">
+                <span className="text-xs font-medium text-slate">
+                  {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? "Step 2: Section" : "Year"}
+                </span>
+                {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? (
+                  <select className={selectClass} value={section} onChange={(e) => setSection(e.target.value)}>
+                    <option value="all">Select a section</option>
+                    {sectionOptions.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <select className={selectClass} value={year} onChange={(e) => setYear(e.target.value)}>
+                    <option value="all">All years</option>
+                    {yearOptions.map((s) => (
+                      <option key={s} value={s}>
+                        {s}
+                      </option>
+                    ))}
+                  </select>
+                )}
+              </label>
             </div>
-          )}
-          {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && (
-            <p className="mt-3 text-xs leading-relaxed text-slate">
-              Complete both steps before files appear.
-            </p>
-          )}
-        </div>
+            {category === "general-notes" && (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:max-w-xs">
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-slate">Note focus</span>
+                  <select
+                    className={selectClass}
+                    value={notesSubCategory}
+                    onChange={(e) => setNotesSubCategory(e.target.value as NotesSubCategoryFilter)}
+                  >
+                    <option value="unset">Choose a topic</option>
+                    {NOTES_SUBCATEGORY_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            )}
+            {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && (
+              <p className="mt-3 text-xs leading-relaxed text-slate">
+                Complete both steps before files appear.
+              </p>
+            )}
+          </div>
+        )}
 
         <div id="resource-grid" className="scroll-mt-24 sm:scroll-mt-28">
-          {filtered.length > 0 ? (
+          {category === "all" ? (
+            <div className="py-10 text-center sm:py-14">
+              <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
+                Explore Resources
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate">
+                Choose a category to begin your preparation.
+              </p>
+            </div>
+          ) : filtered.length > 0 ? (
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {filtered.map((r) => (
                 <ResourceCard key={r.id} resource={r} />
               ))}
+            </div>
+          ) : GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && paper === "all" ? (
+            <div className="rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:p-8">
+              <p className="text-center text-sm leading-relaxed text-slate">{emptyState}</p>
+              <div className="mt-8 grid gap-6 lg:grid-cols-2">
+                {guidedPaperSections.map((paperEntry) => (
+                  <div key={paperEntry.paper} className="space-y-3">
+                    <h3 className="font-serif text-lg font-semibold text-ink">{paperEntry.paper}</h3>
+                    <div className="grid gap-3">
+                      {paperEntry.sections.map((sectionName) => {
+                        const count = guidedPreviewResources.filter(
+                          (r) => r.paper === paperEntry.paper && r.section === sectionName
+                        ).length;
+                        return (
+                          <button
+                            key={`${paperEntry.paper}-${sectionName}`}
+                            type="button"
+                            onClick={() => {
+                              setPaper(paperEntry.paper);
+                              setSection(sectionName);
+                              requestAnimationFrame(() => scrollToResourceGrid());
+                            }}
+                            className={previewPillClass(false)}
+                          >
+                            <p className="font-serif text-sm font-semibold text-ink">{sectionName}</p>
+                            <p className="mt-1 text-xs text-slate">{count} resources</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all" ? (
+            <div className="rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:p-8">
+              <p className="text-center text-sm leading-relaxed text-slate">Select a section to continue.</p>
+              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {sectionOptions.map((sectionName) => {
+                  const count = guidedPreviewResources.filter(
+                    (r) => r.paper === paper && r.section === sectionName
+                  ).length;
+                  return (
+                    <button
+                      key={`${paper}-${sectionName}`}
+                      type="button"
+                      onClick={() => {
+                        setSection(sectionName);
+                        requestAnimationFrame(() => scrollToResourceGrid());
+                      }}
+                      className={previewPillClass(section === sectionName)}
+                    >
+                      <p className="font-serif text-sm font-semibold text-ink">{sectionName}</p>
+                      <p className="mt-1 text-xs text-slate">{count} resources</p>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           ) : (
             <p className="py-16 text-center text-sm text-slate">{emptyState}</p>
