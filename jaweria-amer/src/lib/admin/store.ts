@@ -183,18 +183,40 @@ export const defaultSettings: SiteSettings = {
   stats: defaultSettingsFromFile.stats.map((s) => ({ value: s.value, label: s.label })),
 };
 
+/** Store and read stat values as plain text (e.g. "95%", "500+") — no numeric parsing. */
+function toStatString(v: unknown): string {
+  if (v == null) return "";
+  return String(v);
+}
+
 export async function getSettings(): Promise<SiteSettings> {
   const raw = await readJSON<SiteSettings | null | undefined>("settings.json", defaultSettings);
   if (!raw || typeof raw !== "object") {
     return defaultSettings;
   }
-  const stats = (raw as SiteSettings).stats;
+  const r = raw as SiteSettings;
+  const data = raw as { stats?: unknown };
+  const rawList = Array.isArray(data.stats) ? (data.stats as { value?: unknown; label?: unknown }[]) : [];
+  const stats = rawList.map((s) => ({
+    value: toStatString(s?.value),
+    label: toStatString(s?.label),
+  }));
   return {
-    whatsappNumber: String((raw as SiteSettings).whatsappNumber ?? defaultSettings.whatsappNumber),
-    stats: Array.isArray(stats) ? stats : defaultSettings.stats,
+    whatsappNumber: String(r.whatsappNumber ?? defaultSettings.whatsappNumber),
+    stats: stats.length > 0 ? stats : defaultSettings.stats.map((s) => ({ value: s.value, label: s.label })),
   };
 }
 
 export async function saveSettings(settings: SiteSettings): Promise<void> {
-  await writeJSON("settings.json", settings);
+  const stats = Array.isArray(settings.stats)
+    ? settings.stats.map((s) => ({
+        value: toStatString(s?.value),
+        label: toStatString(s?.label),
+      }))
+    : [];
+  const normalized: SiteSettings = {
+    whatsappNumber: toStatString(settings.whatsappNumber) || defaultSettings.whatsappNumber,
+    stats,
+  };
+  await writeJSON("settings.json", normalized);
 }

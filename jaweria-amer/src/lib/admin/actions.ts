@@ -210,26 +210,47 @@ export async function deleteLeadAction(id: string) {
 
 // --- Settings actions ---
 
+const statEntrySchema = z.object({
+  value: z.preprocess(
+    (v) => (v == null || v === undefined ? "" : String(v)).trim(),
+    z.string().min(1, "Value is required")
+  ),
+  label: z.preprocess(
+    (v) => (v == null || v === undefined ? "" : String(v)).trim(),
+    z.string().min(1, "Label is required")
+  ),
+});
+
 const settingsSchema = z.object({
-  whatsappNumber: z.string().min(10, "Invalid phone number").max(15),
-  stats: z.array(z.object({
-    value: z.string().min(1),
-    label: z.string().min(1),
-  })).min(1).max(6),
+  whatsappNumber: z.preprocess(
+    (v) => (v == null || v === undefined ? "" : String(v)).trim(),
+    z.string().min(10, "Invalid phone number").max(15)
+  ),
+  stats: z.array(statEntrySchema).min(1).max(6),
 });
 
 export async function saveSettingsAction(_prev: unknown, formData: FormData) {
-  const statsCount = parseInt(formData.get("statsCount") as string) || 0;
-  const stats = [];
+  const statsCountStr = String(formData.get("statsCount") ?? "0");
+  let statsCount = 0;
+  for (let p = 0; p < statsCountStr.length; p++) {
+    const digit = statsCountStr.charCodeAt(p) - 48;
+    if (digit < 0 || digit > 9) {
+      statsCount = 0;
+      break;
+    }
+    statsCount = statsCount * 10 + digit;
+  }
+  statsCount = Math.min(6, Math.max(0, statsCount));
+  const stats: { value: string; label: string }[] = [];
   for (let i = 0; i < statsCount; i++) {
     stats.push({
-      value: formData.get(`stat_value_${i}`) as string,
-      label: formData.get(`stat_label_${i}`) as string,
+      value: String(formData.get(`stat_value_${i}`) ?? ""),
+      label: String(formData.get(`stat_label_${i}`) ?? ""),
     });
   }
 
   const parsed = settingsSchema.safeParse({
-    whatsappNumber: formData.get("whatsappNumber"),
+    whatsappNumber: String(formData.get("whatsappNumber") ?? ""),
     stats,
   });
 

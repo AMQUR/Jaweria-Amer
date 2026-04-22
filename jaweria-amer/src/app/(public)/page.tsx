@@ -125,12 +125,12 @@ export default async function HomePage() {
       <section className="border-b border-border/70 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
           <div className="premium-reveal grid grid-cols-2 gap-10 lg:grid-cols-4 lg:gap-12">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="mb-1.5 font-serif text-3xl font-semibold tabular-nums text-crimson sm:text-[2.1rem]">
-                  {stat.value}
-                </p>
-                <p className="text-sm leading-snug text-slate">{stat.label}</p>
+            {stats.map((stat, i) => (
+              <div key={`ticker-${i}`} className="text-center">
+                <h3 className="mb-1.5 font-serif text-3xl font-semibold text-crimson sm:text-[2.1rem]">
+                  {String(stat.value ?? "")}
+                </h3>
+                <p className="text-sm leading-snug text-slate">{String(stat.label ?? "")}</p>
               </div>
             ))}
           </div>

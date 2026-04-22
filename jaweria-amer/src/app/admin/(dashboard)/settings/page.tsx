@@ -71,7 +71,7 @@ export default function SettingsPage() {
   function updateStat(index: number, field: "value" | "label", val: string) {
     if (!settings) return;
     const newStats = [...settings.stats];
-    newStats[index] = { ...newStats[index], [field]: val };
+    newStats[index] = { ...newStats[index], [field]: String(val) };
     setSettings({ ...settings, stats: newStats });
   }
 
@@ -140,7 +140,7 @@ export default function SettingsPage() {
                     <Input
                       id={`stat_value_${i}`}
                       name={`stat_value_${i}`}
-                      value={stat.value}
+                      value={String(stat.value ?? "")}
                       onChange={(e) => updateStat(i, "value", e.target.value)}
                       placeholder="95%"
                       required
@@ -151,7 +151,7 @@ export default function SettingsPage() {
                     <Input
                       id={`stat_label_${i}`}
                       name={`stat_label_${i}`}
-                      value={stat.label}
+                      value={String(stat.label ?? "")}
                       onChange={(e) => updateStat(i, "label", e.target.value)}
                       placeholder="Students scored A*/A"
                       required
