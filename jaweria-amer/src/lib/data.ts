@@ -29,15 +29,20 @@ export type ResourceHubCategory =
   | "yearly-past-papers"
   | "examiner-reports"
   | "checklists"
-  | "quick-worksheets";
+  | "quick-worksheets"
+  | "vocabulary";
 
-/** Sub-type for vault items in `general-notes` (optional; inferred when omitted). */
+/** Sub-type for vault items in `general-notes` and `vocabulary` (optional; inferred when omitted). */
 export type ResourceNotesSubCategory =
   | "summary-writing"
   | "comprehension"
   | "essay-writing"
   | "directed-writing"
-  | "grammar";
+  | "grammar"
+  | "comprehension-vocabulary"
+  | "essay-vocabulary"
+  | "general-vocabulary"
+  | "checklists";
 
 export interface Resource {
   id: string;
@@ -88,8 +93,13 @@ export const RESOURCE_HUB_CATEGORIES: {
   },
   {
     id: "quick-worksheets",
-    label: "Quick Worksheets — MCQs",
-    blurb: "Interactive multiple-choice assessments with instant scoring and explanations.",
+    label: "Quick Worksheets",
+    blurb: "Interactive MCQ assessments and PDF checklists with instant scoring and explanations.",
+  },
+  {
+    id: "vocabulary",
+    label: "Vocabulary",
+    blurb: "Targeted vocabulary lists and banks for comprehension, essay writing, and general use.",
   },
 ];
 

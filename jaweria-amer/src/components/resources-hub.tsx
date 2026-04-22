@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  BookMarked,
   BookOpen,
   Brain,
   ClipboardList,
@@ -34,6 +35,7 @@ const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   "examiner-reports": FileSearch,
   checklists: ClipboardList,
   "quick-worksheets": Brain,
+  vocabulary: BookMarked,
 };
 
 const GUIDED_SECTION_CATEGORIES = new Set<ResourceHubCategory>(["topicals", "checklists"]);
@@ -110,6 +112,18 @@ const NOTES_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string }[] = [
   { id: "essay-writing", label: "Essay Writing" },
   { id: "directed-writing", label: "Directed Writing" },
   { id: "grammar", label: "Grammar" },
+];
+
+const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; description: string }[] = [
+  { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },
+  { id: "essay-vocabulary", label: "Essay Vocabulary", description: "Expressive vocabulary for writing tasks." },
+  { id: "general-vocabulary", label: "General Vocabulary", description: "Broad vocabulary banks for all paper tasks." },
+];
+
+const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
+  { value: "comprehension-vocabulary", label: "Comprehension Vocabulary" },
+  { value: "essay-vocabulary", label: "Essay Vocabulary" },
+  { value: "general-vocabulary", label: "General Vocabulary" },
 ];
 
 const topicBrowseCardClass = (active: boolean) =>
@@ -282,7 +296,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     const basePool = category === "topicals" ? filteredResources : scopedForResults;
 
     return basePool.filter((r) => {
-      if (category === "general-notes") {
+      if (category === "general-notes" || category === "vocabulary") {
         if (notesSubCategory === "unset") return false;
         if (r.subCategory !== notesSubCategory) return false;
       }
@@ -319,6 +333,8 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   let emptyState = "";
   if (category === "general-notes" && notesSubCategory === "unset") {
     emptyState = "Choose a notes topic above to see the files in that area.";
+  } else if (category === "vocabulary" && notesSubCategory === "unset") {
+    emptyState = "Choose a vocabulary topic above to see the files in that area.";
   } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && paper === "all") {
     emptyState = "Choose a paper to begin targeted practice.";
   } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all" && category !== "topicals") {
@@ -430,6 +446,36 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
           </div>
         )}
 
+        {category === "vocabulary" && (
+          <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
+            <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
+              Browse Vocabulary by Type
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
+              Pick a vocabulary type to open the matching files.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {VOCABULARY_TOPIC_BLOCKS.map((topic) => {
+                const active = notesSubCategory === topic.id;
+                return (
+                  <button
+                    key={topic.id}
+                    type="button"
+                    onClick={() => handleTopicTileClick(topic.id)}
+                    className={cn(
+                      topicBrowseCardClass(active),
+                      topicTapId === topic.id && "resource-topic-tap-active"
+                    )}
+                  >
+                    <p className="font-serif text-sm font-semibold text-ink">{topic.label}</p>
+                    <p className="mt-1.5 text-xs leading-relaxed text-slate">{topic.description}</p>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {category !== "all" && (
           <div
             id="resource-filters"
@@ -531,6 +577,25 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   >
                     <option value="unset">Choose a topic</option>
                     {NOTES_SUBCATEGORY_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+            )}
+            {category === "vocabulary" && (
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:max-w-xs">
+                <label className="block space-y-1">
+                  <span className="text-xs font-medium text-slate">Vocabulary focus</span>
+                  <select
+                    className={selectClass}
+                    value={notesSubCategory}
+                    onChange={(e) => setNotesSubCategory(e.target.value as NotesSubCategoryFilter)}
+                  >
+                    <option value="unset">Choose a type</option>
+                    {VOCABULARY_SUBCATEGORY_OPTIONS.map((opt) => (
                       <option key={opt.value} value={opt.value}>
                         {opt.label}
                       </option>

@@ -26,6 +26,7 @@ const CATEGORY_TO_FOLDER: Record<CmsResourceCategory, string> = {
   "examiner-reports": "scripts",
   checklists: "marking-schemes",
   "quick-worksheets": "mcq",
+  vocabulary: "vocabulary",
 };
 
 function nowIso() {

@@ -12,7 +12,8 @@ export const CMS_RESOURCE_CATEGORY_LABELS: Record<CmsResourceCategory, string> =
   "yearly-past-papers": "Yearlies",
   "examiner-reports": "Scripts",
   checklists: "Marking Schemes",
-  "quick-worksheets": "Quick Worksheets — MCQs",
+  "quick-worksheets": "Quick Worksheets",
+  vocabulary: "Vocabulary",
 };
 
 export const CMS_RESOURCE_CATEGORY_OPTIONS: { value: CmsResourceCategory; label: string }[] = [
@@ -21,7 +22,8 @@ export const CMS_RESOURCE_CATEGORY_OPTIONS: { value: CmsResourceCategory; label:
   { value: "yearly-past-papers", label: "Yearlies" },
   { value: "examiner-reports", label: "Scripts" },
   { value: "checklists", label: "Marking Schemes" },
-  { value: "quick-worksheets", label: "Quick Worksheets — MCQs" },
+  { value: "quick-worksheets", label: "Quick Worksheets" },
+  { value: "vocabulary", label: "Vocabulary" },
 ];
 
 export const CMS_NOTES_SUBCATEGORY_OPTIONS: {
