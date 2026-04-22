@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function ResourcesPage() {
-  const resources = await getPublicResources();
+  const resources = (await getPublicResources()) ?? [];
 
   return (
     <>
@@ -117,8 +117,22 @@ export default async function ResourcesPage() {
           </div>
         </div>
       </section>
-
-      <ResourcesHub resources={resources} />
+      {resources.length === 0 ? (
+        <section className="bg-cream py-16 sm:py-24">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="rounded-2xl border border-border/60 bg-white p-6 text-center shadow-sm sm:p-8">
+              <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
+                Loading resources...
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate">
+                The resource library is loading safely. Please refresh shortly if files do not appear.
+              </p>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <ResourcesHub resources={resources} />
+      )}
     </>
   );
 }

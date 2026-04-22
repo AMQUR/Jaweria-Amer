@@ -44,10 +44,23 @@ const bodyLead = "text-sm leading-relaxed text-slate sm:text-base sm:leading-rel
 export default async function HomePage() {
   const featuredCourses = listMarketingCourses(courses).filter((c) => c.featured);
   const [settings, homepageContent] = await Promise.all([getSettings(), getHomepageContent()]);
+  const stats = settings?.stats ?? [];
+  const safeHomepageContent = homepageContent ?? {
+    heroKicker: siteConfig.brandSubtitle,
+    heroTitlePrimary: "Master CAIE English",
+    heroTitleSecondary: "with Clarity and Care",
+    heroDescription:
+      "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
+    primaryCtaText: "Book a Clarity Call",
+    primaryCtaLink: "/contact/whatsapp-primary",
+    secondaryCtaText: "Join WhatsApp group",
+    secondaryCtaLink: "/contact/whatsapp-group",
+    bannerImagePath: "/images/homepage-banner.png",
+  };
 
   return (
     <>
-      <WorkshopPromoSection bannerImagePath={homepageContent.bannerImagePath} />
+      <WorkshopPromoSection bannerImagePath={safeHomepageContent.bannerImagePath} />
 
       {/* Hero */}
       <section className="relative overflow-hidden pt-14 pb-24 sm:pt-20 sm:pb-32 lg:pt-24 lg:pb-36">
@@ -63,37 +76,37 @@ export default async function HomePage() {
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
             <p className="premium-reveal mb-5 max-w-xl text-[11px] font-semibold leading-snug tracking-wide text-white/75 sm:mb-6 sm:text-xs">
-              {homepageContent.heroKicker}
+              {safeHomepageContent.heroKicker}
             </p>
             <h1 className="premium-reveal premium-reveal-delay-1 mb-6 font-serif text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl sm:leading-[1.06] lg:text-[2.95rem] lg:leading-[1.04]">
-              {homepageContent.heroTitlePrimary}
-              <span className="mt-2 block font-normal text-white/90">{homepageContent.heroTitleSecondary}</span>
+              {safeHomepageContent.heroTitlePrimary}
+              <span className="mt-2 block font-normal text-white/90">{safeHomepageContent.heroTitleSecondary}</span>
             </h1>
             <p className="premium-reveal premium-reveal-delay-2 mb-9 max-w-xl text-sm leading-relaxed text-white/72 sm:mb-11 sm:text-base sm:leading-relaxed lg:text-lg">
-              {homepageContent.heroDescription}
+              {safeHomepageContent.heroDescription}
             </p>
             <div className="premium-reveal premium-reveal-delay-3 flex flex-col gap-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <TrackedWhatsAppLink
-                  href={homepageContent.primaryCtaLink === "/contact/whatsapp-primary" ? whatsAppUrl() : homepageContent.primaryCtaLink}
+                  href={safeHomepageContent.primaryCtaLink === "/contact/whatsapp-primary" ? whatsAppUrl() : safeHomepageContent.primaryCtaLink}
                   location="home_hero"
                   variant="direct"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 >
-                  {homepageContent.primaryCtaText}
+                  {safeHomepageContent.primaryCtaText}
                   <ArrowRight className="h-4 w-4" />
                 </TrackedWhatsAppLink>
                 <TrackedWhatsAppLink
-                  href={homepageContent.secondaryCtaLink === "/contact/whatsapp-group" ? whatsAppGroupUrl() : homepageContent.secondaryCtaLink}
+                  href={safeHomepageContent.secondaryCtaLink === "/contact/whatsapp-group" ? whatsAppGroupUrl() : safeHomepageContent.secondaryCtaLink}
                   location="home_hero"
                   variant="group"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-[2px] shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/35 hover:bg-white/16 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 >
-                  {homepageContent.secondaryCtaText}
+                  {safeHomepageContent.secondaryCtaText}
                 </TrackedWhatsAppLink>
               </div>
               <Link
@@ -112,7 +125,7 @@ export default async function HomePage() {
       <section className="border-b border-border/70 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
           <div className="premium-reveal grid grid-cols-2 gap-10 lg:grid-cols-4 lg:gap-12">
-            {settings.stats.map((stat) => (
+            {stats.map((stat) => (
               <div key={stat.label} className="text-center">
                 <p className="mb-1.5 font-serif text-3xl font-semibold tabular-nums text-crimson sm:text-[2.1rem]">
                   {stat.value}

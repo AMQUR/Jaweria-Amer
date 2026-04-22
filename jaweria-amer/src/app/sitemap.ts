@@ -7,7 +7,7 @@ import { getSiteUrl } from "@/lib/site-url";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl().href.replace(/\/$/, "");
   const lastModified = new Date();
-  const resources = await getPublicResources();
+  const resources = (await getPublicResources()) ?? [];
 
   const staticPaths = ["", "/about", "/courses", "/resources", "/privacy", "/terms"] as const;
 
@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
   }
 
-  for (const resource of resources) {
+  for (const resource of resources.filter((item) => item && item.id)) {
     entries.push({
       url: `${base}/resources/view/${resource.id}`,
       lastModified,

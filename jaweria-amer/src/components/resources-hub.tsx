@@ -156,14 +156,25 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     };
   }, []);
 
+  const safeResources = useMemo(
+    () =>
+      (resources ?? []).filter(
+        (resource) =>
+          Boolean(resource) &&
+          (resource.type === "mcq" ||
+            (typeof resource.fileUrl === "string" && resource.fileUrl.startsWith("/resources/")))
+      ),
+    [resources]
+  );
+
   const scopedForFilters = useMemo(
-    () => (category === "all" ? resources : resources.filter((r) => r.category === category)),
-    [category, resources]
+    () => (category === "all" ? safeResources : safeResources.filter((r) => r.category === category)),
+    [category, safeResources]
   );
 
   const scopedForResults = useMemo(
-    () => (category === "all" ? [] : resources.filter((r) => r.category === category)),
-    [category, resources]
+    () => (category === "all" ? [] : safeResources.filter((r) => r.category === category)),
+    [category, safeResources]
   );
   const guidedPreviewResources = useMemo(() => {
     if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
@@ -197,7 +208,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
 
     const sections = Array.from(
       new Set(
-        resources
+        safeResources
           .filter((r) => r.category === "topicals" && r.paper === paper)
           .map((r) => r.section)
           .filter((section): section is string => Boolean(section))
@@ -205,7 +216,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     );
 
     return sortSections(sections);
-  }, [category, paper, scopedForFilters, resources]);
+  }, [category, paper, scopedForFilters, safeResources]);
 
   const guidedPaperSections = useMemo(() => {
     if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
@@ -255,7 +266,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   const filtered = useMemo(() => {
     if (category === "all") return [];
 
-    const filteredResources = resources.filter((r) => {
+    const filteredResources = safeResources.filter((r) => {
       if (category !== "topicals") return true;
       if (r.category !== "topicals") return false;
       if (paper === "all") return false;
@@ -289,7 +300,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       if (year !== "all" && r.year !== year) return false;
       return true;
     });
-  }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year, resources]);
+  }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year, safeResources]);
 
   function resetFilters() {
     selectCategory("all");
@@ -527,7 +538,16 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         )}
 
         <div id="resource-grid" className="scroll-mt-24 sm:scroll-mt-28">
-          {category === "all" ? (
+          {!safeResources.length ? (
+            <div className="rounded-2xl border border-border/60 bg-white p-6 text-center shadow-sm sm:p-8">
+              <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
+                Loading resources...
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate">
+                Resources are being prepared safely. Please refresh in a moment if this takes longer than expected.
+              </p>
+            </div>
+          ) : category === "all" ? (
             <div className="py-10 text-center sm:py-14">
               <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
                 Explore Resources

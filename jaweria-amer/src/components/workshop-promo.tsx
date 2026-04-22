@@ -8,13 +8,17 @@ import { workshopRegisterUrl } from "@/lib/contact";
  */
 export function WorkshopPromoSection({ bannerImagePath = "/images/homepage-banner.png" }: { bannerImagePath?: string }) {
   const registerHref = workshopRegisterUrl();
+  const safeBannerImagePath =
+    typeof bannerImagePath === "string" && bannerImagePath.trim().startsWith("/")
+      ? bannerImagePath.trim()
+      : "/images/homepage-banner.png";
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-3 pt-20 sm:px-6 sm:pt-24 lg:px-8">
       <div className="premium-reveal overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
         <div className="relative w-full">
           <Image
-            src={bannerImagePath}
+            src={safeBannerImagePath}
             alt="O Level English Workshop Banner"
             width={1024}
             height={379}

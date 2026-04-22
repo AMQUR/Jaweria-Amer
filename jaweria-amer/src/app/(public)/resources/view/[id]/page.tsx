@@ -13,8 +13,8 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params;
-  const resources = await getPublicResources();
-  const resource = resources.find((r) => r.id === id);
+  const resources = (await getPublicResources()) ?? [];
+  const resource = (resources ?? []).find((r) => r?.id === id);
   if (!resource) return { title: "Resource" };
   const path = `/resources/view/${resource.id}`;
   const displayTitle = formatDisplayTitle(resource.title, resource.category);
@@ -40,21 +40,33 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function ResourceViewPage({ params }: { params: Params }) {
   const { id } = await params;
   const [resources, mcqSets] = await Promise.all([getPublicResources(), getPublicMcqSets()]);
-  const resource = resources.find((r) => r.id === id);
+  const safeResources = (resources ?? []).filter(
+    (resource) =>
+      Boolean(resource) &&
+      (resource.type === "mcq" ||
+        (typeof resource.fileUrl === "string" && resource.fileUrl.startsWith("/resources/")))
+  );
+  const resource = safeResources.find((r) => r.id === id);
   if (!resource) notFound();
 
   const displayTitle = formatDisplayTitle(resource.title, resource.category);
   const meta = [resource.level, resource.subject, resource.year, resource.paper].join(" · ");
 
   const isMcq = resource.type === "mcq";
-  const mcqSet = isMcq ? (mcqSets[resource.id] ?? null) : null;
+  const mcqSet = isMcq ? ((mcqSets ?? {})[resource.id] ?? null) : null;
+  const validPdfUrl =
+    !isMcq && typeof resource.fileUrl === "string" && resource.fileUrl.startsWith("/resources/")
+      ? resource.fileUrl
+      : null;
 
   // Only resolve the PDF URL for non-MCQ resources
   const gviewSrc = isMcq
     ? null
-    : await publicFileAbsoluteUrl(resource.fileUrl).then(
+    : validPdfUrl
+      ? await publicFileAbsoluteUrl(validPdfUrl).then(
         (abs) => `https://docs.google.com/gview?url=${encodeURIComponent(abs)}&embedded=true`
-      );
+        )
+      : null;
 
   return (
     <div className="min-h-screen bg-cream">
@@ -93,13 +105,17 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
           <p className="py-24 text-center text-sm text-slate">
             Assessment data not found. Please contact us if this problem persists.
           </p>
-        ) : (
+        ) : gviewSrc ? (
           <iframe
             title={displayTitle}
             src={gviewSrc!}
             className="h-[80vh] w-full rounded-xl border border-border/80 bg-white shadow-sm"
             allow="fullscreen"
           />
+        ) : (
+          <p className="py-24 text-center text-sm text-slate">
+            This resource file is unavailable right now. Please contact us if you need immediate access.
+          </p>
         )}
       </div>
     </div>
