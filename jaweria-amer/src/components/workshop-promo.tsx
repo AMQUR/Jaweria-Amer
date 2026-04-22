@@ -11,18 +11,18 @@ export function WorkshopPromoSection() {
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-3 pt-20 sm:px-6 sm:pt-24 lg:px-8">
-      <div className="premium-reveal overflow-hidden rounded-2xl border border-border/60 shadow-lg">
-        <div className="relative w-full aspect-video overflow-hidden rounded-2xl">
+      <div className="premium-reveal overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
+        <div className="relative w-full">
           <Image
             src="/images/homepage-banner.png"
             alt="O Level English Workshop Banner"
-            fill
+            width={1024}
+            height={379}
             priority
             quality={90}
             sizes="(max-width: 768px) 100vw, 1200px"
-            className="object-cover"
+            className="h-auto w-full object-contain"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         </div>
       </div>
 
