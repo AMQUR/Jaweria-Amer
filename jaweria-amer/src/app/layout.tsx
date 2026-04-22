@@ -16,55 +16,48 @@ const playfair = Playfair_Display({
   subsets: ["latin"],
 });
 
-export async function generateMetadata(): Promise<Metadata> {
-  const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
-  return {
-    metadataBase: getSiteUrl(),
-    icons: {
-      icon: "/favicon.png",
-      shortcut: "/favicon.png",
-      apple: "/favicon.png",
-    },
-    title: {
-      default: siteConfig.title,
-      template: `%s | ${siteConfig.name}`,
-    },
+export const metadata: Metadata = {
+  metadataBase: getSiteUrl(),
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: [
+    "O Level English Teacher Karachi",
+    "Best O Level English Teacher Karachi",
+    "CAIE English Tutor",
+    "Cambridge English Karachi",
+    "O Level English 1123",
+    "English Language Tuition Karachi",
+  ],
+  authors: [{ name: siteConfig.name }],
+  openGraph: {
+    siteName: siteConfig.name,
+    title: siteConfig.title,
     description: siteConfig.description,
-    keywords: [
-      "O Level English Teacher Karachi",
-      "Best O Level English Teacher Karachi",
-      "CAIE English Tutor",
-      "Cambridge English Karachi",
-      "O Level English 1123",
-      "English Language Tuition Karachi",
+    type: "website",
+    locale: "en_US",
+    url: "/",
+    images: [
+      {
+        url: "/icon.png",
+        width: 512,
+        height: 512,
+        alt: `${siteConfig.name} — Miss Jay`,
+      },
     ],
-    authors: [{ name: siteConfig.name }],
-    openGraph: {
-      siteName: siteConfig.name,
-      title: siteConfig.title,
-      description: siteConfig.description,
-      type: "website",
-      locale: "en_US",
-      url: "/",
-      images: [
-        {
-          url: "/favicon.png",
-          width: 512,
-          height: 512,
-          alt: `${siteConfig.name} — Miss Jay`,
-        },
-      ],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: siteConfig.title,
-      description: siteConfig.description,
-      images: ["/favicon.png"],
-    },
-    ...(googleVerification ? { verification: { google: googleVerification } } : {}),
-  };
-}
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: ["/icon.png"],
+  },
+  ...(googleVerification ? { verification: { google: googleVerification } } : {}),
+};
 
 export default function RootLayout({
   children,
