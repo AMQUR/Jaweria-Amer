@@ -244,8 +244,8 @@ export async function saveSettingsAction(_prev: unknown, formData: FormData) {
   const stats: { value: string; label: string }[] = [];
   for (let i = 0; i < statsCount; i++) {
     stats.push({
-      value: String(formData.get(`stat_value_${i}`) ?? ""),
-      label: String(formData.get(`stat_label_${i}`) ?? ""),
+      value: String(formData.get(`stat_value_${i}`) || "").trim(),
+      label: String(formData.get(`stat_label_${i}`) || "").trim(),
     });
   }
 
