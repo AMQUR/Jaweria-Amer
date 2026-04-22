@@ -188,8 +188,3 @@
     animation: resource-topic-tap 0.18s ease-out;
   }
 }
-
-/* Homepage workshop banner: WebKit contrast hint for small type / fine detail (scoped, not global). */
-img.workshop-banner-img {
-  image-rendering: -webkit-optimize-contrast;
-}

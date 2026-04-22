@@ -12,15 +12,15 @@ export function WorkshopPromoSection() {
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-3 pt-20 sm:px-6 sm:pt-24 lg:px-8">
       <div className="premium-reveal overflow-hidden rounded-2xl border border-border/60 shadow-lg">
-        <div className="relative aspect-video w-full overflow-hidden rounded-2xl">
+        <div className="relative w-full aspect-video overflow-hidden rounded-2xl">
           <Image
             src="/images/homepage-banner.png"
-            alt="Miss Jay O Level English Workshop — 5 to 7 day online and physical programme, syllabus revision, mock exams, and contact details on banner"
+            alt="O Level English Workshop Banner"
             fill
             priority
             quality={90}
             sizes="(max-width: 768px) 100vw, 1200px"
-            className="workshop-banner-img object-cover"
+            className="object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
         </div>
