@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { GoogleAnalytics } from "@/components/analytics/google-analytics";
 import { StructuredData } from "@/components/analytics/structured-data";
-import { siteConfig } from "@/lib/data";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -20,11 +19,13 @@ const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
-  title: {
-    default: siteConfig.title,
-    template: `%s | ${siteConfig.name}`,
+  title: "Jaweria Amer",
+  description:
+    "Cambridge English specialist helping students master O Level English 1123 with structured lessons, notes, and practice.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
   },
-  description: siteConfig.description,
   keywords: [
     "O Level English Teacher Karachi",
     "Best O Level English Teacher Karachi",
@@ -33,11 +34,12 @@ export const metadata: Metadata = {
     "O Level English 1123",
     "English Language Tuition Karachi",
   ],
-  authors: [{ name: siteConfig.name }],
+  authors: [{ name: "Jaweria Amer" }],
   openGraph: {
-    siteName: siteConfig.name,
-    title: siteConfig.title,
-    description: siteConfig.description,
+    siteName: "Jaweria Amer",
+    title: "Jaweria Amer",
+    description:
+      "Cambridge English specialist helping students master O Level English 1123 with structured lessons, notes, and practice.",
     type: "website",
     locale: "en_US",
     url: "/",
@@ -46,14 +48,15 @@ export const metadata: Metadata = {
         url: "/icon.png",
         width: 512,
         height: 512,
-        alt: `${siteConfig.name} — Miss Jay`,
+        alt: "Jaweria Amer — Miss Jay",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: siteConfig.title,
-    description: siteConfig.description,
+    title: "Jaweria Amer",
+    description:
+      "Cambridge English specialist helping students master O Level English 1123 with structured lessons, notes, and practice.",
     images: ["/icon.png"],
   },
   ...(googleVerification ? { verification: { google: googleVerification } } : {}),
