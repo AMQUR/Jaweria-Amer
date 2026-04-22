@@ -82,11 +82,19 @@ export async function getPublicResources(): Promise<Resource[]> {
       )
     );
 
+    const staticRes = await getSanitizedOrRawStatic();
     if (Array.isArray(fromCms) && fromCms.length > 0) {
-      return fromCms;
+      const byId = new Map<string, Resource>();
+      for (const r of staticRes) {
+        if (r?.id) byId.set(r.id, r);
+      }
+      for (const r of fromCms) {
+        if (r?.id) byId.set(r.id, r);
+      }
+      return Array.from(byId.values());
     }
     console.error("CMS public list empty after sanitize, using static fallback");
-    return getSanitizedOrRawStatic();
+    return staticRes;
   } catch (error) {
     console.error("CMS failed, using static fallback", error);
     return getSanitizedOrRawStatic();

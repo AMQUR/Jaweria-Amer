@@ -57,8 +57,10 @@ export default function AnimatedCounter({
     if (!el) return;
 
     if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setDisplay(value);
-      return;
+      const raf = requestAnimationFrame(() => {
+        setDisplay(value);
+      });
+      return () => cancelAnimationFrame(raf);
     }
 
     const observer = new IntersectionObserver(

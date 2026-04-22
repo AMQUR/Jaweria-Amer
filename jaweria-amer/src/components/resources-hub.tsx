@@ -190,6 +190,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   const levelOptions = useMemo(() => uniqueSorted(scopedForFilters.map((r) => r.level)), [scopedForFilters]);
   const yearOptions = useMemo(() => uniqueSorted(scopedForFilters.map((r) => r.year)), [scopedForFilters]);
   const paperOptions = useMemo(() => {
+    if (category === "topicals") {
+      return ["Paper 1", "Paper 2"];
+    }
     const values = uniqueSorted(scopedForFilters.map((r) => r.paper));
     return GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)
       ? values.filter((value) => value === "Paper 1" || value === "Paper 2")
@@ -234,7 +237,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         );
         return { paper: paperName, sections };
       })
-      .filter((entry) => entry.sections.length > 0);
+      .filter((entry) => (category === "topicals" ? true : entry.sections.length > 0));
   }, [category, guidedPreviewResources]);
 
   function selectCategory(next: ResourceHubCategory | "all") {
@@ -271,7 +274,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       if (r.category !== "topicals") return false;
       if (paper === "all") return false;
       if (r.paper !== paper) return false;
-      if (section === "all") return false;
+      if (section === "all") return true;
       if (r.section !== section) return false;
       return true;
     });
@@ -311,7 +314,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     emptyState = "Choose a notes topic above to see the files in that area.";
   } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && paper === "all") {
     emptyState = "Choose a paper to begin targeted practice.";
-  } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all") {
+  } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all" && category !== "topicals") {
     emptyState = "Select a section to see the matching files.";
   } else if (category !== "all") {
     emptyState = "No resources match these filters.";
@@ -531,7 +534,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
             )}
             {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && (
               <p className="mt-3 text-xs leading-relaxed text-slate">
-                Complete both steps before files appear.
+                {category === "topicals"
+                  ? "Choose a paper to view its topicals. Use the section filter to narrow when you are ready."
+                  : "Complete both steps before files appear."}
               </p>
             )}
           </div>
@@ -595,7 +600,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                 ))}
               </div>
             </div>
-          ) : GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all" ? (
+          ) : GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) &&
+            section === "all" &&
+            !(category === "topicals" && paper !== "all") ? (
             <div className="rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:p-8">
               <p className="text-center text-sm leading-relaxed text-slate">Select a section to continue.</p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

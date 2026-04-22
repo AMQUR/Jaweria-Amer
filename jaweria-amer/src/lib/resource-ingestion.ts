@@ -308,6 +308,19 @@ export function inferGeneralNotesSubCategory(
 function normalizeTopicalsResource(resource: Resource): Resource {
   if (resource.category !== "topicals") return resource;
 
+  const preservableTopicalSection = new Set<string>([
+    "Directed Writing",
+    "Composition",
+    "Comprehension",
+    "Language",
+    "Summary",
+    "General Writing",
+    "General Reading",
+  ]);
+  if (resource.paper && resource.section && preservableTopicalSection.has(resource.section)) {
+    return { ...resource, paper: resource.paper, section: resource.section };
+  }
+
   const raw = `${resource.title || ""} ${basenameFromFileUrl(resource.fileUrl) || ""}`
     .toLowerCase()
     .replace(/[-_]+/g, " ");
@@ -322,7 +335,11 @@ function normalizeTopicalsResource(resource: Resource): Resource {
   let section = resource.section;
 
   if (paper === "Paper 1") {
-    if (
+    if (raw.includes("comprehension") || /\bpc\d?\b/.test(raw) || /\bpc \d+/.test(raw) || /practice comp/.test(raw)) {
+      section = "Comprehension";
+    } else if (raw.includes("summary") && !raw.includes("comprehension")) {
+      section = "Summary";
+    } else if (
       raw.includes("directed") ||
       raw.includes("interviewer") ||
       raw.includes("phrases") ||
@@ -339,7 +356,7 @@ function normalizeTopicalsResource(resource: Resource): Resource {
       raw.includes("narrative") ||
       raw.includes("descriptive") ||
       raw.includes("vocab") ||
-      raw.includes("writing")
+      (raw.includes("writing") && !raw.includes("comprehension") && !raw.includes("summary"))
     ) {
       section = "Composition";
     } else {
@@ -464,7 +481,9 @@ function inferResourceSection(
       }
       return "General";
     }
-    if (haystack.includes("summary")) return "Summary Writing";
+    if (haystack.includes("summary")) {
+      return resource.category === "topicals" ? "Summary" : "Summary Writing";
+    }
     if (
       haystack.includes("comprehension") ||
       haystack.includes("use of language") ||
@@ -551,14 +570,15 @@ export function finalizeResourcesForSite(items: readonly Resource[]): Resource[]
       const cleanTitle = cleanCopyOfTitlePrefix(item.title);
       const subCategory =
         item.category === "general-notes" ? item.subCategory ?? inferGeneralNotesSubCategory(item) : item.subCategory;
-      const category = !legacyChecklist && isMarkSchemeResource(item) ? "checklists" : item.category;
+      const category =
+        !legacyChecklist && isMarkSchemeResource(item) && item.category !== "topicals" ? "checklists" : item.category;
       const baseItem: Resource = {
         ...item,
         title: cleanTitle,
         category,
         paper: normalizeGuidedPaper(item),
         subCategory,
-        section: inferResourceSection({ ...item, category, subCategory }),
+        section: item.section ?? inferResourceSection({ ...item, category, subCategory }),
       };
       const normalizedItem = normalizeTopicalsResource(baseItem);
       return {

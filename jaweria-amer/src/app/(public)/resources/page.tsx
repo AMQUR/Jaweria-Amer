@@ -32,7 +32,6 @@ export default async function ResourcesPage() {
   const resources = (await getPublicResources()) ?? [];
   const safeResources =
     Array.isArray(resources) && resources.length > 0 ? resources : staticResources;
-  console.log("FINAL RESOURCES COUNT:", safeResources.length);
 
   return (
     <>
