@@ -42,6 +42,7 @@ export type ResourceNotesSubCategory =
   | "comprehension-vocabulary"
   | "essay-vocabulary"
   | "general-vocabulary"
+  | "p2-50-words"
   | "checklists";
 
 export interface Resource {

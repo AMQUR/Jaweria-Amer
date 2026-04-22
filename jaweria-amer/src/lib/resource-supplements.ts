@@ -715,6 +715,19 @@ export const supplementalHubResources: Resource[] = [
     fileUrl: "/resources/vocabulary/essay-vocabulary.pdf",
     description: "Dialogue words, tone shifts, and expressive verbs for essay writing.",
   },
+  {
+    id: "vocab-p2-50-words-writing",
+    title: "50 Words for Paper 2 Writing",
+    category: "vocabulary",
+    subCategory: "p2-50-words",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 2",
+    year: "Core",
+    fileUrl: "/resources/vocabulary/p2-50-words-writing.pdf",
+    description:
+      "High-impact vocabulary bank for Directed Writing and Essay responses, including connectors, development phrases, evaluation language, and examiner-level words. Use at least 3–5 of these in every response for stronger examiner impact.",
+  },
   // ── Quick Worksheets — Checklists ────────────────────────────────────────
   {
     id: "quick-checklist-pop-quiz",

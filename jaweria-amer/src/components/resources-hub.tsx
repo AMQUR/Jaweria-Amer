@@ -118,12 +118,14 @@ const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; de
   { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },
   { id: "essay-vocabulary", label: "Essay Vocabulary", description: "Expressive vocabulary for writing tasks." },
   { id: "general-vocabulary", label: "General Vocabulary", description: "Broad vocabulary banks for all paper tasks." },
+  { id: "p2-50-words", label: "50 Words for P2", description: "High-impact bank for Paper 2 directed writing and essays." },
 ];
 
 const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
   { value: "comprehension-vocabulary", label: "Comprehension Vocabulary" },
   { value: "essay-vocabulary", label: "Essay Vocabulary" },
   { value: "general-vocabulary", label: "General Vocabulary" },
+  { value: "p2-50-words", label: "50 Words for P2" },
 ];
 
 const topicBrowseCardClass = (active: boolean) =>
