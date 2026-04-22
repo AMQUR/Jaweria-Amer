@@ -21,9 +21,8 @@ export const defaultHomepageContent: HomepageContent = {
 export const defaultSettings = {
   whatsappNumber: "923253708069",
   stats: [
-    { value: "95%", label: "Students scored A*/A" },
-    { value: "500+", label: "Students mentored" },
-    { value: "8+", label: "Years of experience" },
-    { value: "12", label: "CAIE exam sessions" },
+    { value: "3+", label: "Years Teaching Experience" },
+    { value: "80%", label: "Students scored A+/A" },
+    { value: "6", label: "CAIE Exam Sessions" },
   ],
 } as const;

@@ -125,7 +125,7 @@ export default async function HomePage() {
       {/* Stats — tighter vertical rhythm */}
       <section className="border-b border-border/70 bg-white">
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-          <div className="premium-reveal grid grid-cols-2 gap-10 lg:grid-cols-4 lg:gap-12">
+          <div className="premium-reveal grid grid-cols-2 gap-10 lg:grid-cols-3 lg:gap-12">
             {stats.map((stat, i) => (
               <div
                 key={`ticker-${i}`}

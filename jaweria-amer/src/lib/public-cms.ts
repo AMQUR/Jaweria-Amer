@@ -104,20 +104,27 @@ export async function getPublicResources(): Promise<Resource[]> {
 export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
   try {
     const mcqs = await getCmsMcqSets();
-    return Object.fromEntries(
-      (mcqs ?? [])
-        .filter((item) => !item.deleted && item.visibility === "published")
-        .map((item) => [
+    const published = (mcqs ?? []).filter((item) => !item.deleted && item.visibility === "published");
+    const fromCms = Object.fromEntries(
+      published.map((item) => {
+        const staticBase = staticMcqSets[item.id];
+        const questions =
+          Array.isArray(item.questions) && item.questions.length > 0
+            ? item.questions
+            : (staticBase?.questions ?? []);
+        return [
           item.id,
           {
             id: item.id,
             title: item.title,
             description: item.description,
-            timeLimit: item.timeLimit,
-            questions: item.questions,
+            timeLimit: item.timeLimit ?? staticBase?.timeLimit,
+            questions,
           } satisfies McqSet,
-        ])
+        ];
+      })
     );
+    return { ...staticMcqSets, ...fromCms };
   } catch (error) {
     console.error("Falling back to static MCQ sets:", error);
     return staticMcqSets;

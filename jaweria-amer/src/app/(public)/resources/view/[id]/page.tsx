@@ -53,7 +53,10 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
   const meta = [resource.level, resource.subject, resource.year, resource.paper].join(" · ");
 
   const isMcq = resource.type === "mcq";
-  const mcqSet = isMcq ? ((mcqSets ?? {})[resource.id] ?? null) : null;
+  const mcq = isMcq ? (mcqSets?.[resource.id] ?? null) : null;
+  if (isMcq && !mcq) {
+    console.error("Missing MCQ set:", resource.id);
+  }
   const validPdfUrl =
     !isMcq && typeof resource.fileUrl === "string" && resource.fileUrl.startsWith("/resources/")
       ? resource.fileUrl
@@ -85,11 +88,11 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
           <h1 className="font-serif text-2xl font-bold leading-snug sm:text-3xl">{displayTitle}</h1>
           <p className="mt-2 text-sm text-white/60">{meta}</p>
           <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/70">{resource.description}</p>
-          {isMcq && mcqSet && (
+          {isMcq && mcq && (
             <p className="mt-3 text-sm font-medium text-white/80">
-              {mcqSet.questions.length} questions
-              {mcqSet.timeLimit
-                ? ` · ${mcqSet.timeLimit / 60} minutes`
+              {mcq.questions.length} questions
+              {mcq.timeLimit
+                ? ` · ${mcq.timeLimit / 60} minutes`
                 : " · 3 sections"}
               {" · instant scoring"}
             </p>
@@ -99,12 +102,15 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
 
       {/* Body */}
       <div className={isMcq ? "py-10 sm:py-14" : "mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8"}>
-        {isMcq && mcqSet ? (
-          <McqViewer mcqSet={mcqSet} />
-        ) : isMcq && !mcqSet ? (
-          <p className="py-24 text-center text-sm text-slate">
-            Assessment data not found. Please contact us if this problem persists.
-          </p>
+        {isMcq && mcq ? (
+          <McqViewer mcqSet={mcq} />
+        ) : isMcq && !mcq ? (
+          <div className="p-6 text-center">
+            <h2 className="text-lg font-semibold">Assessment data not found</h2>
+            <p className="text-sm text-muted-foreground">
+              This assessment is not properly configured.
+            </p>
+          </div>
         ) : gviewSrc ? (
           <iframe
             title={displayTitle}

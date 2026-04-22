@@ -394,20 +394,27 @@ export async function deleteCmsMcqSet(id: string) {
 
 export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
   const merged = await getCmsMcqSets();
-  return Object.fromEntries(
-    merged
-      .filter((item) => !item.deleted && item.visibility === "published")
-      .map((item) => [
+  const published = merged.filter((item) => !item.deleted && item.visibility === "published");
+  const fromCms = Object.fromEntries(
+    published.map((item) => {
+      const staticBase = staticMcqSets[item.id];
+      const questions =
+        Array.isArray(item.questions) && item.questions.length > 0
+          ? item.questions
+          : (staticBase?.questions ?? []);
+      return [
         item.id,
         {
           id: item.id,
           title: item.title,
           description: item.description,
-          timeLimit: item.timeLimit,
-          questions: item.questions ?? [],
+          timeLimit: item.timeLimit ?? staticBase?.timeLimit,
+          questions,
         } satisfies McqSet,
-      ])
+      ];
+    })
   );
+  return { ...staticMcqSets, ...fromCms };
 }
 
 export async function getCmsResources(): Promise<CmsResourceRecord[]> {
