@@ -1,13 +1,16 @@
-import { BookOpen, FolderOpen, Users, TrendingUp } from "lucide-react";
-import { getCourses, getResources, getLeads, getSettings } from "@/lib/admin/store";
+import { BookOpen, FileQuestion, FolderOpen, ImageUp, Users, TrendingUp } from "lucide-react";
+import { getCourses, getLeads, getSettings } from "@/lib/admin/store";
+import { getCmsMcqSets, getCmsResources, getHomepageContent } from "@/lib/admin/cms-store";
 import Link from "next/link";
 
 export default async function AdminDashboard() {
-  const [courses, resources, leads, settings] = await Promise.all([
+  const [courses, resources, mcqs, leads, settings, homepageContent] = await Promise.all([
     getCourses(),
-    getResources(),
+    getCmsResources(),
+    getCmsMcqSets(),
     getLeads(),
     getSettings(),
+    getHomepageContent(),
   ]);
 
   const newLeads = leads.filter((l) => l.status === "new").length;
@@ -72,6 +75,47 @@ export default async function AdminDashboard() {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="rounded-xl border border-border/60 bg-white p-5 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-serif text-lg font-semibold tracking-tight text-ink">Content Controls</h2>
+            <Link href="/admin/homepage" className="text-xs text-brand transition-colors hover:text-brand-accent">
+              Edit
+            </Link>
+          </div>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between rounded-xl border border-border/60 bg-cream p-3">
+              <div className="flex items-center gap-3">
+                <ImageUp className="h-4 w-4 text-brand" />
+                <div>
+                  <p className="text-sm font-medium text-ink">Homepage hero</p>
+                  <p className="text-xs text-slate-light">{homepageContent.primaryCtaText} / {homepageContent.secondaryCtaText}</p>
+                </div>
+              </div>
+              <Link href="/admin/homepage" className="text-xs text-brand">Manage</Link>
+            </div>
+            <div className="flex items-center justify-between rounded-xl border border-border/60 bg-cream p-3">
+              <div className="flex items-center gap-3">
+                <FileQuestion className="h-4 w-4 text-brand" />
+                <div>
+                  <p className="text-sm font-medium text-ink">Quick Worksheets</p>
+                  <p className="text-xs text-slate-light">{mcqs.length} MCQ sets in the library</p>
+                </div>
+              </div>
+              <Link href="/admin/mcq" className="text-xs text-brand">Manage</Link>
+            </div>
+            <div className="flex items-center justify-between rounded-xl border border-border/60 bg-cream p-3">
+              <div className="flex items-center gap-3">
+                <FolderOpen className="h-4 w-4 text-brand" />
+                <div>
+                  <p className="text-sm font-medium text-ink">Uploads</p>
+                  <p className="text-xs text-slate-light">PDFs, banner artwork, and public assets</p>
+                </div>
+              </div>
+              <Link href="/admin/uploads" className="text-xs text-brand">Open</Link>
             </div>
           </div>
         </div>

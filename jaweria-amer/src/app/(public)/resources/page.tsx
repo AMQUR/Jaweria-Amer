@@ -3,6 +3,7 @@ import { ExternalLink, FolderOpen, PlayCircle } from "lucide-react";
 import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
 import { contact } from "@/lib/contact";
 import { siteConfig } from "@/lib/data";
+import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
 
 export const metadata: Metadata = {
@@ -25,7 +26,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ResourcesPage() {
+export const dynamic = "force-dynamic";
+
+export default async function ResourcesPage() {
+  const resources = await getPublicResources();
+
   return (
     <>
       <section className="bg-gradient-to-b from-crimson to-crimson-dark pb-16 pt-28 sm:pb-20 sm:pt-36">
@@ -113,7 +118,7 @@ export default function ResourcesPage() {
         </div>
       </section>
 
-      <ResourcesHub />
+      <ResourcesHub resources={resources} />
     </>
   );
 }

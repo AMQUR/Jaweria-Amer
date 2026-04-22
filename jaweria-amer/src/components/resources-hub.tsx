@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import {
   RESOURCE_HUB_CATEGORIES,
-  resources,
+  resources as defaultResources,
   type Resource,
   type ResourceHubCategory,
   type ResourceNotesSubCategory,
@@ -134,7 +134,7 @@ function sortSections(values: string[]) {
   });
 }
 
-export function ResourcesHub() {
+export function ResourcesHub({ resources = defaultResources }: { resources?: Resource[] }) {
   const [category, setCategory] = useState<ResourceHubCategory | "all">("all");
   const [notesSubCategory, setNotesSubCategory] = useState<NotesSubCategoryFilter>("unset");
   const [subject, setSubject] = useState("all");
@@ -158,12 +158,12 @@ export function ResourcesHub() {
 
   const scopedForFilters = useMemo(
     () => (category === "all" ? resources : resources.filter((r) => r.category === category)),
-    [category]
+    [category, resources]
   );
 
   const scopedForResults = useMemo(
     () => (category === "all" ? [] : resources.filter((r) => r.category === category)),
-    [category]
+    [category, resources]
   );
   const guidedPreviewResources = useMemo(() => {
     if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
@@ -205,7 +205,7 @@ export function ResourcesHub() {
     );
 
     return sortSections(sections);
-  }, [category, paper, scopedForFilters]);
+  }, [category, paper, scopedForFilters, resources]);
 
   const guidedPaperSections = useMemo(() => {
     if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
@@ -289,7 +289,7 @@ export function ResourcesHub() {
       if (year !== "all" && r.year !== year) return false;
       return true;
     });
-  }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year]);
+  }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year, resources]);
 
   function resetFilters() {
     selectCategory("all");

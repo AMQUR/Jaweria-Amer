@@ -6,7 +6,7 @@ import { workshopRegisterUrl } from "@/lib/contact";
 /**
  * Homepage workshop banner (image only — artwork includes all copy) + reserve CTA block below.
  */
-export function WorkshopPromoSection() {
+export function WorkshopPromoSection({ bannerImagePath = "/images/homepage-banner.png" }: { bannerImagePath?: string }) {
   const registerHref = workshopRegisterUrl();
 
   return (
@@ -14,7 +14,7 @@ export function WorkshopPromoSection() {
       <div className="premium-reveal overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
         <div className="relative w-full">
           <Image
-            src="/images/homepage-banner.png"
+            src={bannerImagePath}
             alt="O Level English Workshop Banner"
             width={1024}
             height={379}

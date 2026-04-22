@@ -36,21 +36,13 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: "Jaweria Amer" }],
   openGraph: {
-    siteName: "Jaweria Amer",
     title: "Jaweria Amer",
     description:
-      "Cambridge English specialist helping students master O Level English 1123 with structured lessons, notes, and practice.",
-    type: "website",
-    locale: "en_US",
+      "Cambridge English specialist helping students master O Level English 1123.",
     url: "/",
-    images: [
-      {
-        url: "/icon.png",
-        width: 512,
-        height: 512,
-        alt: "Jaweria Amer — Miss Jay",
-      },
-    ],
+    siteName: "Jaweria Amer",
+    images: ["/icon.png"],
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",

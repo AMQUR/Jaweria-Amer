@@ -6,6 +6,9 @@ import {
   LayoutDashboard,
   BookOpen,
   FolderOpen,
+  LibraryBig,
+  FileQuestion,
+  Image,
   Users,
   Settings,
   LogOut,
@@ -18,8 +21,11 @@ import { useState } from "react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Courses", href: "/admin/courses", icon: BookOpen },
   { label: "Resources", href: "/admin/resources", icon: FolderOpen },
+  { label: "MCQ Builder", href: "/admin/mcq", icon: FileQuestion },
+  { label: "Homepage", href: "/admin/homepage", icon: LibraryBig },
+  { label: "Uploads", href: "/admin/uploads", icon: Image },
+  { label: "Courses", href: "/admin/courses", icon: BookOpen },
   { label: "Leads", href: "/admin/leads", icon: Users },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
@@ -33,7 +39,7 @@ export function AdminSidebar() {
       <div className="border-b border-white/10 p-6">
         <Link href="/admin" className="flex flex-col" onClick={() => setMobileOpen(false)}>
           <span className="font-serif text-lg font-semibold tracking-tight">Jaweria Amer</span>
-          <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase">Admin Portal</span>
+          <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase">Control Center</span>
         </Link>
       </div>
 

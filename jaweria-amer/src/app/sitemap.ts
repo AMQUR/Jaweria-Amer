@@ -1,11 +1,13 @@
 import type { MetadataRoute } from "next";
-import { courses, resources } from "@/lib/data";
+import { courses } from "@/lib/data";
 import { listMarketingCourses } from "@/lib/course-offerings";
+import { getPublicResources } from "@/lib/public-cms";
 import { getSiteUrl } from "@/lib/site-url";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const base = getSiteUrl().href.replace(/\/$/, "");
   const lastModified = new Date();
+  const resources = await getPublicResources();
 
   const staticPaths = ["", "/about", "/courses", "/resources", "/privacy", "/terms"] as const;
 

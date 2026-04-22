@@ -2,12 +2,12 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getSessionSecret } from "@/lib/session-secret";
 import { verifyAdminPassword } from "./password-store";
+import { ADMIN_SESSION_COOKIE } from "./constants";
 
 export function normalizeAdminEmail(email: string): string {
   return email.trim().toLowerCase();
 }
 
-const SESSION_COOKIE = "ja_admin_session";
 const SESSION_MAX_AGE = 60 * 60 * 24; // 24 hours
 
 function generateToken(email: string): string {
@@ -38,7 +38,7 @@ export async function login(email: string, password: string): Promise<{ success:
 
   const token = generateToken(email);
   const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, token, {
+  cookieStore.set(ADMIN_SESSION_COOKIE, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
@@ -51,12 +51,12 @@ export async function login(email: string, password: string): Promise<{ success:
 
 export async function logout(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE);
+  cookieStore.delete(ADMIN_SESSION_COOKIE);
 }
 
 export async function getSession(): Promise<{ authenticated: boolean }> {
   const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE)?.value;
+  const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
   if (!token) return { authenticated: false };
   return { authenticated: verifyToken(token) };
 }

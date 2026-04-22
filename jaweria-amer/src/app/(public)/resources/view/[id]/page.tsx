@@ -4,19 +4,16 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { ResourceViewTracker } from "@/components/analytics/resource-view-tracker";
 import { McqViewer } from "@/components/mcq-viewer";
-import { resources } from "@/lib/data";
-import { mcqSets } from "@/lib/mcq-data";
+import { getPublicMcqSets, getPublicResources } from "@/lib/public-cms";
 import { formatDisplayTitle } from "@/lib/resource-ingestion";
 import { publicFileAbsoluteUrl } from "@/lib/public-asset-url";
 
 type Params = Promise<{ id: string }>;
-
-export function generateStaticParams() {
-  return resources.map((r) => ({ id: r.id }));
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { id } = await params;
+  const resources = await getPublicResources();
   const resource = resources.find((r) => r.id === id);
   if (!resource) return { title: "Resource" };
   const path = `/resources/view/${resource.id}`;
@@ -42,6 +39,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 
 export default async function ResourceViewPage({ params }: { params: Params }) {
   const { id } = await params;
+  const [resources, mcqSets] = await Promise.all([getPublicResources(), getPublicMcqSets()]);
   const resource = resources.find((r) => r.id === id);
   if (!resource) notFound();
 
