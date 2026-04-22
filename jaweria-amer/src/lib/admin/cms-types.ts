@@ -45,6 +45,7 @@ export const CMS_SECTION_OPTIONS = [
   "Comprehension",
   "Language",
   "Summary",
+  "Essay",
   "General Writing",
   "General Reading",
   "Question 1",

@@ -314,6 +314,7 @@ function normalizeTopicalsResource(resource: Resource): Resource {
     "Comprehension",
     "Language",
     "Summary",
+    "Essay",
     "General Writing",
     "General Reading",
   ]);
@@ -374,12 +375,25 @@ function normalizeTopicalsResource(resource: Resource): Resource {
       raw.includes("writer")
     ) {
       section = "Language";
-    } else if (
-      raw.includes("summary") ||
-      raw.includes("q3") ||
-      raw.includes("exam hack")
-    ) {
+    } else if (raw.includes("summary") || raw.includes("q3") || raw.includes("exam hack")) {
       section = "Summary";
+    } else if (
+      raw.includes("directed writing") ||
+      (raw.includes("directed") && raw.includes("topics")) ||
+      raw.includes("article topics") ||
+      raw.includes("email topics") ||
+      raw.includes("letter topics") ||
+      raw.includes("report topics") ||
+      raw.includes("speech topics")
+    ) {
+      section = "Directed Writing";
+    } else if (
+      raw.includes("essay") ||
+      raw.includes("composition") ||
+      raw.includes("descriptive") ||
+      raw.includes("narrative")
+    ) {
+      section = "Essay";
     } else {
       section = "General Reading";
     }

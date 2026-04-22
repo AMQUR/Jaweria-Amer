@@ -16,6 +16,7 @@ import {
 import {
   RESOURCE_HUB_CATEGORIES,
   resources as defaultResources,
+  TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS,
   type Resource,
   type ResourceHubCategory,
   type ResourceNotesSubCategory,
@@ -45,6 +46,7 @@ const TOPICALS_SECTION_ORDER = [
   "Comprehension",
   "Language",
   "Summary",
+  "Essay",
   "General Writing",
   "General Reading",
 ] as const;
@@ -150,6 +152,18 @@ function sortSections(values: string[]) {
   });
 }
 
+/** Paper 2 topical sections: fixed hub order first, then other P2 sections (e.g. Language). */
+function sortTopicalSectionsForPaper2(sections: string[]) {
+  const order = [...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, "Language", "General Reading"];
+  return [...sections].sort((a, b) => {
+    const ai = order.indexOf(a);
+    const bi = order.indexOf(b);
+    const av = ai === -1 ? Number.MAX_SAFE_INTEGER : ai;
+    const bv = bi === -1 ? Number.MAX_SAFE_INTEGER : bi;
+    return av === bv ? a.localeCompare(b) : av - bv;
+  });
+}
+
 export function ResourcesHub({ resources = defaultResources }: { resources?: Resource[] }) {
   const [category, setCategory] = useState<ResourceHubCategory | "all">("all");
   const [notesSubCategory, setNotesSubCategory] = useState<NotesSubCategoryFilter>("unset");
@@ -234,6 +248,10 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       )
     );
 
+    if (paper === "Paper 2") {
+      return sortTopicalSectionsForPaper2([...new Set([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, ...sections])]);
+    }
+
     return sortSections(sections);
   }, [category, paper, scopedForFilters, safeResources]);
 
@@ -241,16 +259,18 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
     return ["Paper 1", "Paper 2"]
       .map((paperName) => {
-        const sections = sortSections(
-          Array.from(
-            new Set(
-              guidedPreviewResources
-                .filter((r) => r.paper === paperName)
-                .map((r) => r.section)
-                .filter((value): value is string => Boolean(value))
-            )
+        const fromResources = Array.from(
+          new Set(
+            guidedPreviewResources
+              .filter((r) => r.paper === paperName)
+              .map((r) => r.section)
+              .filter((value): value is string => Boolean(value))
           )
         );
+        const sections =
+          category === "topicals" && paperName === "Paper 2"
+            ? sortTopicalSectionsForPaper2([...new Set([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, ...fromResources])])
+            : sortSections(fromResources);
         return { paper: paperName, sections };
       })
       .filter((entry) => (category === "topicals" ? true : entry.sections.length > 0));
