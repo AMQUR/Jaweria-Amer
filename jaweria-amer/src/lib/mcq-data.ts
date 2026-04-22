@@ -1,6 +1,6 @@
 // All answers verified against Cambridge 1123 conventions (British English rules).
 // Audit log (subtle fixes): comma+but drill (removed short-clause ambiguity), "Because…" set (A=because+so),
-// comma splice with "however" (replaced debatable "although" line), collective Q → "every one… was",
+// Q9 comma placement (compound subject + compound predicate; no comma), collective Q → "every one… was",
 // fragment While-clause distractor D (verb claim removed), list + Despite-rain explanations tightened,
 // dialogue-after-tag explanation (proper noun vs reporting verb).
 
@@ -158,16 +158,16 @@ const mcqSetsInternal: Record<string, McqSet> = {
       },
       {
         section: "C",
-        question: "What is wrong here?\n\"I left the hall early, however I had paid for a full ticket.\"",
+        question: "Where should the comma go?\n\"Harry and James play cricket and watch football.\"",
         options: {
-          A: "Two full ideas cannot be joined only by \", however\" — use a full stop or semicolon before \"However\".",
-          B: "The word \"however\" should be deleted entirely.",
-          C: "A colon is required after \"early\".",
-          D: "Both clauses must end with a question mark.",
+          A: "Harry, and James play cricket and watch football.",
+          B: "Harry and James, play cricket and watch football.",
+          C: "Harry and James play cricket, and watch football.",
+          D: "No comma is needed.",
         },
-        answer: "A",
+        answer: "D",
         explanation:
-          '"However" is not a coordinating conjunction like "and" or "but." Between two full statements you need a full stop or semicolon, then "However," with a capital H: "I left the hall early. However, I had paid for a full ticket." A comma alone creates a comma splice.',
+          "No comma is needed because 'Harry and James' is a compound subject, and 'play cricket and watch football' is a compound predicate. Commas are not used to separate compound subjects or verbs joined by 'and'.",
       },
       {
         section: "C",
