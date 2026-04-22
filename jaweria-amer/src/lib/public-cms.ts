@@ -95,8 +95,9 @@ export async function getPublicResources(): Promise<Resource[]> {
       console.error("CMS public list empty after sanitize, using static fallback");
     }
     const merged = Array.from(byId.values());
-    // Never return [] — raw static is the absolute last resort
-    return merged.length > 0 ? merged : rawStatic;
+    // Prefer CMS-backed list when non-empty; otherwise static so the hub never goes empty
+    const out = merged.length > 0 ? merged : rawStatic;
+    return out.length > 0 ? out : rawStatic;
   } catch (error) {
     console.error("CMS failed, using static fallback", error);
     const fallback = await getSanitizedOrRawStatic();

@@ -121,13 +121,6 @@ export default function AboutPage() {
                     marking criteria, because understanding how examiners think
                     is what changes grades.
                   </p>
-                  <p className="text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
-                    Having worked across education systems in Karachi, London,
-                    and Athens, I bring a global perspective grounded in local
-                    understanding. I know the pressures students at KGS, Nixor,
-                    and The Lyceum face &mdash; and I know how to turn that
-                    pressure into structured, purposeful effort.
-                  </p>
                 </div>
               </div>
 

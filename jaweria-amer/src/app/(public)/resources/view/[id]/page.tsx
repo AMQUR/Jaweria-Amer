@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { ResourceViewTracker } from "@/components/analytics/resource-view-tracker";
 import { McqViewer } from "@/components/mcq-viewer";
+import { SecurePdfViewer } from "@/components/secure-pdf-viewer";
 import { getPublicMcqSets, getPublicResources } from "@/lib/public-cms";
 import { formatDisplayTitle } from "@/lib/resource-ingestion";
 
@@ -79,10 +80,6 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
     );
   }
 
-  if (!isMcq && resource.fileUrl) {
-    console.log("PDF URL:", resource.fileUrl);
-  }
-
   return (
     <div className="min-h-screen bg-cream">
       <ResourceViewTracker id={resource.id} title={displayTitle} />
@@ -124,14 +121,7 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
             </p>
           </div>
         ) : (
-          <div className="w-full h-[90vh]">
-            <iframe
-              title={displayTitle}
-              src={resource.fileUrl}
-              className="h-full w-full rounded-xl border border-border/80 bg-white shadow-sm"
-              allow="fullscreen"
-            />
-          </div>
+          <SecurePdfViewer resourceId={resource.id} title={displayTitle} />
         )}
       </div>
     </div>
