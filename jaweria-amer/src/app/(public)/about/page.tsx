@@ -112,7 +112,7 @@ export default function AboutPage() {
                     My approach is simple: reduce confusion and give students a sense of control. We work with real paper patterns, build repeatable writing structures, and practise under timed conditions — all while keeping confidence intact.
                   </p>
                   <p className="text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
-                    Having achieved 9 A*/As at O Level and 5 A*/As at A Level, I understand the pressure students face in these exams. I've experienced it firsthand, which is why my focus is not just on teaching content, but on helping students stay composed and perform under pressure.
+                    Having achieved 9A<span className="relative -top-[1px] text-[0.9em]">*</span>s &amp; 1A in O Levels and 3A<span className="relative -top-[1px] text-[0.9em]">*</span>s and 2As, I know the exact pressure students face in an exam. I&apos;ve experienced it firsthand, which is why my focus is not just on teaching content, but on helping students stay composed and perform under pressure.
                   </p>
                   <p className="text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
                     I teach English the way high-performing students actually need it: clear structures, precise feedback, and habits that hold up on exam day. Every session is built around Cambridge marking criteria, so students learn how to think like examiners and turn their writing into marks.
