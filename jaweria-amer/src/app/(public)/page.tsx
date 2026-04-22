@@ -133,7 +133,10 @@ export default async function HomePage() {
                 style={{ animationDelay: `${i * 0.08}s` }}
               >
                 <h3 className="mb-1.5 font-serif text-3xl font-semibold text-crimson sm:text-[2.1rem]">
-                  <AnimatedCounter value={String(stat.value ?? "")} />
+                  <AnimatedCounter
+                    value={String(stat.value ?? "")}
+                    delay={i * 100}
+                  />
                 </h3>
                 <p className="text-sm leading-snug text-slate">{String(stat.label ?? "")}</p>
               </div>

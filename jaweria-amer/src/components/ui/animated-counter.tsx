@@ -2,15 +2,18 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type AnimatedCounterProps = {
+export default function AnimatedCounter({
+  value,
+  delay = 0,
+}: {
   value: string;
-};
-
-export default function AnimatedCounter({ value }: AnimatedCounterProps) {
+  delay?: number;
+}) {
   const [display, setDisplay] = useState("0");
   const ref = useRef<HTMLSpanElement | null>(null);
   const hasAnimated = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const runCountUp = useCallback((raw: string) => {
     const digitRun = raw.replace(/\D/g, "");
@@ -62,7 +65,14 @@ export default function AnimatedCounter({ value }: AnimatedCounterProps) {
       ([entry]) => {
         if (entry.isIntersecting && !hasAnimated.current) {
           hasAnimated.current = true;
-          runCountUp(value);
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+            timeoutRef.current = null;
+          }
+          timeoutRef.current = setTimeout(() => {
+            timeoutRef.current = null;
+            runCountUp(value);
+          }, delay);
         }
       },
       { threshold: 0.5 }
@@ -70,12 +80,16 @@ export default function AnimatedCounter({ value }: AnimatedCounterProps) {
     observer.observe(el);
     return () => {
       observer.disconnect();
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
         intervalRef.current = null;
       }
     };
-  }, [value, runCountUp]);
+  }, [value, runCountUp, delay]);
 
   return <span ref={ref}>{display}</span>;
 }
