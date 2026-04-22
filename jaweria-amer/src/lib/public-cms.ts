@@ -5,6 +5,7 @@ import { join } from "path";
 import { getCmsMcqSets, getCmsResources, getHomepageContent as getStoredHomepageContent } from "@/lib/admin/cms-store";
 import { siteConfig, staticResources } from "@/lib/data";
 import type { Resource } from "@/lib/data";
+import { normalizeTopicalsResource } from "@/lib/resource-ingestion";
 import { mcqSets as staticMcqSets } from "@/lib/mcq-data";
 import type { McqSet } from "@/lib/mcq-data";
 
@@ -38,6 +39,10 @@ async function sanitizePublicResources(resources: Resource[]) {
   );
 
   return sanitized.filter((resource): resource is Resource => Boolean(resource));
+}
+
+function withStrictTopicals(resources: Resource[]): Resource[] {
+  return resources.map((r) => normalizeTopicalsResource(r));
 }
 
 /** Curated static catalog — same source as pre-CMS `staticResources` in @/lib/data. */
@@ -97,11 +102,11 @@ export async function getPublicResources(): Promise<Resource[]> {
     const merged = Array.from(byId.values());
     // Prefer CMS-backed list when non-empty; otherwise static so the hub never goes empty
     const out = merged.length > 0 ? merged : rawStatic;
-    return out.length > 0 ? out : rawStatic;
+    return withStrictTopicals(out.length > 0 ? out : rawStatic);
   } catch (error) {
     console.error("CMS failed, using static fallback", error);
     const fallback = await getSanitizedOrRawStatic();
-    return fallback.length > 0 ? fallback : rawStatic;
+    return withStrictTopicals(fallback.length > 0 ? fallback : rawStatic);
   }
 }
 

@@ -8,7 +8,7 @@ import type { Resource } from "./data";
  * Not registered here (near-duplicate of existing public PDFs, left on disk): s25-paper-2-48-50-1.pdf,
  * s25-paper-2-49-50-1.pdf, s25-paper-2-49-50-2.pdf.
  */
-export const supplementalHubResources: Resource[] = [
+const supplementalHubResourcesBase: Resource[] = [
   {
     id: "topical-p1-3d51a75bae9c",
     title: "Copy of English Assessment 1- MS",
@@ -839,3 +839,11 @@ export const supplementalHubResources: Resource[] = [
     description: "Official principal examiner report (1123).",
   },
 ];
+
+export const supplementalHubResources: Resource[] = supplementalHubResourcesBase.map((r) => {
+  if (r.category !== "topicals") return r;
+  const sec = r.section;
+  if (sec === "Comprehension" || sec === "Summary") return { ...r, paper: "Paper 1" };
+  if (sec === "Essay" || sec === "Directed Writing") return { ...r, paper: "Paper 2" };
+  return r;
+});

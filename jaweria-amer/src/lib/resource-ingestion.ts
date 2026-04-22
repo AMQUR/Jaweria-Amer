@@ -305,114 +305,89 @@ export function inferGeneralNotesSubCategory(
   return undefined;
 }
 
-function normalizeTopicalsResource(resource: Resource): Resource {
-  if (resource.category !== "topicals") return resource;
+type TopicalsStrictSection = "Comprehension" | "Summary" | "Essay" | "Directed Writing";
 
-  const preservableTopicalSection = new Set<string>([
-    "Directed Writing",
-    "Composition",
-    "Comprehension",
-    "Language",
-    "Summary",
-    "Essay",
-    "General Writing",
-    "General Reading",
-  ]);
-  if (resource.paper && resource.section && preservableTopicalSection.has(resource.section)) {
-    const isP2OnlySection = resource.section === "Directed Writing" || resource.section === "Essay";
-    const paper = isP2OnlySection ? "Paper 2" : resource.paper;
-    return { ...resource, paper, section: resource.section };
-  }
+/** Topicals: only P1 (Comprehension, Summary) and P2 (Essay, Directed Writing); paper follows section. */
+export function normalizeTopicalsResource(resource: Resource): Resource {
+  if (resource.category !== "topicals") return resource;
 
   const raw = `${resource.title || ""} ${basenameFromFileUrl(resource.fileUrl) || ""}`
     .toLowerCase()
     .replace(/[-_]+/g, " ");
 
-  let paper = resource.paper;
-  if (raw.includes("paper 1") || raw.includes("p1") || raw.includes("writing")) {
-    paper = "Paper 1";
-  } else if (raw.includes("paper 2") || raw.includes("p2") || raw.includes("reading")) {
-    paper = "Paper 2";
+  const section: TopicalsStrictSection = inferStrictTopicalsSection(resource, raw);
+
+  if (section === "Comprehension" || section === "Summary") {
+    return { ...resource, paper: "Paper 1", section };
   }
-
-  let section = resource.section;
-
-  if (paper === "Paper 1") {
-    if (raw.includes("comprehension") || /\bpc\d?\b/.test(raw) || /\bpc \d+/.test(raw) || /practice comp/.test(raw)) {
-      section = "Comprehension";
-    } else if (raw.includes("summary") && !raw.includes("comprehension")) {
-      section = "Summary";
-    } else if (
-      raw.includes("directed") ||
-      raw.includes("interviewer") ||
-      raw.includes("phrases") ||
-      raw.includes("sentences") ||
-      raw.includes("letter") ||
-      raw.includes("speech") ||
-      raw.includes("article") ||
-      raw.includes("report")
-    ) {
-      section = "General Writing";
-    } else if (
-      raw.includes("essay") ||
-      raw.includes("composition") ||
-      raw.includes("narrative") ||
-      raw.includes("descriptive") ||
-      raw.includes("vocab") ||
-      (raw.includes("writing") && !raw.includes("comprehension") && !raw.includes("summary"))
-    ) {
-      section = "Composition";
-    } else {
-      section = "General Writing";
-    }
-  }
-
-  if (paper === "Paper 2") {
-    if (raw.includes("comprehension") || raw.includes("question 1") || raw.includes("q1")) {
-      section = "Comprehension";
-    } else if (
-      raw.includes("language") ||
-      raw.includes("use of language") ||
-      raw.includes("q2") ||
-      raw.includes("writer")
-    ) {
-      section = "Language";
-    } else if (raw.includes("summary") || raw.includes("q3") || raw.includes("exam hack")) {
-      section = "Summary";
-    } else if (
-      raw.includes("directed writing") ||
-      (raw.includes("directed") && raw.includes("topics")) ||
-      raw.includes("article topics") ||
-      raw.includes("email topics") ||
-      raw.includes("letter topics") ||
-      raw.includes("report topics") ||
-      raw.includes("speech topics")
-    ) {
-      section = "Directed Writing";
-    } else if (
-      raw.includes("essay") ||
-      raw.includes("composition") ||
-      raw.includes("descriptive") ||
-      raw.includes("narrative")
-    ) {
-      section = "Essay";
-    } else {
-      section = "General Reading";
-    }
-  }
-
-  if (section === "Directed Writing" || section === "Essay") {
-    paper = "Paper 2";
-  }
-
-  return {
-    ...resource,
-    paper,
-    section,
-  };
+  return { ...resource, paper: "Paper 2", section };
 }
 
-function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "fileUrl">): string {
+function inferStrictTopicalsSection(resource: Resource, raw: string): TopicalsStrictSection {
+  const s = resource.section?.trim();
+  if (s === "Comprehension" || s === "Summary" || s === "Essay" || s === "Directed Writing") {
+    return s;
+  }
+  if (s === "Essay Writing" || s === "Composition") return "Essay";
+  if (s === "Summary Writing") return "Summary";
+  if (s === "Language" || s === "General Reading" || s === "Grammar" || s === "Vocabulary") {
+    return "Comprehension";
+  }
+  if (s === "General Writing") {
+    return raw.includes("summary") && !raw.includes("comprehension") ? "Summary" : "Directed Writing";
+  }
+
+  if (raw.includes("summary") && !raw.includes("comprehension")) return "Summary";
+  if (
+    raw.includes("comprehension") ||
+    /\bpc\d?\b/.test(raw) ||
+    /\bpc \d+/.test(raw) ||
+    /practice comp/.test(raw) ||
+    raw.includes("writer") ||
+    raw.includes("use of language") ||
+    raw.includes("exam hack") ||
+    raw.includes("question 1") ||
+    raw.includes("question 2") ||
+    raw.includes("question 3") ||
+    /\bq[123]\b/.test(raw) ||
+    raw.includes("vocab")
+  ) {
+    return "Comprehension";
+  }
+  if (
+    raw.includes("directed writing") ||
+    (raw.includes("directed") && raw.includes("topics")) ||
+    raw.includes("article topics") ||
+    raw.includes("email topics") ||
+    raw.includes("letter topics") ||
+    raw.includes("report topics") ||
+    raw.includes("speech topics") ||
+    raw.includes("interviewer") ||
+    raw.includes("phrases to") ||
+    raw.includes("sentences you can")
+  ) {
+    return "Directed Writing";
+  }
+  if (
+    raw.includes("essay") ||
+    raw.includes("composition") ||
+    raw.includes("descriptive") ||
+    raw.includes("narrative")
+  ) {
+    return "Essay";
+  }
+  if (raw.includes("paper 2") || raw.includes("p2")) return "Comprehension";
+  if (raw.includes("paper 1") || raw.includes("p1")) {
+    return raw.includes("summary") ? "Summary" : "Comprehension";
+  }
+  return "Comprehension";
+}
+
+function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "fileUrl" | "category">): string {
+  if (resource.category === "topicals") {
+    return resource.paper;
+  }
+
   const contentHaystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
     .toLowerCase()
     .replace(/[-_]+/g, " ");

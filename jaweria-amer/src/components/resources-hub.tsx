@@ -153,9 +153,9 @@ function sortSections(values: string[]) {
   });
 }
 
-/** Paper 2 topical sections: fixed hub order first, then other P2 sections (e.g. Language). */
+/** Paper 2 Topicals: fixed hub order only (Essay, then Directed Writing). */
 function sortTopicalSectionsForPaper2(sections: string[]) {
-  const order = [...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, "Language", "General Reading"];
+  const order = [...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS];
   return [...sections].sort((a, b) => {
     const ai = order.indexOf(a);
     const bi = order.indexOf(b);
@@ -240,26 +240,16 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       );
     }
 
-    const sections = Array.from(
-      new Set(
-        safeResources
-          .filter((r) => r.category === "topicals" && r.paper === paper)
-          .map((r) => r.section)
-          .filter((section): section is string => Boolean(section))
-      )
-    );
-
     if (paper === "Paper 2") {
-      return sortTopicalSectionsForPaper2([...new Set([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, ...sections])]);
+      return sortTopicalSectionsForPaper2([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS]);
     }
 
     if (paper === "Paper 1") {
-      const noP2Only = sections.filter((s) => s !== "Essay" && s !== "Directed Writing");
-      return sortSections([...new Set([...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS, ...noP2Only])]);
+      return sortSections([...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS]);
     }
 
-    return sortSections(sections);
-  }, [category, paper, scopedForFilters, safeResources]);
+    return [];
+  }, [category, paper, scopedForFilters]);
 
   const guidedPaperSections = useMemo(() => {
     if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
@@ -275,14 +265,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         );
         const sections =
           category === "topicals" && paperName === "Paper 2"
-            ? sortTopicalSectionsForPaper2([...new Set([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, ...fromResources])])
+            ? sortTopicalSectionsForPaper2([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS])
             : category === "topicals" && paperName === "Paper 1"
-              ? sortSections([
-                  ...new Set([
-                    ...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS,
-                    ...fromResources.filter((s) => s !== "Essay" && s !== "Directed Writing"),
-                  ]),
-                ])
+              ? sortSections([...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS])
               : sortSections(fromResources);
         return { paper: paperName, sections };
       })

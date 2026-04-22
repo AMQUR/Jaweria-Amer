@@ -62,19 +62,23 @@ export interface Resource {
   type?: "mcq";
 }
 
-/** Paper 2 Topicals hub sections (slug `id`, display `label` = `Resource.section`). Always listed even when empty. */
-export const TOPICALS_PAPER_2_SECTION_DEFS = [
+/** Paper 1 Topicals hub sections only (no overlap with Paper 2). */
+export const TOPICALS_PAPER_1_SECTION_DEFS = [
   { id: "comprehension", label: "Comprehension" },
   { id: "summary", label: "Summary" },
+] as const;
+
+export const TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS: readonly string[] =
+  TOPICALS_PAPER_1_SECTION_DEFS.map((s) => s.label);
+
+/** Paper 2 Topicals hub sections only (no overlap with Paper 1). */
+export const TOPICALS_PAPER_2_SECTION_DEFS = [
   { id: "essay", label: "Essay" },
   { id: "directed-writing", label: "Directed Writing" },
 ] as const;
 
 export const TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS: readonly string[] =
   TOPICALS_PAPER_2_SECTION_DEFS.map((s) => s.label);
-
-/** Paper 1 Topicals hub: these sections are always listed; Essay/Directed Writing are Paper 2 only. */
-export const TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS = ["Comprehension", "Summary"] as const;
 
 export const RESOURCE_HUB_CATEGORIES: {
   id: ResourceHubCategory;
