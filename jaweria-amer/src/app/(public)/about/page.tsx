@@ -109,17 +109,13 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-5 text-slate">
                   <p className="border-l-2 border-rose/25 pl-5 text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
-                    My approach is simple: reduce confusion, increase control.
-                    We work with real paper patterns, build repeatable writing
-                    structures, and practise under timed conditions &mdash; while
-                    keeping confidence intact.
+                    My approach is simple: reduce confusion and give students a sense of control. We work with real paper patterns, build repeatable writing structures, and practise under timed conditions — all while keeping confidence intact.
                   </p>
                   <p className="text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
-                    I teach English the way high-performing students need it:
-                    clear structures, precise feedback, and habits that hold up
-                    on exam day. Every session is designed around Cambridge
-                    marking criteria, because understanding how examiners think
-                    is what changes grades.
+                    Having achieved 9 A*/As at O Level and 5 A*/As at A Level, I understand the pressure students face in these exams. I've experienced it firsthand, which is why my focus is not just on teaching content, but on helping students stay composed and perform under pressure.
+                  </p>
+                  <p className="text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
+                    I teach English the way high-performing students actually need it: clear structures, precise feedback, and habits that hold up on exam day. Every session is built around Cambridge marking criteria, so students learn how to think like examiners and turn their writing into marks.
                   </p>
                 </div>
               </div>
@@ -134,7 +130,7 @@ export default function AboutPage() {
                   {
                     icon: Globe,
                     title: "International Experience",
-                    desc: "Education administration across Karachi, London, and Athens. A global perspective on university pathways.",
+                    desc: "Experience across multiple education systems, bringing a global perspective to student learning and academic pathways.",
                   },
                   {
                     icon: BookOpen,
