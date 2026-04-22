@@ -16,6 +16,7 @@ import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
 import { whatsAppGroupUrl, whatsAppUrl } from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
+import AnimatedCounter from "@/components/ui/animated-counter";
 import { WorkshopPromoSection } from "@/components/workshop-promo";
 
 export const metadata: Metadata = {
@@ -126,9 +127,13 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
           <div className="premium-reveal grid grid-cols-2 gap-10 lg:grid-cols-4 lg:gap-12">
             {stats.map((stat, i) => (
-              <div key={`ticker-${i}`} className="text-center">
+              <div
+                key={`ticker-${i}`}
+                className="text-center opacity-0 animate-fade-in-up"
+                style={{ animationDelay: `${i * 0.08}s` }}
+              >
                 <h3 className="mb-1.5 font-serif text-3xl font-semibold text-crimson sm:text-[2.1rem]">
-                  {String(stat.value ?? "")}
+                  <AnimatedCounter value={String(stat.value ?? "")} />
                 </h3>
                 <p className="text-sm leading-snug text-slate">{String(stat.label ?? "")}</p>
               </div>
