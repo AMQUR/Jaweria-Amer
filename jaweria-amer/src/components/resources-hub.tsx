@@ -305,6 +305,13 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     });
   }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year, safeResources]);
 
+  const paperResources = useMemo(() => {
+    if (category !== "topicals" || paper === "all") return [];
+    return safeResources.filter((r) => r.category === "topicals" && r.paper === paper);
+  }, [category, paper, safeResources]);
+
+  const isEmpty = !paperResources || paperResources.length === 0;
+
   function resetFilters() {
     selectCategory("all");
   }
@@ -566,6 +573,15 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
               {filtered.map((r) => (
                 <ResourceCard key={r.id} resource={r} />
               ))}
+            </div>
+          ) : category === "topicals" && paper !== "all" && isEmpty ? (
+            <div className="rounded-2xl border border-border/60 bg-white p-6 text-center shadow-sm sm:p-8">
+              <p className="text-sm leading-relaxed text-slate">
+                No resources available for this paper yet. Please check back soon.
+              </p>
+              {paper === "Paper 2" && (
+                <p className="mt-2 text-xs text-muted-foreground">Paper 2 resources will be added soon.</p>
+              )}
             </div>
           ) : GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && paper === "all" ? (
             <div className="rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:p-8">
