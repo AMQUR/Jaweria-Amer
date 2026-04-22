@@ -256,7 +256,7 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className={cn(
                 channelCardBase,
-                "border border-border/70 bg-white shadow-sm hover:border-border hover:shadow-md"
+                "cursor-pointer border-2 border-primary/28 bg-gradient-to-b from-white via-white to-crimson/[0.045] shadow-[0_10px_40px_rgba(112,20,20,0.11)] hover:border-primary/42 hover:shadow-lg"
               )}
             >
               <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted text-ink">
@@ -279,7 +279,7 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className={cn(
                 channelCardBase,
-                "border border-border/70 bg-white shadow-sm hover:border-border hover:shadow-md"
+                "cursor-pointer border-2 border-border/70 bg-gradient-to-b from-white via-muted/25 to-neutral-100/35 shadow-[0_10px_40px_rgba(34,16,18,0.1)] hover:border-border hover:shadow-lg"
               )}
             >
               <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted text-brand">
