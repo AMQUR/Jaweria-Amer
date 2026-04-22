@@ -150,11 +150,11 @@ const mcqSetsInternal: Record<string, McqSet> = {
           A: "Because she revised every evening, so she passed with confidence.",
           B: "She revised every evening. Because she passed with confidence.",
           C: "Because she revised every evening; she passed with confidence.",
-          D: "She passed with confidence, because she revised every evening.",
+          D: "She passed with confidence because she revised every morning.",
         },
         answer: "D",
         explanation:
-          'Do not use "because" and "so" together to link the same idea (A is wrong). A semicolon cannot replace the needed link after a lone "Because" clause (C). B reverses the logic. D is correct: main clause first, then the reason with a comma before "because": "She passed with confidence, because she revised every evening."',
+          "The original sentence is incorrect because 'Because she revised every evening' is a fragment. The correct rewrite combines the ideas into one complete sentence without a comma before 'because': She passed with confidence because she revised every morning.",
       },
       {
         section: "C",
