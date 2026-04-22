@@ -279,12 +279,171 @@ export function inferGeneralNotesSubCategory(
   const stem = basenameFromFileUrl(resource.fileUrl).replace(/\.[a-z0-9]+$/i, "");
   const haystack = `${resource.title} ${stem}`.toLowerCase().replace(/[-_]+/g, " ");
 
+  if (
+    haystack.includes("essay") ||
+    haystack.includes("descriptive") ||
+    haystack.includes("narrative") ||
+    haystack.includes("vocabulary for essay") ||
+    haystack.includes("sample essay")
+  ) {
+    return "essay-writing";
+  }
   if (haystack.includes("directed writing")) return "directed-writing";
+  if (haystack.includes("pde") || haystack.includes("short response") || haystack.includes("formats")) {
+    return "directed-writing";
+  }
   if (haystack.includes("comprehension")) return "comprehension";
   if (haystack.includes("summary")) return "summary-writing";
-  if (haystack.includes("essay")) return "essay-writing";
-  if (haystack.includes("grammar")) return "grammar";
+  if (
+    haystack.includes("grammar") ||
+    haystack.includes("sentence") ||
+    haystack.includes("punctuation") ||
+    haystack.includes("grammatical errors")
+  ) {
+    return "grammar";
+  }
   return undefined;
+}
+
+function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "fileUrl">): string {
+  const contentHaystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
+    .toLowerCase()
+    .replace(/[-_]+/g, " ");
+  const paperHaystack = resource.paper.toLowerCase();
+
+  if (
+    contentHaystack.includes("summary") ||
+    contentHaystack.includes("comprehension") ||
+    contentHaystack.includes("writer") ||
+    contentHaystack.includes("use of language")
+  ) {
+    return "Paper 2";
+  }
+
+  if (
+    contentHaystack.includes("directed") ||
+    contentHaystack.includes("essay") ||
+    contentHaystack.includes("descriptive") ||
+    contentHaystack.includes("narrative") ||
+    contentHaystack.includes("interviewer") ||
+    contentHaystack.includes("vocab") ||
+    contentHaystack.includes("phrases") ||
+    contentHaystack.includes("sentences") ||
+    contentHaystack.includes("pde") ||
+    contentHaystack.includes("short response")
+  ) {
+    return "Paper 1";
+  }
+
+  if (
+    paperHaystack.includes("paper 1") ||
+    /\bp1\b/.test(paperHaystack)
+  ) {
+    return "Paper 1";
+  }
+
+  if (paperHaystack.includes("paper 2") || /\bp2\b/.test(paperHaystack)) {
+    return "Paper 2";
+  }
+
+  return resource.paper;
+}
+
+function isMarkSchemeResource(resource: Pick<Resource, "title" | "fileUrl" | "category">): boolean {
+  const haystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
+    .toLowerCase()
+    .replace(/[-_]+/g, " ");
+  const inferred = inferCaieFromBasename(basenameFromFileUrl(resource.fileUrl));
+
+  return (
+    inferred.docKind === "ms" ||
+    haystack.includes("marking scheme") ||
+    /\bms\b/.test(haystack) ||
+    haystack.includes(" solved") ||
+    haystack.includes("solution")
+  );
+}
+
+function inferResourceSection(
+  resource: Pick<Resource, "title" | "fileUrl" | "category" | "subCategory" | "year">
+): string | undefined {
+  const haystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
+    .toLowerCase()
+    .replace(/[-_]+/g, " ");
+
+  if (resource.category === "general-notes") {
+    const subCategory = resource.subCategory ?? inferGeneralNotesSubCategory(resource);
+    if (subCategory === "summary-writing") return "Summary Writing";
+    if (subCategory === "comprehension") return "Comprehension";
+    if (subCategory === "essay-writing") return "Essay Writing";
+    if (subCategory === "directed-writing") return "Directed Writing";
+    if (subCategory === "grammar") return "Grammar";
+    return undefined;
+  }
+
+  if (resource.category === "topical-worksheets" || resource.category === "checklists") {
+    if (haystack.includes("summary")) return "Summary Writing";
+    if (
+      haystack.includes("comprehension") ||
+      haystack.includes("use of language") ||
+      haystack.includes("writer")
+    ) {
+      return "Comprehension";
+    }
+    if (
+      haystack.includes("vocab") ||
+      haystack.includes("vocabulary") ||
+      haystack.includes("writing words")
+    ) {
+      return "Vocabulary";
+    }
+    if (
+      haystack.includes("essay") ||
+      haystack.includes("descriptive") ||
+      haystack.includes("narrative")
+    ) {
+      return "Essay Writing";
+    }
+    if (
+      haystack.includes("directed") ||
+      haystack.includes("interviewer") ||
+      haystack.includes("phrases") ||
+      haystack.includes("sentences") ||
+      haystack.includes("pde") ||
+      haystack.includes("short response")
+    ) {
+      return "Directed Writing";
+    }
+    if (
+      haystack.includes("grammar") ||
+      haystack.includes("sentence") ||
+      haystack.includes("punctuation") ||
+      haystack.includes("grammatical errors")
+    ) {
+      return "Grammar";
+    }
+  }
+
+  if (resource.category === "yearly-past-papers" || resource.category === "checklists") {
+    if (/specimen/i.test(resource.title) || /specimen/i.test(resource.fileUrl)) return "Specimen";
+    if (resource.year && resource.year !== "Mixed" && resource.year !== "Practice" && resource.year !== "Current") {
+      return resource.year;
+    }
+  }
+
+  return undefined;
+}
+
+function shouldHideResource(resource: Pick<Resource, "title" | "fileUrl" | "category" | "subCategory" | "type">) {
+  const haystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
+    .toLowerCase()
+    .replace(/[-_]+/g, " ");
+
+  if (resource.type === "mcq") return false;
+  if (resource.category === "general-notes" && (resource.subCategory ?? inferGeneralNotesSubCategory(resource)) == null) {
+    return true;
+  }
+  return haystack.includes("syllabus") || haystack.includes("specification") || haystack.includes("changes in the syllabus");
 }
 
 /**
@@ -292,11 +451,45 @@ export function inferGeneralNotesSubCategory(
  * Preserves first occurrence order.
  */
 export function finalizeResourcesForSite(items: readonly Resource[]): Resource[] {
+  const normalized = items
+    .map((item) => {
+      const legacyChecklist = item.category === "checklists";
+      const cleanTitle = cleanCopyOfTitlePrefix(item.title);
+      const subCategory =
+        item.category === "general-notes" ? item.subCategory ?? inferGeneralNotesSubCategory(item) : item.subCategory;
+      const category = !legacyChecklist && isMarkSchemeResource(item) ? "checklists" : item.category;
+      const normalizedItem: Resource = {
+        ...item,
+        title: cleanTitle,
+        category,
+        paper: normalizeGuidedPaper(item),
+        subCategory,
+        section: inferResourceSection({ ...item, category, subCategory }),
+      };
+      return {
+        item: normalizedItem,
+        copyKey: `${category}|${normalizeFilenameKey(cleanTitle)}`,
+        legacyChecklist,
+        wasCopy: /^copy\s+of\s+/i.test(item.title.trim()),
+      };
+    })
+    .filter(({ item, legacyChecklist }) => !legacyChecklist && !shouldHideResource(item));
+
+  const preferredNonCopyKeys = new Set(
+    normalized.filter(({ wasCopy }) => !wasCopy).map(({ copyKey }) => copyKey)
+  );
+
   const out: Resource[] = [];
   const seenBasenames = new Set<string>();
   const seenIds = new Set<string>();
+  const seenTitleKeys = new Set<string>();
 
-  for (const item of items) {
+  for (const entry of normalized) {
+    const item = entry.item;
+    if (entry.wasCopy && preferredNonCopyKeys.has(entry.copyKey)) {
+      logDuplicateSkipped(item.title, "copy-of duplicate");
+      continue;
+    }
     if (seenIds.has(item.id)) {
       logDuplicateSkipped(`id:${item.id}`, "duplicate id");
       continue;
@@ -306,15 +499,16 @@ export function finalizeResourcesForSite(items: readonly Resource[]): Resource[]
       logDuplicateSkipped(basenameFromFileUrl(item.fileUrl), "normalized filename");
       continue;
     }
+    const titleKey = `${item.category}|${normalizeFilenameKey(item.title)}|${item.paper}|${item.section ?? ""}`;
+    if (titleKey.length > 0 && seenTitleKeys.has(titleKey)) {
+      logDuplicateSkipped(item.title, "normalized title");
+      continue;
+    }
 
     seenIds.add(item.id);
     if (bn.length > 0) seenBasenames.add(bn);
-    const withCleanTitle: Resource = { ...item, title: cleanCopyOfTitlePrefix(item.title) };
-    const enriched: Resource =
-      withCleanTitle.category === "general-notes" && withCleanTitle.subCategory === undefined
-        ? { ...withCleanTitle, subCategory: inferGeneralNotesSubCategory(withCleanTitle) }
-        : withCleanTitle;
-    out.push(enriched);
+    if (titleKey.length > 0) seenTitleKeys.add(titleKey);
+    out.push(item);
   }
   return out;
 }

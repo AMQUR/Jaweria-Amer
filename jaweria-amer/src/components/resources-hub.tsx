@@ -15,7 +15,6 @@ import {
 import {
   RESOURCE_HUB_CATEGORIES,
   resources,
-  START_HERE_RESOURCE_IDS,
   type Resource,
   type ResourceHubCategory,
   type ResourceNotesSubCategory,
@@ -37,6 +36,42 @@ const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   "quick-worksheets": Brain,
 };
 
+const GUIDED_SECTION_CATEGORIES = new Set<ResourceHubCategory>(["topical-worksheets", "checklists"]);
+
+const START_PATHWAYS: {
+  id: string;
+  title: string;
+  description: string;
+  category: ResourceHubCategory;
+  cta: string;
+  icon: typeof BookOpen;
+}[] = [
+  {
+    id: "foundation",
+    title: "Build Your Foundation",
+    description: "Start with topic-based notes before moving into practice.",
+    category: "general-notes",
+    cta: "Open Notes",
+    icon: BookOpen,
+  },
+  {
+    id: "yearlies",
+    title: "Practice with Real Papers",
+    description: "Work through official yearlies in a cleaner session-based list.",
+    category: "yearly-past-papers",
+    cta: "Open Yearlies",
+    icon: FolderOpen,
+  },
+  {
+    id: "mcqs",
+    title: "Test Yourself",
+    description: "Use quick MCQs for fast checks on grammar, punctuation, and accuracy.",
+    category: "quick-worksheets",
+    cta: "Open MCQs",
+    icon: Brain,
+  },
+];
+
 function uniqueSorted(values: string[]) {
   return [...new Set(values.map((v) => v.trim()).filter(Boolean))].sort((a, b) =>
     a.localeCompare(b)
@@ -46,10 +81,9 @@ function uniqueSorted(values: string[]) {
 const selectClass =
   "w-full rounded-xl border border-input bg-white px-3 py-2.5 text-sm text-ink shadow-[inset_0_1px_1px_rgba(34,16,18,0.03)] transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25";
 
-type NotesSubCategoryFilter = "unset" | "all" | ResourceNotesSubCategory;
+type NotesSubCategoryFilter = "unset" | ResourceNotesSubCategory;
 
-const NOTES_SUBCATEGORY_OPTIONS: { value: "all" | ResourceNotesSubCategory; label: string }[] = [
-  { value: "all", label: "All" },
+const NOTES_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
   { value: "summary-writing", label: "Summary Writing" },
   { value: "comprehension", label: "Comprehension" },
   { value: "essay-writing", label: "Essay Writing" },
@@ -71,30 +105,18 @@ const topicBrowseCardClass = (active: boolean) =>
     active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
   );
 
-/** Secondary action: matches vault surfaces (border, muted fill), reads as a chip — not primary CTA. */
-const viewAllNotesChipClass =
-  "inline-flex items-center justify-center rounded-full border border-border/70 bg-muted/50 px-4 py-2 text-xs font-medium text-ink shadow-[inset_0_1px_1px_rgba(34,16,18,0.04)] transition-all hover:border-border hover:bg-white hover:shadow-[0_2px_10px_rgba(34,16,18,0.06)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25";
-
 export function ResourcesHub() {
   const [category, setCategory] = useState<ResourceHubCategory | "all">("all");
-  const [notesSubCategory, setNotesSubCategory] = useState<NotesSubCategoryFilter>("all");
+  const [notesSubCategory, setNotesSubCategory] = useState<NotesSubCategoryFilter>("unset");
   const [subject, setSubject] = useState("all");
   const [level, setLevel] = useState("all");
   const [paper, setPaper] = useState("all");
   const [year, setYear] = useState("all");
+  const [section, setSection] = useState("all");
 
   const scrollToResourceGrid = useCallback(() => {
     document.getElementById("resource-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }, []);
-
-  function selectCategory(next: ResourceHubCategory | "all") {
-    setCategory(next);
-    setNotesSubCategory(next === "general-notes" ? "unset" : "all");
-    setSubject("all");
-    setLevel("all");
-    setPaper("all");
-    setYear("all");
-  }
 
   const topicTapTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [topicTapId, setTopicTapId] = useState<ResourceNotesSubCategory | null>(null);
@@ -105,80 +127,132 @@ export function ResourcesHub() {
     };
   }, []);
 
-  function pickNotesTopic(next: "all" | ResourceNotesSubCategory) {
-    setNotesSubCategory(next);
+  const scopedForFilters = useMemo(
+    () => (category === "all" ? resources : resources.filter((r) => r.category === category)),
+    [category]
+  );
+
+  const scopedForResults = useMemo(
+    () => (category === "all" ? [] : resources.filter((r) => r.category === category)),
+    [category]
+  );
+
+  const subjectOptions = useMemo(() => uniqueSorted(scopedForFilters.map((r) => r.subject)), [scopedForFilters]);
+  const levelOptions = useMemo(() => uniqueSorted(scopedForFilters.map((r) => r.level)), [scopedForFilters]);
+  const yearOptions = useMemo(() => uniqueSorted(scopedForFilters.map((r) => r.year)), [scopedForFilters]);
+  const paperOptions = useMemo(() => {
+    const values = uniqueSorted(scopedForFilters.map((r) => r.paper));
+    return GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)
+      ? values.filter((value) => value === "Paper 1" || value === "Paper 2")
+      : values;
+  }, [category, scopedForFilters]);
+  const sectionOptions = useMemo(() => {
+    if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) || paper === "all") return [];
+    return uniqueSorted(
+      scopedForFilters
+        .filter((r) => r.paper === paper)
+        .map((r) => r.section ?? "")
+        .filter(Boolean)
+    );
+  }, [category, paper, scopedForFilters]);
+
+  function selectCategory(next: ResourceHubCategory | "all") {
+    setCategory(next);
+    setNotesSubCategory("unset");
+    setSubject("all");
+    setLevel("all");
+    setPaper("all");
+    setYear("all");
+    setSection("all");
+  }
+
+  function openCategory(next: ResourceHubCategory) {
+    selectCategory(next);
     requestAnimationFrame(() => scrollToResourceGrid());
   }
 
   function handleTopicTileClick(id: ResourceNotesSubCategory) {
     if (topicTapTimeoutRef.current) clearTimeout(topicTapTimeoutRef.current);
     setTopicTapId(id);
-    pickNotesTopic(id);
+    setNotesSubCategory(id);
+    requestAnimationFrame(() => scrollToResourceGrid());
     topicTapTimeoutRef.current = setTimeout(() => {
       setTopicTapId(null);
       topicTapTimeoutRef.current = null;
     }, 200);
   }
 
-  const scoped = useMemo(
-    () => (category === "all" ? resources : resources.filter((r) => r.category === category)),
-    [category]
-  );
-
-  const subjectOptions = useMemo(() => uniqueSorted(scoped.map((r) => r.subject)), [scoped]);
-  const levelOptions = useMemo(() => uniqueSorted(scoped.map((r) => r.level)), [scoped]);
-  const paperOptions = useMemo(() => uniqueSorted(scoped.map((r) => r.paper)), [scoped]);
-  const yearOptions = useMemo(() => uniqueSorted(scoped.map((r) => r.year)), [scoped]);
-
   const filtered = useMemo(() => {
-    return scoped.filter((r) => {
+    if (category === "all") return [];
+
+    return scopedForResults.filter((r) => {
       if (category === "general-notes") {
         if (notesSubCategory === "unset") return false;
-        if (notesSubCategory !== "all" && r.subCategory !== notesSubCategory) return false;
+        if (r.subCategory !== notesSubCategory) return false;
       }
+
+      if (GUIDED_SECTION_CATEGORIES.has(category)) {
+        if (paper === "all" || r.paper !== paper) return false;
+        if (section === "all" || r.section !== section) return false;
+      } else if (paper !== "all" && r.paper !== paper) {
+        return false;
+      }
+
       if (subject !== "all" && r.subject !== subject) return false;
       if (level !== "all" && r.level !== level) return false;
-      if (paper !== "all" && r.paper !== paper) return false;
       if (year !== "all" && r.year !== year) return false;
       return true;
     });
-  }, [scoped, category, notesSubCategory, subject, level, paper, year]);
-
-  const startHereResources = useMemo(() => {
-    return START_HERE_RESOURCE_IDS.map((id) => resources.find((r) => r.id === id)).filter(
-      (r): r is Resource => r != null
-    );
-  }, []);
-
-  const startHereIdSet = useMemo(() => new Set(START_HERE_RESOURCE_IDS), []);
-
-  const filteredMain = useMemo(
-    () => filtered.filter((r) => !startHereIdSet.has(r.id)),
-    [filtered, startHereIdSet]
-  );
+  }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year]);
 
   function resetFilters() {
     selectCategory("all");
   }
 
+  let emptyState = "Choose a category above to start exploring resources.";
+  if (category === "general-notes" && notesSubCategory === "unset") {
+    emptyState = "Choose a notes topic above to see the files in that area.";
+  } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && paper === "all") {
+    emptyState = "Select Paper 1 or Paper 2 to continue.";
+  } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all") {
+    emptyState = "Select a section to see the matching files.";
+  } else if (category !== "all") {
+    emptyState = "No resources match these filters.";
+  }
+
   return (
     <section className="bg-cream py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {startHereResources.length > 0 && (
-          <div className="mb-12 rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-8">
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
-              Start Here
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
-              Recommended for new students
-            </p>
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {startHereResources.map((r) => (
-                <ResourceCard key={`start-${r.id}`} resource={r} />
-              ))}
-            </div>
+        <div className="mb-12 rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-8">
+          <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
+            Start Your Preparation
+          </h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
+            Choose a path based on what you want to improve.
+          </p>
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {START_PATHWAYS.map((pathway) => {
+              const Icon = pathway.icon;
+              return (
+                <button
+                  key={pathway.id}
+                  type="button"
+                  onClick={() => openCategory(pathway.category)}
+                  className="rounded-xl border border-border/70 bg-white p-6 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-border hover:shadow-[0_6px_22px_rgba(34,16,18,0.07)]"
+                >
+                  <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-brand">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <h3 className="font-serif text-base font-semibold leading-snug text-ink">{pathway.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate">{pathway.description}</p>
+                  <span className="mt-6 inline-flex items-center text-sm font-medium text-brand">
+                    {pathway.cta}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        )}
+        </div>
 
         <div className="mb-12 grid gap-3 sm:grid-cols-2 lg:mb-14 lg:grid-cols-5">
           <button
@@ -190,7 +264,9 @@ export function ResourcesHub() {
             )}
           >
             <p className="font-serif text-sm font-semibold text-ink">All</p>
-            <p className="mt-1.5 text-xs leading-relaxed text-slate">Browse the full vault.</p>
+            <p className="mt-1.5 text-xs leading-relaxed text-slate">
+              Pick a category to unlock guided navigation.
+            </p>
           </button>
           {RESOURCE_HUB_CATEGORIES.map((cat) => {
             const Icon = categoryIcon[cat.id];
@@ -223,7 +299,7 @@ export function ResourcesHub() {
               Browse Notes by Topic
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
-              Choose a focus area to see matching notes, or open the full notes list.
+              Pick one topic to focus your notes before opening the file list.
             </p>
             <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
               {NOTES_TOPIC_BLOCKS.map((topic) => {
@@ -243,11 +319,6 @@ export function ResourcesHub() {
                   </button>
                 );
               })}
-            </div>
-            <div className="mt-6">
-              <button type="button" onClick={() => pickNotesTopic("all")} className={viewAllNotesChipClass}>
-                View all notes in this section
-              </button>
             </div>
           </div>
         )}
@@ -293,9 +364,22 @@ export function ResourcesHub() {
               </select>
             </label>
             <label className="block space-y-1">
-              <span className="text-xs font-medium text-slate">Paper</span>
-              <select className={selectClass} value={paper} onChange={(e) => setPaper(e.target.value)}>
-                <option value="all">All papers</option>
+              <span className="text-xs font-medium text-slate">
+                {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? "Step 1: Paper" : "Paper"}
+              </span>
+              <select
+                className={selectClass}
+                value={paper}
+                onChange={(e) => {
+                  setPaper(e.target.value);
+                  setSection("all");
+                }}
+              >
+                <option value="all">
+                  {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)
+                    ? "Select a paper"
+                    : "All papers"}
+                </option>
                 {paperOptions.map((s) => (
                   <option key={s} value={s}>
                     {s}
@@ -304,29 +388,40 @@ export function ResourcesHub() {
               </select>
             </label>
             <label className="block space-y-1">
-              <span className="text-xs font-medium text-slate">Year</span>
-              <select className={selectClass} value={year} onChange={(e) => setYear(e.target.value)}>
-                <option value="all">All years</option>
-                {yearOptions.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+              <span className="text-xs font-medium text-slate">
+                {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? "Step 2: Section" : "Year"}
+              </span>
+              {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? (
+                <select className={selectClass} value={section} onChange={(e) => setSection(e.target.value)}>
+                  <option value="all">Select a section</option>
+                  {sectionOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <select className={selectClass} value={year} onChange={(e) => setYear(e.target.value)}>
+                  <option value="all">All years</option>
+                  {yearOptions.map((s) => (
+                    <option key={s} value={s}>
+                      {s}
+                    </option>
+                  ))}
+                </select>
+              )}
             </label>
           </div>
-          {category === "general-notes" && notesSubCategory !== "unset" && (
+          {category === "general-notes" && (
             <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:max-w-xs">
               <label className="block space-y-1">
                 <span className="text-xs font-medium text-slate">Note focus</span>
                 <select
                   className={selectClass}
                   value={notesSubCategory}
-                  onChange={(e) => {
-                    const v = e.target.value as "all" | ResourceNotesSubCategory;
-                    setNotesSubCategory(v);
-                  }}
+                  onChange={(e) => setNotesSubCategory(e.target.value as NotesSubCategoryFilter)}
                 >
+                  <option value="unset">Choose a topic</option>
                   {NOTES_SUBCATEGORY_OPTIONS.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}
@@ -336,28 +431,22 @@ export function ResourcesHub() {
               </label>
             </div>
           )}
+          {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && (
+            <p className="mt-3 text-xs leading-relaxed text-slate">
+              Complete both steps before files appear.
+            </p>
+          )}
         </div>
 
         <div id="resource-grid" className="scroll-mt-24 sm:scroll-mt-28">
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredMain.map((r) => (
-              <ResourceCard key={r.id} resource={r} />
-            ))}
-          </div>
-
-          {category === "general-notes" && notesSubCategory === "unset" && (
-            <div className="flex flex-col items-center gap-4 py-16">
-              <p className="max-w-md text-center text-sm leading-relaxed text-slate">
-                Choose a topic above to browse notes, or open the full list.
-              </p>
-              <button type="button" onClick={() => pickNotesTopic("all")} className={viewAllNotesChipClass}>
-                View all notes in this section
-              </button>
+          {filtered.length > 0 ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((r) => (
+                <ResourceCard key={r.id} resource={r} />
+              ))}
             </div>
-          )}
-
-          {!(category === "general-notes" && notesSubCategory === "unset") && filteredMain.length === 0 && (
-            <p className="py-16 text-center text-sm text-slate">No resources match these filters.</p>
+          ) : (
+            <p className="py-16 text-center text-sm text-slate">{emptyState}</p>
           )}
         </div>
       </div>
@@ -369,7 +458,9 @@ const scriptsChipClass =
   "mb-2 inline-flex w-fit rounded-md border border-border/60 bg-muted/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
 
 function ResourceCard({ resource }: { resource: Resource }) {
-  const meta = [resource.level, resource.subject, resource.year, resource.paper].join(" · ");
+  const meta = [resource.level, resource.subject, resource.section, resource.year, resource.paper]
+    .filter(Boolean)
+    .join(" · ");
   const displayTitle = formatDisplayTitle(resource.title, resource.category);
   const isScripts = resource.category === "examiner-reports";
   const isMcq = resource.type === "mcq";
@@ -380,9 +471,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
 
   return (
     <article className="flex flex-col rounded-xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-border hover:shadow-[0_6px_22px_rgba(34,16,18,0.07)]">
-      {isMcq && (
-        <span className={scriptsChipClass}>MCQ Assessment</span>
-      )}
+      {isMcq && <span className={scriptsChipClass}>MCQ Assessment</span>}
       {vaultChip && !isMcq && <span className={scriptsChipClass}>{vaultChip}</span>}
       <h3 className="font-serif text-base font-semibold leading-snug text-ink">{titleMain}</h3>
       {isScripts && titleSecondary ? (

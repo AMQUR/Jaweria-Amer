@@ -8,12 +8,12 @@ import { ResourcesHub } from "@/components/resources-hub";
 export const metadata: Metadata = {
   title: "Resources",
   description:
-    "Free vault: notes, topical worksheets, past papers, examiner reports, and checklists for Cambridge O Level English (1123).",
+    "Free vault: notes, topicals, yearlies, scripts, marking schemes, and MCQ drills for Cambridge O Level English (1123).",
   alternates: { canonical: "/resources" },
   openGraph: {
     title: `Resources | ${siteConfig.name}`,
     description:
-      "Notes, worksheets, past papers, examiner reports, and checklists — organised for purposeful practice.",
+      "Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised for purposeful practice.",
     type: "website",
     url: "/resources",
   },
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: `Resources | ${siteConfig.name}`,
     description:
-      "Notes, worksheets, past papers, examiner reports, and checklists — organised for purposeful practice.",
+      "Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised for purposeful practice.",
   },
 };
 
@@ -37,8 +37,8 @@ export default function ResourcesPage() {
             Resources
           </h1>
           <p className="max-w-2xl text-sm leading-relaxed text-white/72 sm:text-base">
-            Notes, worksheets, past papers, examiner reports, and checklists — organised so you can
-            find what you need quickly and practise with purpose.
+            Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised so you can
+            practise with a clear path instead of a file dump.
           </p>
         </div>
       </section>

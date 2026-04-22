@@ -190,14 +190,14 @@ export const mcqSets: Record<string, McqSet> = {
         section: "A",
         question: "Which sentence is written correctly?",
         options: {
-          A: "Its raining; we should take umbrellas.",
-          B: "It's raining; we should take umbrellas.",
-          C: "Its' raining; we should take umbrellas.",
-          D: "Its raining we should take umbrellas.",
+          A: "\"That’s amazing\", she said.",
+          B: "\"That’s amazing!\", she said.",
+          C: "\"That’s amazing\"! she said.",
+          D: "\"That’s amazing!\" she said.",
         },
         answer: "B",
         explanation:
-          '"It\'s" means "it is"; "its" (no apostrophe) shows possession.',
+          'Place the exclamation mark inside the quotation marks and the comma outside: "That’s amazing!", she said.',
       },
       {
         section: "A",
@@ -215,16 +215,16 @@ export const mcqSets: Record<string, McqSet> = {
       // SECTION B — Common Exam Errors (4)
       {
         section: "B",
-        question: "Which sentence mixes past and future without a clear reason?",
+        question: "Which sentence uses the correct word?",
         options: {
-          A: "She walked home and made dinner.",
-          B: "He studied all night, and he will pass easily.",
-          C: "They finished early and caught the bus.",
-          D: "The bell rang and the lesson began.",
+          A: "We reached the station than boarded the train.",
+          B: "We reached the station then boarded the train.",
+          C: "We reached the station then the train was late than expected.",
+          D: "We reached the station than the train was late then expected.",
         },
         answer: "B",
         explanation:
-          'Past "studied" clashes with future "will pass"; use one time frame or add a clear link.',
+          '"Then" relates to time or sequence. "Than" is used for comparison.',
       },
       {
         section: "B",
@@ -241,16 +241,16 @@ export const mcqSets: Record<string, McqSet> = {
       },
       {
         section: "B",
-        question: "Which sentence would lose marks in a formal exam answer?",
+        question: "Which sentence uses the correct word?",
         options: {
-          A: "The committee met for two hours before voting.",
-          B: "The committee was gonna vote after a long chat.",
-          C: "The committee has issued its final statement.",
-          D: "The findings support the board's recommendation.",
+          A: "Their is a quiet corner near the library.",
+          B: "There revision notes are on the desk.",
+          C: "Their revision group meets after school.",
+          D: "The students left there bags in class.",
         },
-        answer: "B",
+        answer: "C",
         explanation:
-          "\"Gonna\" and \"chat\" are too informal; the other sentences fit serious exam English.",
+          '"Their" shows possession. "There" refers to a place or position.',
       },
       {
         section: "B",
