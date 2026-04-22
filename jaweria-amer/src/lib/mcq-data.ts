@@ -1,4 +1,8 @@
 // All answers verified against Cambridge 1123 conventions (British English rules).
+// Audit log (subtle fixes): comma+but drill (removed short-clause ambiguity), "Because…" set (A=because+so),
+// comma splice with "however" (replaced debatable "although" line), collective Q → "every one… was",
+// fragment While-clause distractor D (verb claim removed), list + Despite-rain explanations tightened,
+// dialogue-after-tag explanation (proper noun vs reporting verb).
 
 export type McqOption = "A" | "B" | "C" | "D";
 
@@ -75,11 +79,11 @@ const mcqSetsInternal: Record<string, McqSet> = {
           A: "A sentence — it has a subject and a verb.",
           B: "A fragment — it starts with \"While\" and does not finish the thought.",
           C: "A sentence — it ends with a full stop.",
-          D: "A fragment — it has no verb.",
+          D: "A fragment — it cannot stand alone because the main idea never arrives.",
         },
         answer: "B",
         explanation:
-          'The line begins with "While," so the reader expects more after the comma or full stop. On its own it is a fragment.',
+          'The line has a subject and a verb inside the subordinate clause, but it still depends on a main clause ("...they kept cheering") that never arrives. A full stop alone cannot make it complete — it is a fragment.',
       },
       // SECTION B — comma placement (4)
       {
@@ -113,16 +117,16 @@ const mcqSetsInternal: Record<string, McqSet> = {
       {
         section: "B",
         question:
-          "Which sentence correctly joins two full ideas with a comma and \"but\"?",
+          "Which sentence correctly joins two full ideas with a comma and \"but\"? (Cambridge-style: comma before the coordinator between two independent clauses.)",
         options: {
           A: "The plan looked simple it failed at the first step.",
           B: "The plan looked simple, but it failed at the first step.",
           C: "The plan looked simple but, it failed at the first step.",
-          D: "The plan looked simple but it failed at the first step.",
+          D: "The plan looked simple, it failed at the first step.",
         },
         answer: "B",
         explanation:
-          'Two full ideas joined by "but" need a comma before "but": "...simple, but it failed..."',
+          'Two independent clauses cannot be fused with no punctuation (A) or joined with only a comma (D — a comma splice). The comma must sit immediately before the coordinator: "The plan looked simple, but it failed at the first step." C misplaces the comma after "but."',
       },
       {
         section: "B",
@@ -143,27 +147,27 @@ const mcqSetsInternal: Record<string, McqSet> = {
         section: "C",
         question: "Which rewrite fixes the error?\n\"Because she revised every evening. She passed with confidence.\"",
         options: {
-          A: "Because she revised every evening she passed with confidence.",
+          A: "Because she revised every evening, so she passed with confidence.",
           B: "She revised every evening. Because she passed with confidence.",
           C: "Because she revised every evening; she passed with confidence.",
           D: "She passed with confidence, because she revised every evening.",
         },
         answer: "D",
         explanation:
-          'The first line is only half an idea after "Because." Putting the main idea first often reads clearly: "She passed with confidence, because she revised every evening."',
+          'Do not use "because" and "so" together to link the same idea (A is wrong). A semicolon cannot replace the needed link after a lone "Because" clause (C). B reverses the logic. D is correct: main clause first, then the reason with a comma before "because": "She passed with confidence, because she revised every evening."',
       },
       {
         section: "C",
-        question: "What is wrong here?\n\"I wanted to stay longer, although I left early.\"",
+        question: "What is wrong here?\n\"I left the hall early, however I had paid for a full ticket.\"",
         options: {
-          A: "The word \"although\" turns the meaning the wrong way.",
-          B: "A comma cannot appear in this sentence.",
-          C: "The sentence needs a semicolon after \"longer.\"",
-          D: "Both parts should be questions.",
+          A: "Two full ideas cannot be joined only by \", however\" — use a full stop or semicolon before \"However\".",
+          B: "The word \"however\" should be deleted entirely.",
+          C: "A colon is required after \"early\".",
+          D: "Both clauses must end with a question mark.",
         },
         answer: "A",
         explanation:
-          '"Although" suggests something surprising — usually that you did not stay. If you left early because you wanted to stay longer, use a word that shows result, such as "so": "I wanted to stay longer, so I was disappointed to leave early."',
+          '"However" is not a coordinating conjunction like "and" or "but." Between two full statements you need a full stop or semicolon, then "However," with a capital H: "I left the hall early. However, I had paid for a full ticket." A comma alone creates a comma splice.',
       },
       {
         section: "C",
@@ -176,7 +180,7 @@ const mcqSetsInternal: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          '"Yet" can join two full ideas like "but." Use a comma before it: "She practised daily, yet her scores barely moved." "However" cannot be used like "yet" here without heavier punctuation.',
+          '"Yet" joins two independent clauses like "but," with a comma before it: "She practised daily, yet her scores barely moved." A is wrong because "however" is not a plain coordinator here — you would need a full stop or semicolon before "However,". C misplaces the comma; D uses a semicolon before "yet," which is heavy and non-standard for this pattern.',
       },
     ],
   },
@@ -272,14 +276,14 @@ const mcqSetsInternal: Record<string, McqSet> = {
         section: "B",
         question: "Which sentence is written correctly?",
         options: {
-          A: "The jury has reached its verdict.",
-          B: "The jury have reached their verdict.",
-          C: "The jury has reached their verdict.",
-          D: "The jury have reached its verdict.",
+          A: "Every one of the players were ready for kick-off.",
+          B: "Every one of the players was ready for kick-off.",
+          C: "Each of the players were ready for kick-off.",
+          D: "Everyone of the players was ready for kick-off.",
         },
-        answer: "A",
+        answer: "B",
         explanation:
-          'Treat "jury" as one unit in formal writing: singular verb "has" and "its."',
+          'With "every one of the + plural noun," the phrase "every one" is singular, so use "was." "Each of the players" also needs a singular verb ("was") — C is wrong. "Everyone of" is not standard English (say "everyone in the team").',
       },
       // SECTION C — Fix the Sentence (3)
       {
@@ -391,7 +395,7 @@ const mcqSetsInternal: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          'In a list of three or more items, commas separate each item. "She bought apples, oranges, and bananas" places commas correctly between all items. Option A is missing the comma after "apples"; Option C puts an incorrect comma after "bought"; Option D places the comma in the wrong position before "bananas".',
+          'In a list of three or more items, commas must separate each item: "She bought apples, oranges, and bananas." A comma before the final "and" (sometimes called an Oxford comma) is acceptable in Cambridge international English and avoids ambiguity. A omits the comma after "apples"; C and D misplace commas.',
       },
       {
         section: "B",
@@ -478,7 +482,7 @@ const mcqSetsInternal: Record<string, McqSet> = {
         },
         answer: "B",
         explanation:
-          '"Despite the rain, the match continued, and the fans cheered loudly" is correctly punctuated throughout: a comma follows the opening phrase "Despite the rain", and a comma precedes "and" when it joins two full ideas. Option A omits the opening comma and misplaces the second; Option C puts an incorrect comma after "Despite"; Option D misplaces the second comma.',
+          'After the opening adverbial ("Despite the rain,"), a comma separates two independent clauses joined by "and": "the match continued" + "the fans cheered loudly." That needs a comma before "and." Correct line: "Despite the rain, the match continued, and the fans cheered loudly." A omits the first comma and misplaces another; C breaks "Despite the rain"; D wrongly splits "the fans cheered."',
       },
     ],
   },
@@ -521,7 +525,7 @@ const mcqSetsInternal: Record<string, McqSet> = {
         },
         answer: "A",
         explanation:
-          'When a dialogue tag follows the spoken words, a comma (not a full stop) ends the quoted speech inside the quotation marks, and the tag begins with a lower-case letter. "\"I cannot believe it,\" Sara said." is the only option that applies all these rules correctly.',
+          'When a dialogue tag follows the spoken words, a comma (not a full stop) ends the quoted speech inside the quotation marks; the reporting verb stays lower case ("said"). The name "Sara" stays capitalised as a proper noun. Correct line: "I cannot believe it," Sara said.',
       },
       {
         section: "A",
