@@ -40,36 +40,56 @@ async function sanitizePublicResources(resources: Resource[]) {
   return sanitized.filter((resource): resource is Resource => Boolean(resource));
 }
 
+/** Curated static catalog — same source as pre-CMS `staticResources` in @/lib/data. */
+function getStaticResources(): Resource[] {
+  return staticResources;
+}
+
+async function getSanitizedOrRawStatic(): Promise<Resource[]> {
+  const base = getStaticResources();
+  const sanitized = await sanitizePublicResources(base);
+  if (sanitized.length > 0) {
+    return sanitized;
+  }
+  if (base.length > 0) {
+    console.warn("public-cms: sanitized static was empty; using raw static resource list for public display");
+    return base;
+  }
+  return [];
+}
+
 export async function getPublicResources(): Promise<Resource[]> {
   try {
     const cmsData = await getCmsResources();
     const cmsResources = cmsData?.filter((item) => !item.deleted && item.visibility === "published") ?? [];
-    const resources = await sanitizePublicResources(
+    const fromCms = await sanitizePublicResources(
       cmsResources.map(
-      (item) =>
-        ({
-          id: item.id,
-          title: item.title,
-          category: item.category,
-          subCategory: item.subCategory,
-          paper: item.paper,
-          section: item.section,
-          fileUrl: item.fileUrl,
-          type: item.type === "mcq" ? "mcq" : undefined,
-          subject: item.subject,
-          level: item.level,
-          year: item.year,
-          description: item.description,
-        }) satisfies Resource
+        (item) =>
+          ({
+            id: item.id,
+            title: item.title,
+            category: item.category,
+            subCategory: item.subCategory,
+            paper: item.paper,
+            section: item.section,
+            fileUrl: item.fileUrl,
+            type: item.type === "mcq" ? "mcq" : undefined,
+            subject: item.subject,
+            level: item.level,
+            year: item.year,
+            description: item.description,
+          }) satisfies Resource
       )
     );
-    console.log("Resources count:", resources?.length ?? 0);
-    return resources;
+
+    if (Array.isArray(fromCms) && fromCms.length > 0) {
+      return fromCms;
+    }
+    console.error("CMS public list empty after sanitize, using static fallback");
+    return getSanitizedOrRawStatic();
   } catch (error) {
-    console.error("Falling back to static resources:", error);
-    const resources = await sanitizePublicResources(staticResources);
-    console.log("Resources count:", resources?.length ?? 0);
-    return resources;
+    console.error("CMS failed, using static fallback", error);
+    return getSanitizedOrRawStatic();
   }
 }
 

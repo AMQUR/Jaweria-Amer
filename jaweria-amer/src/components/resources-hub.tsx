@@ -541,10 +541,10 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
           {!safeResources.length ? (
             <div className="rounded-2xl border border-border/60 bg-white p-6 text-center shadow-sm sm:p-8">
               <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
-                Loading resources...
+                No resources available yet. Please refresh.
               </h2>
               <p className="mt-2 text-sm leading-relaxed text-slate">
-                Resources are being prepared safely. Please refresh in a moment if this takes longer than expected.
+                If this message persists, try refreshing the page.
               </p>
             </div>
           ) : category === "all" ? (
