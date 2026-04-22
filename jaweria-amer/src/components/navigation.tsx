@@ -26,7 +26,7 @@ export function Navigation() {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+        "fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,box-shadow] duration-200 ease-out",
         scrolled
           ? "border-b border-border/80 bg-white/95 shadow-[0_1px_0_rgba(34,16,18,0.04)] backdrop-blur-md"
           : "bg-transparent"
@@ -75,7 +75,7 @@ export function Navigation() {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackWhatsAppClick({ location: "nav_desktop", variant: "direct" })}
-                className="rounded-xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_2px_10px_rgba(112,20,20,0.15)]"
+                className="rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
               >
                 WhatsApp
               </Link>
@@ -85,10 +85,10 @@ export function Navigation() {
                 rel="noopener noreferrer"
                 onClick={() => trackWhatsAppClick({ location: "nav_desktop", variant: "group" })}
                 className={cn(
-                  "rounded-xl border px-3 py-2.5 text-sm font-medium transition-all",
+                  "rounded-2xl border px-3 py-2.5 text-sm font-medium shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0",
                   isTransparent
                     ? "border-white/30 bg-white/10 text-white hover:bg-white/18"
-                    : "border-border/90 bg-white text-ink shadow-none hover:border-border hover:bg-muted/40"
+                    : "border-border/90 bg-white text-ink hover:border-border hover:bg-muted/40"
                 )}
               >
                 Group
@@ -99,7 +99,7 @@ export function Navigation() {
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
               className={cn(
-                "rounded-lg p-2 transition-colors md:hidden",
+                "rounded-2xl p-2 transition-[transform,background-color,color] duration-200 ease-out active:scale-[0.98] md:hidden",
                 isTransparent ? "text-white" : "text-ink"
               )}
               aria-label="Open menu"
@@ -120,7 +120,7 @@ export function Navigation() {
                       href={item.href}
                       onClick={() => setOpen(false)}
                       className={cn(
-                        "rounded-lg px-3 py-2.5 text-base tracking-[0.02em] transition-colors",
+                        "rounded-2xl px-3 py-2.5 text-base tracking-[0.02em] transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-sm active:scale-[0.98] motion-reduce:hover:translate-y-0",
                         active ? "bg-muted font-medium text-ink" : "text-slate hover:bg-muted/60 hover:text-ink"
                       )}
                     >
@@ -137,7 +137,7 @@ export function Navigation() {
                       trackWhatsAppClick({ location: "nav_mobile_sheet", variant: "direct" });
                       setOpen(false);
                     }}
-                    className="rounded-xl bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground shadow-sm transition-colors hover:bg-brand-accent"
+                    className="rounded-2xl bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                   >
                     WhatsApp
                   </Link>
@@ -149,7 +149,7 @@ export function Navigation() {
                       trackWhatsAppClick({ location: "nav_mobile_sheet", variant: "group" });
                       setOpen(false);
                     }}
-                    className="rounded-xl border border-border bg-white py-2.5 text-center text-sm font-medium text-ink transition-colors hover:bg-muted/50"
+                    className="rounded-2xl border border-border/60 bg-white py-2.5 text-center text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-muted/50 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                   >
                     WhatsApp group
                   </Link>

@@ -15,7 +15,7 @@ const categoryColors: Record<string, string> = {
 
 export function CourseCard({ course }: { course: Course }) {
   return (
-    <Card className="group overflow-hidden border-border/70 motion-reduce:hover:translate-y-0 hover:-translate-y-1 hover:shadow-[0_14px_44px_rgba(34,16,18,0.1)] motion-reduce:hover:shadow-[0_1px_3px_rgba(34,16,18,0.04)]">
+    <Card className="group overflow-hidden border-border/60 shadow-sm motion-reduce:hover:translate-y-0 hover:-translate-y-0.5 hover:shadow-md">
       <CardContent className="flex h-full flex-col p-6 sm:p-7">
         <div className="mb-5 flex items-start justify-between gap-3">
           <Badge
@@ -24,17 +24,19 @@ export function CourseCard({ course }: { course: Course }) {
           >
             {course.categoryLabel}
           </Badge>
-          <span className="max-w-[14rem] shrink-0 text-right text-xs font-medium leading-snug text-slate sm:max-w-[15rem] sm:text-sm">
+          <span className="max-w-[14rem] shrink-0 text-right text-xs font-medium leading-relaxed text-muted-foreground sm:max-w-[15rem] sm:text-sm">
             {getPublicCoursePriceLabel(course)}
           </span>
         </div>
 
-        <h3 className="mb-1.5 font-serif text-lg font-semibold leading-snug text-ink sm:text-xl">{course.title}</h3>
-        <p className="mb-3 text-xs leading-snug text-slate-light">{course.subtitle}</p>
+        <h3 className="mb-1.5 font-serif text-xl font-semibold leading-relaxed tracking-tight text-ink sm:text-2xl">
+          {course.title}
+        </h3>
+        <p className="mb-3 text-xs leading-relaxed text-muted-foreground">{course.subtitle}</p>
 
-        <p className="mb-6 flex-1 text-sm leading-relaxed text-slate">{course.description}</p>
+        <p className="mb-6 flex-1 text-sm leading-relaxed text-slate sm:text-base">{course.description}</p>
 
-        <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-slate-light">
+        <div className="mb-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-muted-foreground">
           <span className="flex items-center gap-1.5">
             <Clock className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
             {course.duration}
@@ -52,7 +54,7 @@ export function CourseCard({ course }: { course: Course }) {
             variant="direct"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.18)] active:scale-100 motion-reduce:hover:scale-100"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <MessageCircle className="h-4 w-4" aria-hidden />
             Enquire on WhatsApp
@@ -61,7 +63,7 @@ export function CourseCard({ course }: { course: Course }) {
           <TrackedCourseSyllabusLink
             href={`/courses/${course.id}`}
             courseId={course.id}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-white py-3 text-sm font-medium text-ink transition-colors hover:border-border hover:bg-muted/40"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-border/60 bg-white py-3 text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-muted/40 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             View syllabus
           </TrackedCourseSyllabusLink>

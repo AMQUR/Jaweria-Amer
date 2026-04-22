@@ -92,7 +92,7 @@ function uniqueSorted(values: string[]) {
 }
 
 const selectClass =
-  "w-full rounded-xl border border-input bg-white px-3 py-2.5 text-sm text-ink shadow-[inset_0_1px_1px_rgba(34,16,18,0.03)] transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25";
+  "w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm text-ink shadow-[inset_0_1px_1px_rgba(34,16,18,0.03)] transition-[background-color,border-color,box-shadow] duration-200 ease-out focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25";
 
 type NotesSubCategoryFilter = "unset" | ResourceNotesSubCategory;
 
@@ -114,13 +114,13 @@ const NOTES_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string }[] = [
 
 const topicBrowseCardClass = (active: boolean) =>
   cn(
-    "origin-center rounded-xl border bg-white p-5 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:border-border hover:shadow-[0_4px_18px_rgba(34,16,18,0.06)]",
+    "origin-center rounded-2xl border bg-white p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
     active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
   );
 
 const previewPillClass = (active: boolean) =>
   cn(
-    "rounded-xl border bg-white px-4 py-3 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[transform,border-color,box-shadow] duration-200 ease-out hover:border-border hover:shadow-[0_4px_18px_rgba(34,16,18,0.06)]",
+    "rounded-2xl border bg-white px-4 py-3 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
     active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
   );
 
@@ -309,7 +309,7 @@ export function ResourcesHub() {
   return (
     <section className="bg-cream py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-8">
+        <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
           <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
             Start Your Preparation
           </h2>
@@ -324,7 +324,7 @@ export function ResourcesHub() {
                   key={pathway.id}
                   type="button"
                   onClick={() => openCategory(pathway.category)}
-                  className="rounded-xl border border-border/70 bg-white p-6 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-border hover:shadow-[0_6px_22px_rgba(34,16,18,0.07)]"
+                  className="rounded-2xl border border-border/60 bg-white p-6 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
                 >
                   <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-brand">
                     <Icon className="h-5 w-5" aria-hidden />
@@ -340,12 +340,12 @@ export function ResourcesHub() {
           </div>
         </div>
 
-        <div className="mb-12 grid gap-3 sm:grid-cols-2 lg:mb-14 lg:grid-cols-5">
+        <div className="mb-12 grid gap-4 sm:grid-cols-2 lg:mb-14 lg:grid-cols-5">
           <button
             type="button"
             onClick={() => selectCategory("all")}
             className={cn(
-              "rounded-xl border bg-white p-5 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-all hover:border-border hover:shadow-[0_4px_18px_rgba(34,16,18,0.06)]",
+              "rounded-2xl border bg-white p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
               category === "all" ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
             )}
           >
@@ -363,7 +363,7 @@ export function ResourcesHub() {
                 type="button"
                 onClick={() => selectCategory(cat.id)}
                 className={cn(
-                  "rounded-xl border bg-white p-5 text-left shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-all hover:border-border hover:shadow-[0_4px_18px_rgba(34,16,18,0.06)]",
+                  "rounded-2xl border bg-white p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
                   active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
                 )}
               >
@@ -380,14 +380,14 @@ export function ResourcesHub() {
         </div>
 
         {category === "general-notes" && (
-          <div className="mb-12 rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-8">
+          <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
             <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
               Browse Notes by Topic
             </h2>
             <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
               Pick one topic to focus your notes before opening the file list.
             </p>
-            <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {NOTES_TOPIC_BLOCKS.map((topic) => {
                 const active = notesSubCategory === topic.id;
                 return (
@@ -412,7 +412,7 @@ export function ResourcesHub() {
         {category !== "all" && (
           <div
             id="resource-filters"
-            className="mb-12 rounded-xl border border-border/70 bg-white p-5 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:mb-14 sm:p-6"
+            className="mb-12 rounded-2xl border border-border/60 bg-white p-5 shadow-sm sm:mb-14 sm:p-6"
           >
             <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
@@ -427,7 +427,7 @@ export function ResourcesHub() {
                 Reset all
               </button>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <label className="block space-y-1">
                 <span className="text-xs font-medium text-slate">Subject</span>
                 <select className={selectClass} value={subject} onChange={(e) => setSubject(e.target.value)}>
@@ -543,13 +543,13 @@ export function ResourcesHub() {
               ))}
             </div>
           ) : GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && paper === "all" ? (
-            <div className="rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:p-8">
+            <div className="rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:p-8">
               <p className="text-center text-sm leading-relaxed text-slate">{emptyState}</p>
               <div className="mt-8 grid gap-6 lg:grid-cols-2">
                 {guidedPaperSections.map((paperEntry) => (
                   <div key={paperEntry.paper} className="space-y-3">
                     <h3 className="font-serif text-lg font-semibold text-ink">{paperEntry.paper}</h3>
-                    <div className="grid gap-3">
+                    <div className="grid gap-4">
                       {paperEntry.sections.map((sectionName) => {
                         const count = guidedPreviewResources.filter(
                           (r) => r.paper === paperEntry.paper && r.section === sectionName
@@ -566,7 +566,7 @@ export function ResourcesHub() {
                             className={previewPillClass(false)}
                           >
                             <p className="font-serif text-sm font-semibold text-ink">{sectionName}</p>
-                            <p className="mt-1 text-xs text-slate">{count} resources</p>
+                            <p className="mt-1 text-xs text-muted-foreground">{count} resources</p>
                           </button>
                         );
                       })}
@@ -576,9 +576,9 @@ export function ResourcesHub() {
               </div>
             </div>
           ) : GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all" ? (
-            <div className="rounded-2xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] sm:p-8">
+            <div className="rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:p-8">
               <p className="text-center text-sm leading-relaxed text-slate">Select a section to continue.</p>
-              <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {sectionOptions.map((sectionName) => {
                   const count = guidedPreviewResources.filter(
                     (r) => r.paper === paper && r.section === sectionName
@@ -594,7 +594,7 @@ export function ResourcesHub() {
                       className={previewPillClass(section === sectionName)}
                     >
                       <p className="font-serif text-sm font-semibold text-ink">{sectionName}</p>
-                      <p className="mt-1 text-xs text-slate">{count} resources</p>
+                      <p className="mt-1 text-xs text-muted-foreground">{count} resources</p>
                     </button>
                   );
                 })}
@@ -625,15 +625,15 @@ function ResourceCard({ resource }: { resource: Resource }) {
     : { main: displayTitle, secondary: null as string | null };
 
   return (
-    <article className="flex flex-col rounded-xl border border-border/70 bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-[border-color,box-shadow] duration-300 hover:border-border hover:shadow-[0_6px_22px_rgba(34,16,18,0.07)]">
+    <article className="flex flex-col rounded-2xl border border-border/60 bg-white p-6 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0">
       {isMcq && <span className={scriptsChipClass}>MCQ Assessment</span>}
       {vaultChip && !isMcq && <span className={scriptsChipClass}>{vaultChip}</span>}
-      <h3 className="font-serif text-base font-semibold leading-snug text-ink">{titleMain}</h3>
+      <h3 className="font-serif text-base font-semibold leading-relaxed tracking-tight text-ink">{titleMain}</h3>
       {isScripts && titleSecondary ? (
         <p className="mt-1 text-xs font-medium tabular-nums tracking-wide text-slate">{titleSecondary}</p>
       ) : null}
-      <p className="mt-2 text-xs leading-relaxed text-slate">{meta}</p>
-      <p className="mt-3 flex-1 text-sm leading-relaxed text-slate">{resource.description}</p>
+      <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{meta}</p>
+      <p className="mt-3 flex-1 text-sm leading-relaxed text-slate sm:text-base">{resource.description}</p>
       <div className="mt-6">
         {isMcq ? (
           <Link
@@ -641,7 +641,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
             onClick={() =>
               trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
             }
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <ListChecks className="h-4 w-4 shrink-0" aria-hidden />
             Take Assessment
@@ -652,7 +652,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
             onClick={() =>
               trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
             }
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <Eye className="h-4 w-4 shrink-0" aria-hidden />
             View Resource

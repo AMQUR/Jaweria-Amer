@@ -111,7 +111,7 @@ export function McqViewer({ mcqSet }: Props) {
           <button
             type="button"
             onClick={handleReset}
-            className="mt-6 inline-flex items-center gap-2 rounded-xl border border-border/70 bg-white px-5 py-2.5 text-sm font-medium text-ink shadow-sm transition-colors hover:border-border hover:bg-muted/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25"
+          className="mt-6 inline-flex items-center gap-2 rounded-2xl border border-border/60 bg-white px-5 py-2.5 text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-muted/30 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25 active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <RotateCcw className="h-4 w-4" aria-hidden />
             Try Again
@@ -121,7 +121,7 @@ export function McqViewer({ mcqSet }: Props) {
 
       {/* Progress bar — shown while taking the quiz */}
       {!submitted && (
-        <div className="mb-8 rounded-xl border border-border/70 bg-white p-5 shadow-[0_1px_3px_rgba(34,16,18,0.04)]">
+        <div className="mb-8 rounded-2xl border border-border/60 bg-white p-5 shadow-sm">
           <div className="mb-3 flex items-center justify-between text-sm">
             <span className="font-medium text-ink">Progress</span>
             <span className="tabular-nums text-slate">
@@ -130,7 +130,7 @@ export function McqViewer({ mcqSet }: Props) {
           </div>
           <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
             <div
-              className="h-full rounded-full bg-crimson transition-all duration-300"
+              className="h-full rounded-full bg-crimson transition-[width] duration-200 ease-out"
               style={{ width: `${(answeredCount / totalQuestions) * 100}%` }}
             />
           </div>
@@ -149,7 +149,7 @@ export function McqViewer({ mcqSet }: Props) {
               <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
                 {sectionId === "A" ? "Identify" : sectionId === "B" ? "Apply" : "Challenge"}
               </p>
-              <h2 className="mt-0.5 font-serif text-xl font-semibold text-ink sm:text-2xl">
+              <h2 className="mt-0.5 font-serif text-xl font-semibold tracking-tight text-ink sm:text-2xl">
                 {meta.title}
               </h2>
               <p className="mt-1 text-sm text-slate">{meta.blurb}</p>
@@ -166,7 +166,7 @@ export function McqViewer({ mcqSet }: Props) {
                   <article
                     key={index}
                     className={cn(
-                      "rounded-xl border bg-white p-6 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-colors",
+                      "rounded-2xl border bg-white p-6 shadow-sm transition-[background-color,border-color,box-shadow]",
                       !submitted && "border-border/70",
                       isCorrect && "border-green-200 bg-green-50/60",
                       isWrong && "border-red-200 bg-red-50/60",
@@ -211,14 +211,14 @@ export function McqViewer({ mcqSet }: Props) {
                             onClick={() => handleSelect(index, opt)}
                             disabled={submitted}
                             className={cn(
-                              "flex w-full items-center gap-3 rounded-lg border px-4 py-3 text-left text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
+                              "flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
                               // Idle states
                               !submitted &&
                                 !isSelected &&
-                                "border-border/60 bg-white text-ink hover:border-border hover:bg-muted/30",
+                                "border-border/60 bg-white text-ink hover:-translate-y-0.5 hover:border-border hover:bg-muted/30 hover:shadow-sm motion-reduce:hover:translate-y-0",
                               !submitted &&
                                 isSelected &&
-                                "border-primary/50 bg-primary/5 ring-1 ring-primary/20 text-ink",
+                                "border-primary/50 bg-primary/5 ring-1 ring-primary/20 text-ink shadow-sm",
                               // Post-submit states
                               isCorrectOpt &&
                                 "border-green-400 bg-green-100 text-green-900",
@@ -295,7 +295,7 @@ export function McqViewer({ mcqSet }: Props) {
 
       {/* Submit CTA */}
       {!submitted && (
-        <div className="mt-10 flex flex-col items-center gap-4 rounded-xl border border-border/70 bg-white p-8 shadow-[0_1px_3px_rgba(34,16,18,0.04)] text-center">
+        <div className="mt-10 flex flex-col items-center gap-4 rounded-2xl border border-border/60 bg-white p-8 text-center shadow-sm">
           {!allAnswered && (
             <p className="text-sm text-slate">
               Answer all {totalQuestions} questions to submit.
@@ -306,9 +306,9 @@ export function McqViewer({ mcqSet }: Props) {
             onClick={handleSubmit}
             disabled={!allAnswered}
             className={cn(
-              "inline-flex items-center gap-2 rounded-xl px-8 py-3.5 text-sm font-medium text-white shadow-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
+              "inline-flex items-center gap-2 rounded-2xl px-8 py-3.5 text-sm font-medium text-white shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25",
               allAnswered
-                ? "bg-crimson hover:scale-[1.02] hover:shadow-[0_4px_14px_rgba(112,20,20,0.18)] active:scale-100 cursor-pointer"
+                ? "cursor-pointer bg-crimson hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 : "cursor-not-allowed bg-muted text-muted-foreground shadow-none"
             )}
           >

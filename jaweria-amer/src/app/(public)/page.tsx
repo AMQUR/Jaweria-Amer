@@ -36,7 +36,7 @@ const sectionKicker =
   "text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground";
 const sectionTitle =
   "font-serif text-2xl font-semibold leading-[1.18] tracking-tight text-ink sm:text-3xl lg:text-[2.05rem] lg:leading-[1.16]";
-const bodyLead = "text-base leading-[1.7] text-slate sm:text-[1.0625rem] sm:leading-[1.72]";
+const bodyLead = "text-sm leading-relaxed text-slate sm:text-base sm:leading-relaxed";
 
 export default async function HomePage() {
   const featuredCourses = listMarketingCourses(courses).filter((c) => c.featured);
@@ -49,6 +49,7 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="relative overflow-hidden pt-14 pb-24 sm:pt-20 sm:pb-32 lg:pt-24 lg:pb-36">
         <div className="absolute inset-0 bg-gradient-to-br from-crimson via-crimson to-crimson-dark" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
         <div
           className="absolute inset-0 opacity-[0.035]"
           style={{
@@ -61,11 +62,11 @@ export default async function HomePage() {
             <p className="premium-reveal mb-5 max-w-xl text-[11px] font-semibold leading-snug tracking-wide text-white/75 sm:mb-6 sm:text-xs">
               {siteConfig.brandSubtitle}
             </p>
-            <h1 className="premium-reveal premium-reveal-delay-1 mb-6 font-serif text-[2.35rem] font-semibold leading-[1.08] tracking-tight text-white sm:text-[2.55rem] sm:leading-[1.06] lg:text-[2.95rem] lg:leading-[1.04]">
+            <h1 className="premium-reveal premium-reveal-delay-1 mb-6 font-serif text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl sm:leading-[1.06] lg:text-[2.95rem] lg:leading-[1.04]">
               Master CAIE English
               <span className="mt-2 block font-normal text-white/90">with Clarity and Care</span>
             </h1>
-            <p className="premium-reveal premium-reveal-delay-2 mb-9 max-w-xl text-base leading-[1.68] text-white/72 sm:mb-11 sm:text-lg sm:leading-[1.66]">
+            <p className="premium-reveal premium-reveal-delay-2 mb-9 max-w-xl text-sm leading-relaxed text-white/72 sm:mb-11 sm:text-base sm:leading-relaxed lg:text-lg">
               Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers.
               Structured practice that holds up on exam day.
             </p>
@@ -77,7 +78,7 @@ export default async function HomePage() {
                   variant="direct"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-[0_2px_12px_rgba(0,0,0,0.12)] transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-brand-accent hover:shadow-[0_4px_18px_rgba(0,0,0,0.15)] active:scale-100 motion-reduce:hover:scale-100"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 >
                   Book a Clarity Call
                   <ArrowRight className="h-4 w-4" />
@@ -88,7 +89,7 @@ export default async function HomePage() {
                   variant="group"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-[2px] transition-all duration-200 ease-out hover:scale-[1.02] hover:border-white/35 hover:bg-white/16 active:scale-100 motion-reduce:hover:scale-100"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-[2px] shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/35 hover:bg-white/16 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 >
                   Join WhatsApp group
                 </TrackedWhatsAppLink>
@@ -158,13 +159,13 @@ export default async function HomePage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="rounded-xl border border-border/60 bg-white p-7 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-border/80 hover:shadow-[0_12px_36px_rgba(34,16,18,0.09)] motion-reduce:hover:translate-y-0"
+                className="rounded-2xl border border-border/60 bg-white p-7 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
               >
                 <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
                   <item.icon className="h-5 w-5 text-brand" aria-hidden />
                 </div>
-                <h3 className="mb-2 font-serif text-lg font-semibold text-ink">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate">{item.desc}</p>
+                <h3 className="mb-2 font-serif text-xl font-semibold tracking-tight text-ink">{item.title}</h3>
+                <p className="text-sm leading-relaxed text-slate sm:text-base">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -240,10 +241,10 @@ export default async function HomePage() {
       {/* CTA */}
       <section className="border-t border-crimson-dark/20 bg-gradient-to-b from-crimson to-crimson-dark py-[4.75rem] sm:py-28">
         <div className="premium-reveal mx-auto max-w-2xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="mb-4 font-serif text-2xl font-semibold leading-[1.2] tracking-tight text-white sm:text-3xl lg:text-[2rem]">
+          <h2 className="mb-4 font-serif text-xl font-semibold leading-[1.2] tracking-tight text-white sm:text-2xl lg:text-[2rem]">
             Ready to Build a Clear Plan?
           </h2>
-          <p className="mx-auto mb-4 max-w-lg leading-[1.65] text-white/75">
+          <p className="mx-auto mb-4 max-w-lg text-sm leading-relaxed text-white/75 sm:text-base">
             Book a short clarity call to discuss your goals, current level, and the programme that fits. No pressure,
             no commitment.
           </p>
@@ -257,7 +258,7 @@ export default async function HomePage() {
               variant="direct"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-[0_2px_14px_rgba(0,0,0,0.2)] transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-brand-accent active:scale-100 motion-reduce:hover:scale-100 sm:min-w-[200px]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
             >
               Book a Clarity Call
               <ArrowRight className="h-4 w-4" />
@@ -268,7 +269,7 @@ export default async function HomePage() {
               variant="group"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-white/18 active:scale-100 motion-reduce:hover:scale-100 sm:min-w-[200px]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/18 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
             >
               Join WhatsApp group
             </TrackedWhatsAppLink>
