@@ -4,7 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import { ResourceViewTracker } from "@/components/analytics/resource-view-tracker";
 import { McqViewer } from "@/components/mcq-viewer";
-import { SecurePdfViewer } from "@/components/secure-pdf-viewer";
+import { ResourcePdfSlot } from "@/components/resource-pdf-slot";
 import { getPublicMcqSets, getPublicResources } from "@/lib/public-cms";
 import { formatDisplayTitle } from "@/lib/resource-ingestion";
 
@@ -121,7 +121,7 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
             </p>
           </div>
         ) : (
-          <SecurePdfViewer resourceId={resource.id} title={displayTitle} />
+          <ResourcePdfSlot key={resource.id} resourceId={resource.id} />
         )}
       </div>
     </div>

@@ -12,6 +12,7 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "public/pdf.worker.min.mjs",
   ]),
   // Async client fetch + setState after await is intentional for admin CRUD pages.
   {
