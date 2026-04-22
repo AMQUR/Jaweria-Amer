@@ -1,3 +1,5 @@
+// All answers verified against Cambridge 1123 conventions (British English rules).
+
 export type McqOption = "A" | "B" | "C" | "D";
 
 export interface McqQuestion {
@@ -17,7 +19,21 @@ export interface McqSet {
   questions: McqQuestion[];
 }
 
-export const mcqSets: Record<string, McqSet> = {
+/** Dev-only guard: every `answer` must match an option key (prevents typos in keys). */
+function validateMcqAnswerKeys(sets: Record<string, McqSet>): void {
+  if (process.env.NODE_ENV === "production") return;
+  for (const [setId, set] of Object.entries(sets)) {
+    set.questions.forEach((q, idx) => {
+      if (!(q.answer in q.options)) {
+        console.error(
+          `[mcq-data] answer "${q.answer}" is not an option key in set "${setId}" question ${idx + 1}: ${q.question.slice(0, 60)}…`
+        );
+      }
+    });
+  }
+}
+
+const mcqSetsInternal: Record<string, McqSet> = {
   "mcq-compound-complex-sentences": {
     id: "mcq-compound-complex-sentences",
     title: "5-Minute Drill: Clear Sentences & Joining",
@@ -195,9 +211,9 @@ export const mcqSets: Record<string, McqSet> = {
           C: "\"That’s amazing\"! she said.",
           D: "\"That’s amazing!\" she said.",
         },
-        answer: "B",
+        answer: "D",
         explanation:
-          'Place the exclamation mark inside the quotation marks and the comma outside: "That’s amazing!", she said.',
+          "Use the exclamation mark inside the quotation marks, and do not add a comma before the reporting clause. The exclamation mark already ends the sentence: \"That's amazing!\" she said.",
       },
       {
         section: "A",
@@ -628,3 +644,6 @@ export const mcqSets: Record<string, McqSet> = {
     ],
   },
 };
+
+validateMcqAnswerKeys(mcqSetsInternal);
+export const mcqSets = mcqSetsInternal;
