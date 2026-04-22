@@ -40,14 +40,14 @@ const NOISE_FILENAME_TOKENS = new Set([
 /** Maps on-disk folder names under `public/resources/` to hub categories. */
 export const RESOURCE_FOLDER_TO_CATEGORY: Record<string, ResourceHubCategory> = {
   notes: "general-notes",
-  worksheets: "topical-worksheets",
+  worksheets: "topicals",
   "past-papers": "yearly-past-papers",
   "examiner-reports": "examiner-reports",
   checklists: "checklists",
 };
 
 export function hubCategoryForDiskFolder(folder: string): ResourceHubCategory {
-  return RESOURCE_FOLDER_TO_CATEGORY[folder] ?? "topical-worksheets";
+  return RESOURCE_FOLDER_TO_CATEGORY[folder] ?? "topicals";
 }
 
 export function basenameFromFileUrl(fileUrl: string): string {
@@ -305,6 +305,76 @@ export function inferGeneralNotesSubCategory(
   return undefined;
 }
 
+function normalizeTopicalsResource(resource: Resource): Resource {
+  if (resource.category !== "topicals") return resource;
+
+  const raw = `${resource.title || ""} ${basenameFromFileUrl(resource.fileUrl) || ""}`
+    .toLowerCase()
+    .replace(/[-_]+/g, " ");
+
+  let paper = resource.paper;
+  if (raw.includes("paper 1") || raw.includes("p1") || raw.includes("writing")) {
+    paper = "Paper 1";
+  } else if (raw.includes("paper 2") || raw.includes("p2") || raw.includes("reading")) {
+    paper = "Paper 2";
+  }
+
+  let section = resource.section;
+
+  if (paper === "Paper 1") {
+    if (
+      raw.includes("directed") ||
+      raw.includes("interviewer") ||
+      raw.includes("phrases") ||
+      raw.includes("sentences") ||
+      raw.includes("letter") ||
+      raw.includes("speech") ||
+      raw.includes("article") ||
+      raw.includes("report")
+    ) {
+      section = "Directed Writing";
+    } else if (
+      raw.includes("essay") ||
+      raw.includes("composition") ||
+      raw.includes("narrative") ||
+      raw.includes("descriptive") ||
+      raw.includes("vocab") ||
+      raw.includes("writing")
+    ) {
+      section = "Composition";
+    } else {
+      section = "General Writing";
+    }
+  }
+
+  if (paper === "Paper 2") {
+    if (raw.includes("comprehension") || raw.includes("question 1") || raw.includes("q1")) {
+      section = "Comprehension";
+    } else if (
+      raw.includes("language") ||
+      raw.includes("use of language") ||
+      raw.includes("q2") ||
+      raw.includes("writer")
+    ) {
+      section = "Language";
+    } else if (
+      raw.includes("summary") ||
+      raw.includes("q3") ||
+      raw.includes("exam hack")
+    ) {
+      section = "Summary";
+    } else {
+      section = "General Reading";
+    }
+  }
+
+  return {
+    ...resource,
+    paper,
+    section,
+  };
+}
+
 function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "fileUrl">): string {
   const contentHaystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
     .toLowerCase()
@@ -381,7 +451,19 @@ function inferResourceSection(
     return undefined;
   }
 
-  if (resource.category === "topical-worksheets" || resource.category === "checklists") {
+  if (resource.category === "topicals" || resource.category === "checklists") {
+    if (rawLooksLikeTopicalsQuestion(resource)) {
+      if (haystack.includes("q1") || haystack.includes("question 1") || /\b11\b/.test(haystack)) {
+        return "Question 1";
+      }
+      if (haystack.includes("q2") || haystack.includes("question 2") || /\b12\b/.test(haystack)) {
+        return "Question 2";
+      }
+      if (haystack.includes("q3") || haystack.includes("question 3") || /\b13\b/.test(haystack)) {
+        return "Question 3";
+      }
+      return "General";
+    }
     if (haystack.includes("summary")) return "Summary Writing";
     if (
       haystack.includes("comprehension") ||
@@ -434,6 +516,18 @@ function inferResourceSection(
   return undefined;
 }
 
+function rawLooksLikeTopicalsQuestion(resource: Pick<Resource, "category" | "title" | "fileUrl">) {
+  if (resource.category !== "topicals") return false;
+  const raw = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`.toLowerCase();
+  return (
+    raw.includes("question") ||
+    /\bq[123]\b/.test(raw) ||
+    /\b1[123]\b/.test(raw) ||
+    raw.includes("qp11") ||
+    raw.includes("qp12")
+  );
+}
+
 function shouldHideResource(resource: Pick<Resource, "title" | "fileUrl" | "category" | "subCategory" | "type">) {
   const haystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
     .toLowerCase()
@@ -458,7 +552,7 @@ export function finalizeResourcesForSite(items: readonly Resource[]): Resource[]
       const subCategory =
         item.category === "general-notes" ? item.subCategory ?? inferGeneralNotesSubCategory(item) : item.subCategory;
       const category = !legacyChecklist && isMarkSchemeResource(item) ? "checklists" : item.category;
-      const normalizedItem: Resource = {
+      const baseItem: Resource = {
         ...item,
         title: cleanTitle,
         category,
@@ -466,6 +560,7 @@ export function finalizeResourcesForSite(items: readonly Resource[]): Resource[]
         subCategory,
         section: inferResourceSection({ ...item, category, subCategory }),
       };
+      const normalizedItem = normalizeTopicalsResource(baseItem);
       return {
         item: normalizedItem,
         copyKey: `${category}|${normalizeFilenameKey(cleanTitle)}`,
@@ -693,7 +788,7 @@ export function inferResourceFieldsFromFilename(
   const description =
     hubCategory === "general-notes"
       ? "Summary and notes pack aligned to O Level English 1123."
-      : hubCategory === "topical-worksheets"
+      : hubCategory === "topicals"
         ? "Targeted practice for common 1123 question types."
         : hubCategory === "examiner-reports"
           ? "Examiner-facing guidance and illustrative responses."

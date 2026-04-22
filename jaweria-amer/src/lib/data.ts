@@ -25,7 +25,7 @@ export interface Course {
 /** Public vault categories (marketing `/resources`). */
 export type ResourceHubCategory =
   | "general-notes"
-  | "topical-worksheets"
+  | "topicals"
   | "yearly-past-papers"
   | "examiner-reports"
   | "checklists"
@@ -67,7 +67,7 @@ export const RESOURCE_HUB_CATEGORIES: {
     blurb: "Topic-based notes to build writing, reading, and grammar foundations.",
   },
   {
-    id: "topical-worksheets",
+    id: "topicals",
     label: "Topicals",
     blurb: "Section-based practice packs grouped by paper and skill.",
   },
@@ -908,7 +908,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-26-march-vocab-test-ms-marking-scheme",
     title: "Vocabulary marking scheme — test ",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -919,7 +919,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-exam-hack-4",
     title: "Exam hack — set 4",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 2",
@@ -930,7 +930,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-exam-hack-writers-effect",
     title: "Exam hack — writer's effect",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 2",
@@ -941,7 +941,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-interviewer-question-practice",
     title: "Interviewer question practice set",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
@@ -952,7 +952,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-phrases-to-utilize",
     title: "Phrases to utilise",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
@@ -974,7 +974,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-sentences-you-can-use",
     title: "Sentences you can use",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
@@ -1051,7 +1051,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-1-qp",
     title: "Vocabulary question paper — test 1",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1062,7 +1062,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-10-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 10",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1073,7 +1073,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-10-qp",
     title: "Vocabulary question paper — test 10",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1084,7 +1084,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-10-ws",
     title: "Vocabulary worksheet — test 10",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1095,7 +1095,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-11-qp",
     title: "Vocabulary question paper — test 11",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1106,7 +1106,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-11-ws",
     title: "Vocabulary worksheet — test 11",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1117,7 +1117,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-12-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 12",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1128,7 +1128,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-12-qp",
     title: "Vocabulary question paper — test 12",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1139,7 +1139,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-12-ws",
     title: "Vocabulary worksheet — test 12",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1150,7 +1150,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-13-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 13",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1161,7 +1161,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-13-qp",
     title: "Vocabulary question paper — test 13",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1172,7 +1172,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-13-ws",
     title: "Vocabulary worksheet — test 13",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1183,7 +1183,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-14-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 14",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1194,7 +1194,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-14-qp",
     title: "Vocabulary question paper — test 14",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1205,7 +1205,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-14-ws",
     title: "Vocabulary worksheet — test 14",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1216,7 +1216,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-2-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 2",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1227,7 +1227,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-3-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 3",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1238,7 +1238,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-3-qp",
     title: "Vocabulary question paper — test 3",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1249,7 +1249,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-4-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 4",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1260,7 +1260,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-4-qp",
     title: "Vocabulary question paper — test 4",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1271,7 +1271,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-4-ws",
     title: "Vocabulary worksheet — test 4",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1282,7 +1282,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-5-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 5",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1293,7 +1293,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-5-qp",
     title: "Vocabulary question paper — test 5",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1304,7 +1304,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-5-ws",
     title: "Vocabulary worksheet — test 5",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1315,7 +1315,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-6-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 6",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1326,7 +1326,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-6-qp",
     title: "Vocabulary question paper — test 6",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1337,7 +1337,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-6-ws",
     title: "Vocabulary worksheet — test 6",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1348,7 +1348,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-7-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 7",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1359,7 +1359,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-7-qp",
     title: "Vocabulary question paper — test 7",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1370,7 +1370,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-7-ws",
     title: "Vocabulary worksheet — test 7",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1381,7 +1381,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-8-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 8",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1392,7 +1392,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-8-qp",
     title: "Vocabulary question paper — test 8",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1403,7 +1403,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-8-ws",
     title: "Vocabulary worksheet — test 8",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1414,7 +1414,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-9-ms-marking-scheme",
     title: "Vocabulary marking scheme — test 9",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1425,7 +1425,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-9-qp",
     title: "Vocabulary question paper — test 9",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1436,7 +1436,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocab-test-9-ws",
     title: "Vocabulary worksheet — test 9",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Vocabulary",
@@ -1447,7 +1447,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-vocabulary-bank-2",
     title: "Vocabulary bank — set 2",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
@@ -1458,7 +1458,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-writing-vocab-ms-marking-scheme",
     title: "Writing vocabulary — marking scheme",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
@@ -1469,7 +1469,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-writing-vocab-qp",
     title: "Writing vocabulary — question paper",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
@@ -1480,7 +1480,7 @@ const resourceLibrary: Resource[] = [
   {
     id: "worksheet-writing-words-day-15",
     title: "Writing words — day 15",
-    category: "topical-worksheets",
+    category: "topicals",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",

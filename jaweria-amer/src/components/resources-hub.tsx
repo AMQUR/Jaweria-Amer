@@ -29,14 +29,23 @@ import { cn } from "@/lib/utils";
 
 const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   "general-notes": BookOpen,
-  "topical-worksheets": LayoutGrid,
+  topicals: LayoutGrid,
   "yearly-past-papers": FolderOpen,
   "examiner-reports": FileSearch,
   checklists: ClipboardList,
   "quick-worksheets": Brain,
 };
 
-const GUIDED_SECTION_CATEGORIES = new Set<ResourceHubCategory>(["topical-worksheets", "checklists"]);
+const GUIDED_SECTION_CATEGORIES = new Set<ResourceHubCategory>(["topicals", "checklists"]);
+const TOPICALS_SECTION_ORDER = [
+  "Directed Writing",
+  "Composition",
+  "Comprehension",
+  "Language",
+  "Summary",
+  "General Writing",
+  "General Reading",
+] as const;
 
 const START_PATHWAYS: {
   id: string;
@@ -147,13 +156,32 @@ export function ResourcesHub() {
       : values;
   }, [category, scopedForFilters]);
   const sectionOptions = useMemo(() => {
-    if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) || paper === "all") return [];
-    return uniqueSorted(
-      scopedForFilters
-        .filter((r) => r.paper === paper)
-        .map((r) => r.section ?? "")
-        .filter(Boolean)
+    if (category !== "topicals" || paper === "all") {
+      if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) || paper === "all") return [];
+      return uniqueSorted(
+        scopedForFilters
+          .filter((r) => r.paper === paper)
+          .map((r) => r.section ?? "")
+          .filter(Boolean)
+      );
+    }
+
+    const sections = Array.from(
+      new Set(
+        resources
+          .filter((r) => r.category === "topicals" && r.paper === paper)
+          .map((r) => r.section)
+          .filter((section): section is string => Boolean(section))
+      )
     );
+
+    return [...sections].sort((a, b) => {
+      const ai = TOPICALS_SECTION_ORDER.indexOf(a as (typeof TOPICALS_SECTION_ORDER)[number]);
+      const bi = TOPICALS_SECTION_ORDER.indexOf(b as (typeof TOPICALS_SECTION_ORDER)[number]);
+      const av = ai === -1 ? Number.MAX_SAFE_INTEGER : ai;
+      const bv = bi === -1 ? Number.MAX_SAFE_INTEGER : bi;
+      return av === bv ? a.localeCompare(b) : av - bv;
+    });
   }, [category, paper, scopedForFilters]);
 
   function selectCategory(next: ResourceHubCategory | "all") {
@@ -185,10 +213,26 @@ export function ResourcesHub() {
   const filtered = useMemo(() => {
     if (category === "all") return [];
 
-    return scopedForResults.filter((r) => {
+    const filteredResources = resources.filter((r) => {
+      if (category !== "topicals") return true;
+      if (r.category !== "topicals") return false;
+      if (paper === "all") return false;
+      if (r.paper !== paper) return false;
+      if (section === "all") return false;
+      if (r.section !== section) return false;
+      return true;
+    });
+
+    const basePool = category === "topicals" ? filteredResources : scopedForResults;
+
+    return basePool.filter((r) => {
       if (category === "general-notes") {
         if (notesSubCategory === "unset") return false;
         if (r.subCategory !== notesSubCategory) return false;
+      }
+
+      if (category === "topicals") {
+        return true;
       }
 
       if (GUIDED_SECTION_CATEGORIES.has(category)) {
