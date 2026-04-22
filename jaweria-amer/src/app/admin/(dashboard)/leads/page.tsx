@@ -21,34 +21,44 @@ const statusOptions = [
 ];
 
 export default function LeadsPage() {
-  const [leads, setLeads] = useState<Lead[]>([]);
+  const [leads, setLeads] = useState<Lead[] | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchLeads = useCallback(async () => {
-    const res = await fetch("/api/admin/leads");
-    const data = await res.json();
-    setLeads(data);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/admin/leads");
+      const data = res.ok ? await res.json() : null;
+      setLeads(Array.isArray(data) ? data : null);
+    } catch {
+      setLeads(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
 
   async function handleStatusChange(id: string, status: string) {
-    setLeads((prev) => prev.map((l) => l.id === id ? { ...l, status: status as Lead["status"] } : l));
+    setLeads((prev) => (prev ?? []).map((l) => l.id === id ? { ...l, status: status as Lead["status"] } : l));
     toast.success(`Status updated to ${status}`);
     await updateLeadStatusAction(id, status as Lead["status"]);
   }
 
   async function handleDelete(id: string) {
-    setLeads((prev) => prev.filter((l) => l.id !== id));
+    setLeads((prev) => (prev ?? []).filter((l) => l.id !== id));
     toast.success("Lead removed");
     await deleteLeadAction(id);
     fetchLeads();
   }
 
-  const newCount = leads.filter((l) => l.status === "new").length;
-  const contactedCount = leads.filter((l) => l.status === "contacted").length;
-  const enrolledCount = leads.filter((l) => l.status === "enrolled").length;
+  if (!loading && leads === null) {
+    return <div />;
+  }
+
+  const list = leads ?? [];
+  const newCount = list.filter((l) => l.status === "new").length;
+  const contactedCount = list.filter((l) => l.status === "contacted").length;
+  const enrolledCount = list.filter((l) => l.status === "enrolled").length;
 
   return (
     <div>
@@ -57,7 +67,7 @@ export default function LeadsPage() {
         <p className="text-sm text-slate mt-1">Track and manage student inquiries</p>
       </div>
 
-      {!loading && leads.length > 0 && (
+      {!loading && list.length > 0 && (
         <div className="grid grid-cols-3 gap-3 mb-6">
           <div className="rounded-lg bg-brand-soft p-3 text-center shadow-sm">
             <p className="font-serif text-xl font-bold text-brand">{newCount}</p>
@@ -77,7 +87,7 @@ export default function LeadsPage() {
       <div className="overflow-hidden rounded-xl border border-border/60 bg-white shadow-sm">
         {loading ? (
           <div className="p-12 text-center text-slate-light text-sm">Loading leads...</div>
-        ) : leads.length === 0 ? (
+        ) : list.length === 0 ? (
           <div className="p-12 text-center">
             <Users className="w-10 h-10 text-slate-light/40 mx-auto mb-3" />
             <p className="text-sm font-medium text-ink mb-1">No new inquiries</p>
@@ -96,7 +106,7 @@ export default function LeadsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {leads.map((lead) => (
+              {list.map((lead) => (
                 <TableRow key={lead.id}>
                   <TableCell className="font-medium text-ink">{lead.name}</TableCell>
                   <TableCell>

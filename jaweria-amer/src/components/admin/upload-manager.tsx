@@ -6,30 +6,29 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import type { UploadAsset } from "@/lib/admin/cms-types";
 
-export function UploadManager() {
-  const [assets, setAssets] = useState<UploadAsset[]>([]);
-  const [loading, setLoading] = useState(true);
+type UploadManagerProps = {
+  initialAssets?: UploadAsset[];
+};
+
+export function UploadManager({ initialAssets }: UploadManagerProps) {
+  const [assets, setAssets] = useState<UploadAsset[]>(() => (Array.isArray(initialAssets) ? initialAssets : []));
+  const [loading, setLoading] = useState(initialAssets === undefined);
 
   async function loadAssets() {
-    setLoading(true);
-    const response = await fetch("/api/admin/uploads", { cache: "no-store" });
-    const data = await response.json();
-    setAssets(Array.isArray(data) ? data : []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await fetch("/api/admin/uploads", { cache: "no-store" });
+      const data = response.ok ? await response.json() : null;
+      setAssets(Array.isArray(data) ? data : []);
+    } catch {
+      setAssets([]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    let active = true;
-    fetch("/api/admin/uploads", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!active) return;
-        setAssets(Array.isArray(data) ? data : []);
-        setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
+    void loadAssets();
   }, []);
 
   async function handleDelete(url: string) {

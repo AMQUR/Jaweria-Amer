@@ -25,16 +25,21 @@ import type { AdminCourse } from "@/lib/admin/store";
 import { getAdminCourseLevelSelectOptions } from "@/lib/course-offerings";
 
 export default function CoursesPage() {
-  const [courses, setCourses] = useState<AdminCourse[]>([]);
+  const [courses, setCourses] = useState<AdminCourse[] | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState<AdminCourse | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchCourses = useCallback(async () => {
-    const res = await fetch("/api/admin/courses");
-    const data = await res.json();
-    setCourses(data);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/admin/courses");
+      const data = res.ok ? await res.json() : null;
+      setCourses(Array.isArray(data) ? data : null);
+    } catch {
+      setCourses(null);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchCourses(); }, [fetchCourses]);
@@ -51,7 +56,7 @@ export default function CoursesPage() {
   }, null);
 
   async function handleDelete(id: string) {
-    setCourses((prev) => prev.filter((c) => c.id !== id));
+    setCourses((prev) => (prev ?? []).filter((c) => c.id !== id));
     toast.success("Course deleted");
     await deleteCourseAction(id);
     fetchCourses();
@@ -66,6 +71,12 @@ export default function CoursesPage() {
     setEditingCourse(null);
     setDialogOpen(true);
   }
+
+  if (!loading && courses === null) {
+    return <div />;
+  }
+
+  const list = courses ?? [];
 
   return (
     <div>
@@ -163,7 +174,7 @@ export default function CoursesPage() {
       <div className="overflow-hidden rounded-xl border border-border/60 bg-white shadow-sm">
         {loading ? (
           <div className="p-12 text-center text-slate-light text-sm">Loading courses...</div>
-        ) : courses.length === 0 ? (
+        ) : list.length === 0 ? (
           <div className="p-12 text-center">
             <BookOpen className="w-10 h-10 text-slate-light/40 mx-auto mb-3" />
             <p className="text-sm font-medium text-ink mb-1">No courses found</p>
@@ -184,7 +195,7 @@ export default function CoursesPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {courses.map((course) => (
+              {list.map((course) => (
                 <TableRow key={course.id}>
                   <TableCell className="font-medium text-ink">{course.title}</TableCell>
                   <TableCell className="text-slate">{course.level}</TableCell>

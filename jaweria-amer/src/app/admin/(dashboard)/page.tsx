@@ -1,20 +1,66 @@
 import { BookOpen, FileQuestion, FolderOpen, ImageUp, Users, TrendingUp } from "lucide-react";
-import { getCourses, getLeads, getSettings } from "@/lib/admin/store";
+import { getCourses, getLeads, getSettings, type AdminCourse, type Lead, type SiteSettings } from "@/lib/admin/store";
 import { getCmsMcqSets, getCmsResources, getHomepageContent } from "@/lib/admin/cms-store";
+import { defaultHomepageContent } from "@/lib/admin/defaults";
+import type { CmsMcqSet, CmsResourceRecord, HomepageContent } from "@/lib/admin/cms-types";
 import Link from "next/link";
 
-export default async function AdminDashboard() {
-  const [courses, resources, mcqs, leads, settings, homepageContent] = await Promise.all([
-    getCourses(),
-    getCmsResources(),
-    getCmsMcqSets(),
-    getLeads(),
-    getSettings(),
-    getHomepageContent(),
-  ]);
+type DashboardBundle = {
+  courses: AdminCourse[];
+  resources: CmsResourceRecord[];
+  mcqs: CmsMcqSet[];
+  leads: Lead[];
+  settings: SiteSettings;
+  homepageContent: HomepageContent;
+};
 
-  const newLeads = leads.filter((l) => l.status === "new").length;
-  const activeCourses = courses.filter((c) => c.status === "active").length;
+export default async function AdminDashboard() {
+  let data: DashboardBundle | null = null;
+  try {
+    const [courses, resources, mcqs, leads, settings, homepageContent] = await Promise.all([
+      getCourses(),
+      getCmsResources(),
+      getCmsMcqSets(),
+      getLeads(),
+      getSettings(),
+      getHomepageContent(),
+    ]);
+    const safeCourses = (courses ?? []) as AdminCourse[];
+    const safeResources = (resources ?? []) as CmsResourceRecord[];
+    const safeMcqs = (mcqs ?? []) as CmsMcqSet[];
+    const safeLeads = (leads ?? []) as Lead[];
+    const safeSettings: SiteSettings = {
+      whatsappNumber: String((settings as SiteSettings | null | undefined)?.whatsappNumber ?? "923253708069"),
+      stats: Array.isArray((settings as SiteSettings | null | undefined)?.stats)
+        ? (settings as SiteSettings).stats
+        : [],
+    };
+    const h = homepageContent as Partial<HomepageContent> | null | undefined;
+    const safeHomepage: HomepageContent = {
+      ...defaultHomepageContent,
+      ...(h && typeof h === "object" ? h : {}),
+    };
+
+    data = {
+      courses: safeCourses,
+      resources: safeResources,
+      mcqs: safeMcqs,
+      leads: safeLeads,
+      settings: safeSettings,
+      homepageContent: safeHomepage,
+    };
+  } catch {
+    return <div />;
+  }
+
+  if (!data) {
+    return <div />;
+  }
+
+  const { courses, resources, mcqs, leads, settings, homepageContent } = data;
+  const newLeads = (leads ?? []).filter((l) => l.status === "new").length;
+  const activeCourses = (courses ?? []).filter((c) => c.status === "active").length;
+  const statRows = (settings?.stats ?? []) as { value: string; label: string }[];
 
   const stats = [
     { label: "Total Courses", value: courses.length, icon: BookOpen, href: "/admin/courses", color: "bg-brand-soft text-brand" },
@@ -59,19 +105,19 @@ export default async function AdminDashboard() {
           <div className="space-y-3">
             <div className="py-2 border-b border-border/40">
               <p className="text-xs text-slate-light mb-0.5">WhatsApp Number</p>
-              <p className="text-sm font-medium text-ink">+{settings.whatsappNumber}</p>
+              <p className="text-sm font-medium text-ink">+{String(settings.whatsappNumber ?? "")}</p>
             </div>
             <div className="py-2 border-b border-border/40">
               <p className="text-xs text-slate-light mb-0.5">Stats Ticker</p>
-              <p className="text-sm font-medium text-ink">{settings.stats.length} stat{settings.stats.length !== 1 ? "s" : ""} displayed</p>
+              <p className="text-sm font-medium text-ink">{statRows.length} stat{statRows.length !== 1 ? "s" : ""} displayed</p>
             </div>
             <div className="py-2">
               <p className="text-xs text-slate-light mb-1.5">Active Stats</p>
               <div className="space-y-1">
-                {settings.stats.slice(0, 4).map((stat, i) => (
+                {statRows.slice(0, 4).map((stat, i) => (
                   <div key={i} className="flex items-center justify-between text-xs">
-                    <span className="text-slate truncate mr-2">{stat.label}</span>
-                    <span className="font-medium text-ink shrink-0">{stat.value}</span>
+                    <span className="text-slate truncate mr-2">{String(stat?.label ?? "")}</span>
+                    <span className="font-medium text-ink shrink-0">{String(stat?.value ?? "")}</span>
                   </div>
                 ))}
               </div>
@@ -92,7 +138,9 @@ export default async function AdminDashboard() {
                 <ImageUp className="h-4 w-4 text-brand" />
                 <div>
                   <p className="text-sm font-medium text-ink">Homepage hero</p>
-                  <p className="text-xs text-slate-light">{homepageContent.primaryCtaText} / {homepageContent.secondaryCtaText}</p>
+                  <p className="text-xs text-slate-light">
+                    {String(homepageContent?.primaryCtaText ?? "")} / {String(homepageContent?.secondaryCtaText ?? "")}
+                  </p>
                 </div>
               </div>
               <Link href="/admin/homepage" className="text-xs text-brand">Manage</Link>
@@ -132,15 +180,19 @@ export default async function AdminDashboard() {
               {leads.slice(0, 5).map((lead) => (
                 <div key={lead.id} className="flex items-center justify-between py-2 border-b border-border/40 last:border-0">
                   <div>
-                    <p className="text-sm font-medium text-ink">{lead.name}</p>
-                    <p className="text-xs text-slate-light">{lead.email}</p>
+                    <p className="text-sm font-medium text-ink">{String(lead?.name ?? "")}</p>
+                    <p className="text-xs text-slate-light">{String(lead?.email ?? "")}</p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    lead.status === "new" ? "bg-brand-soft text-brand" :
-                    lead.status === "contacted" ? "bg-amber-50 text-amber-700" :
-                    "bg-green-50 text-green-700"
-                  }`}>
-                    {lead.status}
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full font-medium ${
+                      lead.status === "new"
+                        ? "bg-brand-soft text-brand"
+                        : lead.status === "contacted"
+                          ? "bg-amber-50 text-amber-700"
+                          : "bg-green-50 text-green-700"
+                    }`}
+                  >
+                    {String(lead?.status ?? "")}
                   </span>
                 </div>
               ))}
@@ -163,13 +215,15 @@ export default async function AdminDashboard() {
               {courses.slice(0, 5).map((course) => (
                 <div key={course.id} className="flex items-center justify-between py-2 border-b border-border/40 last:border-0">
                   <div>
-                    <p className="text-sm font-medium text-ink">{course.title}</p>
-                    <p className="text-xs text-slate-light">{course.level}</p>
+                    <p className="text-sm font-medium text-ink">{String(course?.title ?? "")}</p>
+                    <p className="text-xs text-slate-light">{String(course?.level ?? "")}</p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${
-                    course.status === "active" ? "bg-green-50 text-green-700" : "bg-muted text-muted-foreground"
-                  }`}>
-                    {course.status}
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full font-medium ${
+                      course.status === "active" ? "bg-green-50 text-green-700" : "bg-muted text-muted-foreground"
+                    }`}
+                  >
+                    {String(course?.status ?? "")}
                   </span>
                 </div>
               ))}

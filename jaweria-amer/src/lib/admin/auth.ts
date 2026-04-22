@@ -55,10 +55,14 @@ export async function logout(): Promise<void> {
 }
 
 export async function getSession(): Promise<{ authenticated: boolean }> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
-  if (!token) return { authenticated: false };
-  return { authenticated: verifyToken(token) };
+  try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
+    if (!token) return { authenticated: false };
+    return { authenticated: verifyToken(token) };
+  } catch {
+    return { authenticated: false };
+  }
 }
 
 export async function requireAuth(): Promise<void> {

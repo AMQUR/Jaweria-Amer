@@ -7,7 +7,12 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  return Response.json(await getUploadAssets());
+  try {
+    const assets = await getUploadAssets();
+    return Response.json(Array.isArray(assets) ? assets : []);
+  } catch {
+    return Response.json([]);
+  }
 }
 
 export async function DELETE(request: Request) {

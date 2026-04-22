@@ -1,6 +1,7 @@
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import type { CourseLevel } from "@/lib/course-offerings";
+import { defaultSettings as defaultSettingsFromFile } from "./defaults";
 
 export type { CourseLevel } from "@/lib/course-offerings";
 
@@ -16,7 +17,19 @@ async function readJSON<T>(filename: string, fallback: T): Promise<T> {
   await ensureDataDir();
   try {
     const raw = await readFile(join(DATA_DIR, filename), "utf-8");
-    return JSON.parse(raw);
+    const parsed: unknown = JSON.parse(raw) as unknown;
+    if (Array.isArray(fallback) && !Array.isArray(parsed)) {
+      return fallback;
+    }
+    if (
+      fallback !== null &&
+      typeof fallback === "object" &&
+      !Array.isArray(fallback) &&
+      (parsed === null || typeof parsed !== "object" || Array.isArray(parsed))
+    ) {
+      return fallback;
+    }
+    return parsed as T;
   } catch {
     return fallback;
   }
@@ -165,18 +178,21 @@ export interface SiteSettings {
   stats: { value: string; label: string }[];
 }
 
-const defaultSettings: SiteSettings = {
-  whatsappNumber: "923253708069",
-  stats: [
-    { value: "95%", label: "Students scored A*/A" },
-    { value: "500+", label: "Students mentored" },
-    { value: "8+", label: "Years of experience" },
-    { value: "12", label: "CAIE exam sessions" },
-  ],
+export const defaultSettings: SiteSettings = {
+  whatsappNumber: defaultSettingsFromFile.whatsappNumber,
+  stats: defaultSettingsFromFile.stats.map((s) => ({ value: s.value, label: s.label })),
 };
 
 export async function getSettings(): Promise<SiteSettings> {
-  return readJSON<SiteSettings>("settings.json", defaultSettings);
+  const raw = await readJSON<SiteSettings | null | undefined>("settings.json", defaultSettings);
+  if (!raw || typeof raw !== "object") {
+    return defaultSettings;
+  }
+  const stats = (raw as SiteSettings).stats;
+  return {
+    whatsappNumber: String((raw as SiteSettings).whatsappNumber ?? defaultSettings.whatsappNumber),
+    stats: Array.isArray(stats) ? stats : defaultSettings.stats,
+  };
 }
 
 export async function saveSettings(settings: SiteSettings): Promise<void> {

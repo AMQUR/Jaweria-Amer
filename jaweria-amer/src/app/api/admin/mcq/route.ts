@@ -7,7 +7,12 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  return Response.json(await getCmsMcqSets());
+  try {
+    const mcqs = await getCmsMcqSets();
+    return Response.json(Array.isArray(mcqs) ? mcqs : []);
+  } catch {
+    return Response.json([]);
+  }
 }
 
 export async function POST(request: Request) {
@@ -18,13 +23,13 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json();
-    const mcq = await saveCmsMcqSet(body);
-    return Response.json({ success: true, mcq });
-  } catch (error) {
-    return Response.json(
-      { error: error instanceof Error ? error.message : "Could not save MCQ set." },
-      { status: 400 }
-    );
+    const result = await saveCmsMcqSet(body);
+    if ("error" in result) {
+      return Response.json({ error: result.error }, { status: 400 });
+    }
+    return Response.json({ success: true, mcq: result });
+  } catch {
+    return Response.json({ error: "Could not save MCQ set." }, { status: 400 });
   }
 }
 

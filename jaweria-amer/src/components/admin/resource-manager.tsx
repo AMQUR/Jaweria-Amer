@@ -50,9 +50,15 @@ const emptyForm = (): ResourceFormState => ({
   file: null,
 });
 
-export function ResourceManager() {
-  const [resources, setResources] = useState<CmsResourceRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+type ResourceManagerProps = {
+  initialResources?: CmsResourceRecord[];
+};
+
+export function ResourceManager({ initialResources }: ResourceManagerProps) {
+  const [resources, setResources] = useState<CmsResourceRecord[]>(() =>
+    Array.isArray(initialResources) ? initialResources : []
+  );
+  const [loading, setLoading] = useState(initialResources === undefined);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
@@ -63,30 +69,25 @@ export function ResourceManager() {
   const [form, setForm] = useState<ResourceFormState>(emptyForm());
 
   async function loadResources() {
-    setLoading(true);
-    const response = await fetch("/api/admin/resources", { cache: "no-store" });
-    const data = await response.json();
-    setResources(Array.isArray(data) ? data : []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await fetch("/api/admin/resources", { cache: "no-store" });
+      const data = response.ok ? await response.json() : null;
+      setResources(Array.isArray(data) ? data : []);
+    } catch {
+      setResources([]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    let active = true;
-    fetch("/api/admin/resources", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!active) return;
-        setResources(Array.isArray(data) ? data : []);
-        setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
+    void loadResources();
   }, []);
 
   const filteredResources = useMemo(() => {
     return resources.filter((resource) => {
-      if (search && !resource.title.toLowerCase().includes(search.toLowerCase())) return false;
+      if (search && !(resource?.title ?? "").toLowerCase().includes(search.toLowerCase())) return false;
       if (categoryFilter !== "all" && resource.category !== categoryFilter) return false;
       if (paperFilter !== "all" && resource.paper !== paperFilter) return false;
       if (sectionFilter !== "all" && (resource.section || "") !== sectionFilter) return false;

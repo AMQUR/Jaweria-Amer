@@ -8,34 +8,43 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { defaultHomepageContent } from "@/lib/admin/defaults";
 import type { HomepageContent } from "@/lib/admin/cms-types";
 
-export function HomepageManager() {
-  const [content, setContent] = useState<HomepageContent | null>(null);
-  const [loading, setLoading] = useState(true);
+type HomepageManagerProps = {
+  initialContent?: HomepageContent;
+};
+
+function mergeHomepage(data: unknown): HomepageContent {
+  if (data && typeof data === "object" && !("error" in (data as object))) {
+    return { ...defaultHomepageContent, ...(data as Partial<HomepageContent>) };
+  }
+  return { ...defaultHomepageContent };
+}
+
+export function HomepageManager({ initialContent }: HomepageManagerProps) {
+  const [content, setContent] = useState<HomepageContent | null>(() =>
+    initialContent ? mergeHomepage(initialContent) : null
+  );
+  const [loading, setLoading] = useState(!initialContent);
   const [saving, setSaving] = useState(false);
   const [bannerFile, setBannerFile] = useState<File | null>(null);
 
   async function loadContent() {
-    setLoading(true);
-    const response = await fetch("/api/admin/homepage", { cache: "no-store" });
-    const data = await response.json();
-    setContent(data);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await fetch("/api/admin/homepage", { cache: "no-store" });
+      const data = response.ok ? await response.json() : null;
+      setContent(mergeHomepage(data));
+    } catch {
+      setContent(mergeHomepage(null));
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    let active = true;
-    fetch("/api/admin/homepage", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!active) return;
-        setContent(data);
-        setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
+    void loadContent();
   }, []);
 
   async function handleSave(event: React.FormEvent<HTMLFormElement>) {
@@ -68,8 +77,11 @@ export function HomepageManager() {
     await loadContent();
   }
 
-  if (loading || !content) {
+  if (loading && !content) {
     return <div className="rounded-2xl border border-border/60 bg-white p-8 text-sm text-slate shadow-sm">Loading homepage content…</div>;
+  }
+  if (!content) {
+    return <div />;
   }
 
   return (
@@ -131,7 +143,7 @@ export function HomepageManager() {
           </p>
           <div className="mt-4 overflow-hidden rounded-2xl border border-border/60 bg-cream">
             <Image
-              src={content.bannerImagePath}
+              src={content?.bannerImagePath || defaultHomepageContent.bannerImagePath}
               alt="Homepage banner preview"
               width={1200}
               height={630}

@@ -45,59 +45,62 @@ const emptyMcqForm = (): McqForm => ({
   questions: [blankQuestion()],
 });
 
-export function McqManager() {
-  const [mcqs, setMcqs] = useState<CmsMcqSet[]>([]);
-  const [loading, setLoading] = useState(true);
+type McqManagerProps = {
+  initialMcqs?: CmsMcqSet[];
+};
+
+export function McqManager({ initialMcqs }: McqManagerProps) {
+  const [mcqs, setMcqs] = useState<CmsMcqSet[]>(() => (Array.isArray(initialMcqs) ? initialMcqs : []));
+  const [loading, setLoading] = useState(initialMcqs === undefined);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<McqForm>(emptyMcqForm());
 
   async function loadMcqs() {
-    setLoading(true);
-    const response = await fetch("/api/admin/mcq", { cache: "no-store" });
-    const data = await response.json();
-    setMcqs(Array.isArray(data) ? data : []);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const response = await fetch("/api/admin/mcq", { cache: "no-store" });
+      const data = response.ok ? await response.json() : null;
+      setMcqs(Array.isArray(data) ? data : []);
+    } catch {
+      setMcqs([]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
-    let active = true;
-    fetch("/api/admin/mcq", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        if (!active) return;
-        setMcqs(Array.isArray(data) ? data : []);
-        setLoading(false);
-      });
-    return () => {
-      active = false;
-    };
+    void loadMcqs();
   }, []);
 
   const stats = useMemo(() => {
-    const published = mcqs.filter((mcq) => mcq.visibility === "published" && !mcq.deleted).length;
+    const list = mcqs ?? [];
+    const published = list.filter((mcq) => mcq?.visibility === "published" && !mcq.deleted).length;
     return {
-      total: mcqs.length,
+      total: list.length,
       published,
-      drafts: mcqs.length - published,
+      drafts: list.length - published,
     };
   }, [mcqs]);
 
   function loadIntoForm(mcq: CmsMcqSet) {
+    const q = (mcq?.questions ?? []) as McqQuestion[];
     setForm({
       id: mcq.id,
-      title: mcq.title,
-      description: mcq.description,
-      timeLimit: mcq.timeLimit ? String(mcq.timeLimit) : "",
-      visibility: mcq.visibility,
-      paper: mcq.paper,
+      title: String(mcq?.title ?? ""),
+      description: String(mcq?.description ?? ""),
+      timeLimit: mcq?.timeLimit ? String(mcq.timeLimit) : "",
+      visibility: (mcq?.visibility === "draft" ? "draft" : "published") as McqForm["visibility"],
+      paper: String(mcq?.paper ?? ""),
       section: mcq.section ?? "",
-      subject: mcq.subject,
-      level: mcq.level,
-      year: mcq.year,
-      questions: mcq.questions.map((question) => ({
-        ...question,
-        options: { ...question.options },
-      })),
+      subject: String(mcq?.subject ?? ""),
+      level: String(mcq?.level ?? ""),
+      year: String(mcq?.year ?? ""),
+      questions: q.length
+        ? q.map((question) => ({
+            ...question,
+            options: { ...question.options },
+          }))
+        : [blankQuestion()],
     });
   }
 
@@ -201,7 +204,7 @@ export function McqManager() {
                   <button type="button" className="w-full text-left" onClick={() => loadIntoForm(mcq)}>
                     <p className="font-medium text-ink">{mcq.title}</p>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {mcq.questions.length} questions · {mcq.visibility} · {mcq.paper}
+                      {(mcq?.questions ?? []).length} questions · {String(mcq?.visibility ?? "")} · {String(mcq?.paper ?? "")}
                     </p>
                   </button>
                   <div className="mt-3 flex items-center gap-2">

@@ -2,7 +2,8 @@ import "server-only";
 
 import { mkdir, readFile, readdir, rm, stat, unlink, writeFile } from "fs/promises";
 import { basename, extname, join, relative } from "path";
-import { staticResources, siteConfig } from "@/lib/data";
+import { staticResources } from "@/lib/data";
+import { defaultHomepageContent } from "./defaults";
 import { mcqSets as staticMcqSets } from "@/lib/mcq-data";
 import type { Resource, ResourceNotesSubCategory } from "@/lib/data";
 import type { McqSet, McqQuestion } from "@/lib/mcq-data";
@@ -39,7 +40,19 @@ async function readJSON<T>(filename: string, fallback: T): Promise<T> {
   await ensureDir(DATA_DIR);
   try {
     const raw = await readFile(join(DATA_DIR, filename), "utf-8");
-    return JSON.parse(raw) as T;
+    const parsed: unknown = JSON.parse(raw) as unknown;
+    if (Array.isArray(fallback) && !Array.isArray(parsed)) {
+      return fallback;
+    }
+    if (
+      fallback !== null &&
+      typeof fallback === "object" &&
+      !Array.isArray(fallback) &&
+      (parsed === null || typeof parsed !== "object" || Array.isArray(parsed))
+    ) {
+      return fallback;
+    }
+    return parsed as T;
   } catch {
     return fallback;
   }
@@ -184,24 +197,16 @@ function defaultMcqMeta(id: string): Omit<CmsMcqSet, "questions" | "createdAt" |
   };
 }
 
-const defaultHomepageContent: HomepageContent = {
-  heroKicker: siteConfig.brandSubtitle,
-  heroTitlePrimary: "Master CAIE English",
-  heroTitleSecondary: "with Clarity and Care",
-  heroDescription:
-    "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
-  primaryCtaText: "Book a Clarity Call",
-  primaryCtaLink: "/contact/whatsapp-primary",
-  secondaryCtaText: "Join WhatsApp group",
-  secondaryCtaLink: "/contact/whatsapp-group",
-  bannerImagePath: "/images/homepage-banner.png",
-  updatedAt: STATIC_RECORD_TIMESTAMP,
-};
+type SaveFileError = { error: string };
 
-async function saveFileToPublic(file: File, category: CmsResourceCategory, title: string) {
+async function saveFileToPublic(
+  file: File,
+  category: CmsResourceCategory,
+  title: string
+): Promise<string | SaveFileError> {
   const fileExt = extname(file.name).toLowerCase();
   if (fileExt !== ".pdf") {
-    throw new Error("Only PDF files are allowed.");
+    return { error: "Only PDF files are allowed." };
   }
   const folder = CATEGORY_TO_FOLDER[category];
   const targetDir = join(RESOURCE_ROOT, folder);
@@ -213,10 +218,10 @@ async function saveFileToPublic(file: File, category: CmsResourceCategory, title
   return `/resources/${folder}/${targetName}`;
 }
 
-async function replaceHomepageBanner(file: File) {
+async function replaceHomepageBanner(file: File): Promise<string | SaveFileError> {
   const ext = extname(file.name).toLowerCase();
   if (![".png", ".jpg", ".jpeg", ".webp"].includes(ext)) {
-    throw new Error("Upload a PNG, JPG, JPEG, or WEBP image.");
+    return { error: "Upload a PNG, JPG, JPEG, or WEBP image." };
   }
   const imageDir = join(PUBLIC_DIR, "images");
   await ensureDir(imageDir);
@@ -245,20 +250,30 @@ export async function getStoredMcqOverrides() {
 }
 
 export async function getHomepageContent() {
-  const stored = await readJSON<Partial<HomepageContent>>(HOMEPAGE_FILE, {});
-  return {
-    ...defaultHomepageContent,
-    ...stored,
-    updatedAt: stored.updatedAt ?? defaultHomepageContent.updatedAt,
-  } satisfies HomepageContent;
+  try {
+    const stored = await readJSON<Partial<HomepageContent>>(HOMEPAGE_FILE, {});
+    return {
+      ...defaultHomepageContent,
+      ...stored,
+      updatedAt: stored?.updatedAt ?? defaultHomepageContent.updatedAt,
+    } satisfies HomepageContent;
+  } catch {
+    return { ...defaultHomepageContent };
+  }
 }
 
-export async function saveHomepageContent(input: Omit<HomepageContent, "updatedAt" | "bannerImagePath"> & { bannerFile?: File | null }) {
+export async function saveHomepageContent(
+  input: Omit<HomepageContent, "updatedAt" | "bannerImagePath"> & { bannerFile?: File | null }
+): Promise<HomepageContent | { error: string }> {
   const current = await getHomepageContent();
-  const bannerImagePath =
-    input.bannerFile && input.bannerFile.size > 0
-      ? await replaceHomepageBanner(input.bannerFile)
-      : current.bannerImagePath;
+  let bannerImagePath = current.bannerImagePath;
+  if (input.bannerFile && input.bannerFile.size > 0) {
+    const nextBanner = await replaceHomepageBanner(input.bannerFile);
+    if (typeof nextBanner === "object" && "error" in nextBanner) {
+      return nextBanner;
+    }
+    bannerImagePath = nextBanner;
+  }
 
   const next: HomepageContent = {
     ...current,
@@ -267,38 +282,47 @@ export async function saveHomepageContent(input: Omit<HomepageContent, "updatedA
     updatedAt: nowIso(),
   };
 
-  await writeJSON(HOMEPAGE_FILE, next);
+  try {
+    await writeJSON(HOMEPAGE_FILE, next);
+  } catch {
+    return { error: "Could not save homepage content." };
+  }
   return next;
 }
 
 export async function getCmsMcqSets(): Promise<CmsMcqSet[]> {
-  const overrides = await getStoredMcqOverrides();
-  const map = new Map<string, CmsMcqSet>();
-  const timestamp = STATIC_RECORD_TIMESTAMP;
+  try {
+    const overrides = await getStoredMcqOverrides();
+    const map = new Map<string, CmsMcqSet>();
+    const timestamp = STATIC_RECORD_TIMESTAMP;
 
-  for (const [id, mcq] of Object.entries(staticMcqSets)) {
-    const base = defaultMcqMeta(id);
-    map.set(id, {
-      ...base,
-      questions: mcq.questions,
-      createdAt: timestamp,
-      updatedAt: timestamp,
-      timeLimit: mcq.timeLimit,
-    });
+    for (const [id, mcq] of Object.entries(staticMcqSets ?? {})) {
+      const base = defaultMcqMeta(id);
+      const questions = mcq?.questions ?? [];
+      map.set(id, {
+        ...base,
+        questions,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+        timeLimit: mcq?.timeLimit,
+      });
+    }
+
+    for (const override of overrides ?? []) {
+      const existing = map.get(override.id);
+      map.set(override.id, {
+        ...(existing ?? override),
+        ...override,
+        source: existing ? "static" : override.source ?? "admin",
+        createdAt: existing?.createdAt ?? override.createdAt ?? timestamp,
+        updatedAt: override.updatedAt ?? timestamp,
+      });
+    }
+
+    return [...map.values()].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  } catch {
+    return [];
   }
-
-  for (const override of overrides) {
-    const existing = map.get(override.id);
-    map.set(override.id, {
-      ...(existing ?? override),
-      ...override,
-      source: existing ? "static" : override.source ?? "admin",
-      createdAt: existing?.createdAt ?? override.createdAt ?? timestamp,
-      updatedAt: override.updatedAt ?? timestamp,
-    });
-  }
-
-  return [...map.values()].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 export async function saveCmsMcqSet(input: {
@@ -313,7 +337,7 @@ export async function saveCmsMcqSet(input: {
   subject: string;
   level: string;
   year: string;
-}) {
+}): Promise<CmsMcqSet | { error: string }> {
   const overrides = await getStoredMcqOverrides();
   const all = await getCmsMcqSets();
   const existing = input.id ? all.find((item) => item.id === input.id) : undefined;
@@ -321,7 +345,7 @@ export async function saveCmsMcqSet(input: {
   const now = nowIso();
 
   if (!existing && all.some((item) => item.id === generatedId)) {
-    throw new Error("An MCQ with this ID already exists.");
+    return { error: "An MCQ with this ID already exists." };
   }
 
   const record: CmsMcqSet = {
@@ -329,7 +353,7 @@ export async function saveCmsMcqSet(input: {
     title: input.title,
     description: input.description,
     timeLimit: input.timeLimit,
-    questions: input.questions,
+    questions: input.questions ?? [],
     visibility: input.visibility,
     paper: input.paper,
     section: input.section,
@@ -343,7 +367,11 @@ export async function saveCmsMcqSet(input: {
 
   const next = overrides.filter((item) => item.id !== generatedId);
   next.push(record);
-  await writeJSON(MCQ_RECORDS_FILE, next);
+  try {
+    await writeJSON(MCQ_RECORDS_FILE, next);
+  } catch {
+    return { error: "Could not save MCQ set." };
+  }
   return record;
 }
 
@@ -375,21 +403,29 @@ export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
           title: item.title,
           description: item.description,
           timeLimit: item.timeLimit,
-          questions: item.questions,
+          questions: item.questions ?? [],
         } satisfies McqSet,
       ])
   );
 }
 
 export async function getCmsResources(): Promise<CmsResourceRecord[]> {
+  try {
+    return await getCmsResourcesInternal();
+  } catch {
+    return [];
+  }
+}
+
+async function getCmsResourcesInternal(): Promise<CmsResourceRecord[]> {
   const overrides = await getStoredResourceOverrides();
   const map = new Map<string, CmsResourceRecord>();
 
-  for (const resource of staticResources) {
+  for (const resource of staticResources ?? []) {
     map.set(resource.id, toCmsResource(resource));
   }
 
-  for (const override of overrides) {
+  for (const override of overrides ?? []) {
     const existing = map.get(override.id);
     map.set(override.id, {
       ...(existing ?? override),
@@ -442,16 +478,16 @@ export async function saveCmsResource(input: {
   description: string;
   autoDetectSection?: boolean;
   file?: File | null;
-}) {
+}): Promise<CmsResourceRecord | { error: string }> {
   const merged = await getCmsResources();
   const current = input.id ? merged.find((item) => item.id === input.id) : undefined;
   if (current?.type === "mcq") {
-    throw new Error("Quick Worksheets are managed from the MCQ builder.");
+    return { error: "Quick Worksheets are managed from the MCQ builder." };
   }
 
   const effectiveId = input.id || `resource-${slugify(input.title) || Date.now().toString()}`;
   if (!current && merged.some((item) => item.id === effectiveId)) {
-    throw new Error("A resource with this ID already exists.");
+    return { error: "A resource with this ID already exists." };
   }
 
   const fileName = input.file?.name ?? current?.fileName ?? `${slugify(input.title) || effectiveId}.pdf`;
@@ -467,12 +503,16 @@ export async function saveCmsResource(input: {
 
   let fileUrl = current?.fileUrl ?? "";
   if (input.file && input.file.size > 0) {
-    fileUrl = await saveFileToPublic(input.file, input.category, input.title);
+    const uploaded = await saveFileToPublic(input.file, input.category, input.title);
+    if (typeof uploaded === "object" && "error" in uploaded) {
+      return uploaded;
+    }
+    fileUrl = uploaded;
     if (current?.source === "admin" && current.fileUrl && current.fileUrl !== fileUrl) {
       await deletePublicFile(current.fileUrl);
     }
   } else if (!fileUrl) {
-    throw new Error("Upload a PDF file.");
+    return { error: "Upload a PDF file." };
   }
 
   const nextRecord: CmsResourceRecord = {
@@ -497,9 +537,13 @@ export async function saveCmsResource(input: {
   };
 
   const overrides = await getStoredResourceOverrides();
-  const nextOverrides = overrides.filter((item) => item.id !== effectiveId);
+  const nextOverrides = (overrides ?? []).filter((item) => item.id !== effectiveId);
   nextOverrides.push(nextRecord);
-  await writeJSON(RESOURCE_RECORDS_FILE, nextOverrides);
+  try {
+    await writeJSON(RESOURCE_RECORDS_FILE, nextOverrides);
+  } catch {
+    return { error: "Could not save resource." };
+  }
   return nextRecord;
 }
 
@@ -550,41 +594,47 @@ async function walkFiles(dir: string): Promise<string[]> {
 }
 
 export async function getUploadAssets(): Promise<UploadAsset[]> {
-  const files = await walkFiles(RESOURCE_ROOT);
-  const assets: UploadAsset[] = [];
-
-  for (const filePath of files) {
-    const info = await stat(filePath);
-    const rel = relative(PUBLIC_DIR, filePath).replace(/\\/g, "/");
-    assets.push({
-      path: filePath,
-      url: `/${rel}`,
-      fileName: basename(filePath),
-      size: info.size,
-      updatedAt: info.mtime.toISOString(),
-      category: rel.split("/")[1] ?? "resources",
-    });
-  }
-
   try {
-    for (const variant of [".png", ".jpg", ".jpeg", ".webp"]) {
-      const bannerPath = join(PUBLIC_DIR, "images", `homepage-banner${variant}`);
+    const files = await walkFiles(RESOURCE_ROOT);
+    const assets: UploadAsset[] = [];
+
+    for (const filePath of files) {
       try {
-        const banner = await stat(bannerPath);
-        assets.unshift({
-          path: bannerPath,
-          url: `/images/homepage-banner${variant}`,
-          fileName: `homepage-banner${variant}`,
-          size: banner.size,
-          updatedAt: banner.mtime.toISOString(),
-          category: "images",
+        const info = await stat(filePath);
+        const rel = relative(PUBLIC_DIR, filePath).replace(/\\/g, "/");
+        assets.push({
+          path: filePath,
+          url: `/${rel}`,
+          fileName: basename(filePath),
+          size: info.size,
+          updatedAt: info.mtime.toISOString(),
+          category: rel.split("/")[1] ?? "resources",
         });
-        break;
       } catch {}
     }
-  } catch {}
 
-  return assets.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    try {
+      for (const variant of [".png", ".jpg", ".jpeg", ".webp"]) {
+        const bannerPath = join(PUBLIC_DIR, "images", `homepage-banner${variant}`);
+        try {
+          const banner = await stat(bannerPath);
+          assets.unshift({
+            path: bannerPath,
+            url: `/images/homepage-banner${variant}`,
+            fileName: `homepage-banner${variant}`,
+            size: banner.size,
+            updatedAt: banner.mtime.toISOString(),
+            category: "images",
+          });
+          break;
+        } catch {}
+      }
+    } catch {}
+
+    return assets.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  } catch {
+    return [];
+  }
 }
 
 export async function deleteUploadAsset(url: string) {

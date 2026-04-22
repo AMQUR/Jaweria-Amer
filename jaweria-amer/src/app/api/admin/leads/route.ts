@@ -6,6 +6,10 @@ export async function GET() {
   if (!session.authenticated) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const leads = await getLeads();
-  return Response.json(leads);
+  try {
+    const leads = await getLeads();
+    return Response.json(Array.isArray(leads) ? leads : []);
+  } catch {
+    return Response.json([]);
+  }
 }

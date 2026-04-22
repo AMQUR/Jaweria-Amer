@@ -6,8 +6,12 @@ export async function GET() {
   if (!session.authenticated) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const resources = await getCmsResources();
-  return Response.json(resources);
+  try {
+    const resources = await getCmsResources();
+    return Response.json(Array.isArray(resources) ? resources : []);
+  } catch {
+    return Response.json([]);
+  }
 }
 
 export async function POST(request: Request) {
@@ -19,7 +23,7 @@ export async function POST(request: Request) {
   const formData = await request.formData();
 
   try {
-    const resource = await saveCmsResource({
+    const result = await saveCmsResource({
       id: (formData.get("id") as string) || undefined,
       title: String(formData.get("title") || ""),
       category: formData.get("category") as never,
@@ -34,12 +38,12 @@ export async function POST(request: Request) {
       autoDetectSection: formData.get("autoDetectSection") === "true",
       file: (formData.get("file") as File | null) ?? null,
     });
-    return Response.json({ success: true, resource });
-  } catch (error) {
-    return Response.json(
-      { error: error instanceof Error ? error.message : "Could not save resource." },
-      { status: 400 }
-    );
+    if ("error" in result) {
+      return Response.json({ error: result.error }, { status: 400 });
+    }
+    return Response.json({ success: true, resource: result });
+  } catch {
+    return Response.json({ error: "Could not save resource." }, { status: 400 });
   }
 }
 

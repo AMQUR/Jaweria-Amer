@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { saveSettingsAction } from "@/lib/admin/actions";
+import { defaultSettings } from "@/lib/admin/defaults";
 import type { SiteSettings } from "@/lib/admin/store";
 
 export default function SettingsPage() {
@@ -14,10 +15,30 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
 
   const fetchSettings = useCallback(async () => {
-    const res = await fetch("/api/admin/settings");
-    const data = await res.json();
-    setSettings(data);
-    setLoading(false);
+    try {
+      const res = await fetch("/api/admin/settings");
+      const data = res.ok ? await res.json() : null;
+      if (data && typeof data === "object" && !("error" in data)) {
+        const raw = data as SiteSettings;
+        const defaultStats = defaultSettings.stats.map((s) => ({ value: s.value, label: s.label }));
+        setSettings({
+          whatsappNumber: String(raw.whatsappNumber ?? defaultSettings.whatsappNumber),
+          stats: Array.isArray(raw.stats) ? raw.stats.map((s) => ({ value: String(s.value), label: String(s.label) })) : defaultStats,
+        });
+      } else {
+        setSettings({
+          whatsappNumber: defaultSettings.whatsappNumber,
+          stats: defaultSettings.stats.map((s) => ({ value: s.value, label: s.label })),
+        });
+      }
+    } catch {
+      setSettings({
+        whatsappNumber: defaultSettings.whatsappNumber,
+        stats: defaultSettings.stats.map((s) => ({ value: s.value, label: s.label })),
+      });
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => { fetchSettings(); }, [fetchSettings]);
@@ -63,7 +84,9 @@ export default function SettingsPage() {
     );
   }
 
-  if (!settings) return null;
+  if (!settings) {
+    return <div />;
+  }
 
   return (
     <div>

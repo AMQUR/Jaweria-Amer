@@ -7,7 +7,12 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  return Response.json(await getHomepageContent());
+  try {
+    const content = await getHomepageContent();
+    return Response.json(content ?? {});
+  } catch {
+    return Response.json({});
+  }
 }
 
 export async function POST(request: Request) {
@@ -19,7 +24,7 @@ export async function POST(request: Request) {
   const formData = await request.formData();
 
   try {
-    const content = await saveHomepageContent({
+    const result = await saveHomepageContent({
       heroKicker: String(formData.get("heroKicker") || ""),
       heroTitlePrimary: String(formData.get("heroTitlePrimary") || ""),
       heroTitleSecondary: String(formData.get("heroTitleSecondary") || ""),
@@ -30,12 +35,11 @@ export async function POST(request: Request) {
       secondaryCtaLink: String(formData.get("secondaryCtaLink") || ""),
       bannerFile: (formData.get("bannerFile") as File | null) ?? null,
     });
-
-    return Response.json({ success: true, content });
-  } catch (error) {
-    return Response.json(
-      { error: error instanceof Error ? error.message : "Could not save homepage content." },
-      { status: 400 }
-    );
+    if ("error" in result) {
+      return Response.json({ error: result.error }, { status: 400 });
+    }
+    return Response.json({ success: true, content: result });
+  } catch {
+    return Response.json({ error: "Could not save homepage content." }, { status: 400 });
   }
 }

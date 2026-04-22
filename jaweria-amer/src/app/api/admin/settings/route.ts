@@ -6,6 +6,10 @@ export async function GET() {
   if (!session.authenticated) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const settings = await getSettings();
-  return Response.json(settings);
+  try {
+    const settings = await getSettings();
+    return Response.json(settings ?? {});
+  } catch {
+    return Response.json({});
+  }
 }
