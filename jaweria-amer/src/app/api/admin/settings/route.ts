@@ -30,12 +30,12 @@ export async function POST(request: Request) {
       ? body.stats.map((s) => {
           const row = s as { label?: unknown; value?: unknown };
           return {
-            label: String(row?.label ?? ""),
-            value: String(row?.value ?? ""),
+            label: String(row?.label ?? "").trim(),
+            value: String(row?.value ?? "").trim(),
           };
         })
       : [];
-    const valid = stats.filter((s) => s.label.trim().length > 0 && s.value.trim().length > 0);
+    const valid = stats.filter((s) => s.value && s.label);
     if (valid.length === 0 || valid.length > 6) {
       return Response.json({ error: "Add between 1 and 6 stats with value and label." }, { status: 400 });
     }
