@@ -73,6 +73,9 @@ export const TOPICALS_PAPER_2_SECTION_DEFS = [
 export const TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS: readonly string[] =
   TOPICALS_PAPER_2_SECTION_DEFS.map((s) => s.label);
 
+/** Paper 1 Topicals hub: these sections are always listed; Essay/Directed Writing are Paper 2 only. */
+export const TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS = ["Comprehension", "Summary"] as const;
+
 export const RESOURCE_HUB_CATEGORIES: {
   id: ResourceHubCategory;
   label: string;

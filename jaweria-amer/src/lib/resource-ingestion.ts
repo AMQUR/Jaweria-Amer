@@ -319,7 +319,9 @@ function normalizeTopicalsResource(resource: Resource): Resource {
     "General Reading",
   ]);
   if (resource.paper && resource.section && preservableTopicalSection.has(resource.section)) {
-    return { ...resource, paper: resource.paper, section: resource.section };
+    const isP2OnlySection = resource.section === "Directed Writing" || resource.section === "Essay";
+    const paper = isP2OnlySection ? "Paper 2" : resource.paper;
+    return { ...resource, paper, section: resource.section };
   }
 
   const raw = `${resource.title || ""} ${basenameFromFileUrl(resource.fileUrl) || ""}`
@@ -350,7 +352,7 @@ function normalizeTopicalsResource(resource: Resource): Resource {
       raw.includes("article") ||
       raw.includes("report")
     ) {
-      section = "Directed Writing";
+      section = "General Writing";
     } else if (
       raw.includes("essay") ||
       raw.includes("composition") ||
@@ -397,6 +399,10 @@ function normalizeTopicalsResource(resource: Resource): Resource {
     } else {
       section = "General Reading";
     }
+  }
+
+  if (section === "Directed Writing" || section === "Essay") {
+    paper = "Paper 2";
   }
 
   return {

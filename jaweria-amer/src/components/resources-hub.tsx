@@ -16,6 +16,7 @@ import {
 import {
   RESOURCE_HUB_CATEGORIES,
   resources as defaultResources,
+  TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS,
   TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS,
   type Resource,
   type ResourceHubCategory,
@@ -252,6 +253,11 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       return sortTopicalSectionsForPaper2([...new Set([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, ...sections])]);
     }
 
+    if (paper === "Paper 1") {
+      const noP2Only = sections.filter((s) => s !== "Essay" && s !== "Directed Writing");
+      return sortSections([...new Set([...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS, ...noP2Only])]);
+    }
+
     return sortSections(sections);
   }, [category, paper, scopedForFilters, safeResources]);
 
@@ -270,7 +276,14 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         const sections =
           category === "topicals" && paperName === "Paper 2"
             ? sortTopicalSectionsForPaper2([...new Set([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS, ...fromResources])])
-            : sortSections(fromResources);
+            : category === "topicals" && paperName === "Paper 1"
+              ? sortSections([
+                  ...new Set([
+                    ...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS,
+                    ...fromResources.filter((s) => s !== "Essay" && s !== "Directed Writing"),
+                  ]),
+                ])
+              : sortSections(fromResources);
         return { paper: paperName, sections };
       })
       .filter((entry) => (category === "topicals" ? true : entry.sections.length > 0));
@@ -324,6 +337,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       }
 
       if (category === "topicals") {
+        if (paper === "all") return false;
+        if (r.paper !== paper) return false;
+        if (section !== "all" && r.section !== section) return false;
         return true;
       }
 
