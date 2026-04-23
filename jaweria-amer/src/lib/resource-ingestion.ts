@@ -385,7 +385,7 @@ function inferStrictTopicalsSection(resource: Resource, raw: string): TopicalsSt
 }
 
 function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "fileUrl" | "category">): string {
-  if (resource.category === "topicals") {
+  if (resource.category === "topicals" || resource.category === "vocabulary") {
     return resource.paper;
   }
 
@@ -436,6 +436,8 @@ function isMarkSchemeResource(resource: Pick<Resource, "title" | "fileUrl" | "ca
   const fileUrlLower = resource.fileUrl.toLowerCase();
   /** Solved worked papers live under Notes; "solved" in the stem must not force the MS → checklists path. */
   if (fileUrlLower.includes("/notes/solved-papers/")) return false;
+  /** Notes vocabulary banks are not mark schemes. */
+  if (fileUrlLower.includes("/notes/vocabulary/")) return false;
 
   const haystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
     .toLowerCase()

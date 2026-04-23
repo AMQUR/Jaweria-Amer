@@ -814,6 +814,30 @@ const supplementalHubResourcesBase: Resource[] = [
     description:
       "High-impact vocabulary bank for Directed Writing and Essay responses, including connectors, development phrases, evaluation language, and examiner-level words. Use at least 3–5 of these in every response for stronger examiner impact.",
   },
+  {
+    id: "notes-vocab-directed-writing-bank",
+    title: "Directed Writing Vocabulary Bank",
+    category: "vocabulary",
+    subCategory: "general-vocabulary",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 2",
+    year: "Core",
+    fileUrl: "/resources/notes/vocabulary/directed-writing-vocabulary-bank.pdf",
+    description: "High-impact vocabulary, evaluative phrases, and power words for Directed Writing.",
+  },
+  {
+    id: "notes-vocab-summary-bank",
+    title: "Summary Vocabulary Bank — 25 Words",
+    category: "vocabulary",
+    subCategory: "general-vocabulary",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Core",
+    fileUrl: "/resources/notes/vocabulary/summary-vocabulary-bank.pdf",
+    description: "Core vocabulary bank for summary writing with high-utility exam words.",
+  },
   // ── Examiner Reports ─────────────────────────────────────────────────────
   {
     id: "script-copy-of-1123-s24-er",
