@@ -35,6 +35,7 @@ export const CMS_NOTES_SUBCATEGORY_OPTIONS: {
   { value: "essay-writing", label: "Essay Writing" },
   { value: "directed-writing", label: "Directed Writing" },
   { value: "grammar", label: "Grammar" },
+  { value: "solved-papers", label: "Solved Papers" },
 ];
 
 export const CMS_PAPER_OPTIONS = ["Paper 1", "Paper 2"] as const;

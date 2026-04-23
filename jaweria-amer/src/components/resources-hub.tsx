@@ -14,6 +14,7 @@ import {
   ListChecks,
 } from "lucide-react";
 import {
+  NOTES_HUB_SUBTOPICS,
   RESOURCE_HUB_CATEGORIES,
   resources as defaultResources,
   TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS,
@@ -101,21 +102,8 @@ const selectClass =
 
 type NotesSubCategoryFilter = "unset" | ResourceNotesSubCategory;
 
-const NOTES_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
-  { value: "summary-writing", label: "Summary Writing" },
-  { value: "comprehension", label: "Comprehension" },
-  { value: "essay-writing", label: "Essay Writing" },
-  { value: "directed-writing", label: "Directed Writing" },
-  { value: "grammar", label: "Grammar" },
-];
-
-const NOTES_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string }[] = [
-  { id: "summary-writing", label: "Summary Writing" },
-  { id: "comprehension", label: "Comprehension" },
-  { id: "essay-writing", label: "Essay Writing" },
-  { id: "directed-writing", label: "Directed Writing" },
-  { id: "grammar", label: "Grammar" },
-];
+const NOTES_SUBCATEGORY_OPTIONS = NOTES_HUB_SUBTOPICS.map((t) => ({ value: t.id, label: t.label }));
+const NOTES_TOPIC_BLOCKS = NOTES_HUB_SUBTOPICS;
 
 const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; description: string }[] = [
   { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },

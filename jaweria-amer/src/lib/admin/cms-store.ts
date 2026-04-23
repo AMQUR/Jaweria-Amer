@@ -87,6 +87,7 @@ function inferNotesSubCategory(raw: string): ResourceNotesSubCategory | undefine
   if (raw.includes("essay") || raw.includes("descriptive") || raw.includes("narrative")) return "essay-writing";
   if (raw.includes("directed")) return "directed-writing";
   if (raw.includes("grammar") || raw.includes("sentence") || raw.includes("punctuation")) return "grammar";
+  if (raw.includes("solved-papers") || raw.includes("solved paper")) return "solved-papers";
   return undefined;
 }
 

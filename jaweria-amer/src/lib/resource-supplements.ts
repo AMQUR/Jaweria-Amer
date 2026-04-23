@@ -763,6 +763,19 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-speech-topics.pdf",
     description: "Speech-format directed writing prompts for Paper 2.",
   },
+  // ── Notes — Solved Papers ───────────────────────────────────────────────
+  {
+    id: "notes-solved-w25-qp21",
+    title: "W25 Paper 2 (QP 21) — Solved",
+    category: "general-notes",
+    subCategory: "solved-papers",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 2",
+    year: "W25",
+    fileUrl: "/resources/notes/solved-papers/w25-qp21-solved.pdf",
+    description: "Fully worked solution with examiner-style answers.",
+  },
   // ── Vocabulary ───────────────────────────────────────────────────────────
   {
     id: "vocab-comprehension-vocabulary",

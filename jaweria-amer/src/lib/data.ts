@@ -39,6 +39,7 @@ export type ResourceNotesSubCategory =
   | "essay-writing"
   | "directed-writing"
   | "grammar"
+  | "solved-papers"
   | "comprehension-vocabulary"
   | "essay-vocabulary"
   | "general-vocabulary"
@@ -61,6 +62,16 @@ export interface Resource {
   /** When `"mcq"`, the resource view renders an interactive MCQ quiz instead of a PDF iframe. */
   type?: "mcq";
 }
+
+/** Notes hub topic tiles / filters (`general-notes` only; vocabulary uses its own lists in the UI). */
+export const NOTES_HUB_SUBTOPICS: { id: ResourceNotesSubCategory; label: string }[] = [
+  { id: "summary-writing", label: "Summary Writing" },
+  { id: "comprehension", label: "Comprehension" },
+  { id: "essay-writing", label: "Essay Writing" },
+  { id: "directed-writing", label: "Directed Writing" },
+  { id: "grammar", label: "Grammar" },
+  { id: "solved-papers", label: "Solved Papers" },
+];
 
 /** Paper 1 Topicals hub sections only (no overlap with Paper 2). */
 export const TOPICALS_PAPER_1_SECTION_DEFS = [
