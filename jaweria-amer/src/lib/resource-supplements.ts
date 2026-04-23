@@ -773,7 +773,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "W25",
-    fileUrl: "/resources/notes/solved-papers/w25-qp21-solved.pdf",
+    fileUrl: "/resources/notes/solved-papers/w25-qp21-solved.pdf?v=2",
     description: "Fully worked solution with examiner-style answers.",
   },
   // ── Vocabulary ───────────────────────────────────────────────────────────

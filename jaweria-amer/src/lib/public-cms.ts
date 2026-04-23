@@ -16,8 +16,9 @@ function isValidResourceFileUrl(fileUrl: string | undefined): fileUrl is string 
 }
 
 async function publicFileExists(fileUrl: string) {
+  const pathOnly = fileUrl.split("?")[0]?.split("#")[0] ?? fileUrl;
   try {
-    await access(join(PUBLIC_DIR, fileUrl.replace(/^\//, "")));
+    await access(join(PUBLIC_DIR, pathOnly.replace(/^\//, "")));
     return true;
   } catch {
     return false;

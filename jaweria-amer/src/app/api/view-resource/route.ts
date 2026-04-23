@@ -22,7 +22,8 @@ export async function GET(req: NextRequest) {
     }
 
     const publicRoot = resolve(process.cwd(), "public");
-    const rel = resource.fileUrl.replace(/^\/+/, "");
+    const pathOnly = resource.fileUrl.split("?")[0]?.split("#")[0] ?? resource.fileUrl;
+    const rel = pathOnly.replace(/^\/+/, "");
     const filePath = resolve(publicRoot, rel);
     const relCheck = relative(publicRoot, filePath);
     if (relCheck.startsWith("..") || relCheck.startsWith("/") || relCheck === "") {
