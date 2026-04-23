@@ -14,6 +14,7 @@ export const CMS_RESOURCE_CATEGORY_LABELS: Record<CmsResourceCategory, string> =
   checklists: "Marking Schemes",
   "quick-worksheets": "Quick Worksheets",
   vocabulary: "Vocabulary",
+  featured: "Featured",
 };
 
 export const CMS_RESOURCE_CATEGORY_OPTIONS: { value: CmsResourceCategory; label: string }[] = [

@@ -30,7 +30,8 @@ export type ResourceHubCategory =
   | "examiner-reports"
   | "checklists"
   | "quick-worksheets"
-  | "vocabulary";
+  | "vocabulary"
+  | "featured";
 
 /** Sub-type for vault items in `general-notes` and `vocabulary` (optional; inferred when omitted). */
 export type ResourceNotesSubCategory =
@@ -43,6 +44,8 @@ export type ResourceNotesSubCategory =
   | "comprehension-vocabulary"
   | "essay-vocabulary"
   | "general-vocabulary"
+  | "directed-writing-vocabulary"
+  | "summary-writing-vocabulary"
   | "p2-50-words"
   | "checklists";
 

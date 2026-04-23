@@ -39,6 +39,7 @@ const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   checklists: ClipboardList,
   "quick-worksheets": Brain,
   vocabulary: BookMarked,
+  featured: FolderOpen,
 };
 
 const GUIDED_SECTION_CATEGORIES = new Set<ResourceHubCategory>(["topicals", "checklists"]);
@@ -108,6 +109,8 @@ const NOTES_TOPIC_BLOCKS = NOTES_HUB_SUBTOPICS;
 const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; description: string }[] = [
   { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },
   { id: "essay-vocabulary", label: "Essay Vocabulary", description: "Expressive vocabulary for writing tasks." },
+  { id: "directed-writing-vocabulary", label: "Directed Writing Vocabulary", description: "High-impact vocabulary and phrases for directed writing." },
+  { id: "summary-writing-vocabulary", label: "Summary Writing Vocabulary", description: "High-utility vocabulary for summary writing tasks." },
   { id: "general-vocabulary", label: "General Vocabulary", description: "Broad vocabulary banks for all paper tasks." },
   { id: "p2-50-words", label: "50 Words for P2", description: "High-impact bank for Paper 2 directed writing and essays." },
 ];
@@ -115,6 +118,8 @@ const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; de
 const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
   { value: "comprehension-vocabulary", label: "Comprehension Vocabulary" },
   { value: "essay-vocabulary", label: "Essay Vocabulary" },
+  { value: "directed-writing-vocabulary", label: "Directed Writing Vocabulary" },
+  { value: "summary-writing-vocabulary", label: "Summary Writing Vocabulary" },
   { value: "general-vocabulary", label: "General Vocabulary" },
   { value: "p2-50-words", label: "50 Words for P2" },
 ];

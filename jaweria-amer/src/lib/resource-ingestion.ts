@@ -432,12 +432,14 @@ function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "file
   return resource.paper;
 }
 
-function isMarkSchemeResource(resource: Pick<Resource, "title" | "fileUrl" | "category">): boolean {
+function isMarkSchemeResource(resource: Pick<Resource, "title" | "fileUrl" | "category" | "subCategory">): boolean {
   const fileUrlLower = resource.fileUrl.toLowerCase();
   /** Solved worked papers live under Notes; "solved" in the stem must not force the MS → checklists path. */
   if (fileUrlLower.includes("/notes/solved-papers/")) return false;
   /** Notes vocabulary banks are not mark schemes. */
   if (fileUrlLower.includes("/notes/vocabulary/")) return false;
+  /** Vocabulary subCategory resources are never mark schemes. */
+  if (resource.subCategory?.includes("vocabulary")) return false;
 
   const haystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
     .toLowerCase()

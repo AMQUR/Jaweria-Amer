@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { ExternalLink, FolderOpen, PlayCircle } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, FolderOpen, PlayCircle, CalendarDays } from "lucide-react";
 import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
 import { contact } from "@/lib/contact";
 import { siteConfig, staticResources } from "@/lib/data";
@@ -119,6 +120,33 @@ export default async function ResourcesPage() {
           </div>
         </div>
       </section>
+      <section className="border-b border-border/70 bg-white py-8 sm:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-2xl border bg-gradient-to-b from-white to-muted/40 p-6 shadow-sm">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-start gap-4">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-crimson text-white">
+                  <CalendarDays className="h-5 w-5" aria-hidden />
+                </span>
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand">Featured</p>
+                  <h2 className="mt-0.5 font-serif text-xl font-semibold text-ink">Last 5-Day Exam Plan</h2>
+                  <p className="mt-1 text-sm leading-relaxed text-slate">
+                    Your final strategy to maximise marks before the exam.
+                  </p>
+                </div>
+              </div>
+              <Link
+                href="/resources/view/last-5-day-plan"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-crimson px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-rose"
+              >
+                View Plan
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <ResourcesHub resources={safeResources} />
     </>
   );
