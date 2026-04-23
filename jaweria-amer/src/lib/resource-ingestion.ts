@@ -433,6 +433,10 @@ function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "file
 }
 
 function isMarkSchemeResource(resource: Pick<Resource, "title" | "fileUrl" | "category">): boolean {
+  const fileUrlLower = resource.fileUrl.toLowerCase();
+  /** Solved worked papers live under Notes; "solved" in the stem must not force the MS → checklists path. */
+  if (fileUrlLower.includes("/notes/solved-papers/")) return false;
+
   const haystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
     .toLowerCase()
     .replace(/[-_]+/g, " ");
