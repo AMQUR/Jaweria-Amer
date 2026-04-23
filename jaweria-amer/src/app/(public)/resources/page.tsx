@@ -63,7 +63,7 @@ export default async function ResourcesPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-10 lg:grid-cols-2 lg:items-stretch lg:gap-12">
             <div
-              className="flex flex-col justify-center rounded-2xl border border-[rgba(198,40,57,0.08)] bg-white p-8 shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-10"
+              className="flex flex-col justify-center rounded-2xl border border-[#fda4af] bg-gradient-to-br from-[#fff1f2] via-white to-[#ffe4e6] p-8 shadow-[0_10px_30px_rgba(244,63,94,0.15)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_15px_40px_rgba(244,63,94,0.25)] sm:p-10"
             >
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-crimson text-white">
                 <PlayCircle className="h-5 w-5" aria-hidden />
@@ -81,7 +81,7 @@ export default async function ResourcesPage() {
                 channel="youtube"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-crimson px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-rose"
+                className="mt-6 inline-flex w-fit items-center gap-2 rounded-xl bg-[#be123c] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-[#9f1239]"
               >
                 Open YouTube channel
                 <ExternalLink className="h-4 w-4 opacity-90" aria-hidden />
@@ -89,19 +89,15 @@ export default async function ResourcesPage() {
             </div>
 
             <div
-              className="flex flex-col justify-between rounded-2xl border border-white/15 p-8 text-white shadow-sm transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-md sm:p-10"
-              style={{
-                background:
-                  "linear-gradient(135deg, rgba(198, 40, 57, 0.92), rgba(233, 30, 99, 0.80))",
-              }}
+              className="flex flex-col justify-between rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 text-white shadow-[0_12px_35px_rgba(127,29,29,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(127,29,29,0.45)] sm:p-10"
             >
               <div>
                 <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 text-white">
                   <FolderOpen className="h-5 w-5" aria-hidden />
                 </div>
-                <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/80">Full vault</p>
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-white/60">Full vault</p>
                 <h2 className="mt-2 font-serif text-2xl font-bold text-white sm:text-3xl">Full Resource Pack</h2>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-white/90">
+                <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80">
                   The curated folder bundles extended handouts and session materials in one place —
                   for students who want the complete archive alongside this hub.
                 </p>
@@ -111,7 +107,7 @@ export default async function ResourcesPage() {
                 channel="drive"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex w-fit items-center gap-2 rounded-xl border border-white/25 bg-white/95 px-5 py-3 text-sm font-semibold text-crimson shadow-sm transition-[background-color,color,box-shadow] duration-200 hover:border-white/40 hover:bg-white hover:shadow-md"
+                className="mt-8 inline-flex w-fit items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-medium text-[#7f1d1d] shadow-sm transition-all duration-300 hover:bg-[#ffe4e6]"
               >
                 Open full pack
                 <ExternalLink className="h-4 w-4 opacity-90" aria-hidden />
@@ -122,15 +118,15 @@ export default async function ResourcesPage() {
       </section>
       <section className="border-b border-border/70 bg-white py-8 sm:py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border bg-gradient-to-b from-white to-muted/40 p-6 shadow-sm">
+          <div className="rounded-2xl border border-[#fdba74] bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] p-6 shadow-[0_8px_25px_rgba(251,146,60,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(251,146,60,0.3)]">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-crimson text-white">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#c2410c] text-white">
                   <CalendarDays className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-brand">Featured</p>
-                  <h2 className="mt-0.5 font-serif text-xl font-semibold text-ink">Last 5-Day Exam Plan</h2>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#c2410c]">Featured</p>
+                  <h2 className="mt-0.5 font-serif text-xl font-semibold text-[#9a3412]">Last 5-Day Exam Plan</h2>
                   <p className="mt-1 text-sm leading-relaxed text-slate">
                     Your final strategy to maximise marks before the exam.
                   </p>
@@ -138,7 +134,7 @@ export default async function ResourcesPage() {
               </div>
               <Link
                 href="/resources/view/last-5-day-plan"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-crimson px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:bg-rose"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#c2410c] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-[#9a3412]"
               >
                 View Plan
               </Link>
