@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { ExternalLink, PlayCircle, CalendarDays } from "lucide-react";
 import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
 import { contact } from "@/lib/contact";
@@ -121,7 +122,9 @@ export default async function ResourcesPage() {
         </div>
       </section>
 
-      <ResourcesHub resources={safeResources} />
+      <Suspense fallback={<div className="min-h-[40vh] bg-cream" aria-hidden />}>
+        <ResourcesHub resources={safeResources} />
+      </Suspense>
     </>
   );
 }

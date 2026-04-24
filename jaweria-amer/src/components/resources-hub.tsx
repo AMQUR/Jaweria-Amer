@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   BookMarked,
@@ -98,6 +99,45 @@ function uniqueSorted(values: string[]) {
   );
 }
 
+const ALL_HUB_CATEGORY_IDS = new Set(RESOURCE_HUB_CATEGORIES.map((c) => c.id));
+
+function isResourceHubCategoryId(s: string): s is ResourceHubCategory {
+  return ALL_HUB_CATEGORY_IDS.has(s as ResourceHubCategory);
+}
+
+function isValidSubForCategory(
+  sub: string,
+  category: ResourceHubCategory | "all"
+): sub is ResourceNotesSubCategory {
+  if (category === "general-notes") {
+    return NOTES_HUB_SUBTOPICS.some((t) => t.id === sub);
+  }
+  if (category === "vocabulary") {
+    return VOCABULARY_SUBCATEGORY_OPTIONS.some((o) => o.value === sub);
+  }
+  return false;
+}
+
+function readHubFromSearchParams(sp: URLSearchParams) {
+  const rawCat = sp.get("cat");
+  const category: ResourceHubCategory | "all" =
+    rawCat && isResourceHubCategoryId(rawCat) ? rawCat : "all";
+
+  const subRaw = sp.get("sub");
+  let notesSubCategory: NotesSubCategoryFilter = "unset";
+  if (subRaw && (category === "general-notes" || category === "vocabulary")) {
+    if (isValidSubForCategory(subRaw, category)) {
+      notesSubCategory = subRaw;
+    }
+  }
+
+  const paperP = sp.get("paper");
+  const paper = paperP && paperP.length > 0 ? paperP : "all";
+  const sectionP = sp.get("section");
+  const section = sectionP && sectionP.length > 0 ? sectionP : "all";
+  return { category, notesSubCategory, paper, section };
+}
+
 const selectClass =
   "w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm text-ink shadow-[inset_0_1px_1px_rgba(34,16,18,0.03)] transition-[background-color,border-color,box-shadow] duration-200 ease-out focus-visible:border-ring focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/25";
 
@@ -159,13 +199,43 @@ function sortTopicalSectionsForPaper2(sections: string[]) {
 }
 
 export function ResourcesHub({ resources = defaultResources }: { resources?: Resource[] }) {
-  const [category, setCategory] = useState<ResourceHubCategory | "all">("all");
-  const [notesSubCategory, setNotesSubCategory] = useState<NotesSubCategoryFilter>("unset");
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+  const spKey = searchParams.toString();
+  const { category, notesSubCategory, paper, section } = useMemo(
+    () => readHubFromSearchParams(new URLSearchParams(spKey)),
+    [spKey]
+  );
+
   const [subject, setSubject] = useState("all");
   const [level, setLevel] = useState("all");
-  const [paper, setPaper] = useState("all");
   const [year, setYear] = useState("all");
-  const [section, setSection] = useState("all");
+
+  const writeHub = useCallback(
+    (h: {
+      category: ResourceHubCategory | "all";
+      notesSubCategory: NotesSubCategoryFilter;
+      paper: string;
+      section: string;
+    }) => {
+      const p = new URLSearchParams(searchParams.toString());
+      if (h.category === "all") p.delete("cat");
+      else p.set("cat", h.category);
+      if (h.notesSubCategory === "unset" || (h.category !== "general-notes" && h.category !== "vocabulary")) {
+        p.delete("sub");
+      } else {
+        p.set("sub", h.notesSubCategory);
+      }
+      if (h.paper === "all") p.delete("paper");
+      else p.set("paper", h.paper);
+      if (h.section === "all") p.delete("section");
+      else p.set("section", h.section);
+      const q = p.toString();
+      router.replace(q ? `${pathname}?${q}` : pathname, { scroll: false });
+    },
+    [pathname, router, searchParams]
+  );
 
   const scrollToResourceGrid = useCallback(() => {
     document.getElementById("resource-grid")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -268,13 +338,10 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   }, [category, guidedPreviewResources]);
 
   function selectCategory(next: ResourceHubCategory | "all") {
-    setCategory(next);
-    setNotesSubCategory("unset");
     setSubject("all");
     setLevel("all");
-    setPaper("all");
     setYear("all");
-    setSection("all");
+    writeHub({ category: next, notesSubCategory: "unset", paper: "all", section: "all" });
   }
 
   function openCategory(next: ResourceHubCategory) {
@@ -285,7 +352,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   function handleTopicTileClick(id: ResourceNotesSubCategory) {
     if (topicTapTimeoutRef.current) clearTimeout(topicTapTimeoutRef.current);
     setTopicTapId(id);
-    setNotesSubCategory(id);
+    writeHub({ category, notesSubCategory: id, paper, section });
     requestAnimationFrame(() => scrollToResourceGrid());
     topicTapTimeoutRef.current = setTimeout(() => {
       setTopicTapId(null);
@@ -541,8 +608,8 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   className={selectClass}
                   value={paper}
                   onChange={(e) => {
-                    setPaper(e.target.value);
-                    setSection("all");
+                    const p = e.target.value;
+                    writeHub({ category, notesSubCategory, paper: p, section: "all" });
                   }}
                 >
                   <option value="all">
@@ -562,7 +629,14 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? "Step 2: Section" : "Year"}
                 </span>
                 {GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) ? (
-                  <select className={selectClass} value={section} onChange={(e) => setSection(e.target.value)}>
+                  <select
+                    className={selectClass}
+                    value={section}
+                    onChange={(e) => {
+                      const s = e.target.value;
+                      writeHub({ category, notesSubCategory, paper, section: s });
+                    }}
+                  >
                     <option value="all">Select a section</option>
                     {sectionOptions.map((s) => (
                       <option key={s} value={s}>
@@ -589,7 +663,10 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   <select
                     className={selectClass}
                     value={notesSubCategory}
-                    onChange={(e) => setNotesSubCategory(e.target.value as NotesSubCategoryFilter)}
+                    onChange={(e) => {
+                      const v = e.target.value as NotesSubCategoryFilter;
+                      writeHub({ category, notesSubCategory: v, paper, section });
+                    }}
                   >
                     <option value="unset">Choose a topic</option>
                     {NOTES_SUBCATEGORY_OPTIONS.map((opt) => (
@@ -608,7 +685,10 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   <select
                     className={selectClass}
                     value={notesSubCategory}
-                    onChange={(e) => setNotesSubCategory(e.target.value as NotesSubCategoryFilter)}
+                    onChange={(e) => {
+                      const v = e.target.value as ResourceNotesSubCategory;
+                      writeHub({ category, notesSubCategory: v, paper, section });
+                    }}
                   >
                     <option value="unset">Choose a type</option>
                     {VOCABULARY_SUBCATEGORY_OPTIONS.map((opt) => (
@@ -681,8 +761,12 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                             key={`${paperEntry.paper}-${sectionName}`}
                             type="button"
                             onClick={() => {
-                              setPaper(paperEntry.paper);
-                              setSection(sectionName);
+                              writeHub({
+                                category,
+                                notesSubCategory,
+                                paper: paperEntry.paper,
+                                section: sectionName,
+                              });
                               requestAnimationFrame(() => scrollToResourceGrid());
                             }}
                             className={previewPillClass(false)}
@@ -712,7 +796,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                       key={`${paper}-${sectionName}`}
                       type="button"
                       onClick={() => {
-                        setSection(sectionName);
+                        writeHub({ category, notesSubCategory, paper, section: sectionName });
                         requestAnimationFrame(() => scrollToResourceGrid());
                       }}
                       className={previewPillClass(section === sectionName)}

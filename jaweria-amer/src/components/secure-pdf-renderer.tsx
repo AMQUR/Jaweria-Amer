@@ -1,93 +1,57 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Document, Page, pdfjs } from "react-pdf";
-import "react-pdf/dist/Page/AnnotationLayer.css";
-import "react-pdf/dist/Page/TextLayer.css";
+import dynamic from "next/dynamic";
+import { useLayoutEffect, useState } from "react";
 
-pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+function PdfSkeleton() {
+  return (
+    <div
+      className="w-full overflow-hidden rounded-xl border border-border/80 bg-neutral-100/80 shadow-sm"
+      aria-hidden
+    >
+      <div className="h-[90vh] min-h-[320px] animate-pulse bg-gradient-to-b from-muted/40 to-muted/20" />
+    </div>
+  );
+}
+
+const SecurePdfRendererDesktop = dynamic(
+  () =>
+    import("@/components/secure-pdf-renderer-desktop").then((m) => ({
+      default: m.SecurePdfRendererDesktop,
+    })),
+  {
+    ssr: false,
+    loading: () => <PdfSkeleton />,
+  }
+);
 
 export function SecurePdfRenderer({ resourceId }: { resourceId: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [width, setWidth] = useState(720);
-  const [numPages, setNumPages] = useState<number | null>(null);
-  const [loadError, setLoadError] = useState(false);
-
-  const file = useMemo(
-    () => `/api/view-resource?id=${encodeURIComponent(resourceId)}`,
-    [resourceId]
-  );
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useLayoutEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const measure = () => {
-      const w = el.getBoundingClientRect().width;
-      setWidth(Math.max(280, Math.floor(w - 8)));
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => ro.disconnect();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- UA is only available in the browser
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
   }, []);
 
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if ((e.ctrlKey || e.metaKey) && ["p", "s"].includes(e.key.toLowerCase())) {
-        e.preventDefault();
-      }
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, []);
+  if (!resourceId) {
+    return null;
+  }
 
-  const onLoadSuccess = useCallback(({ numPages: n }: { numPages: number }) => {
-    setNumPages(n);
-    setLoadError(false);
-  }, []);
+  if (isMobile === null) {
+    return <PdfSkeleton />;
+  }
 
-  const onLoadError = useCallback(() => {
-    setLoadError(true);
-    setNumPages(null);
-  }, []);
-
-  if (loadError) {
+  if (isMobile) {
     return (
-      <div className="rounded-xl border border-border/80 bg-white p-8 text-center text-sm text-slate shadow-sm">
-        Unable to display this resource right now.
+      <div className="w-full">
+        <iframe
+          title="Resource preview"
+          src={`/api/view-resource?id=${encodeURIComponent(resourceId)}`}
+          className="h-[90vh] w-full rounded-xl border"
+        />
       </div>
     );
   }
 
-  return (
-    <div
-      ref={containerRef}
-      className="max-h-[90vh] w-full overflow-y-auto rounded-xl border border-border/80 bg-neutral-100/80 py-4 shadow-sm"
-      onContextMenu={(e) => e.preventDefault()}
-    >
-      <Document
-        file={file}
-        onLoadSuccess={onLoadSuccess}
-        onLoadError={onLoadError}
-        loading={
-          <div className="px-4 py-12 text-center text-sm text-muted-foreground">Loading…</div>
-        }
-        externalLinkTarget="_blank"
-        externalLinkRel="noopener noreferrer nofollow"
-      >
-        {numPages !== null &&
-          Array.from({ length: numPages }, (_, i) => (
-            <div key={i + 1} className="mb-6 flex justify-center px-2 last:mb-0">
-              <Page
-                pageNumber={i + 1}
-                width={width}
-                renderTextLayer
-                renderAnnotationLayer
-                className="shadow-sm"
-              />
-            </div>
-          ))}
-      </Document>
-    </div>
-  );
+  return <SecurePdfRendererDesktop resourceId={resourceId} />;
 }
