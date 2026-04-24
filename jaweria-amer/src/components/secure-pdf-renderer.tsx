@@ -43,12 +43,18 @@ export function SecurePdfRenderer({ resourceId }: { resourceId: string }) {
 
   if (isMobile) {
     return (
-      <div className="w-full">
-        <iframe
-          title="Resource preview"
-          src={`/api/view-resource?id=${encodeURIComponent(resourceId)}`}
-          className="h-[90vh] w-full rounded-xl border"
-        />
+      <div className="w-full h-[90vh] overflow-hidden rounded-xl border">
+        <object
+          data={`/api/view-resource?id=${encodeURIComponent(resourceId)}`}
+          type="application/pdf"
+          className="w-full h-full"
+        >
+          <iframe
+            title="Resource preview"
+            src={`/api/view-resource?id=${encodeURIComponent(resourceId)}`}
+            className="w-full h-full"
+          />
+        </object>
       </div>
     );
   }

@@ -765,6 +765,18 @@ const supplementalHubResourcesBase: Resource[] = [
   },
   // ── Notes — Solved Papers ───────────────────────────────────────────────
   {
+    id: "notes-solved-all-sample-answers",
+    title: "All Sample Answers",
+    category: "general-notes",
+    subCategory: "solved-papers",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "All papers",
+    year: "Practice",
+    fileUrl: "/resources/notes/solved-papers/all-sample-answers.pdf",
+    description: "Collection of high-quality sample answers for exam practice.",
+  },
+  {
     id: "notes-solved-w25-qp21",
     title: "W25 Paper 2 (QP 21) — Solved",
     category: "general-notes",
