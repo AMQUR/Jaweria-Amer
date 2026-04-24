@@ -20,10 +20,10 @@ export function ChecklistBanner() {
                 Interactive
               </p>
               <h2 className="mt-0.5 font-serif text-xl font-semibold text-white">
-                Last 5-Day Exam Checklist
+                Paper 2 Writing Checklist
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-amber-100/80">
-                Track your progress and complete everything before your exam.
+                Track your preparation and complete everything before exam day.
               </p>
             </div>
           </div>
