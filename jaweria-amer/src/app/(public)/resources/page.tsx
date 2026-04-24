@@ -7,6 +7,7 @@ import { contact } from "@/lib/contact";
 import { siteConfig, staticResources } from "@/lib/data";
 import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
+import { ChecklistBanner } from "@/components/checklist-banner";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -97,6 +98,9 @@ export default async function ResourcesPage() {
       </section>
       <section className="border-b border-border/70 bg-white py-10 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-4">
+            <ChecklistBanner />
+          </div>
           <div className="rounded-2xl border border-[#fdba74] bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] p-6 shadow-[0_8px_25px_rgba(251,146,60,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(251,146,60,0.3)]">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-4">
