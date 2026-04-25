@@ -1,13 +1,13 @@
 "use client";
 
-import { SecurePdfRenderer } from "@/components/secure-pdf-renderer";
+import PdfViewer from "@/components/pdf-viewer";
 
 export function ResourcePdfSlot({
-  resourceId,
+  resourceId: _resourceId,
   fileUrl,
 }: {
   resourceId: string;
   fileUrl: string;
 }) {
-  return <SecurePdfRenderer key={resourceId} resourceId={resourceId} fileUrl={fileUrl} />;
+  return <PdfViewer src={fileUrl} />;
 }
