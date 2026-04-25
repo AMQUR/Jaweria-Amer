@@ -211,10 +211,10 @@ const defaultCategoryButtonClass = cn(
   "hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
 );
 
+/** Solved Papers: same base as other hub categories, plus a warm left accent (no full-tint background). */
 const solvedPapersCategoryButtonClass = cn(
-  "rounded-2xl border border-[#fdba74] bg-[#fff7ed] p-5 text-left shadow-sm",
-  "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
-  "hover:-translate-y-0.5 hover:shadow-xl motion-reduce:hover:translate-y-0"
+  defaultCategoryButtonClass,
+  "border-l-4 !border-l-[#ea580c] hover:!border-l-[#ea580c]"
 );
 
 const previewPillClass = (active: boolean) =>
