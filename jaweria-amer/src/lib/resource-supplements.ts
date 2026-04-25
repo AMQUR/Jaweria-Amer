@@ -788,6 +788,18 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "/resources/notes/solved-papers/all-directed-writings.pdf",
     description: "Collection of high-quality directed writing sample answers for exam practice.",
   },
+  {
+    id: "notes-sample-essays",
+    title: "Sample Essays",
+    category: "general-notes",
+    subCategory: "solved-papers",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 2",
+    year: "Core",
+    fileUrl: "/resources/notes/solved-papers/sample-essays.pdf",
+    description: "High-quality narrative and descriptive essays for Paper 2 practice.",
+  },
   // ── Vocabulary ───────────────────────────────────────────────────────────
   {
     id: "vocab-comprehension-vocabulary",

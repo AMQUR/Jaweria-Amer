@@ -13,6 +13,7 @@ import {
   FolderOpen,
   LayoutGrid,
   ListChecks,
+  ArrowRight,
 } from "lucide-react";
 import {
   NOTES_HUB_SUBTOPICS,
@@ -186,6 +187,18 @@ const topicBrowseCardClass = (active: boolean, topicId?: string) => {
     active && "border-primary/60 ring-1 ring-primary/20",
   );
 };
+
+const pdfResourceSurfaceClass = cn(
+  "flex flex-col rounded-2xl border border-[#fdba74] bg-[#fff7ed] p-6 shadow-sm",
+  "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
+  "hover:-translate-y-0.5 hover:shadow-xl motion-reduce:hover:translate-y-0"
+);
+
+const mainHubNotesEntryClass = cn(
+  "group",
+  pdfResourceSurfaceClass,
+  "text-left"
+);
 
 const previewPillClass = (active: boolean) =>
   cn(
@@ -430,6 +443,25 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     selectCategory("all");
   }
 
+  const mainSolvedResources = useMemo(() => {
+    const order = [
+      "notes-solved-w25-qp21",
+      "notes-solved-all-directed-writings",
+      "notes-sample-essays",
+    ] as const;
+    const pool = safeResources.filter(
+      (r) => r.category === "general-notes" && r.subCategory === "solved-papers" && r.type !== "mcq"
+    );
+    return order
+      .map((id) => pool.find((r) => r.id === id))
+      .filter((r): r is Resource => Boolean(r));
+  }, [safeResources]);
+
+  const mainRevisionResource = useMemo(
+    () => safeResources.find((r) => r.id === "final-p2-checklist") ?? null,
+    [safeResources]
+  );
+
   let emptyState = "";
   if (category === "general-notes" && notesSubCategory === "unset") {
     emptyState = "Choose a notes topic above to see the files in that area.";
@@ -446,6 +478,87 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   return (
     <section className="bg-cream py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {category === "all" && (
+          <div className="mb-12 sm:mb-14">
+            <h2
+              id="main-resources"
+              className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]"
+            >
+              Main resources
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
+              Notes, your revision guide, worked papers, and sample essays in one place.
+            </p>
+            <div className="mt-8 grid gap-5 sm:grid-cols-2">
+              <Link
+                href="/resources?cat=general-notes"
+                onClick={() =>
+                  trackResourceView("hub-main-notes", "Notes", { interaction: "main_resources_nav" })
+                }
+                className={mainHubNotesEntryClass}
+              >
+                <span className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[#fdba74]/40 text-[#9a3412] transition-colors group-hover:bg-[#fdba74]/50">
+                  <BookOpen className="h-4 w-4" aria-hidden />
+                </span>
+                <h3 className="font-serif text-base font-semibold leading-relaxed tracking-tight text-ink">Notes</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate sm:text-base">
+                  Summary, comprehension, writing, and grammar — pick a focus to open the matching
+                  files.
+                </p>
+                <span className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:bg-primary/90 group-active:scale-[0.98]">
+                  Browse notes
+                  <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+                </span>
+              </Link>
+              {mainRevisionResource ? (
+                <ResourceCard resource={mainRevisionResource} />
+              ) : (
+                <Link
+                  href="/resources/view/final-p2-checklist"
+                  onClick={() =>
+                    trackResourceView(
+                      "final-p2-checklist",
+                      "Last Minute P2 – Writing Revision Guide",
+                      { interaction: "main_resources_fallback" }
+                    )
+                  }
+                  className={mainHubNotesEntryClass}
+                >
+                  <span className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[#fdba74]/40 text-[#9a3412]">
+                    <BookOpen className="h-4 w-4" aria-hidden />
+                  </span>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#c2410c]">
+                    Revision guide
+                  </p>
+                  <h3 className="mt-1 font-serif text-base font-semibold text-ink">
+                    Last Minute P2 – Writing Revision Guide
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
+                    Complete your final exam prep before Paper 2.
+                  </p>
+                  <span className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-medium text-primary-foreground shadow-sm">
+                    <Eye className="h-4 w-4 shrink-0" aria-hidden />
+                    Open PDF
+                  </span>
+                </Link>
+              )}
+            </div>
+            {mainSolvedResources.length > 0 && (
+              <div className="mt-10">
+                <h3 className="font-serif text-lg font-semibold text-ink sm:text-xl">Solved papers</h3>
+                <p className="mt-1 max-w-2xl text-sm text-slate">
+                  Model answers and worked questions — use with your revision guide above.
+                </p>
+                <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                  {mainSolvedResources.map((r) => (
+                    <ResourceCard key={r.id} resource={r} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
           <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
             Start Your Preparation
@@ -844,13 +957,20 @@ function ResourceCard({ resource }: { resource: Resource }) {
   const displayTitle = formatDisplayTitle(resource.title, resource.category);
   const isScripts = resource.category === "examiner-reports";
   const isMcq = resource.type === "mcq";
+  const isPdfResource = !isMcq;
   const vaultChip = isScripts ? scriptsResourceVaultChip(resource.title, displayTitle) : null;
   const { main: titleMain, secondary: titleSecondary } = isScripts
     ? splitScriptsCardTitle(displayTitle)
     : { main: displayTitle, secondary: null as string | null };
 
   return (
-    <article className="flex flex-col rounded-2xl border border-border/60 bg-white p-6 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0">
+    <article
+      className={cn(
+        isPdfResource
+          ? pdfResourceSurfaceClass
+          : "flex flex-col rounded-2xl border border-border/60 bg-white p-6 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
+      )}
+    >
       {isMcq && <span className={scriptsChipClass}>MCQ Assessment</span>}
       {vaultChip && !isMcq && <span className={scriptsChipClass}>{vaultChip}</span>}
       <h3 className="font-serif text-base font-semibold leading-relaxed tracking-tight text-ink">{titleMain}</h3>
@@ -880,7 +1000,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
             className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <Eye className="h-4 w-4 shrink-0" aria-hidden />
-            View Resource
+            Open PDF
           </Link>
         )}
       </div>
