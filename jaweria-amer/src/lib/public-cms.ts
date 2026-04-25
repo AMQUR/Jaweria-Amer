@@ -8,6 +8,17 @@ import type { Resource } from "@/lib/data";
 import { normalizeTopicalsResource } from "@/lib/resource-ingestion";
 import { mcqSets as staticMcqSets } from "@/lib/mcq-data";
 import type { McqSet } from "@/lib/mcq-data";
+import { getWhatsAppUrl, isInvalidWhatsAppLink } from "@/lib/contact";
+
+function sanitizeCtaLink(link: string | undefined): string {
+  if (!link || isInvalidWhatsAppLink(link)) {
+    if (typeof window !== "undefined") {
+      console.warn("Blocked invalid WhatsApp link:", link);
+    }
+    return getWhatsAppUrl();
+  }
+  return link;
+}
 
 const PUBLIC_DIR = join(process.cwd(), "public");
 
@@ -143,7 +154,12 @@ export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
 
 export async function getHomepageContent() {
   try {
-    return await getStoredHomepageContent();
+    const stored = await getStoredHomepageContent();
+    return {
+      ...stored,
+      primaryCtaLink: sanitizeCtaLink(stored.primaryCtaLink),
+      secondaryCtaLink: sanitizeCtaLink(stored.secondaryCtaLink),
+    };
   } catch (error) {
     console.error("Falling back to default homepage content:", error);
     return {
@@ -152,10 +168,10 @@ export async function getHomepageContent() {
       heroTitleSecondary: "with Clarity and Care",
       heroDescription:
         "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
-      primaryCtaText: "Book a Clarity Call",
-      primaryCtaLink: "/contact/whatsapp-primary",
-      secondaryCtaText: "Join WhatsApp group",
-      secondaryCtaLink: "/contact/whatsapp-group",
+      primaryCtaText: "Join WhatsApp Community",
+      primaryCtaLink: getWhatsAppUrl(),
+      secondaryCtaText: "Join WhatsApp Community",
+      secondaryCtaLink: getWhatsAppUrl(),
       bannerImagePath: "/assets/hero-legacy.jpg",
       updatedAt: "2024-01-01T00:00:00.000Z",
     };

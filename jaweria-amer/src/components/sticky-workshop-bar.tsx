@@ -45,7 +45,7 @@ export function StickyWorkshopBar() {
         <TrackedWhatsAppLink
           href={workshopRegisterUrl()}
           location="sticky_workshop_bar"
-          variant="direct"
+          variant="group"
           target="_blank"
           rel="noopener noreferrer"
           className="shrink-0 rounded-xl bg-white px-3 py-1.5 text-center text-xs font-semibold text-brand shadow-sm transition-colors hover:bg-brand-soft sm:px-4 sm:text-sm"

@@ -10,9 +10,9 @@ export const defaultHomepageContent: HomepageContent = {
   heroTitleSecondary: "with Clarity and Care",
   heroDescription:
     "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
-  primaryCtaText: "Book a Clarity Call",
-  primaryCtaLink: "/contact/whatsapp-primary",
-  secondaryCtaText: "Join WhatsApp group",
+  primaryCtaText: "Join WhatsApp Community",
+  primaryCtaLink: "/contact/whatsapp-group",
+  secondaryCtaText: "Join WhatsApp Community",
   secondaryCtaLink: "/contact/whatsapp-group",
   bannerImagePath: "/assets/hero-legacy.jpg",
   updatedAt: STATIC_RECORD_TIMESTAMP,

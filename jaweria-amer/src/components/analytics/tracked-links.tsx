@@ -3,25 +3,36 @@
 import Link from "next/link";
 import type { AnchorHTMLAttributes } from "react";
 import { trackCourseClick, trackOutboundLink, trackWhatsAppClick } from "@/lib/analytics";
+import { getWhatsAppUrl, isInvalidWhatsAppLink } from "@/lib/contact";
 
 type TrackedWhatsAppProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   href: string;
   location: string;
-  variant?: "direct" | "group";
+  variant?: "group";
 };
 
-/** External WhatsApp (`wa.me` / `api.whatsapp.com`) with click analytics. */
+/** WhatsApp community link with click analytics. Always opens the community — never direct chat. */
 export function TrackedWhatsAppLink({
   href,
   location,
-  variant = "direct",
+  variant = "group",
   onClick,
   children,
   ...rest
 }: TrackedWhatsAppProps) {
+  let safeHref = href;
+  if (!href || isInvalidWhatsAppLink(href)) {
+    if (typeof window !== "undefined") {
+      console.warn("Blocked invalid WhatsApp link:", href);
+    }
+    safeHref = getWhatsAppUrl();
+  }
+
   return (
     <a
-      href={href}
+      href={safeHref}
+      target="_blank"
+      rel="noopener noreferrer"
       onClick={(e) => {
         trackWhatsAppClick({ location, variant });
         onClick?.(e);
@@ -66,7 +77,7 @@ type TrackedCourseSyllabusProps = Omit<React.ComponentProps<typeof Link>, "href"
   courseId: string;
 };
 
-/** Internal navigation to a course detail page (vault card “View syllabus”). */
+/** Internal navigation to a course detail page (vault card "View syllabus"). */
 export function TrackedCourseSyllabusLink({ href, courseId, onClick, ...rest }: TrackedCourseSyllabusProps) {
   return (
     <Link

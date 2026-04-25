@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { siteConfig } from "@/lib/data";
-import { whatsAppGroupUrl, whatsAppUrl } from "@/lib/contact";
+import { whatsAppGroupUrl } from "@/lib/contact";
 import { trackWhatsAppClick } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
@@ -71,27 +71,13 @@ export function Navigation() {
             })}
             <div className="ml-1 flex items-center gap-2 border-l border-border/60 pl-8">
               <Link
-                href={whatsAppUrl()}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick({ location: "nav_desktop", variant: "direct" })}
-                className="rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
-              >
-                WhatsApp
-              </Link>
-              <Link
                 href={whatsAppGroupUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => trackWhatsAppClick({ location: "nav_desktop", variant: "group" })}
-                className={cn(
-                  "rounded-2xl border px-3 py-2.5 text-sm font-medium shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0",
-                  isTransparent
-                    ? "border-white/30 bg-white/10 text-white hover:bg-white/18"
-                    : "border-border/90 bg-white text-ink hover:border-border hover:bg-muted/40"
-                )}
+                className="rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
               >
-                Group
+                Join Community
               </Link>
             </div>
           </div>
@@ -130,18 +116,6 @@ export function Navigation() {
                 })}
                 <div className="mt-6 flex flex-col gap-2 border-t border-border/60 pt-6">
                   <Link
-                    href={whatsAppUrl()}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => {
-                      trackWhatsAppClick({ location: "nav_mobile_sheet", variant: "direct" });
-                      setOpen(false);
-                    }}
-                    className="rounded-2xl bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
-                  >
-                    WhatsApp
-                  </Link>
-                  <Link
                     href={whatsAppGroupUrl()}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -149,9 +123,9 @@ export function Navigation() {
                       trackWhatsAppClick({ location: "nav_mobile_sheet", variant: "group" });
                       setOpen(false);
                     }}
-                    className="rounded-2xl border border-border/60 bg-white py-2.5 text-center text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:bg-muted/50 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
+                    className="rounded-2xl bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                   >
-                    WhatsApp group
+                    Join WhatsApp Community
                   </Link>
                 </div>
               </div>

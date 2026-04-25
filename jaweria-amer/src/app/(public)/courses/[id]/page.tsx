@@ -13,7 +13,7 @@ import { getPublicCoursePriceLabel } from "@/lib/pricing-display";
 import { isCourseCategoryOffered, listMarketingCourses } from "@/lib/course-offerings";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { whatsAppGroupUrl, whatsAppUrl } from "@/lib/contact";
+import { whatsAppGroupUrl } from "@/lib/contact";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -169,25 +169,15 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
 
               <div className="space-y-3 border-t border-border pt-6">
                 <TrackedWhatsAppLink
-                  href={whatsAppUrl(`Hi, I'm interested in the ${course.title} programme.`)}
-                  location="course_detail"
-                  variant="direct"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
-                >
-                  Enquire on WhatsApp
-                  <ArrowRight className="h-4 w-4" />
-                </TrackedWhatsAppLink>
-                <TrackedWhatsAppLink
                   href={whatsAppGroupUrl()}
                   location="course_detail"
                   variant="group"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-white py-3 text-sm font-medium text-ink transition-colors hover:border-border hover:bg-muted/40"
+                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
                 >
-                  Join WhatsApp group
+                  Join WhatsApp Community
+                  <ArrowRight className="h-4 w-4" />
                 </TrackedWhatsAppLink>
               </div>
 

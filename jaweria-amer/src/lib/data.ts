@@ -1767,8 +1767,6 @@ export const siteConfig = {
   description:
     "Rubric-driven Cambridge O Level English tutoring in Karachi. Structured practice, precise feedback, and mentorship that builds independent thinkers.",
   tagline: "Master CAIE English with Clarity and Care",
-  whatsappNumber: contact.whatsapp,
-  whatsappMessage: contact.messageDefault,
   stats: [
     { value: "3+", label: "Years Teaching Experience" },
     { value: "80%", label: "Students scored A+/A" },

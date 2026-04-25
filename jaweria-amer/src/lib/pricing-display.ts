@@ -4,7 +4,7 @@
  */
 export const SHOW_PUBLIC_COURSE_PRICING = false;
 
-export const PUBLIC_PRICING_PLACEHOLDER = "Message on WhatsApp for Course Details";
+export const PUBLIC_PRICING_PLACEHOLDER = "Ask in our WhatsApp Community";
 
 export function getPublicCoursePriceLabel(course: { price: string }): string {
   if (SHOW_PUBLIC_COURSE_PRICING) return course.price;

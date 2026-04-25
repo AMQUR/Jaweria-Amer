@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { SVGProps } from "react";
-import { Mail, MapPin, MessageCircle, Phone, PlayCircle, UsersRound } from "lucide-react";
+import { Mail, MapPin, Phone, PlayCircle, UsersRound } from "lucide-react";
 import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { siteConfig } from "@/lib/data";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { contact, telUrl, whatsAppGroupUrl, whatsAppUrl } from "@/lib/contact";
+import { contact, telUrl, whatsAppGroupUrl } from "@/lib/contact";
 
-const whatsappDirectHref = whatsAppUrl();
 const whatsappGroupHref = whatsAppGroupUrl();
 
 function InstagramGlyph(props: SVGProps<SVGSVGElement>) {
@@ -73,19 +72,6 @@ export function Footer() {
               </li>
               <li>
                 <TrackedWhatsAppLink
-                  href={whatsappDirectHref}
-                  location="footer"
-                  variant="direct"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
-                >
-                  <MessageCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
-                  <span>Message on WhatsApp</span>
-                </TrackedWhatsAppLink>
-              </li>
-              <li>
-                <TrackedWhatsAppLink
                   href={whatsappGroupHref}
                   location="footer"
                   variant="group"
@@ -94,7 +80,7 @@ export function Footer() {
                   className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
                 >
                   <UsersRound className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
-                  <span>WhatsApp community</span>
+                  <span>Join WhatsApp Community</span>
                 </TrackedWhatsAppLink>
               </li>
               <li>

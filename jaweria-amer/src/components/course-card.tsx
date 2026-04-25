@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { TrackedCourseSyllabusLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import type { Course } from "@/lib/data";
 import { getPublicCoursePriceLabel } from "@/lib/pricing-display";
-import { whatsAppUrl } from "@/lib/contact";
+import { whatsAppGroupUrl } from "@/lib/contact";
 
 const categoryColors: Record<string, string> = {
   "o-level": "border-crimson/15 bg-crimson/8 text-crimson",
@@ -49,15 +49,15 @@ export function CourseCard({ course }: { course: Course }) {
 
         <div className="flex flex-col gap-2">
           <TrackedWhatsAppLink
-            href={whatsAppUrl(`Hi, I'm interested in the ${course.title} programme.`)}
+            href={whatsAppGroupUrl()}
             location="course_card"
-            variant="direct"
+            variant="group"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <MessageCircle className="h-4 w-4" aria-hidden />
-            Enquire on WhatsApp
+            Join WhatsApp Community
             <ArrowRight className="h-4 w-4" />
           </TrackedWhatsAppLink>
           <TrackedCourseSyllabusLink

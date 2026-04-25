@@ -14,7 +14,7 @@ import { getSettings } from "@/lib/admin/store";
 import { getHomepageContent } from "@/lib/public-cms";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { whatsAppGroupUrl, whatsAppUrl } from "@/lib/contact";
+import { whatsAppGroupUrl } from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
 import { WorkshopPromoSection } from "@/components/workshop-promo";
@@ -52,9 +52,9 @@ export default async function HomePage() {
     heroTitleSecondary: "with Clarity and Care",
     heroDescription:
       "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
-    primaryCtaText: "Book a Clarity Call",
-    primaryCtaLink: "/contact/whatsapp-primary",
-    secondaryCtaText: "Join WhatsApp group",
+    primaryCtaText: "Join WhatsApp Community",
+    primaryCtaLink: "/contact/whatsapp-group",
+    secondaryCtaText: "Join WhatsApp Community",
     secondaryCtaLink: "/contact/whatsapp-group",
     bannerImagePath: "/assets/hero-legacy.jpg",
   };
@@ -89,25 +89,15 @@ export default async function HomePage() {
             <div className="premium-reveal premium-reveal-delay-3 flex flex-col gap-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <TrackedWhatsAppLink
-                  href={safeHomepageContent.primaryCtaLink === "/contact/whatsapp-primary" ? whatsAppUrl() : safeHomepageContent.primaryCtaLink}
-                  location="home_hero"
-                  variant="direct"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
-                >
-                  {safeHomepageContent.primaryCtaText}
-                  <ArrowRight className="h-4 w-4" />
-                </TrackedWhatsAppLink>
-                <TrackedWhatsAppLink
-                  href={safeHomepageContent.secondaryCtaLink === "/contact/whatsapp-group" ? whatsAppGroupUrl() : safeHomepageContent.secondaryCtaLink}
+                  href={whatsAppGroupUrl()}
                   location="home_hero"
                   variant="group"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white backdrop-blur-[2px] shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/35 hover:bg-white/16 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 >
-                  {safeHomepageContent.secondaryCtaText}
+                  Join WhatsApp Community
+                  <ArrowRight className="h-4 w-4" />
                 </TrackedWhatsAppLink>
               </div>
               <Link
@@ -276,25 +266,15 @@ export default async function HomePage() {
           </p>
           <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:justify-center">
             <TrackedWhatsAppLink
-              href={whatsAppUrl()}
-              location="home_footer_cta"
-              variant="direct"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
-            >
-              Book a Clarity Call
-              <ArrowRight className="h-4 w-4" />
-            </TrackedWhatsAppLink>
-            <TrackedWhatsAppLink
               href={whatsAppGroupUrl()}
               location="home_footer_cta"
               variant="group"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/18 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
             >
-              Join WhatsApp group
+              Join WhatsApp Community
+              <ArrowRight className="h-4 w-4" />
             </TrackedWhatsAppLink>
           </div>
           <p className="mt-8">

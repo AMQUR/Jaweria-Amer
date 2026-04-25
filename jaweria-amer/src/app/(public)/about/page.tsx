@@ -12,7 +12,7 @@ import {
 import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
 import { AboutLatestYoutube } from "@/components/about-latest-youtube";
-import { contact, whatsAppGroupUrl, whatsAppUrl } from "@/lib/contact";
+import { contact, whatsAppGroupUrl } from "@/lib/contact";
 import { siteConfig } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -241,10 +241,10 @@ export default function AboutPage() {
                 <IconWhatsApp className="h-5 w-5" />
               </span>
               <h3 className="flex-1 font-serif text-base font-semibold leading-snug text-ink sm:text-lg">
-                Get direct guidance and updates on WhatsApp
+                Ask questions and get updates in the community
               </h3>
               <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-semibold text-crimson">
-                Join the WhatsApp Group
+                Join WhatsApp Community
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
               </span>
             </TrackedWhatsAppLink>
@@ -339,25 +339,15 @@ export default function AboutPage() {
           </p>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <TrackedWhatsAppLink
-              href={whatsAppUrl()}
-              location="about_footer_cta"
-              variant="direct"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-rose px-7 py-3.5 text-sm font-medium text-white shadow-sm transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-rose-dark hover:shadow-md active:scale-100 motion-reduce:hover:scale-100 sm:w-auto"
-            >
-              Book a Clarity Call
-              <ArrowRight className="w-4 h-4" />
-            </TrackedWhatsAppLink>
-            <TrackedWhatsAppLink
               href={whatsAppGroupUrl()}
               location="about_footer_cta"
               variant="group"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-white/20 active:scale-100 motion-reduce:hover:scale-100 sm:w-auto"
+              className="inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-rose px-7 py-3.5 text-sm font-medium text-white shadow-sm transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-rose-dark hover:shadow-md active:scale-100 motion-reduce:hover:scale-100 sm:w-auto"
             >
-              Join WhatsApp group
+              Join WhatsApp Community
+              <ArrowRight className="w-4 h-4" />
             </TrackedWhatsAppLink>
           </div>
         </div>
