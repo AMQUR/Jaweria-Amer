@@ -763,23 +763,10 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-speech-topics.pdf",
     description: "Speech-format directed writing prompts for Paper 2.",
   },
-  // ── Notes — All Sample Answers ──────────────────────────────────────────
-  {
-    id: "notes-solved-all-sample-answers",
-    title: "All Sample Answers",
-    category: "general-notes",
-    subCategory: "all-sample-answers",
-    subject: "English Language 1123",
-    level: "O Level",
-    paper: "All papers",
-    year: "Practice",
-    fileUrl: "/resources/notes/all-sample-answers/all-sample-answers.pdf",
-    description: "Collection of high-quality sample answers for exam practice.",
-  },
   // ── Notes — Solved Papers ───────────────────────────────────────────────
   {
     id: "notes-solved-w25-qp21",
-    title: "All Directed Writing Yearly Solved",
+    title: "W25-QP21 Solved",
     category: "general-notes",
     subCategory: "solved-papers",
     subject: "English Language 1123",
@@ -788,6 +775,18 @@ const supplementalHubResourcesBase: Resource[] = [
     year: "W25",
     fileUrl: "/resources/notes/solved-papers/w25-qp21-solved.pdf?v=2",
     description: "Fully worked solution with examiner-style answers.",
+  },
+  {
+    id: "notes-solved-all-directed-writings",
+    title: "All Directed Writings",
+    category: "general-notes",
+    subCategory: "solved-papers",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 2",
+    year: "Practice",
+    fileUrl: "/resources/notes/solved-papers/all-directed-writings.pdf",
+    description: "Collection of high-quality directed writing sample answers for exam practice.",
   },
   // ── Vocabulary ───────────────────────────────────────────────────────────
   {

@@ -171,7 +171,6 @@ const NOTES_TOPIC_ACCENTS: Record<string, { gradient: string; border: string }> 
   "directed-writing":   { gradient: "to-rose-300/40",  border: "border-rose-300/50" },
   grammar:              { gradient: "to-pink-200/40",  border: "border-pink-300/50" },
   "solved-papers":      { gradient: "to-red-200/40",   border: "border-red-300/50"  },
-  "all-sample-answers": { gradient: "to-rose-400/40",  border: "border-rose-400/50" },
 };
 
 const topicBrowseCardClass = (active: boolean, topicId?: string) => {

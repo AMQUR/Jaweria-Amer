@@ -47,8 +47,7 @@ export type ResourceNotesSubCategory =
   | "directed-writing-vocabulary"
   | "summary-writing-vocabulary"
   | "p2-50-words"
-  | "checklists"
-  | "all-sample-answers";
+  | "checklists";
 
 export interface Resource {
   id: string;
@@ -75,7 +74,6 @@ export const NOTES_HUB_SUBTOPICS: { id: ResourceNotesSubCategory; label: string 
   { id: "directed-writing", label: "Directed Writing" },
   { id: "grammar", label: "Grammar" },
   { id: "solved-papers", label: "Solved Papers" },
-  { id: "all-sample-answers", label: "All Sample Answers" },
 ];
 
 /** Paper 1 Topicals hub sections only (no overlap with Paper 2). */

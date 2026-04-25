@@ -294,7 +294,6 @@ export function inferGeneralNotesSubCategory(
   }
   if (haystack.includes("comprehension")) return "comprehension";
   if (haystack.includes("summary")) return "summary-writing";
-  if (resource.fileUrl.toLowerCase().includes("/notes/all-sample-answers/")) return "all-sample-answers";
   if (resource.fileUrl.toLowerCase().includes("/notes/solved-papers/")) return "solved-papers";
   if (
     haystack.includes("grammar") ||
