@@ -164,32 +164,27 @@ const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: 
   { value: "p2-50-words", label: "50 Words for P2" },
 ];
 
-const NOTES_TOPIC_ACCENTS: Record<string, { base: string; border: string }> = {
-  "all-sample-answers": {
-    base: "bg-gradient-to-br from-pink-100 to-rose-200",
-    border: "border-pink-300",
-  },
-  comprehension: {
-    base: "bg-gradient-to-br from-red-50 to-red-100",
-    border: "border-red-200",
-  },
-  "essay-writing": {
-    base: "bg-gradient-to-br from-rose-50 to-rose-100",
-    border: "border-rose-200",
-  },
-  "directed-writing": {
-    base: "bg-gradient-to-br from-pink-50 to-pink-100",
-    border: "border-pink-200",
-  },
+const NOTES_TOPIC_ACCENTS: Record<string, { gradient: string; border: string }> = {
+  "summary-writing":    { gradient: "to-rose-200/40",  border: "border-rose-300/50" },
+  comprehension:        { gradient: "to-red-300/40",   border: "border-red-300/50"  },
+  "essay-writing":      { gradient: "to-pink-300/40",  border: "border-pink-300/50" },
+  "directed-writing":   { gradient: "to-rose-300/40",  border: "border-rose-300/50" },
+  grammar:              { gradient: "to-pink-200/40",  border: "border-pink-300/50" },
+  "solved-papers":      { gradient: "to-red-200/40",   border: "border-red-300/50"  },
+  "all-sample-answers": { gradient: "to-rose-400/40",  border: "border-rose-400/50" },
 };
 
 const topicBrowseCardClass = (active: boolean, topicId?: string) => {
   const accent = topicId ? NOTES_TOPIC_ACCENTS[topicId] : undefined;
   return cn(
-    "origin-center rounded-2xl border p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
-    accent ? `${accent.base} ${accent.border}` : "bg-white border-border/70",
-    active && "ring-1 ring-primary/20",
-    active && (accent ? "border-primary/50" : "border-primary/35 hover:border-border")
+    "origin-center rounded-2xl border-2 bg-gradient-to-br from-white via-white p-5 text-left",
+    "shadow-[0_10px_30px_rgba(112,20,20,0.08)]",
+    "transition-all duration-300 ease-out",
+    "hover:-translate-y-[2px] hover:border-primary/60 hover:shadow-[0_12px_40px_rgba(112,20,20,0.12)]",
+    "motion-reduce:hover:translate-y-0",
+    accent?.gradient ?? "to-rose-100/40",
+    accent?.border   ?? "border-border/50",
+    active && "border-primary/60 ring-1 ring-primary/20",
   );
 };
 
