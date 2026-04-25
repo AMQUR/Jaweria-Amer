@@ -27,6 +27,7 @@ const CATEGORY_TO_FOLDER: Record<CmsResourceCategory, string> = {
   checklists: "marking-schemes",
   "quick-worksheets": "mcq",
   vocabulary: "vocabulary",
+  "solved-papers": "notes/solved-papers",
   featured: "featured",
 };
 

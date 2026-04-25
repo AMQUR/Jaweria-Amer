@@ -31,6 +31,7 @@ export type ResourceHubCategory =
   | "checklists"
   | "quick-worksheets"
   | "vocabulary"
+  | "solved-papers"
   | "featured";
 
 /** Sub-type for vault items in `general-notes` and `vocabulary` (optional; inferred when omitted). */
@@ -73,7 +74,6 @@ export const NOTES_HUB_SUBTOPICS: { id: ResourceNotesSubCategory; label: string 
   { id: "essay-writing", label: "Essay Writing" },
   { id: "directed-writing", label: "Directed Writing" },
   { id: "grammar", label: "Grammar" },
-  { id: "solved-papers", label: "Solved Papers" },
 ];
 
 /** Paper 1 Topicals hub sections only (no overlap with Paper 2). */
@@ -133,6 +133,11 @@ export const RESOURCE_HUB_CATEGORIES: {
     id: "vocabulary",
     label: "Vocabulary",
     blurb: "Targeted vocabulary lists and banks for comprehension, essay writing, and general use.",
+  },
+  {
+    id: "solved-papers",
+    label: "Solved Papers",
+    blurb: "Model answers and worked papers to guide your exam preparation.",
   },
 ];
 

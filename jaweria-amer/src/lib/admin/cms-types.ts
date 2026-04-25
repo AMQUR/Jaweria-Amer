@@ -14,6 +14,7 @@ export const CMS_RESOURCE_CATEGORY_LABELS: Record<CmsResourceCategory, string> =
   checklists: "Marking Schemes",
   "quick-worksheets": "Quick Worksheets",
   vocabulary: "Vocabulary",
+  "solved-papers": "Solved Papers",
   featured: "Featured",
 };
 
@@ -25,6 +26,7 @@ export const CMS_RESOURCE_CATEGORY_OPTIONS: { value: CmsResourceCategory; label:
   { value: "checklists", label: "Marking Schemes" },
   { value: "quick-worksheets", label: "Quick Worksheets" },
   { value: "vocabulary", label: "Vocabulary" },
+  { value: "solved-papers", label: "Solved Papers" },
 ];
 
 export const CMS_NOTES_SUBCATEGORY_OPTIONS: {
@@ -36,7 +38,6 @@ export const CMS_NOTES_SUBCATEGORY_OPTIONS: {
   { value: "essay-writing", label: "Essay Writing" },
   { value: "directed-writing", label: "Directed Writing" },
   { value: "grammar", label: "Grammar" },
-  { value: "solved-papers", label: "Solved Papers" },
 ];
 
 export const CMS_PAPER_OPTIONS = ["Paper 1", "Paper 2"] as const;

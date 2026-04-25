@@ -13,7 +13,6 @@ import {
   FolderOpen,
   LayoutGrid,
   ListChecks,
-  ArrowRight,
   FileText,
 } from "lucide-react";
 import {
@@ -34,6 +33,17 @@ import {
 } from "@/lib/resource-ingestion";
 import { cn } from "@/lib/utils";
 
+/** Hub category is virtual for legacy items: they keep `category: "general-notes"` and `subCategory: "solved-papers"`. */
+function resourceBelongsToHubCategory(
+  r: Resource,
+  cat: ResourceHubCategory
+): boolean {
+  if (cat === "solved-papers") {
+    return r.subCategory === "solved-papers" || r.category === "solved-papers";
+  }
+  return r.category === cat;
+}
+
 const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   "general-notes": BookOpen,
   topicals: LayoutGrid,
@@ -42,6 +52,7 @@ const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   checklists: ClipboardList,
   "quick-worksheets": Brain,
   vocabulary: BookMarked,
+  "solved-papers": FileText,
   featured: FolderOpen,
 };
 
@@ -172,7 +183,6 @@ const NOTES_TOPIC_ACCENTS: Record<string, { gradient: string; border: string }> 
   "essay-writing":      { gradient: "to-pink-300/40",  border: "border-pink-300/50" },
   "directed-writing":   { gradient: "to-rose-300/40",  border: "border-rose-300/50" },
   grammar:              { gradient: "to-pink-200/40",  border: "border-pink-300/50" },
-  "solved-papers":      { gradient: "to-red-200/40",   border: "border-red-300/50"  },
 };
 
 const topicBrowseCardClass = (active: boolean, topicId?: string) => {
@@ -195,14 +205,14 @@ const pdfResourceSurfaceClass = cn(
   "hover:-translate-y-0.5 hover:shadow-xl motion-reduce:hover:translate-y-0"
 );
 
-const notesHubEntryClass = cn(
-  "group flex h-full min-h-0 flex-col rounded-2xl border border-border/70 bg-white p-6 text-left shadow-sm",
+const defaultCategoryButtonClass = cn(
+  "rounded-2xl border border-border/70 bg-white p-5 text-left shadow-sm",
   "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
   "hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
 );
 
-const solvedPapersHubEntryClass = cn(
-  "group flex h-full min-h-0 flex-col rounded-2xl border border-[#fdba74] bg-[#fff7ed] p-6 text-left shadow-sm",
+const solvedPapersCategoryButtonClass = cn(
+  "rounded-2xl border border-[#fdba74] bg-[#fff7ed] p-5 text-left shadow-sm",
   "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
   "hover:-translate-y-0.5 hover:shadow-xl motion-reduce:hover:translate-y-0"
 );
@@ -298,15 +308,15 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     [resources]
   );
 
-  const scopedForFilters = useMemo(
-    () => (category === "all" ? safeResources : safeResources.filter((r) => r.category === category)),
-    [category, safeResources]
-  );
+  const scopedForFilters = useMemo(() => {
+    if (category === "all") return safeResources;
+    return safeResources.filter((r) => resourceBelongsToHubCategory(r, category));
+  }, [category, safeResources]);
 
-  const scopedForResults = useMemo(
-    () => (category === "all" ? [] : safeResources.filter((r) => r.category === category)),
-    [category, safeResources]
-  );
+  const scopedForResults = useMemo(() => {
+    if (category === "all") return [];
+    return safeResources.filter((r) => resourceBelongsToHubCategory(r, category));
+  }, [category, safeResources]);
   const guidedPreviewResources = useMemo(() => {
     if (!GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory)) return [];
     return scopedForFilters.filter((r) => {
@@ -466,52 +476,6 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   return (
     <section className="bg-cream py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {category === "all" && (
-          <div className="mb-12 grid gap-5 sm:mb-14 sm:grid-cols-2">
-            <Link
-              href="/resources?cat=general-notes"
-              onClick={() =>
-                trackResourceView("hub-notes-entry", "Notes", { interaction: "hub_notes_entry" })
-              }
-              className={notesHubEntryClass}
-            >
-              <span className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-muted text-brand">
-                <BookOpen className="h-4 w-4" aria-hidden />
-              </span>
-              <h3 className="font-serif text-base font-semibold leading-relaxed tracking-tight text-ink">Notes</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate sm:text-base">
-                Summary, comprehension, writing, and grammar — pick a focus to open the matching
-                files.
-              </p>
-              <span className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:bg-primary/90 group-active:scale-[0.98] motion-reduce:group-hover:translate-y-0">
-                Browse notes
-                <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
-              </span>
-            </Link>
-            <Link
-              href="/resources?cat=general-notes&sub=solved-papers"
-              onClick={() =>
-                trackResourceView("hub-solved-papers-entry", "Solved Papers", {
-                  interaction: "hub_solved_papers_entry",
-                })
-              }
-              className={solvedPapersHubEntryClass}
-            >
-              <span className="mb-3 inline-flex h-9 w-9 items-center justify-center rounded-lg bg-[#fdba74]/50 text-[#9a3412]">
-                <FileText className="h-4 w-4" aria-hidden />
-              </span>
-              <h3 className="font-serif text-base font-semibold leading-relaxed tracking-tight text-ink">Solved Papers</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate sm:text-base">
-                Model answers and worked papers to guide your exam preparation.
-              </p>
-              <span className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color] duration-200 ease-out group-hover:-translate-y-0.5 group-hover:bg-primary/90 group-active:scale-[0.98] motion-reduce:group-hover:translate-y-0">
-                Open Solved Papers
-                <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
-              </span>
-            </Link>
-          </div>
-        )}
-
         <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
           <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
             Start Your Preparation
@@ -560,14 +524,15 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
           {RESOURCE_HUB_CATEGORIES.map((cat) => {
             const Icon = categoryIcon[cat.id];
             const active = category === cat.id;
+            const isSolved = cat.id === "solved-papers";
             return (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => selectCategory(cat.id)}
                 className={cn(
-                  "rounded-2xl border bg-white p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
-                  active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
+                  isSolved ? solvedPapersCategoryButtonClass : defaultCategoryButtonClass,
+                  active && "border-primary/35 ring-1 ring-primary/20"
                 )}
               >
                 <div className="mb-3 flex items-center gap-2.5">
