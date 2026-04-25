@@ -73,6 +73,7 @@ export const NOTES_HUB_SUBTOPICS: { id: ResourceNotesSubCategory; label: string 
   { id: "essay-writing", label: "Essay Writing" },
   { id: "directed-writing", label: "Directed Writing" },
   { id: "grammar", label: "Grammar" },
+  { id: "solved-papers", label: "Solved Papers" },
 ];
 
 /** Paper 1 Topicals hub sections only (no overlap with Paper 2). */
