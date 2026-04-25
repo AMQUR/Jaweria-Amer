@@ -6,14 +6,13 @@ import { ArrowRight } from "lucide-react";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { workshopRegisterUrl } from "@/lib/contact";
 
-const DEFAULT_BANNER = "/assets/hero-premium.png";
+const DEFAULT_BANNER = "/assets/hero-premium.jpg";
 
 function getValidBanner(src?: string): string {
   if (!src || typeof src !== "string") return DEFAULT_BANNER;
-  const s = src.trim();
-  if (!s.startsWith("/")) return DEFAULT_BANNER;
-  if (s.includes("homepage-banner") || s.includes("/images/")) return DEFAULT_BANNER;
-  return s;
+  if (!src.startsWith("/")) return DEFAULT_BANNER;
+  if (src.includes("homepage-banner") || src.includes("/images/")) return DEFAULT_BANNER;
+  return src;
 }
 
 /**
@@ -67,7 +66,7 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
             alt="Excel in English — Miss Jay O &amp; A Level English"
             fill
             priority
-            quality={90}
+            quality={85}
             sizes="(max-width: 768px) 100vw, 1400px"
             className="object-cover object-[60%_center]"
           />
