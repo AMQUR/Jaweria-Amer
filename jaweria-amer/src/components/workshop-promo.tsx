@@ -10,8 +10,10 @@ const DEFAULT_BANNER = "/assets/hero-premium.png";
 
 function getValidBanner(src?: string): string {
   if (!src || typeof src !== "string") return DEFAULT_BANNER;
-  if (!src.trim().startsWith("/")) return DEFAULT_BANNER;
-  return src.trim();
+  const s = src.trim();
+  if (!s.startsWith("/")) return DEFAULT_BANNER;
+  if (s.includes("homepage-banner") || s.includes("/images/")) return DEFAULT_BANNER;
+  return s;
 }
 
 /**
@@ -58,7 +60,7 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
       <div className="premium-reveal relative h-[220px] w-full overflow-hidden rounded-2xl shadow-xl sm:h-[320px] md:h-[420px] lg:h-[520px] xl:h-[580px]">
         <div
           ref={heroRef}
-          className="absolute inset-0 relative will-change-transform transition-transform duration-300 ease-out"
+          className="relative h-full w-full will-change-transform"
         >
           <Image
             src={bannerSrc}
@@ -67,7 +69,7 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
             priority
             quality={90}
             sizes="(max-width: 768px) 100vw, 1400px"
-            className="object-cover object-[60%_center] motion-safe:opacity-0 motion-safe:animate-[heroFade_0.8s_ease-out_forwards]"
+            className="object-cover object-[60%_center]"
           />
           <div className="absolute inset-0 bg-black/5 pointer-events-none" />
         </div>
