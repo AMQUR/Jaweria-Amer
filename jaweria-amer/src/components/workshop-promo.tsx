@@ -28,7 +28,7 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
           priority
           quality={90}
           sizes="(max-width: 768px) 100vw, 1400px"
-          className="object-cover object-[60%_center]"
+          className="object-cover object-[60%_center] opacity-0 animate-[heroFade_0.8s_ease-out_forwards]"
         />
         <div className="absolute inset-0 bg-black/5 pointer-events-none" />
       </div>
