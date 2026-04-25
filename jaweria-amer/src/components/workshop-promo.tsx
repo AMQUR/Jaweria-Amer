@@ -3,31 +3,34 @@ import { ArrowRight } from "lucide-react";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { workshopRegisterUrl } from "@/lib/contact";
 
+const DEFAULT_BANNER = "/assets/hero-premium.png";
+
+function getValidBanner(src?: string): string {
+  if (!src || typeof src !== "string") return DEFAULT_BANNER;
+  if (!src.trim().startsWith("/")) return DEFAULT_BANNER;
+  return src.trim();
+}
+
 /**
  * Homepage hero banner (image-driven — artwork includes all copy) + reserve CTA block below.
  */
-export function WorkshopPromoSection({ bannerImagePath = "/assets/hero-premium.png" }: { bannerImagePath?: string }) {
+export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: string }) {
+  const bannerSrc = getValidBanner(bannerImagePath);
   const registerHref = workshopRegisterUrl();
-  const safeBannerImagePath =
-    typeof bannerImagePath === "string" && bannerImagePath.trim().startsWith("/")
-      ? bannerImagePath.trim()
-      : "/assets/hero-premium.png";
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 pb-3 pt-20 sm:px-6 sm:pt-24 lg:px-8">
-      <div className="premium-reveal overflow-hidden rounded-2xl shadow-xl">
-        <div className="relative h-[220px] w-full sm:h-[320px] md:h-[420px] lg:h-[520px] xl:h-[580px]">
-          <Image
-            src={safeBannerImagePath}
-            alt="Excel in English — Miss Jay O &amp; A Level English"
-            fill
-            priority
-            quality={90}
-            sizes="(max-width: 768px) 100vw, 1400px"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-black/5 pointer-events-none" />
-        </div>
+    <div className="mx-auto w-full max-w-[1400px] px-4 pb-3 pt-20 sm:px-6 sm:pt-24 lg:px-8">
+      <div className="premium-reveal relative h-[220px] w-full overflow-hidden rounded-2xl shadow-xl sm:h-[320px] md:h-[420px] lg:h-[520px] xl:h-[580px]">
+        <Image
+          src={bannerSrc}
+          alt="Excel in English — Miss Jay O &amp; A Level English"
+          fill
+          priority
+          quality={90}
+          sizes="(max-width: 768px) 100vw, 1400px"
+          className="object-cover object-[60%_center]"
+        />
+        <div className="absolute inset-0 bg-black/5 pointer-events-none" />
       </div>
 
       <section
