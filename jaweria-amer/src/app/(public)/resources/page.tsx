@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
-import { ExternalLink, PlayCircle, CalendarDays } from "lucide-react";
+import { ExternalLink, PlayCircle } from "lucide-react";
 import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
 import { contact } from "@/lib/contact";
 import { siteConfig, staticResources } from "@/lib/data";
 import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
 import { ChecklistBanner } from "@/components/checklist-banner";
+import { FileVaultCard } from "@/components/file-vault-card";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -62,7 +62,7 @@ export default async function ResourcesPage() {
       />
 
       <section className="border-b border-border/70 bg-white pb-14 pt-10 sm:pb-16 sm:pt-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
           <div
             className="flex flex-col justify-between gap-10 rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 text-white shadow-[0_12px_35px_rgba(127,29,29,0.35)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_50px_rgba(127,29,29,0.45)] sm:p-10 md:flex-row md:items-center md:gap-12 lg:p-12"
           >
@@ -94,40 +94,13 @@ export default async function ResourcesPage() {
               </TrackedOutboundLink>
             </div>
           </div>
+          <FileVaultCard />
         </div>
       </section>
       <section className="border-b border-border/70 bg-white py-10 sm:py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-4">
+          <div>
             <ChecklistBanner />
-          </div>
-          <div className="group relative overflow-hidden rounded-2xl border border-[#fdba74] bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] p-6 shadow-[0_8px_25px_rgba(251,146,60,0.2)] transition-all duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_16px_40px_rgba(251,146,60,0.35)] motion-reduce:transition-shadow motion-reduce:hover:scale-100">
-            <div
-              className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-white/45 via-transparent to-[#fb923c]/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-              aria-hidden
-            />
-            <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-              <div className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#c2410c] text-white shadow-sm ring-1 ring-white/25">
-                  <CalendarDays className="h-5 w-5" aria-hidden />
-                </span>
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#c2410c]">Featured</p>
-                  <h2 className="mt-0.5 font-serif text-xl font-semibold text-[#9a3412]">
-                    Last Minute P2 – Writing Revision Guide
-                  </h2>
-                  <p className="mt-1 text-sm leading-relaxed text-slate">
-                    Complete your final exam prep before Paper 2.
-                  </p>
-                </div>
-              </div>
-              <Link
-                href="/resources/view/final-p2-checklist"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#c2410c] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-[#9a3412] hover:shadow-md"
-              >
-                Open Revision Guide
-              </Link>
-            </div>
           </div>
         </div>
       </section>

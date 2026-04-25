@@ -20,7 +20,7 @@ export function ChecklistBanner() {
                 Interactive
               </p>
               <h2 className="mt-0.5 font-serif text-xl font-semibold text-white">
-                Paper 2 Writing Checklist
+                Last Minute P2 – Writing Revision Guide
               </h2>
               <p className="mt-1 text-sm leading-relaxed text-amber-100/80">
                 Track your preparation and complete everything before exam day.
