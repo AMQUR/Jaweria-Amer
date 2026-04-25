@@ -34,7 +34,8 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
       if (!ticking) {
         window.requestAnimationFrame(() => {
           const rect = el.getBoundingClientRect();
-          const offset = rect.top * 0.15;
+          const raw = rect.top * 0.08;
+          const offset = Math.max(-20, Math.min(20, raw));
 
           el.style.transform = `translateY(${offset}px)`;
 
