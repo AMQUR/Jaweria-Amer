@@ -25,7 +25,13 @@ const SecurePdfRendererDesktop = dynamic(
   }
 );
 
-export function SecurePdfRenderer({ resourceId }: { resourceId: string }) {
+export function SecurePdfRenderer({
+  resourceId,
+  fileUrl,
+}: {
+  resourceId: string;
+  fileUrl: string;
+}) {
   const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
   useLayoutEffect(() => {
@@ -42,19 +48,14 @@ export function SecurePdfRenderer({ resourceId }: { resourceId: string }) {
   }
 
   if (isMobile) {
+    const base = fileUrl.split("#")[0] ?? fileUrl;
+    const safeSrc =
+      base.startsWith("/resources/") && !base.includes("..")
+        ? `${base}#toolbar=0&navpanes=0&scrollbar=1`
+        : `/api/view-resource?id=${encodeURIComponent(resourceId)}`;
     return (
-      <div className="w-full h-[90vh] overflow-hidden rounded-xl border">
-        <object
-          data={`/api/view-resource?id=${encodeURIComponent(resourceId)}`}
-          type="application/pdf"
-          className="w-full h-full"
-        >
-          <iframe
-            title="Resource preview"
-            src={`/api/view-resource?id=${encodeURIComponent(resourceId)}`}
-            className="w-full h-full"
-          />
-        </object>
+      <div className="w-full max-h-[85vh] overflow-y-auto rounded-xl border border-border/80 bg-neutral-50 shadow-sm">
+        <iframe title="Resource preview" src={safeSrc} className="h-[85vh] w-full min-h-[50vh] border-0" />
       </div>
     );
   }

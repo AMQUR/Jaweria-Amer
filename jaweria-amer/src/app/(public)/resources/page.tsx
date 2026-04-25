@@ -101,25 +101,31 @@ export default async function ResourcesPage() {
           <div className="mb-4">
             <ChecklistBanner />
           </div>
-          <div className="rounded-2xl border border-[#fdba74] bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] p-6 shadow-[0_8px_25px_rgba(251,146,60,0.2)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_35px_rgba(251,146,60,0.3)]">
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="group relative overflow-hidden rounded-2xl border border-[#fdba74] bg-gradient-to-r from-[#fff7ed] to-[#ffedd5] p-6 shadow-[0_8px_25px_rgba(251,146,60,0.2)] transition-all duration-300 ease-out hover:scale-[1.01] hover:shadow-[0_16px_40px_rgba(251,146,60,0.35)] motion-reduce:transition-shadow motion-reduce:hover:scale-100">
+            <div
+              className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-white/45 via-transparent to-[#fb923c]/15 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              aria-hidden
+            />
+            <div className="relative flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-4">
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#c2410c] text-white">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#c2410c] text-white shadow-sm ring-1 ring-white/25">
                   <CalendarDays className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#c2410c]">Featured</p>
-                  <h2 className="mt-0.5 font-serif text-xl font-semibold text-[#9a3412]">Last 5-Day Exam Plan</h2>
+                  <h2 className="mt-0.5 font-serif text-xl font-semibold text-[#9a3412]">
+                    Last Minute P2 – Writing Revision Guide
+                  </h2>
                   <p className="mt-1 text-sm leading-relaxed text-slate">
-                    Your final strategy to maximise marks before the exam.
+                    Complete your final exam prep before Paper 2.
                   </p>
                 </div>
               </div>
               <Link
-                href="/resources/view/last-5-day-plan"
-                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#c2410c] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-[#9a3412]"
+                href="/resources/view/final-p2-checklist"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-[#c2410c] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-300 hover:bg-[#9a3412] hover:shadow-md"
               >
-                View Plan
+                Open Revision Guide
               </Link>
             </div>
           </div>

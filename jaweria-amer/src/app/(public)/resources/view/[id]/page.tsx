@@ -121,7 +121,9 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
             </p>
           </div>
         ) : (
-          <ResourcePdfSlot key={resource.id} resourceId={resource.id} />
+          <div className="animate-in fade-in duration-500">
+            <ResourcePdfSlot key={resource.id} resourceId={resource.id} fileUrl={resource.fileUrl} />
+          </div>
         )}
       </div>
     </div>

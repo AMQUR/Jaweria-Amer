@@ -851,17 +851,18 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "/resources/notes/vocabulary/summary-vocabulary-bank.pdf",
     description: "Core vocabulary bank for summary writing with high-utility exam words.",
   },
-  // ── Featured ─────────────────────────────────────────────────────────────
+  // ── Featured (vault: Notes → Essay Writing) ─────────────────────────────
   {
-    id: "last-5-day-plan",
-    title: "Last 5-Day Exam Plan",
-    category: "featured",
+    id: "final-p2-checklist",
+    title: "Last Minute P2 – Writing Revision Guide",
+    category: "general-notes",
+    subCategory: "essay-writing",
     subject: "English Language 1123",
     level: "O Level",
-    paper: "All papers",
+    paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/featured/last-5-day-plan.pdf",
-    description: "Final 5-day structured plan to maximise exam performance.",
+    fileUrl: "/resources/notes/final-p2-checklist.pdf",
+    description: "Complete your final exam prep before Paper 2.",
   },
   // ── Examiner Reports ─────────────────────────────────────────────────────
   {
