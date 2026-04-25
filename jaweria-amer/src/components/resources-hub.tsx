@@ -211,9 +211,10 @@ const defaultCategoryButtonClass = cn(
   "hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
 );
 
-/** Solved Papers: same base as other hub categories, plus a warm left accent (no full-tint background). */
+/** Solved Papers: same borders/shadows/spacing as hub categories; soft gradient + left accent; hover flattens to light warm tint. */
 const solvedPapersCategoryButtonClass = cn(
   defaultCategoryButtonClass,
+  "bg-gradient-to-r from-[#fff7ed] to-white hover:bg-none hover:bg-[#fff7ed]",
   "border-l-4 !border-l-[#ea580c] hover:!border-l-[#ea580c]"
 );
 
