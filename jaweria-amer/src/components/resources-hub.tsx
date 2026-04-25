@@ -164,11 +164,34 @@ const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: 
   { value: "p2-50-words", label: "50 Words for P2" },
 ];
 
-const topicBrowseCardClass = (active: boolean) =>
-  cn(
-    "origin-center rounded-2xl border bg-white p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
-    active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
+const NOTES_TOPIC_ACCENTS: Record<string, { base: string; border: string }> = {
+  "all-sample-answers": {
+    base: "bg-gradient-to-br from-pink-100 to-rose-200",
+    border: "border-pink-300",
+  },
+  comprehension: {
+    base: "bg-gradient-to-br from-red-50 to-red-100",
+    border: "border-red-200",
+  },
+  "essay-writing": {
+    base: "bg-gradient-to-br from-rose-50 to-rose-100",
+    border: "border-rose-200",
+  },
+  "directed-writing": {
+    base: "bg-gradient-to-br from-pink-50 to-pink-100",
+    border: "border-pink-200",
+  },
+};
+
+const topicBrowseCardClass = (active: boolean, topicId?: string) => {
+  const accent = topicId ? NOTES_TOPIC_ACCENTS[topicId] : undefined;
+  return cn(
+    "origin-center rounded-2xl border p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
+    accent ? `${accent.base} ${accent.border}` : "bg-white border-border/70",
+    active && "ring-1 ring-primary/20",
+    active && (accent ? "border-primary/50" : "border-primary/35 hover:border-border")
   );
+};
 
 const previewPillClass = (active: boolean) =>
   cn(
@@ -516,7 +539,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                     type="button"
                     onClick={() => handleTopicTileClick(topic.id)}
                     className={cn(
-                      topicBrowseCardClass(active),
+                      topicBrowseCardClass(active, topic.id),
                       topicTapId === topic.id && "resource-topic-tap-active"
                     )}
                   >
