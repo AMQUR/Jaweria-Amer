@@ -763,6 +763,20 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-speech-topics.pdf",
     description: "Speech-format directed writing prompts for Paper 2.",
   },
+  // ── Notes — Directed Writing (supplement; hub order: see ResourcesHub sort) ─
+  {
+    id: "notes-pde-explained",
+    title: "PDE Explained (Development & Evaluation)",
+    category: "general-notes",
+    subCategory: "directed-writing",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Core",
+    fileUrl: "/resources/notes/directed-writing/pde-explained.pdf",
+    description:
+      "Master how to develop and evaluate points using real examiner techniques, examples, and practice questions.",
+  },
   // ── Notes — Solved Papers ───────────────────────────────────────────────
   {
     id: "notes-solved-w25-qp21",

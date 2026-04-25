@@ -205,6 +205,15 @@ const pdfResourceSurfaceClass = cn(
   "hover:-translate-y-0.5 hover:shadow-xl motion-reduce:hover:translate-y-0"
 );
 
+const PDE_EXPLAINED_ID = "notes-pde-explained";
+
+const pdeExplainedHighlightSurfaceClass = cn(
+  "flex flex-col rounded-2xl border border-border/70 bg-gradient-to-r from-[#fff7ed] to-white p-6 shadow-sm",
+  "border-l-4 !border-l-[#ea580c]",
+  "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
+  "hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0"
+);
+
 const defaultCategoryButtonClass = cn(
   "rounded-2xl border border-border/70 bg-white p-5 text-left shadow-sm",
   "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
@@ -423,7 +432,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
 
     const basePool = category === "topicals" ? filteredResources : scopedForResults;
 
-    return basePool.filter((r) => {
+    const matched = basePool.filter((r) => {
       if (category === "general-notes" || category === "vocabulary") {
         if (notesSubCategory === "unset") return false;
         if (r.subCategory !== notesSubCategory) return false;
@@ -448,6 +457,16 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       if (year !== "all" && r.year !== year) return false;
       return true;
     });
+
+    if (category === "general-notes" && notesSubCategory === "directed-writing") {
+      return [...matched].sort((a, b) => {
+        if (a.id === PDE_EXPLAINED_ID) return -1;
+        if (b.id === PDE_EXPLAINED_ID) return 1;
+        return 0;
+      });
+    }
+
+    return matched;
   }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year, safeResources]);
 
   const paperResources = useMemo(() => {
@@ -882,11 +901,15 @@ function ResourceCard({ resource }: { resource: Resource }) {
     ? splitScriptsCardTitle(displayTitle)
     : { main: displayTitle, secondary: null as string | null };
 
+  const isPdeExplained = resource.id === PDE_EXPLAINED_ID;
+
   return (
     <article
       className={cn(
         isPdfResource
-          ? pdfResourceSurfaceClass
+          ? isPdeExplained
+            ? pdeExplainedHighlightSurfaceClass
+            : pdfResourceSurfaceClass
           : "flex flex-col rounded-2xl border border-border/60 bg-white p-6 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
       )}
     >
