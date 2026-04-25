@@ -11,7 +11,7 @@ export function ChecklistBanner() {
     <>
       <div
         onClick={() => setOpen(true)}
-        className="cursor-pointer rounded-2xl bg-gradient-to-r from-[#f97316] via-[#ea580c] to-[#c2410c] px-6 py-5 shadow-lg transition-all duration-300 hover:shadow-xl"
+        className="cursor-pointer rounded-2xl bg-gradient-to-r from-[#f97316] via-[#ea580c] to-[#c2410c] px-6 py-5 shadow-xl transition-all duration-300 hover:shadow-2xl"
       >
         <div className="flex min-h-[90px] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-center gap-4">

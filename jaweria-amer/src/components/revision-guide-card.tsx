@@ -9,11 +9,11 @@ export function RevisionGuideCard() {
   return (
     <div
       onClick={() => router.push("/resources/view/final-p2-checklist")}
-      className="cursor-pointer rounded-2xl border border-[#fdba74] bg-gradient-to-r from-[#fff7ed] via-[#ffedd5] to-[#fed7aa] px-6 py-5 shadow-md transition-all duration-300 hover:shadow-lg"
+      className="cursor-pointer rounded-2xl border border-[#f59e0b] bg-gradient-to-r from-[#fff7ed] via-[#ffedd5] to-[#fdba74] px-6 py-5 shadow-xl transition-all duration-300 hover:shadow-2xl"
     >
       <div className="flex min-h-[90px] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-4">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-200/60 text-orange-700">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-700">
             <BookOpen className="h-5 w-5" aria-hidden />
           </span>
           <div>
