@@ -56,7 +56,7 @@ export default async function HomePage() {
     primaryCtaLink: "/contact/whatsapp-primary",
     secondaryCtaText: "Join WhatsApp group",
     secondaryCtaLink: "/contact/whatsapp-group",
-    bannerImagePath: "/images/homepage-banner.png",
+    bannerImagePath: "/assets/hero-premium.png",
   };
 
   return (

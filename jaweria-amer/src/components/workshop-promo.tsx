@@ -4,29 +4,29 @@ import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { workshopRegisterUrl } from "@/lib/contact";
 
 /**
- * Homepage workshop banner (image only — artwork includes all copy) + reserve CTA block below.
+ * Homepage hero banner (image-driven — artwork includes all copy) + reserve CTA block below.
  */
-export function WorkshopPromoSection({ bannerImagePath = "/images/homepage-banner.png" }: { bannerImagePath?: string }) {
+export function WorkshopPromoSection({ bannerImagePath = "/assets/hero-premium.png" }: { bannerImagePath?: string }) {
   const registerHref = workshopRegisterUrl();
   const safeBannerImagePath =
     typeof bannerImagePath === "string" && bannerImagePath.trim().startsWith("/")
       ? bannerImagePath.trim()
-      : "/images/homepage-banner.png";
+      : "/assets/hero-premium.png";
 
   return (
     <div className="mx-auto w-full max-w-7xl px-4 pb-3 pt-20 sm:px-6 sm:pt-24 lg:px-8">
-      <div className="premium-reveal overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
-        <div className="relative w-full">
+      <div className="premium-reveal overflow-hidden rounded-2xl shadow-xl">
+        <div className="relative h-[220px] w-full sm:h-[320px] md:h-[420px] lg:h-[520px] xl:h-[580px]">
           <Image
             src={safeBannerImagePath}
-            alt="O Level English Workshop Banner"
-            width={1024}
-            height={379}
+            alt="Excel in English — Miss Jay O &amp; A Level English"
+            fill
             priority
             quality={90}
-            sizes="(max-width: 768px) 100vw, 1200px"
-            className="h-auto w-full object-contain"
+            sizes="(max-width: 768px) 100vw, 1400px"
+            className="object-cover object-center"
           />
+          <div className="absolute inset-0 bg-black/5 pointer-events-none" />
         </div>
       </div>
 
