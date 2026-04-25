@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { workshopRegisterUrl } from "@/lib/contact";
@@ -15,22 +18,58 @@ function getValidBanner(src?: string): string {
  * Homepage hero banner (image-driven — artwork includes all copy) + reserve CTA block below.
  */
 export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: string }) {
+  const heroRef = useRef<HTMLDivElement | null>(null);
   const bannerSrc = getValidBanner(bannerImagePath);
   const registerHref = workshopRegisterUrl();
+
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+
+    if (window.innerWidth < 768) return;
+
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const rect = el.getBoundingClientRect();
+          const offset = rect.top * 0.15;
+
+          el.style.transform = `translateY(${offset}px)`;
+
+          ticking = false;
+        });
+
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="mx-auto w-full max-w-[1400px] px-4 pb-3 pt-20 sm:px-6 sm:pt-24 lg:px-8">
       <div className="premium-reveal relative h-[220px] w-full overflow-hidden rounded-2xl shadow-xl sm:h-[320px] md:h-[420px] lg:h-[520px] xl:h-[580px]">
-        <Image
-          src={bannerSrc}
-          alt="Excel in English — Miss Jay O &amp; A Level English"
-          fill
-          priority
-          quality={90}
-          sizes="(max-width: 768px) 100vw, 1400px"
-          className="object-cover object-[60%_center] motion-safe:opacity-0 motion-safe:animate-[heroFade_0.8s_ease-out_forwards]"
-        />
-        <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+        <div
+          ref={heroRef}
+          className="absolute inset-0 relative will-change-transform transition-transform duration-300 ease-out"
+        >
+          <Image
+            src={bannerSrc}
+            alt="Excel in English — Miss Jay O &amp; A Level English"
+            fill
+            priority
+            quality={90}
+            sizes="(max-width: 768px) 100vw, 1400px"
+            className="object-cover object-[60%_center] motion-safe:opacity-0 motion-safe:animate-[heroFade_0.8s_ease-out_forwards]"
+          />
+          <div className="absolute inset-0 bg-black/5 pointer-events-none" />
+        </div>
       </div>
 
       <section
