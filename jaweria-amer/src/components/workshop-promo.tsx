@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { workshopRegisterUrl } from "@/lib/contact";
@@ -31,8 +31,12 @@ function getValidBanner(src?: string): string {
  */
 export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: string }) {
   const heroRef = useRef<HTMLDivElement | null>(null);
-  const bannerSrc = getValidBanner(bannerImagePath);
+  const [src, setSrc] = useState(() => getValidBanner(bannerImagePath));
   const registerHref = workshopRegisterUrl();
+
+  useEffect(() => {
+    setSrc(getValidBanner(bannerImagePath));
+  }, [bannerImagePath]);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -73,13 +77,18 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
           className="relative h-full w-full will-change-transform"
         >
           <Image
-            src={bannerSrc}
+            src={src}
             alt="Hero Banner"
             fill
             priority
             quality={85}
             sizes="(max-width: 768px) 100vw, 1400px"
             className="object-cover object-center"
+            onError={() => {
+              if (src !== DEFAULT_BANNER) {
+                setSrc(DEFAULT_BANNER);
+              }
+            }}
           />
           <div className="absolute inset-0 bg-black/5 pointer-events-none" />
         </div>
