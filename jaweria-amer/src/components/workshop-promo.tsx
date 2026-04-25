@@ -10,8 +10,19 @@ const DEFAULT_BANNER = "/assets/hero-legacy.jpg";
 
 function getValidBanner(src?: string): string {
   if (!src || typeof src !== "string") return DEFAULT_BANNER;
+
+  // block invalid formats
   if (!src.startsWith("/")) return DEFAULT_BANNER;
-  if (src.includes("/images/") || src.includes("homepage-banner")) return DEFAULT_BANNER;
+
+  // block legacy + deleted assets
+  if (
+    src.includes("hero-premium") ||
+    src.includes("homepage-banner") ||
+    src.includes("/images/")
+  ) {
+    return DEFAULT_BANNER;
+  }
+
   return src;
 }
 
