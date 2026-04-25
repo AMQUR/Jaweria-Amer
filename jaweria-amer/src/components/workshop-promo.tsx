@@ -6,12 +6,12 @@ import { ArrowRight } from "lucide-react";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { workshopRegisterUrl } from "@/lib/contact";
 
-const DEFAULT_BANNER = "/assets/hero-premium.jpg";
+const DEFAULT_BANNER = "/assets/hero-legacy.jpg";
 
 function getValidBanner(src?: string): string {
   if (!src || typeof src !== "string") return DEFAULT_BANNER;
   if (!src.startsWith("/")) return DEFAULT_BANNER;
-  if (src.includes("homepage-banner") || src.includes("/images/")) return DEFAULT_BANNER;
+  if (src.includes("/images/") || src.includes("homepage-banner")) return DEFAULT_BANNER;
   return src;
 }
 
@@ -63,12 +63,12 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
         >
           <Image
             src={bannerSrc}
-            alt="Excel in English — Miss Jay O &amp; A Level English"
+            alt="Hero Banner"
             fill
             priority
             quality={85}
             sizes="(max-width: 768px) 100vw, 1400px"
-            className="object-cover object-[60%_center]"
+            className="object-cover object-center"
           />
           <div className="absolute inset-0 bg-black/5 pointer-events-none" />
         </div>

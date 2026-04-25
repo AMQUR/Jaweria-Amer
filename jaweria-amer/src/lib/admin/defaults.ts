@@ -14,7 +14,7 @@ export const defaultHomepageContent: HomepageContent = {
   primaryCtaLink: "/contact/whatsapp-primary",
   secondaryCtaText: "Join WhatsApp group",
   secondaryCtaLink: "/contact/whatsapp-group",
-  bannerImagePath: "/assets/hero-premium.jpg",
+  bannerImagePath: "/assets/hero-legacy.jpg",
   updatedAt: STATIC_RECORD_TIMESTAMP,
 };
 

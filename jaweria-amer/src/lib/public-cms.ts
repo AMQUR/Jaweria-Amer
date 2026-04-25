@@ -156,7 +156,7 @@ export async function getHomepageContent() {
       primaryCtaLink: "/contact/whatsapp-primary",
       secondaryCtaText: "Join WhatsApp group",
       secondaryCtaLink: "/contact/whatsapp-group",
-      bannerImagePath: "/assets/hero-premium.jpg",
+      bannerImagePath: "/assets/hero-legacy.jpg",
       updatedAt: "2024-01-01T00:00:00.000Z",
     };
   }
