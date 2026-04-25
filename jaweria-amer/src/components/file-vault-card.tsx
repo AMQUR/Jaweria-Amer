@@ -1,40 +1,41 @@
-import Link from "next/link";
+"use client";
+
 import { ArrowRight, FolderOpen } from "lucide-react";
 
-const VAULT_HREF = "/resources/view/final-p2-checklist";
+const DRIVE_URL = "https://drive.google.com/drive/folders/1B3MN_5TiHfknp6Ao4BwlFRlmc89F1AHF";
 
 export function FileVaultCard() {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d]/10 via-[#be123c]/10 to-[#fda4af]/10 p-6 shadow-md transition-all duration-300 hover:scale-[1.01] hover:shadow-xl motion-reduce:transition-shadow motion-reduce:hover:scale-100 sm:p-8 md:p-10">
-      <div
-        className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-rose-200/25 via-transparent to-amber-100/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -inset-px rounded-2xl bg-gradient-to-br from-[#fecdd3]/30 via-transparent to-[#be123c]/20 opacity-0 blur-sm transition-opacity duration-300 group-hover:opacity-100"
-        aria-hidden
-      />
-      <div className="relative flex flex-col justify-between gap-8 md:flex-row md:items-center md:gap-12">
+    <div
+      onClick={() => window.open(DRIVE_URL, "_blank")}
+      className="group cursor-pointer rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-xl transition-all duration-300 ease-out hover:brightness-110 hover:scale-[1.02] hover:shadow-2xl sm:p-10 md:p-10"
+    >
+      <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center md:gap-12">
         <div className="min-w-0 flex-1">
-          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-[#7f1d1d]/15 text-[#7f1d1d] ring-1 ring-[#fecdd3]/30 sm:h-14 sm:w-14">
-            <FolderOpen className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden />
+          <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white transition-transform duration-300 group-hover:scale-110">
+            <FolderOpen className="h-7 w-7" aria-hidden />
           </div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-[#7f1d1d]/70 sm:text-[13px]">File vault</p>
-          <h2 className="mt-3 font-serif text-2xl font-bold leading-tight text-[#4c0519] sm:text-3xl md:text-4xl">
-            Last Minute P2 – Writing Revision Guide
+          <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
+            Vault
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold text-white">
+            File Vault
           </h2>
-          <p className="mt-4 max-w-2xl text-sm leading-relaxed text-slate-700 sm:text-base sm:text-lg">
-            Open the PDF in the same built-in viewer as other resources — download or read in-page.
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
+            Access all notes, solved papers, and exam resources in one place.
           </p>
         </div>
-        <div className="shrink-0 md:pt-2">
-          <Link
-            href={VAULT_HREF}
-            className="inline-flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#fecdd3]/40 bg-white/90 px-6 py-3.5 text-base font-semibold text-[#7f1d1d] shadow-[0_4px_14px_rgba(127,29,29,0.12)] transition-all duration-300 hover:border-[#fda4af]/60 hover:bg-white hover:shadow-[0_8px_24px_rgba(127,29,29,0.2)] active:scale-[0.98] md:inline-flex md:w-auto md:min-w-[200px]"
+        <div className="shrink-0">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(DRIVE_URL, "_blank");
+            }}
+            className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-white px-6 py-3 text-base font-medium text-[#7f1d1d] transition-all duration-200 hover:bg-[#ffe4e6] hover:scale-[1.03] active:scale-[0.98] sm:w-auto"
           >
-            Open
-            <ArrowRight className="h-[1.125rem] w-[1.125rem] shrink-0 opacity-90" aria-hidden />
-          </Link>
+            Open Full Vault
+            <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+          </button>
         </div>
       </div>
     </div>
