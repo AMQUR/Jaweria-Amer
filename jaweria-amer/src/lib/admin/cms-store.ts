@@ -8,7 +8,6 @@ import { mcqSets as staticMcqSets } from "@/lib/mcq-data";
 import type { Resource, ResourceNotesSubCategory } from "@/lib/data";
 import type { McqSet, McqQuestion } from "@/lib/mcq-data";
 import { basenameFromFileUrl, cleanCopyOfTitlePrefix } from "@/lib/resource-ingestion";
-import { cmsResources as bundledCmsResourceOverrides, getStoredResourceOverrides as getBundledOverrides } from "@/lib/resources-data";
 import type { CmsMcqSet, CmsResourceCategory, CmsResourceRecord, HomepageContent, UploadAsset } from "./cms-types";
 
 const DATA_DIR = join(process.cwd(), "data");
@@ -169,23 +168,6 @@ function toCmsResource(resource: Resource): CmsResourceRecord {
   };
 }
 
-function toResource(record: CmsResourceRecord): Resource {
-  return {
-    id: record.id,
-    title: record.title,
-    category: record.category,
-    subCategory: record.subCategory,
-    paper: record.paper,
-    section: record.section,
-    fileUrl: record.fileUrl,
-    type: record.type === "mcq" ? "mcq" : undefined,
-    subject: record.subject,
-    level: record.level,
-    year: record.year,
-    description: record.description,
-  };
-}
-
 function defaultMcqMeta(id: string): Omit<CmsMcqSet, "questions" | "createdAt" | "updatedAt"> {
   const staticResource = staticResources.find((resource) => resource.id === id);
   return {
@@ -248,20 +230,7 @@ async function deletePublicFile(fileUrl: string | undefined) {
 }
 
 export async function getStoredResourceOverrides(): Promise<CmsResourceRecord[]> {
-  const disk = await readJSON<CmsResourceRecord[]>(RESOURCE_RECORDS_FILE, []);
-  const bundled = [...bundledCmsResourceOverrides];
-  let overrides: CmsResourceRecord[];
-  if (disk.length === 0) {
-    overrides = bundled;
-  } else {
-    const byId = new Map<string, CmsResourceRecord>(bundled.map((r) => [r.id, r]));
-    for (const r of disk) {
-      byId.set(r.id, r);
-    }
-    overrides = Array.from(byId.values());
-  }
-  console.log("Overrides loaded:", overrides.length);
-  return overrides;
+  return readJSON<CmsResourceRecord[]>(RESOURCE_RECORDS_FILE, []);
 }
 
 export async function getStoredMcqOverrides() {
@@ -437,30 +406,9 @@ export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
 
 export async function getCmsResources(): Promise<CmsResourceRecord[]> {
   try {
-    // Bundled JSON only for public/runtime (no fs). Admin merges disk in getStoredResourceOverrides / getCmsResourcesFromDisk.
-    const overrides = getBundledOverrides();
-    console.log("Overrides loaded:", overrides.length);
-    const map = new Map<string, CmsResourceRecord>();
-
-    for (const r of staticResources ?? []) {
-      map.set(r.id, toCmsResource(r));
-    }
-
-    for (const r of overrides ?? []) {
-      if (!r || !r.id) continue;
-      const existing = map.get(r.id);
-      map.set(r.id, {
-        ...(existing ?? r),
-        ...r,
-        source: existing ? existing.source : r.source ?? "admin",
-        createdAt: existing?.createdAt ?? r.createdAt ?? STATIC_RECORD_TIMESTAMP,
-        updatedAt: r.updatedAt ?? STATIC_RECORD_TIMESTAMP,
-      });
-    }
-
-    return Array.from(map.values()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    return await getCmsResourcesFromDisk();
   } catch {
-    return [];
+    return (staticResources ?? []).map(toCmsResource).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   }
 }
 
@@ -589,14 +537,6 @@ export async function deleteCmsResource(id: string) {
 
   await deletePublicFile(current.fileUrl);
   await writeJSON(RESOURCE_RECORDS_FILE, overrides.filter((item) => item.id !== id));
-}
-
-export async function getPublicResources(): Promise<Resource[]> {
-  const merged = await getCmsResources();
-  return merged
-    .filter((item) => !item.deleted && item.visibility === "published")
-    .filter((item) => item.type === "mcq" || item.fileUrl)
-    .map(toResource);
 }
 
 async function walkFiles(dir: string): Promise<string[]> {
