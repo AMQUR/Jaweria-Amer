@@ -106,6 +106,29 @@ const START_PATHWAYS: {
   },
 ];
 
+/** Start Your Preparation — 3-card color system (exact hex values). */
+const foundationCard =
+  "bg-[#fef2f2] border border-[#fecaca] hover:border-[#fca5a5] shadow-sm hover:shadow-md";
+const foundationIcon = "bg-[#fee2e2] text-[#dc2626]";
+const practiceCard =
+  "bg-[#eff6ff] border border-[#bfdbfe] hover:border-[#93c5fd] shadow-sm hover:shadow-md";
+const practiceIcon = "bg-[#dbeafe] text-[#2563eb]";
+const masterCard =
+  "bg-[#faf5ff] border border-[#e9d5ff] hover:border-[#d8b4fe] shadow-sm hover:shadow-md";
+const masterIcon = "bg-[#f3e8ff] text-[#7c3aed]";
+
+const START_PATHWAY_CARD: Record<(typeof START_PATHWAYS)[number]["id"], string> = {
+  foundation: foundationCard,
+  yearlies: practiceCard,
+  mcqs: masterCard,
+};
+
+const START_PATHWAY_ICON: Record<(typeof START_PATHWAYS)[number]["id"], string> = {
+  foundation: foundationIcon,
+  yearlies: practiceIcon,
+  mcqs: masterIcon,
+};
+
 function uniqueSorted(values: string[]) {
   return [...new Set(values.map((v) => v.trim()).filter(Boolean))].sort((a, b) =>
     a.localeCompare(b)
@@ -524,9 +547,17 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   key={pathway.id}
                   type="button"
                   onClick={() => openCategory(pathway.category)}
-                  className="rounded-2xl border border-border/60 bg-white p-6 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
+                  className={cn(
+                    "rounded-2xl p-6 text-left transition-[box-shadow,border-color] duration-200 ease-out",
+                    START_PATHWAY_CARD[pathway.id]
+                  )}
                 >
-                  <span className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-muted text-brand">
+                  <span
+                    className={cn(
+                      "mb-4 flex h-10 w-10 items-center justify-center rounded-full",
+                      START_PATHWAY_ICON[pathway.id]
+                    )}
+                  >
                     <Icon className="h-5 w-5" aria-hidden />
                   </span>
                   <h3 className="font-serif text-base font-semibold leading-snug text-ink">{pathway.title}</h3>
