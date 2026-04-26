@@ -13,7 +13,5 @@ export const cmsResources: CmsResourceRecord[] = Array.isArray(cmsOverrides)
 
 /** Returns bundled overrides only — no fs, safe on Vercel serverless. */
 export function getStoredResourceOverrides(): CmsResourceRecord[] {
-  const overrides = cmsResources;
-  console.log("Overrides loaded:", overrides.length);
-  return overrides;
+  return cmsResources;
 }

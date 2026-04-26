@@ -250,14 +250,18 @@ async function deletePublicFile(fileUrl: string | undefined) {
 export async function getStoredResourceOverrides(): Promise<CmsResourceRecord[]> {
   const disk = await readJSON<CmsResourceRecord[]>(RESOURCE_RECORDS_FILE, []);
   const bundled = [...bundledCmsResourceOverrides];
+  let overrides: CmsResourceRecord[];
   if (disk.length === 0) {
-    return bundled;
+    overrides = bundled;
+  } else {
+    const byId = new Map<string, CmsResourceRecord>(bundled.map((r) => [r.id, r]));
+    for (const r of disk) {
+      byId.set(r.id, r);
+    }
+    overrides = Array.from(byId.values());
   }
-  const byId = new Map<string, CmsResourceRecord>(bundled.map((r) => [r.id, r]));
-  for (const r of disk) {
-    byId.set(r.id, r);
-  }
-  return Array.from(byId.values());
+  console.log("Overrides loaded:", overrides.length);
+  return overrides;
 }
 
 export async function getStoredMcqOverrides() {
@@ -433,9 +437,9 @@ export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
 
 export async function getCmsResources(): Promise<CmsResourceRecord[]> {
   try {
-    // Use bundled overrides — safe on Vercel (no fs). Disk overrides are read
-    // on top by getStoredResourceOverrides for admin write paths only.
+    // Bundled JSON only for public/runtime (no fs). Admin merges disk in getStoredResourceOverrides / getCmsResourcesFromDisk.
     const overrides = getBundledOverrides();
+    console.log("Overrides loaded:", overrides.length);
     const map = new Map<string, CmsResourceRecord>();
 
     for (const r of staticResources ?? []) {
