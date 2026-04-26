@@ -11,7 +11,7 @@ import {
 import { listMarketingCourses } from "@/lib/course-offerings";
 import { courses, siteConfig } from "@/lib/data";
 import { getSettings } from "@/lib/admin/store";
-import { getHomepageContent } from "@/lib/public-cms";
+import { getHomepageContent } from "@/lib/public-homepage";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
 import { whatsAppGroupUrl } from "@/lib/contact";
