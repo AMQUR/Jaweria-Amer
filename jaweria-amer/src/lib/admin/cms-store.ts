@@ -8,7 +8,7 @@ import { mcqSets as staticMcqSets } from "@/lib/mcq-data";
 import type { Resource, ResourceNotesSubCategory } from "@/lib/data";
 import type { McqSet, McqQuestion } from "@/lib/mcq-data";
 import { basenameFromFileUrl, cleanCopyOfTitlePrefix } from "@/lib/resource-ingestion";
-import { cmsResources as bundledCmsResourceOverrides } from "@/lib/resources-data";
+import { cmsResources as bundledCmsResourceOverrides, getStoredResourceOverrides as getBundledOverrides } from "@/lib/resources-data";
 import type { CmsMcqSet, CmsResourceCategory, CmsResourceRecord, HomepageContent, UploadAsset } from "./cms-types";
 
 const DATA_DIR = join(process.cwd(), "data");
@@ -41,7 +41,8 @@ async function ensureDir(pathname: string) {
 }
 
 async function readJSON<T>(filename: string, fallback: T): Promise<T> {
-  await ensureDir(DATA_DIR);
+  // ensureDir may throw on Vercel's read-only filesystem — swallow and attempt read anyway
+  try { await ensureDir(DATA_DIR); } catch {}
   try {
     const raw = await readFile(join(DATA_DIR, filename), "utf-8");
     const parsed: unknown = JSON.parse(raw) as unknown;
@@ -432,57 +433,53 @@ export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
 
 export async function getCmsResources(): Promise<CmsResourceRecord[]> {
   try {
-    return await getCmsResourcesInternal();
+    // Use bundled overrides — safe on Vercel (no fs). Disk overrides are read
+    // on top by getStoredResourceOverrides for admin write paths only.
+    const overrides = getBundledOverrides();
+    const map = new Map<string, CmsResourceRecord>();
+
+    for (const r of staticResources ?? []) {
+      map.set(r.id, toCmsResource(r));
+    }
+
+    for (const r of overrides ?? []) {
+      if (!r || !r.id) continue;
+      const existing = map.get(r.id);
+      map.set(r.id, {
+        ...(existing ?? r),
+        ...r,
+        source: existing ? existing.source : r.source ?? "admin",
+        createdAt: existing?.createdAt ?? r.createdAt ?? STATIC_RECORD_TIMESTAMP,
+        updatedAt: r.updatedAt ?? STATIC_RECORD_TIMESTAMP,
+      });
+    }
+
+    return Array.from(map.values()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
   } catch {
     return [];
   }
 }
 
-async function getCmsResourcesInternal(): Promise<CmsResourceRecord[]> {
+/** Full merge including disk (for local admin writes). Never call from public data path. */
+async function getCmsResourcesFromDisk(): Promise<CmsResourceRecord[]> {
   const overrides = await getStoredResourceOverrides();
   const map = new Map<string, CmsResourceRecord>();
 
-  for (const resource of staticResources ?? []) {
-    map.set(resource.id, toCmsResource(resource));
+  for (const r of staticResources ?? []) {
+    map.set(r.id, toCmsResource(r));
   }
-
-  for (const override of overrides ?? []) {
-    const existing = map.get(override.id);
-    map.set(override.id, {
-      ...(existing ?? override),
-      ...override,
-      source: existing ? existing.source : override.source ?? "admin",
-      createdAt: existing?.createdAt ?? override.createdAt ?? nowIso(),
-      updatedAt: override.updatedAt ?? nowIso(),
+  for (const r of overrides ?? []) {
+    if (!r || !r.id) continue;
+    const existing = map.get(r.id);
+    map.set(r.id, {
+      ...(existing ?? r),
+      ...r,
+      source: existing ? existing.source : r.source ?? "admin",
+      createdAt: existing?.createdAt ?? r.createdAt ?? STATIC_RECORD_TIMESTAMP,
+      updatedAt: r.updatedAt ?? STATIC_RECORD_TIMESTAMP,
     });
   }
-
-  const mcqs = await getCmsMcqSets();
-  for (const mcq of mcqs) {
-    const existing = map.get(mcq.id);
-    const record: CmsResourceRecord = {
-      id: mcq.id,
-      title: mcq.title,
-      category: "quick-worksheets",
-      paper: mcq.paper,
-      section: mcq.section,
-      fileUrl: "",
-      type: "mcq",
-      visibility: mcq.visibility,
-      createdAt: existing?.createdAt ?? mcq.createdAt,
-      updatedAt: mcq.updatedAt,
-      fileName: `${mcq.id}.json`,
-      subject: mcq.subject,
-      level: mcq.level,
-      year: mcq.year,
-      description: mcq.description,
-      source: mcq.source,
-      deleted: mcq.deleted,
-    };
-    map.set(mcq.id, { ...(existing ?? record), ...record });
-  }
-
-  return [...map.values()].sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+  return Array.from(map.values()).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
 }
 
 export async function saveCmsResource(input: {
@@ -500,7 +497,7 @@ export async function saveCmsResource(input: {
   autoDetectSection?: boolean;
   file?: File | null;
 }): Promise<CmsResourceRecord | { error: string }> {
-  const merged = await getCmsResources();
+  const merged = await getCmsResourcesFromDisk();
   const current = input.id ? merged.find((item) => item.id === input.id) : undefined;
   if (current?.type === "mcq") {
     return { error: "Quick Worksheets are managed from the MCQ builder." };
@@ -569,7 +566,7 @@ export async function saveCmsResource(input: {
 }
 
 export async function deleteCmsResource(id: string) {
-  const merged = await getCmsResources();
+  const merged = await getCmsResourcesFromDisk();
   const current = merged.find((item) => item.id === id);
   if (!current) return;
   if (current.type === "mcq") {

@@ -46,19 +46,11 @@ function normalizePublicResourceFileUrl(url: string | null | undefined): string 
 
 function sanitizePublicResources(resources: Resource[]): Resource[] {
   return (resources ?? [])
-    .filter((r) => {
-      if (!r) return false;
-      if (!String(r.title ?? "").trim()) return false;
-      if (r.type === "mcq") return true;
-      if (!String(r.fileUrl ?? "").trim()) return false;
-      return true;
-    })
+    .filter((r) => r && String(r.title ?? "").trim())
     .map((r) => {
-      if (r.type === "mcq") {
-        return { ...r };
-      }
+      if (r.type === "mcq") return { ...r };
       const normalized = normalizePublicResourceFileUrl(r.fileUrl);
-      const fileUrl = (normalized ?? String(r.fileUrl).trim()) as string;
+      const fileUrl = (normalized ?? String(r.fileUrl ?? "").trim()) as string;
       return { ...r, fileUrl };
     });
 }
@@ -68,37 +60,32 @@ function withStrictTopicals(resources: Resource[]): Resource[] {
 }
 
 export async function getPublicResources(): Promise<Resource[]> {
-  try {
-    const cmsData = await getCmsResources();
-    const cmsResources = cmsData?.filter((item) => !item.deleted && item.visibility === "published") ?? [];
-    console.log("CMS raw:", cmsResources.length);
+  const cmsData = await getCmsResources();
+  const cmsResources = cmsData?.filter((item) => !item.deleted && item.visibility === "published") ?? [];
+  console.log("CMS raw:", cmsResources.length);
 
-    const fromCms = sanitizePublicResources(
-      cmsResources.map(
-        (item) =>
-          ({
-            id: item.id,
-            title: item.title,
-            category: item.category,
-            subCategory: item.subCategory,
-            paper: item.paper,
-            section: item.section,
-            fileUrl: item.fileUrl ?? "",
-            type: item.type === "mcq" ? "mcq" : undefined,
-            subject: item.subject,
-            level: item.level,
-            year: item.year,
-            description: item.description,
-          }) satisfies Resource
-      )
-    );
+  const fromCms = sanitizePublicResources(
+    cmsResources.map(
+      (item) =>
+        ({
+          id: item.id,
+          title: item.title,
+          category: item.category,
+          subCategory: item.subCategory,
+          paper: item.paper,
+          section: item.section,
+          fileUrl: item.fileUrl ?? "",
+          type: item.type === "mcq" ? "mcq" : undefined,
+          subject: item.subject,
+          level: item.level,
+          year: item.year,
+          description: item.description,
+        }) satisfies Resource
+    )
+  );
 
-    console.log("CMS after sanitize:", fromCms.length);
-    return withStrictTopicals(fromCms);
-  } catch (e) {
-    console.error("CMS failed, using static fallback", e);
-    return withStrictTopicals(staticResources);
-  }
+  console.log("CMS after sanitize:", fromCms.length);
+  return withStrictTopicals(fromCms);
 }
 
 export async function getPublicMcqSets(): Promise<Record<string, McqSet>> {
