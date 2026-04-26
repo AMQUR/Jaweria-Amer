@@ -1,5 +1,29 @@
 import { getSession } from "@/lib/admin/auth";
 import { deleteCmsResource, getCmsResources, saveCmsResource } from "@/lib/admin/cms-store";
+import { staticResources } from "@/lib/data";
+import type { CmsResourceRecord } from "@/lib/admin/cms-types";
+
+function staticToCmsRecord(r: (typeof staticResources)[number]): CmsResourceRecord {
+  return {
+    id: r.id,
+    title: r.title,
+    category: r.category as CmsResourceRecord["category"],
+    subCategory: r.subCategory,
+    paper: r.paper,
+    section: r.section,
+    fileUrl: r.fileUrl ?? "",
+    type: r.type === "mcq" ? "mcq" : "pdf",
+    visibility: "published",
+    createdAt: "2024-01-01T00:00:00.000Z",
+    updatedAt: "2024-01-01T00:00:00.000Z",
+    fileName: (r.fileUrl ?? "").split("/").pop() ?? "",
+    subject: r.subject,
+    level: r.level,
+    year: r.year,
+    description: r.description,
+    source: "static",
+  };
+}
 
 export async function GET() {
   const session = await getSession();
@@ -7,8 +31,11 @@ export async function GET() {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
-    const resources = await getCmsResources();
-    return Response.json(Array.isArray(resources) ? resources : []);
+    const cmsResources = await getCmsResources();
+    const byId = new Map<string, CmsResourceRecord>();
+    for (const r of staticResources) byId.set(r.id, staticToCmsRecord(r));
+    for (const r of Array.isArray(cmsResources) ? cmsResources : []) byId.set(r.id, r);
+    return Response.json(Array.from(byId.values()));
   } catch {
     return Response.json([]);
   }

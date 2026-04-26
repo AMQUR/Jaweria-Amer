@@ -200,7 +200,7 @@ const topicBrowseCardClass = (active: boolean, topicId?: string) => {
 };
 
 const pdfResourceSurfaceClass = cn(
-  "flex flex-col rounded-2xl border border-[#fdba74] bg-[#fff7ed] p-6 shadow-sm",
+  "flex flex-col rounded-2xl border border-rose-200/60 bg-rose-50/30 p-6 shadow-sm",
   "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
   "hover:-translate-y-0.5 hover:shadow-xl motion-reduce:hover:translate-y-0"
 );
@@ -208,24 +208,34 @@ const pdfResourceSurfaceClass = cn(
 const PDE_EXPLAINED_ID = "notes-pde-explained";
 
 const pdeExplainedHighlightSurfaceClass = cn(
-  "flex flex-col rounded-2xl border border-border/70 bg-gradient-to-r from-[#fff7ed] to-white p-6 shadow-sm",
-  "border-l-4 !border-l-[#ea580c]",
+  "flex flex-col rounded-2xl border border-border/70 bg-gradient-to-r from-rose-50 to-white p-6 shadow-sm",
+  "border-l-4 !border-l-primary",
   "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
   "hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0"
 );
 
 const defaultCategoryButtonClass = cn(
   "rounded-2xl border border-border/70 bg-white p-5 text-left shadow-sm",
-  "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
-  "hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
+  "transition-all duration-200 ease-out",
+  "hover:-translate-y-0.5 hover:scale-[1.02] hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
 );
 
-/** Solved Papers: same borders/shadows/spacing as hub categories; soft gradient + left accent; hover flattens to light warm tint. */
+/** Solved Papers: soft warm gradient + left accent. */
 const solvedPapersCategoryButtonClass = cn(
   defaultCategoryButtonClass,
   "bg-gradient-to-r from-[#fff7ed] to-white hover:bg-none hover:bg-[#fff7ed]",
   "border-l-4 !border-l-[#ea580c] hover:!border-l-[#ea580c]"
 );
+
+const categoryTintClass: Partial<Record<ResourceHubCategory, string>> = {
+  "general-notes": "bg-pink-50/60 border-pink-200/50 hover:bg-pink-50",
+  topicals: "bg-blue-50/60 border-blue-200/50 hover:bg-blue-50",
+  "yearly-past-papers": "bg-purple-50/60 border-purple-200/50 hover:bg-purple-50",
+  "examiner-reports": "bg-green-50/60 border-green-200/50 hover:bg-green-50",
+  checklists: "bg-yellow-50/60 border-yellow-200/50 hover:bg-yellow-50",
+  "quick-worksheets": "bg-orange-50/60 border-orange-200/50 hover:bg-orange-50",
+  vocabulary: "bg-rose-50/60 border-rose-200/50 hover:bg-rose-50",
+};
 
 const previewPillClass = (active: boolean) =>
   cn(
@@ -399,6 +409,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     setLevel("all");
     setYear("all");
     writeHub({ category: next, notesSubCategory: "unset", paper: "all", section: "all" });
+    requestAnimationFrame(() => {
+      document.getElementById("resource-hub")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   function openCategory(next: ResourceHubCategory) {
@@ -494,7 +507,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   }
 
   return (
-    <section className="bg-cream py-16 sm:py-24">
+    <section id="resource-hub" className="bg-cream py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
           <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
@@ -545,6 +558,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
             const Icon = categoryIcon[cat.id];
             const active = category === cat.id;
             const isSolved = cat.id === "solved-papers";
+            const tint = categoryTintClass[cat.id];
             return (
               <button
                 key={cat.id}
@@ -552,6 +566,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                 onClick={() => selectCategory(cat.id)}
                 className={cn(
                   isSolved ? solvedPapersCategoryButtonClass : defaultCategoryButtonClass,
+                  !isSolved && tint,
                   active && "border-primary/35 ring-1 ring-primary/20"
                 )}
               >
@@ -778,6 +793,30 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
           </div>
         )}
 
+        {category !== "all" && (
+          <nav className="mb-4 flex items-center gap-1.5 text-xs text-muted-foreground" aria-label="Breadcrumb">
+            <button
+              type="button"
+              onClick={() => selectCategory("all")}
+              className="hover:text-ink transition-colors"
+            >
+              Resources
+            </button>
+            <span aria-hidden>/</span>
+            <span className="font-medium text-ink">
+              {RESOURCE_HUB_CATEGORIES.find((c) => c.id === category)?.label ?? category}
+            </span>
+            {notesSubCategory !== "unset" && (
+              <>
+                <span aria-hidden>/</span>
+                <span className="font-medium text-ink">
+                  {NOTES_HUB_SUBTOPICS.find((t) => t.id === notesSubCategory)?.label ?? notesSubCategory}
+                </span>
+              </>
+            )}
+          </nav>
+        )}
+
         <div id="resource-grid" className="scroll-mt-24 sm:scroll-mt-28">
           {!safeResources.length ? (
             <div className="rounded-2xl border border-border/60 bg-white p-6 text-center shadow-sm sm:p-8">
@@ -888,6 +927,14 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
 const scriptsChipClass =
   "mb-2 inline-flex w-fit rounded-md border border-border/60 bg-muted/30 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.2em] text-muted-foreground";
 
+const BEST_FOR_MAP: Partial<Record<string, string>> = {
+  "directed-writing": "Paper 2 Writing",
+  comprehension: "Reading Section",
+  "essay-writing": "Essay Writing",
+  "summary-writing": "Summary Writing",
+  grammar: "Grammar & Accuracy",
+};
+
 function ResourceCard({ resource }: { resource: Resource }) {
   const meta = [resource.level, resource.subject, resource.section, resource.year, resource.paper]
     .filter(Boolean)
@@ -902,6 +949,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
     : { main: displayTitle, secondary: null as string | null };
 
   const isPdeExplained = resource.id === PDE_EXPLAINED_ID;
+  const bestFor = resource.subCategory ? BEST_FOR_MAP[resource.subCategory] : undefined;
 
   return (
     <article
@@ -910,17 +958,29 @@ function ResourceCard({ resource }: { resource: Resource }) {
           ? isPdeExplained
             ? pdeExplainedHighlightSurfaceClass
             : pdfResourceSurfaceClass
-          : "flex flex-col rounded-2xl border border-border/60 bg-white p-6 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
+          : "flex flex-col rounded-2xl border border-border/60 bg-white p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
       )}
     >
-      {isMcq && <span className={scriptsChipClass}>MCQ Assessment</span>}
-      {vaultChip && !isMcq && <span className={scriptsChipClass}>{vaultChip}</span>}
+      <div className="mb-2 flex items-start justify-between gap-2">
+        <div className="flex flex-wrap gap-1.5">
+          {isMcq && <span className={scriptsChipClass}>MCQ Assessment</span>}
+          {vaultChip && !isMcq && <span className={scriptsChipClass}>{vaultChip}</span>}
+        </div>
+        {isPdfResource && !isMcq && (
+          <span className="shrink-0 rounded-full bg-rose-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-rose-600">
+            Exam-Focused
+          </span>
+        )}
+      </div>
       <h3 className="font-serif text-base font-semibold leading-relaxed tracking-tight text-ink">{titleMain}</h3>
       {isScripts && titleSecondary ? (
         <p className="mt-1 text-xs font-medium tabular-nums tracking-wide text-slate">{titleSecondary}</p>
       ) : null}
       <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{meta}</p>
       <p className="mt-3 flex-1 text-sm leading-relaxed text-slate sm:text-base">{resource.description}</p>
+      {bestFor && (
+        <p className="mt-2 text-[11px] font-semibold text-brand/80">Best for: {bestFor}</p>
+      )}
       <div className="mt-6">
         {isMcq ? (
           <Link

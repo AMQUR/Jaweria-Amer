@@ -1,58 +1,78 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
-import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
-import { workshopRegisterUrl } from "@/lib/contact";
+import { X } from "lucide-react";
+import { getWhatsAppUrl } from "@/lib/contact";
 import { cn } from "@/lib/utils";
 
-/**
- * Slim fixed bar below the main navbar on the homepage after ~150px scroll.
- */
+const DISMISS_KEY = "community-bar-v1-dismissed";
+
 export function StickyWorkshopBar() {
-  const pathname = usePathname();
-  const [scrollY, setScrollY] = useState(0);
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    if (pathname !== "/") return;
-    const onScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", onScroll, { passive: true });
-    queueMicrotask(onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [pathname]);
+    if (localStorage.getItem(DISMISS_KEY)) return;
+    const t = setTimeout(() => setVisible(true), 600);
+    return () => clearTimeout(t);
+  }, []);
 
-  const visible = pathname === "/" && scrollY > 150;
+  function dismiss() {
+    localStorage.setItem(DISMISS_KEY, "1");
+    setVisible(false);
+  }
 
-  if (pathname !== "/") return null;
-
-  return (
-    <div
-      className={cn(
-        "fixed left-0 right-0 z-40 transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none",
-        "top-16 sm:top-20",
-        visible
-          ? "translate-y-0 opacity-100"
-          : "pointer-events-none -translate-y-full opacity-0"
-      )}
-      role="region"
-      aria-label="Workshop promotion"
-      aria-hidden={!visible}
-    >
-      <div className="flex min-h-11 items-center justify-between gap-3 border-b border-white/15 bg-brand px-4 py-2 shadow-md sm:min-h-12 sm:px-6">
-        <p className="min-w-0 flex-1 text-xs font-medium leading-snug text-white sm:text-sm">
-          English Writing Workshop — <span className="font-semibold">Limited Seats</span>
-        </p>
-        <TrackedWhatsAppLink
-          href={workshopRegisterUrl()}
-          location="sticky_workshop_bar"
-          variant="group"
+  const barContent = (
+    <div className="flex min-h-[56px] items-center justify-between gap-3 px-4 py-2 sm:px-6">
+      <p className="min-w-0 flex-1 text-xs font-medium leading-snug text-white sm:text-sm">
+        Join the community for updates, resources, and help
+      </p>
+      <div className="flex shrink-0 items-center gap-2">
+        <a
+          href={getWhatsAppUrl()}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 rounded-xl bg-white px-3 py-1.5 text-center text-xs font-semibold text-brand shadow-sm transition-colors hover:bg-brand-soft sm:px-4 sm:text-sm"
+          className="rounded-xl bg-white px-4 py-1.5 text-xs font-bold text-[#ea580c] shadow-sm transition-colors hover:bg-orange-50 sm:text-sm"
         >
-          Reserve Now
-        </TrackedWhatsAppLink>
+          Join Community
+        </a>
+        <button
+          type="button"
+          onClick={dismiss}
+          aria-label="Dismiss"
+          className="rounded-lg p-1 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
+        >
+          <X className="h-4 w-4" />
+        </button>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {/* Desktop: fixed top below nav */}
+      <div
+        className={cn(
+          "fixed left-0 right-0 z-40 hidden bg-[#ea580c] shadow-lg transition-[opacity,transform] duration-300 ease-out sm:block",
+          "top-16 sm:top-20",
+          visible ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0"
+        )}
+        role="banner"
+        aria-label="Community invite"
+      >
+        {barContent}
+      </div>
+
+      {/* Mobile: fixed bottom */}
+      <div
+        className={cn(
+          "fixed bottom-0 left-0 right-0 z-40 bg-[#ea580c] shadow-lg transition-[opacity,transform] duration-300 ease-out sm:hidden",
+          visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0"
+        )}
+        role="banner"
+        aria-label="Community invite"
+      >
+        {barContent}
+      </div>
+    </>
   );
 }

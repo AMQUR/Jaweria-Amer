@@ -13,7 +13,7 @@ export const contact = {
   drive: "https://drive.google.com/drive/folders/1B3MN_5TiHfknp6Ao4BwlFRlmc89F1AHF",
   instagram: "https://instagram.com/englishwithjaweria",
   /** Public Facebook page — leave empty to hide the Facebook card on marketing pages. */
-  facebook: "",
+  facebook: "https://www.facebook.com/jaweria.amer",
   email: "jaweriaamer001@gmail.com",
   /** Public-facing location line (footer, etc.). */
   locationLine: "Karachi, Pakistan",

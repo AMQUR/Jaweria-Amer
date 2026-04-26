@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { FilePenLine, FileText, Filter, Plus, Search, Sparkles, Trash2 } from "lucide-react";
+import { Eye, FilePenLine, FileText, Filter, Plus, Search, Sparkles, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -67,6 +67,7 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
   const [sectionFilter, setSectionFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [form, setForm] = useState<ResourceFormState>(emptyForm());
+  const [lastSaved, setLastSaved] = useState<string | null>(null);
 
   async function loadResources() {
     try {
@@ -182,6 +183,7 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       return;
     }
 
+    setLastSaved(form.title);
     toast.success(form.id ? "Resource updated." : "Resource added.");
     setDialogOpen(false);
     setForm(emptyForm());
@@ -190,6 +192,21 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
 
   return (
     <div className="space-y-6">
+      {lastSaved && (
+        <div className="flex items-center justify-between rounded-2xl border border-green-200 bg-green-50 px-5 py-3">
+          <p className="text-sm font-medium text-green-700">
+            ✓ &ldquo;{lastSaved}&rdquo; uploaded successfully → Live on site
+          </p>
+          <button
+            type="button"
+            onClick={() => setLastSaved(null)}
+            className="ml-4 text-xs font-semibold text-green-600 hover:text-green-800"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div>
           <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink">Resources Control Center</h1>
@@ -276,9 +293,8 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
             <TableHeader>
               <TableRow>
                 <TableHead>Title</TableHead>
-                <TableHead>Category</TableHead>
+                <TableHead>Category → Sub</TableHead>
                 <TableHead>Paper</TableHead>
-                <TableHead>Section</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Source</TableHead>
@@ -299,9 +315,13 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                       </div>
                     </div>
                   </TableCell>
-                  <TableCell className="text-sm text-slate">{CMS_RESOURCE_CATEGORY_LABELS[resource.category]}</TableCell>
+                  <TableCell className="text-sm text-slate">
+                    {CMS_RESOURCE_CATEGORY_LABELS[resource.category]}
+                    {resource.subCategory && (
+                      <span className="ml-1 text-muted-foreground">→ {resource.subCategory}</span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-sm text-slate">{resource.paper || "—"}</TableCell>
-                  <TableCell className="text-sm text-slate">{resource.section || "—"}</TableCell>
                   <TableCell className="text-sm text-slate uppercase">{resource.type}</TableCell>
                   <TableCell>
                     <span
@@ -315,22 +335,35 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                   <TableCell className="text-xs uppercase tracking-[0.14em] text-muted-foreground">{resource.source}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => openEdit(resource)}
+                      <a
+                        href={`/resources/view/${resource.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
                         className="rounded-xl p-2 text-slate transition-[background-color,color] hover:bg-muted hover:text-ink"
-                        aria-label={`Edit ${resource.title}`}
+                        aria-label={`View ${resource.title}`}
                       >
-                        <FilePenLine className="h-4 w-4" />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => void handleDelete(resource)}
-                        className="rounded-xl p-2 text-slate transition-[background-color,color] hover:bg-brand-soft hover:text-brand"
-                        aria-label={`Delete ${resource.title}`}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
+                        <Eye className="h-4 w-4" />
+                      </a>
+                      {resource.source !== "static" && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => openEdit(resource)}
+                            className="rounded-xl p-2 text-slate transition-[background-color,color] hover:bg-muted hover:text-ink"
+                            aria-label={`Edit ${resource.title}`}
+                          >
+                            <FilePenLine className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => void handleDelete(resource)}
+                            className="rounded-xl p-2 text-slate transition-[background-color,color] hover:bg-brand-soft hover:text-brand"
+                            aria-label={`Delete ${resource.title}`}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </>
+                      )}
                     </div>
                   </TableCell>
                 </TableRow>

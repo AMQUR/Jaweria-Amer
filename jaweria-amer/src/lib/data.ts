@@ -1629,6 +1629,18 @@ const curatedGeneralNotes: Resource[] = [
     description: "Development and evaluation logic for stronger ideas, flaws, and expansion.",
   },
   {
+    id: "paper-2-marathon",
+    title: "Paper 2 Marathon",
+    category: "general-notes",
+    subCategory: "directed-writing",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 2",
+    year: "Current",
+    fileUrl: "/resources/notes/paper-2-marathon.pdf",
+    description: "Complete walkthrough for Paper 2 writing mastery — Miss Jay's marathon guide.",
+  },
+  {
     id: "essay-writing-narrative",
     title: "Essay Writing — Narrative",
     category: "general-notes",
