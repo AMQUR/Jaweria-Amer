@@ -8,6 +8,7 @@ import { mcqSets as staticMcqSets } from "@/lib/mcq-data";
 import type { Resource, ResourceNotesSubCategory } from "@/lib/data";
 import type { McqSet, McqQuestion } from "@/lib/mcq-data";
 import { basenameFromFileUrl, cleanCopyOfTitlePrefix } from "@/lib/resource-ingestion";
+import { cmsResources as bundledCmsResourceOverrides } from "@/lib/resources-data";
 import type { CmsMcqSet, CmsResourceCategory, CmsResourceRecord, HomepageContent, UploadAsset } from "./cms-types";
 
 const DATA_DIR = join(process.cwd(), "data");
@@ -245,8 +246,17 @@ async function deletePublicFile(fileUrl: string | undefined) {
   } catch {}
 }
 
-export async function getStoredResourceOverrides() {
-  return readJSON<CmsResourceRecord[]>(RESOURCE_RECORDS_FILE, []);
+export async function getStoredResourceOverrides(): Promise<CmsResourceRecord[]> {
+  const disk = await readJSON<CmsResourceRecord[]>(RESOURCE_RECORDS_FILE, []);
+  const bundled = [...bundledCmsResourceOverrides];
+  if (disk.length === 0) {
+    return bundled;
+  }
+  const byId = new Map<string, CmsResourceRecord>(bundled.map((r) => [r.id, r]));
+  for (const r of disk) {
+    byId.set(r.id, r);
+  }
+  return Array.from(byId.values());
 }
 
 export async function getStoredMcqOverrides() {
