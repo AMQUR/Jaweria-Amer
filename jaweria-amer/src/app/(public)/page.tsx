@@ -17,7 +17,7 @@ import { ContactEmailLink } from "@/components/contact-email-link";
 import { whatsAppGroupUrl } from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
-import { WorkshopPromoSection } from "@/components/workshop-promo";
+import { LiveSessionHero } from "@/components/live-session-hero";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -61,7 +61,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <WorkshopPromoSection bannerImagePath={safeHomepageContent.bannerImagePath} />
+      <LiveSessionHero bannerImagePath={safeHomepageContent.bannerImagePath} />
 
       {/* Hero */}
       <section className="relative overflow-hidden pt-14 pb-24 sm:pt-20 sm:pb-32 lg:pt-24 lg:pb-36">
