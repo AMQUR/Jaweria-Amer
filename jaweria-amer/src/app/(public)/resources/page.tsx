@@ -10,7 +10,6 @@ import { ChecklistBanner } from "@/components/checklist-banner";
 import { FileVaultCard } from "@/components/file-vault-card";
 import { RevisionGuideCard } from "@/components/revision-guide-card";
 import { MarathonBanner } from "@/components/marathon-banner";
-import { ResourceFunnelSection } from "@/components/resource-funnel-section";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -53,8 +52,6 @@ export default async function ResourcesPage() {
           </p>
         </div>
       </section>
-
-      <ResourceFunnelSection />
 
       <div
         className="pointer-events-none h-12 w-full bg-white sm:h-14"
