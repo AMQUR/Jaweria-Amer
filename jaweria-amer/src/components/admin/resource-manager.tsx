@@ -74,7 +74,13 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       setLoading(true);
       const response = await fetch("/api/admin/resources", { cache: "no-store" });
       const data = response.ok ? await response.json() : null;
-      setResources(Array.isArray(data) ? data : []);
+      const list =
+        data && typeof data === "object" && Array.isArray((data as { resources?: unknown }).resources)
+          ? (data as { resources: CmsResourceRecord[] }).resources
+          : Array.isArray(data)
+            ? (data as CmsResourceRecord[])
+            : [];
+      setResources(list);
     } catch {
       setResources([]);
     } finally {

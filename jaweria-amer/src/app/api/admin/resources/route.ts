@@ -35,9 +35,9 @@ export async function GET() {
     const byId = new Map<string, CmsResourceRecord>();
     for (const r of staticResources) byId.set(r.id, staticToCmsRecord(r));
     for (const r of Array.isArray(cmsResources) ? cmsResources : []) byId.set(r.id, r);
-    return Response.json(Array.from(byId.values()));
+    return Response.json({ resources: Array.from(byId.values()) });
   } catch {
-    return Response.json([]);
+    return Response.json({ resources: [] }, { status: 500 });
   }
 }
 

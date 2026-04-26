@@ -22,8 +22,33 @@ function sanitizeCtaLink(link: string | undefined): string {
 
 const PUBLIC_DIR = join(process.cwd(), "public");
 
-function isValidResourceFileUrl(fileUrl: string | undefined): fileUrl is string {
-  return typeof fileUrl === "string" && fileUrl.startsWith("/resources/");
+/** Map stored paths to the public URL shape `/resources/...` (files live under `public/resources/`). */
+function normalizePublicResourceFileUrl(fileUrl: string | undefined): string | undefined {
+  if (typeof fileUrl !== "string") return undefined;
+  let u = fileUrl.trim();
+  if (!u) return undefined;
+  u = u.split("?")[0]?.split("#")[0] ?? u;
+  try {
+    if (u.startsWith("http://") || u.startsWith("https://")) {
+      u = new URL(u).pathname;
+    }
+  } catch {
+    return undefined;
+  }
+  if (u.startsWith("/public/resources/")) {
+    u = u.slice("/public".length);
+  } else if (u.toLowerCase().startsWith("public/resources/")) {
+    u = `/${u.slice("public/".length)}`;
+  }
+  if (!u.startsWith("/") && u.toLowerCase().startsWith("resources/")) {
+    u = `/${u}`;
+  }
+  if (u.includes("..")) return undefined;
+  return u || undefined;
+}
+
+function isSafeResourcesPath(fileUrl: string): boolean {
+  return fileUrl.startsWith("/resources/") && !fileUrl.includes("..");
 }
 
 async function publicFileExists(fileUrl: string) {
@@ -41,12 +66,12 @@ async function sanitizePublicResources(resources: Resource[]) {
     (resources ?? []).map(async (resource) => {
       if (!resource) return null;
       if (resource.type === "mcq") return resource;
-      if (!isValidResourceFileUrl(resource.fileUrl)) return null;
-      if (!(await publicFileExists(resource.fileUrl))) {
-        console.warn("Dropping missing resource file:", resource.id, resource.fileUrl);
-        return null;
+      const normalized = normalizePublicResourceFileUrl(resource.fileUrl);
+      if (!normalized || !isSafeResourcesPath(normalized)) return null;
+      if (!(await publicFileExists(normalized))) {
+        console.warn("Resource file not found on server (keeping CMS entry):", resource.id, normalized);
       }
-      return resource;
+      return normalized === resource.fileUrl ? resource : { ...resource, fileUrl: normalized };
     })
   );
 
@@ -79,6 +104,8 @@ export async function getPublicResources(): Promise<Resource[]> {
   try {
     const cmsData = await getCmsResources();
     const cmsResources = cmsData?.filter((item) => !item.deleted && item.visibility === "published") ?? [];
+    console.log("CMS resources:", cmsResources.length);
+
     const fromCms = await sanitizePublicResources(
       cmsResources.map(
         (item) =>
@@ -99,22 +126,8 @@ export async function getPublicResources(): Promise<Resource[]> {
       )
     );
 
-    const staticRes = await getSanitizedOrRawStatic();
-    const byId = new Map<string, Resource>();
-    for (const r of staticRes) {
-      if (r?.id) byId.set(r.id, r);
-    }
-    if (Array.isArray(fromCms) && fromCms.length > 0) {
-      for (const r of fromCms) {
-        if (r?.id) byId.set(r.id, r);
-      }
-    } else {
-      console.error("CMS public list empty after sanitize, using static fallback");
-    }
-    const merged = Array.from(byId.values());
-    // Prefer CMS-backed list when non-empty; otherwise static so the hub never goes empty
-    const out = merged.length > 0 ? merged : rawStatic;
-    return withStrictTopicals(out.length > 0 ? out : rawStatic);
+    console.log("CMS resources after sanitize:", fromCms.length);
+    return withStrictTopicals(fromCms);
   } catch (error) {
     console.error("CMS failed, using static fallback", error);
     const fallback = await getSanitizedOrRawStatic();

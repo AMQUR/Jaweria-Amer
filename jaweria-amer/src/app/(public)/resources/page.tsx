@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { ExternalLink, PlayCircle } from "lucide-react";
 import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
 import { contact } from "@/lib/contact";
-import { siteConfig, staticResources } from "@/lib/data";
+import { siteConfig } from "@/lib/data";
 import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
 import { ChecklistBanner } from "@/components/checklist-banner";
@@ -36,8 +36,6 @@ export const dynamic = "force-dynamic";
 
 export default async function ResourcesPage() {
   const resources = (await getPublicResources()) ?? [];
-  const safeResources =
-    Array.isArray(resources) && resources.length > 0 ? resources : staticResources;
 
   return (
     <>
@@ -119,7 +117,7 @@ export default async function ResourcesPage() {
       </section>
 
       <Suspense fallback={<div className="min-h-[40vh] bg-cream" aria-hidden />}>
-        <ResourcesHub resources={safeResources} />
+        <ResourcesHub resources={resources} />
       </Suspense>
     </>
   );
