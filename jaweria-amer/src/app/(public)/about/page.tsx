@@ -18,6 +18,8 @@ import { cn } from "@/lib/utils";
 
 const channelCardBase =
   "group flex flex-col rounded-2xl p-7 transition-all duration-300 ease-out sm:p-8 hover:-translate-y-1 hover:shadow-[0_12px_36px_rgba(34,16,18,0.08)] motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none";
+const CONNECT_CARD_CLASS =
+  "bg-[#fef2f2] border border-[#fecaca] hover:border-[#fca5a5] shadow-sm hover:shadow-md rounded-2xl p-6 transition-all duration-200 hover:scale-[1.02]";
 
 function IconWhatsApp({ className }: { className?: string }) {
   return (
@@ -234,10 +236,11 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className={cn(
                 channelCardBase,
-                "border-2 border-primary/40 bg-gradient-to-b from-white via-white to-crimson/[0.06] shadow-[0_10px_40px_rgba(112,20,20,0.14)] hover:border-primary/50 hover:shadow-lg"
+                CONNECT_CARD_CLASS,
+                "p-7 sm:p-8"
               )}
             >
-              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-crimson text-white shadow-sm">
+              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
                 <IconWhatsApp className="h-5 w-5" />
               </span>
               <h3 className="flex-1 font-serif text-base font-semibold leading-snug text-ink sm:text-lg">
@@ -256,10 +259,12 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className={cn(
                 channelCardBase,
-                "cursor-pointer border-2 border-primary/28 bg-gradient-to-b from-white via-white to-crimson/[0.045] shadow-[0_10px_40px_rgba(112,20,20,0.11)] hover:border-primary/42 hover:shadow-lg"
+                "cursor-pointer",
+                CONNECT_CARD_CLASS,
+                "p-7 sm:p-8"
               )}
             >
-              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted text-ink">
+              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
                 <IconYouTube className="h-5 w-5" />
               </span>
               <h3 className="font-serif text-lg font-semibold text-ink">YouTube</h3>
@@ -279,10 +284,12 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className={cn(
                 channelCardBase,
-                "cursor-pointer border-2 border-border/70 bg-gradient-to-b from-white via-muted/25 to-neutral-100/35 shadow-[0_10px_40px_rgba(34,16,18,0.1)] hover:border-border hover:shadow-lg"
+                "cursor-pointer",
+                CONNECT_CARD_CLASS,
+                "p-7 sm:p-8"
               )}
             >
-              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted text-brand">
+              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
                 <IconInstagram className="h-5 w-5" />
               </span>
               <h3 className="font-serif text-lg font-semibold text-ink">Instagram</h3>
@@ -303,10 +310,11 @@ export default function AboutPage() {
                 rel="noopener noreferrer"
                 className={cn(
                   channelCardBase,
-                  "border border-border/70 bg-white shadow-sm hover:border-border hover:shadow-md"
+                  CONNECT_CARD_CLASS,
+                  "p-7 sm:p-8"
                 )}
               >
-                <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-muted text-brand">
+                <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
                   <Newspaper className="h-5 w-5" aria-hidden />
                 </span>
                 <h3 className="font-serif text-lg font-semibold text-ink">Facebook</h3>
