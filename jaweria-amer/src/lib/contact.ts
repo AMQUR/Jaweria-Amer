@@ -7,11 +7,11 @@ const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/I9p7rCopafq51oG93lJAap
 
 export const contact = {
   phone: "+923253708069",
-  youtube: "https://www.youtube.com/@englishwithjaweria",
+  youtube: "https://www.youtube.com/@englishwithmissjay",
   /** Stable featured lesson for the About page embed (`youtube.com/watch?v=…` ID). */
   youtubeFeaturedVideoId: "Qyl5kB_uv-0",
   drive: "https://drive.google.com/drive/folders/1B3MN_5TiHfknp6Ao4BwlFRlmc89F1AHF",
-  instagram: "https://instagram.com/englishwithjaweria",
+  instagram: "https://instagram.com/englishwithmissjay",
   /** Public Facebook page — leave empty to hide the Facebook card on marketing pages. */
   facebook: "https://www.facebook.com/jaweria.amer",
   email: "jaweriaamer001@gmail.com",
