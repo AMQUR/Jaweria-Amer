@@ -240,6 +240,13 @@ const pdeExplainedHighlightSurfaceClass = cn(
   "hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
 );
 
+const mcqResourceSurfaceClass = cn(
+  "flex flex-col rounded-2xl p-6",
+  SURFACE_ROSE,
+  "transition-all duration-200 ease-out",
+  "hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+);
+
 const defaultCategoryButtonClass = cn(
   "rounded-2xl border border-border/70 bg-white p-5 text-left shadow-sm",
   "transition-all duration-200 ease-out",
@@ -999,7 +1006,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
           ? isPdeExplained
             ? pdeExplainedHighlightSurfaceClass
             : pdfResourceSurfaceClass
-          : "flex flex-col rounded-2xl border border-border/60 bg-white p-6 shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+          : mcqResourceSurfaceClass
       )}
     >
       <div className="mb-2 flex items-start justify-between gap-2">
