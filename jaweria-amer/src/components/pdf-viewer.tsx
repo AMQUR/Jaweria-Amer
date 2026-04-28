@@ -21,12 +21,14 @@ export default function PdfViewer({ src }: { src: string }) {
           Tap below to open the full PDF. You can scroll, zoom, and save it directly from your device.
         </p>
         <div className="mt-5">
-          <button
-            onClick={() => { window.location.href = src; }}
-            className="w-full rounded-full bg-[#ea580c] py-3 font-medium text-white transition hover:bg-[#c2410c] active:scale-95"
+          <a
+            href={src}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full rounded-full bg-[#ea580c] py-3 text-center font-medium text-white transition hover:bg-[#c2410c] active:scale-95"
           >
             Open PDF
-          </button>
+          </a>
         </div>
       </div>
     );

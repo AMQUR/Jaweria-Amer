@@ -548,7 +548,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   type="button"
                   onClick={() => openCategory(pathway.category)}
                   className={cn(
-                    "rounded-2xl p-6 text-left transition-[box-shadow,border-color] duration-200 ease-out",
+                    "rounded-2xl p-6 text-left transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100",
                     START_PATHWAY_CARD[pathway.id]
                   )}
                 >
