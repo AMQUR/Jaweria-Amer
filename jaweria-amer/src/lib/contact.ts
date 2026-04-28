@@ -7,7 +7,7 @@ const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/I9p7rCopafq51oG93lJAap
 
 export const contact = {
   phone: "+923253708069",
-  youtube: "https://www.youtube.com/@englishwithmissjay",
+  youtube: "https://www.youtube.com/@englishwithjaweria",
   /** Stable featured lesson for the About page embed (`youtube.com/watch?v=…` ID). */
   youtubeFeaturedVideoId: "Qyl5kB_uv-0",
   drive: "https://drive.google.com/drive/folders/1B3MN_5TiHfknp6Ao4BwlFRlmc89F1AHF",
