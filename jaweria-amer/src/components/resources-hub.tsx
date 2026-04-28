@@ -224,8 +224,8 @@ const topicBrowseCardClass = (active: boolean, topicId?: string) => {
 
 const pdfResourceSurfaceClass = cn(
   "flex flex-col rounded-2xl border border-rose-200/60 bg-rose-50/30 p-6 shadow-sm",
-  "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
-  "hover:-translate-y-0.5 hover:shadow-xl motion-reduce:hover:translate-y-0"
+  "transition-all duration-200 ease-out",
+  "hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
 );
 
 const PDE_EXPLAINED_ID = "notes-pde-explained";
@@ -233,8 +233,8 @@ const PDE_EXPLAINED_ID = "notes-pde-explained";
 const pdeExplainedHighlightSurfaceClass = cn(
   "flex flex-col rounded-2xl border border-border/70 bg-gradient-to-r from-rose-50 to-white p-6 shadow-sm",
   "border-l-4 !border-l-primary",
-  "transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out",
-  "hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0"
+  "transition-all duration-200 ease-out",
+  "hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
 );
 
 const defaultCategoryButtonClass = cn(
@@ -262,8 +262,8 @@ const categoryTintClass: Partial<Record<ResourceHubCategory, string>> = {
 
 const previewPillClass = (active: boolean) =>
   cn(
-    "rounded-2xl border bg-white px-4 py-3 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
-    active ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
+    "rounded-2xl border bg-[#fef2f2] border-[#fecaca] px-4 py-3 text-left shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#fca5a5] hover:scale-[1.02] hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100",
+    active ? "border-primary/35 ring-1 ring-primary/20" : ""
   );
 
 function sortSections(values: string[]) {
@@ -338,6 +338,13 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     return () => {
       if (topicTapTimeoutRef.current) clearTimeout(topicTapTimeoutRef.current);
     };
+  }, []);
+
+  const scrollToId = useCallback((id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const top = el.getBoundingClientRect().top + window.scrollY - 80;
+    window.scrollTo({ top, behavior: "smooth" });
   }, []);
 
   const safeResources = useMemo(
@@ -427,19 +434,33 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       .filter((entry) => (category === "topicals" ? true : entry.sections.length > 0));
   }, [category, guidedPreviewResources]);
 
+  const CATEGORY_SCROLL_TARGET: Record<ResourceHubCategory, string> = {
+    "general-notes": "notes-section",
+    vocabulary: "vocab-section",
+    topicals: "resource-filters",
+    "yearly-past-papers": "resource-filters",
+    "examiner-reports": "resource-filters",
+    checklists: "resource-filters",
+    "quick-worksheets": "resource-filters",
+    "solved-papers": "resource-filters",
+    featured: "resource-filters",
+  };
+
   function selectCategory(next: ResourceHubCategory | "all") {
     setSubject("all");
     setLevel("all");
     setYear("all");
     writeHub({ category: next, notesSubCategory: "unset", paper: "all", section: "all" });
-    requestAnimationFrame(() => {
-      document.getElementById("resource-hub")?.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
+    const targetId = next === "all" ? "resource-hub" : CATEGORY_SCROLL_TARGET[next];
+    setTimeout(() => scrollToId(targetId), 120);
   }
 
   function openCategory(next: ResourceHubCategory) {
-    selectCategory(next);
-    requestAnimationFrame(() => scrollToResourceGrid());
+    setSubject("all");
+    setLevel("all");
+    setYear("all");
+    writeHub({ category: next, notesSubCategory: "unset", paper: "all", section: "all" });
+    setTimeout(() => scrollToId(CATEGORY_SCROLL_TARGET[next]), 120);
   }
 
   function handleTopicTileClick(id: ResourceNotesSubCategory) {
@@ -614,7 +635,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         </div>
 
         {category === "general-notes" && (
-          <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
+          <div id="notes-section" className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
             <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
               Browse Notes by Topic
             </h2>
@@ -644,7 +665,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         )}
 
         {category === "vocabulary" && (
-          <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
+          <div id="vocab-section" className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
             <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
               Browse Vocabulary by Type
             </h2>
