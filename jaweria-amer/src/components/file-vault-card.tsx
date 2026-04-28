@@ -1,14 +1,14 @@
-"use client";
-
 import { ArrowRight, FolderOpen } from "lucide-react";
 
 const DRIVE_URL = "https://drive.google.com/drive/folders/1B3MN_5TiHfknp6Ao4BwlFRlmc89F1AHF";
 
 export function FileVaultCard() {
   return (
-    <div
-      onClick={() => window.open(DRIVE_URL, "_blank")}
-      className="group cursor-pointer rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-xl transition-all duration-300 ease-out hover:brightness-110 hover:scale-[1.02] hover:shadow-2xl sm:p-10 md:p-10"
+    <a
+      href={DRIVE_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-xl transition-all duration-300 ease-out hover:brightness-110 hover:scale-[1.02] hover:shadow-2xl sm:p-10 md:p-10"
     >
       <div className="flex flex-col justify-between gap-8 md:flex-row md:items-center md:gap-12">
         <div className="min-w-0 flex-1">
@@ -26,18 +26,12 @@ export function FileVaultCard() {
           </p>
         </div>
         <div className="shrink-0">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              window.open(DRIVE_URL, "_blank");
-            }}
-            className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-white px-6 py-3 text-base font-medium text-[#7f1d1d] transition-all duration-200 hover:bg-[#ffe4e6] hover:scale-[1.03] active:scale-[0.98] sm:w-auto"
-          >
+          <span className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-white px-6 py-3 text-base font-medium text-[#7f1d1d] transition-all duration-200 hover:bg-[#ffe4e6] hover:scale-[1.03] active:scale-[0.98] sm:w-auto">
             Open Full Vault
             <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
-          </button>
+          </span>
         </div>
       </div>
-    </div>
+    </a>
   );
 }

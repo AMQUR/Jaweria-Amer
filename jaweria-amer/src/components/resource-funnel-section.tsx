@@ -1,6 +1,4 @@
-"use client";
-
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { BookOpen, LayoutGrid, FileText } from "lucide-react";
 
 const PATHWAYS = [
@@ -43,8 +41,6 @@ const PATHWAYS = [
 ] as const;
 
 export function ResourceFunnelSection() {
-  const router = useRouter();
-
   return (
     <section className="border-b border-border/70 bg-white pb-10 pt-8 sm:pb-12 sm:pt-10">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -58,11 +54,10 @@ export function ResourceFunnelSection() {
           {PATHWAYS.map((p) => {
             const Icon = p.icon;
             return (
-              <button
+              <Link
                 key={p.level}
-                type="button"
-                onClick={() => router.push(p.href)}
-                className={`group flex flex-col rounded-2xl border bg-gradient-to-br p-6 text-left shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100 ${p.gradient} ${p.border}`}
+                href={p.href}
+                className={`group flex flex-col rounded-2xl border bg-gradient-to-br p-6 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:scale-[1.02] hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100 ${p.gradient} ${p.border}`}
               >
                 <span className={`mb-4 flex h-10 w-10 items-center justify-center rounded-xl ${p.iconBg}`}>
                   <Icon className="h-5 w-5" aria-hidden />
@@ -86,7 +81,7 @@ export function ResourceFunnelSection() {
                     </span>
                   ))}
                 </div>
-              </button>
+              </Link>
             );
           })}
         </div>

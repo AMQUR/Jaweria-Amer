@@ -1,7 +1,5 @@
-"use client";
-
+import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 const BULLETS = [
   "Paper pattern explained",
@@ -11,12 +9,10 @@ const BULLETS = [
 ];
 
 export function MarathonBanner() {
-  const router = useRouter();
-
   return (
-    <div
-      onClick={() => router.push("/resources/view/paper-2-marathon")}
-      className="cursor-pointer rounded-2xl bg-gradient-to-r from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-md transition-all duration-300 hover:shadow-xl sm:p-10"
+    <Link
+      href="/resources/view/paper-2-marathon"
+      className="block rounded-2xl bg-gradient-to-r from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-md transition-all duration-300 hover:shadow-xl sm:p-10"
     >
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
@@ -48,17 +44,11 @@ export function MarathonBanner() {
             </ul>
           </div>
         </div>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push("/resources/view/paper-2-marathon");
-          }}
-          className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-white px-6 py-3 text-sm font-medium text-rose-800 shadow-md transition hover:bg-rose-50 active:scale-95"
-        >
+        <span className="inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-white px-6 py-3 text-sm font-medium text-rose-800 shadow-md transition hover:bg-rose-50 active:scale-95">
           Open PDF
           <ArrowRight className="h-4 w-4" aria-hidden />
-        </button>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 }
