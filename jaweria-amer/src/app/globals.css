@@ -130,6 +130,10 @@
   h3 {
     letter-spacing: -0.02em;
   }
+
+  [id$="-section"] {
+    scroll-margin-top: 80px;
+  }
 }
 
 @keyframes heroFade {

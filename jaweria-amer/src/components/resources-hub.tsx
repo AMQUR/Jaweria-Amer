@@ -129,6 +129,9 @@ const START_PATHWAY_ICON: Record<(typeof START_PATHWAYS)[number]["id"], string> 
   mcqs: masterIcon,
 };
 
+const SURFACE_ROSE =
+  "bg-[#fef2f2] border border-[#fecaca] hover:border-[#fca5a5] shadow-sm hover:shadow-md";
+
 function uniqueSorted(values: string[]) {
   return [...new Set(values.map((v) => v.trim()).filter(Boolean))].sort((a, b) =>
     a.localeCompare(b)
@@ -213,8 +216,8 @@ const topicBrowseCardClass = (active: boolean, topicId?: string) => {
   return cn(
     "origin-center rounded-2xl border-2 bg-gradient-to-br from-white via-white p-5 text-left",
     "shadow-[0_10px_30px_rgba(112,20,20,0.08)]",
-    "transition-all duration-300 ease-out",
-    "hover:-translate-y-[2px] hover:border-primary/60 hover:shadow-[0_12px_40px_rgba(112,20,20,0.12)]",
+    "transition-all duration-200 ease-out",
+    "hover:-translate-y-[2px] hover:scale-[1.02] hover:border-primary/60 hover:shadow-md",
     "motion-reduce:hover:translate-y-0",
     accent?.gradient ?? "to-rose-100/40",
     accent?.border   ?? "border-border/50",
@@ -252,11 +255,11 @@ const solvedPapersCategoryButtonClass = cn(
 
 const categoryTintClass: Partial<Record<ResourceHubCategory, string>> = {
   "general-notes": "bg-pink-50/60 border-pink-200/50 hover:bg-pink-50",
-  topicals: "bg-blue-50/60 border-blue-200/50 hover:bg-blue-50",
-  "yearly-past-papers": "bg-purple-50/60 border-purple-200/50 hover:bg-purple-50",
-  "examiner-reports": "bg-green-50/60 border-green-200/50 hover:bg-green-50",
-  checklists: "bg-yellow-50/60 border-yellow-200/50 hover:bg-yellow-50",
-  "quick-worksheets": "bg-orange-50/60 border-orange-200/50 hover:bg-orange-50",
+  topicals: SURFACE_ROSE,
+  "yearly-past-papers": SURFACE_ROSE,
+  "examiner-reports": SURFACE_ROSE,
+  checklists: SURFACE_ROSE,
+  "quick-worksheets": SURFACE_ROSE,
   vocabulary: "bg-rose-50/60 border-rose-200/50 hover:bg-rose-50",
 };
 
@@ -338,13 +341,6 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     return () => {
       if (topicTapTimeoutRef.current) clearTimeout(topicTapTimeoutRef.current);
     };
-  }, []);
-
-  const scrollToId = useCallback((id: string) => {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - 80;
-    window.scrollTo({ top, behavior: "smooth" });
   }, []);
 
   const safeResources = useMemo(
@@ -434,25 +430,11 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       .filter((entry) => (category === "topicals" ? true : entry.sections.length > 0));
   }, [category, guidedPreviewResources]);
 
-  const CATEGORY_SCROLL_TARGET: Record<ResourceHubCategory, string> = {
-    "general-notes": "notes-section",
-    vocabulary: "vocab-section",
-    topicals: "resource-filters",
-    "yearly-past-papers": "resource-filters",
-    "examiner-reports": "resource-filters",
-    checklists: "resource-filters",
-    "quick-worksheets": "resource-filters",
-    "solved-papers": "resource-filters",
-    featured: "resource-filters",
-  };
-
   function selectCategory(next: ResourceHubCategory | "all") {
     setSubject("all");
     setLevel("all");
     setYear("all");
     writeHub({ category: next, notesSubCategory: "unset", paper: "all", section: "all" });
-    const targetId = next === "all" ? "resource-hub" : CATEGORY_SCROLL_TARGET[next];
-    setTimeout(() => scrollToId(targetId), 120);
   }
 
   function openCategory(next: ResourceHubCategory) {
@@ -460,7 +442,6 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     setLevel("all");
     setYear("all");
     writeHub({ category: next, notesSubCategory: "unset", paper: "all", section: "all" });
-    setTimeout(() => scrollToId(CATEGORY_SCROLL_TARGET[next]), 120);
   }
 
   function handleTopicTileClick(id: ResourceNotesSubCategory) {
@@ -597,7 +578,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
             type="button"
             onClick={() => selectCategory("all")}
             className={cn(
-              "rounded-2xl border bg-white p-5 text-left shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0",
+              "rounded-2xl border bg-white p-5 text-left shadow-sm transition-all duration-200 ease-out hover:-translate-y-0.5 hover:scale-[1.02] hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100",
               category === "all" ? "border-primary/35 ring-1 ring-primary/20" : "border-border/70"
             )}
           >
@@ -634,8 +615,16 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
           })}
         </div>
 
+        <div id="notes-section" />
+        <div id="topicals-section" />
+        <div id="yearlies-section" />
+        <div id="scripts-section" />
+        <div id="marking-section" />
+        <div id="worksheets-section" />
+        <div id="vocab-section" />
+
         {category === "general-notes" && (
-          <div id="notes-section" className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
+          <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
             <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
               Browse Notes by Topic
             </h2>
@@ -665,7 +654,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         )}
 
         {category === "vocabulary" && (
-          <div id="vocab-section" className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
+          <div className="mb-12 rounded-2xl border border-border/60 bg-white p-6 shadow-sm sm:mb-14 sm:p-8">
             <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
               Browse Vocabulary by Type
             </h2>

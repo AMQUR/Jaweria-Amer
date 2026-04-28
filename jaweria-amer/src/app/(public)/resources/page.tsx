@@ -10,6 +10,7 @@ import { ChecklistBanner } from "@/components/checklist-banner";
 import { FileVaultCard } from "@/components/file-vault-card";
 import { RevisionGuideCard } from "@/components/revision-guide-card";
 import { MarathonBanner } from "@/components/marathon-banner";
+import { ResourcesPageScroll } from "@/components/resources-page-scroll";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -38,6 +39,7 @@ export default async function ResourcesPage() {
 
   return (
     <>
+      <ResourcesPageScroll />
       <section className="bg-gradient-to-b from-crimson to-crimson-dark pb-16 pt-28 sm:pb-20 sm:pt-36">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70 sm:text-xs">
@@ -65,7 +67,7 @@ export default async function ResourcesPage() {
         <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
           {/* 1 — YouTube */}
           <div
-            className="group flex flex-col justify-between gap-8 rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-xl transition-all duration-300 ease-out hover:scale-[1.02] hover:shadow-2xl sm:p-10 md:flex-row md:items-center md:gap-12"
+            className="group flex flex-col justify-between gap-8 rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-xl transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-md hover:shadow-2xl sm:p-10 md:flex-row md:items-center md:gap-12"
           >
             <div className="min-w-0 flex-1">
               <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white transition-transform duration-300 group-hover:scale-110">
