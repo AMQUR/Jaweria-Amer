@@ -1,0 +1,230 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/**
+ * Jaweria Amer — premium academic crimson / blush system
+ * Restrained pink as accent; deep ink for hierarchy; cream-white bases.
+ */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-serif);
+  /* Deep ink: headings & nav on light surfaces */
+  --color-ink: #221012;
+  --color-ink-muted: #4a383c;
+  --color-crimson: #701414;
+  --color-crimson-light: #8a2424;
+  --color-crimson-dark: #4a0c0c;
+  /* Accent pink: hover, focus, small highlights — not large fields */
+  --color-rose: #a84562;
+  --color-rose-light: #c46882;
+  --color-rose-dark: #86324d;
+  --color-blush: #fdf5f6;
+  --color-slate: #5a4f52;
+  --color-slate-light: #7d7174;
+  --color-brand: #701414;
+  --color-brand-accent: #a84562;
+  --color-brand-soft: #fdf5f6;
+  --color-cream: #faf9f8;
+  --color-cream-dark: #f3efef;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #fafaf9;
+  /* Slightly softer than pure ink — calmer body hierarchy */
+  --foreground: #34262a;
+  --card: #ffffff;
+  --card-foreground: #2d181c;
+  --popover: #ffffff;
+  --popover-foreground: #2d181c;
+  --primary: #701414;
+  --primary-foreground: #ffffff;
+  --secondary: #fdf5f6;
+  --secondary-foreground: #2d181c;
+  --muted: #f4f0f1;
+  --muted-foreground: #6b5d60;
+  --accent: #fdf5f6;
+  --accent-foreground: #2d181c;
+  --destructive: oklch(0.52 0.2 25);
+  --border: #e8e1e2;
+  --input: #e0d8d9;
+  --ring: #a84562;
+  --chart-1: #701414;
+  --chart-2: #221012;
+  --chart-3: #5a4f52;
+  --chart-4: #a84562;
+  --chart-5: #8a2424;
+  --radius: 0.75rem;
+  --sidebar: #fafaf9;
+  --sidebar-foreground: #2d181c;
+  --sidebar-primary: #701414;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #fdf5f6;
+  --sidebar-accent-foreground: #2d181c;
+  --sidebar-border: #e8e1e2;
+  --sidebar-ring: #a84562;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/40;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+  html {
+    @apply font-sans scroll-smooth;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif text-ink tracking-tight;
+  }
+  h1 {
+    @apply text-balance;
+  }
+  h2,
+  h3 {
+    letter-spacing: -0.02em;
+  }
+
+  [id$="-section"] {
+    scroll-margin-top: 80px;
+  }
+}
+
+@keyframes heroFade {
+  from {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Subtle section entrance — no layout shift; disabled when user prefers reduced motion */
+.premium-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes premium-section-in {
+    from {
+      opacity: 0;
+      transform: translateY(1.15rem);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .premium-reveal {
+    opacity: 0;
+    animation: premium-section-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .premium-reveal-delay-1 {
+    animation-delay: 0.1s;
+  }
+
+  .premium-reveal-delay-2 {
+    animation-delay: 0.18s;
+  }
+
+  .premium-reveal-delay-3 {
+    animation-delay: 0.26s;
+  }
+
+  .premium-reveal-delay-4 {
+    animation-delay: 0.34s;
+  }
+
+  /* Resources hub — topic tile tap (transform only; ~180ms; no layout shift) */
+  @keyframes resource-topic-tap {
+    0% {
+      transform: scale(1);
+    }
+    40% {
+      transform: scale(1.01);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  .resource-topic-tap-active {
+    animation: resource-topic-tap 0.18s ease-out;
+  }
+
+  /* Homepage Results Ticker — subtle block fade (counter animates in component) */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+}
+
+/* Stats ticker: show immediately when user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
