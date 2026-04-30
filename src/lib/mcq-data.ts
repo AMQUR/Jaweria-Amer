@@ -38,455 +38,6 @@ function validateMcqAnswerKeys(sets: Record<string, McqSet>): void {
 }
 
 const mcqSetsInternal: Record<string, McqSet> = {
-  "mcq-compound-complex-sentences": {
-    id: "mcq-compound-complex-sentences",
-    title: "5-Minute Drill: Clear Sentences & Joining",
-    description:
-      "10 questions · 5 minutes · exam level. Sentences and fragments, commas in real 1123-style lines, and quick fixes — plain wording, no grammar labels.",
-    timeLimit: 300,
-    questions: [
-      // SECTION A — sentence vs fragment (3)
-      {
-        section: "A",
-        question: "Which option is a complete sentence?",
-        options: {
-          A: "Running through the park in the rain.",
-          B: "Because the bell had already rung.",
-          C: "The team celebrated after the final whistle.",
-          D: "Although the coach was pleased with the effort.",
-        },
-        answer: "C",
-        explanation:
-          'A sentence must express a full thought with a subject and a main verb. "The team celebrated after the final whistle" stands alone. A, B, and D are fragments — they do not finish the idea on their own.',
-      },
-      {
-        section: "A",
-        question: "Which option is a fragment, not a sentence?",
-        options: {
-          A: "She closed the window before the storm arrived.",
-          B: "Hoping for better weather tomorrow.",
-          C: "They waited at the bus stop for twenty minutes.",
-          D: "The exam was harder than we expected.",
-        },
-        answer: "B",
-        explanation:
-          '"Hoping for better weather tomorrow" has no subject paired with a full statement — it cannot stand alone. The other options are complete sentences.',
-      },
-      {
-        section: "A",
-        question: "Is this a sentence or a fragment?\n\"While the audience was still clapping.\"",
-        options: {
-          A: "A sentence — it has a subject and a verb.",
-          B: "A fragment — it starts with \"While\" and does not finish the thought.",
-          C: "A sentence — it ends with a full stop.",
-          D: "A fragment — it cannot stand alone because the main idea never arrives.",
-        },
-        answer: "B",
-        explanation:
-          'The line has a subject and a verb inside the subordinate clause, but it still depends on a main clause ("...they kept cheering") that never arrives. A full stop alone cannot make it complete — it is a fragment.',
-      },
-      // SECTION B — comma placement (4)
-      {
-        section: "B",
-        question:
-          "Where should the comma go?\n\"After the results were announced the hall fell silent.\"",
-        options: {
-          A: "After the results were announced, the hall fell silent.",
-          B: "After, the results were announced the hall fell silent.",
-          C: "After the results were announced the hall, fell silent.",
-          D: "No comma is needed.",
-        },
-        answer: "A",
-        explanation:
-          'When the opening part cannot stand alone as a sentence, put a comma after it: "After the results were announced, the hall fell silent."',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence is punctuated correctly? (The extra detail about the book could be removed.)",
-        options: {
-          A: "The novel which won the prize was translated into twelve languages.",
-          B: "The novel, which won the prize, was translated into twelve languages.",
-          C: "The novel which won the prize, was translated into twelve languages.",
-          D: "The novel, which won the prize was translated into twelve languages.",
-        },
-        answer: "B",
-        explanation:
-          'If the part about winning the prize is extra information, use a comma before and after it: "The novel, which won the prize, was translated..."',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence correctly joins two full ideas with a comma and \"but\"? (Cambridge-style: comma before the coordinator between two independent clauses.)",
-        options: {
-          A: "The plan looked simple it failed at the first step.",
-          B: "The plan looked simple, but it failed at the first step.",
-          C: "The plan looked simple but, it failed at the first step.",
-          D: "The plan looked simple, it failed at the first step.",
-        },
-        answer: "B",
-        explanation:
-          'Two independent clauses cannot be fused with no punctuation (A) or joined with only a comma (D — a comma splice). The comma must sit immediately before the coordinator: "The plan looked simple, but it failed at the first step." C misplaces the comma after "but."',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence avoids a comma splice? (Two full ideas need proper linking.)",
-        options: {
-          A: "The ferry was cancelled, we took the train instead.",
-          B: "The ferry was cancelled; we took the train instead.",
-          C: "The ferry was cancelled we took the train instead.",
-          D: "The ferry was cancelled, and, we took the train instead.",
-        },
-        answer: "B",
-        explanation:
-          'You cannot link two full ideas with only a comma (that is a comma splice). A semicolon is one correct fix: "The ferry was cancelled; we took the train instead."',
-      },
-      // SECTION C — exam-style correction (3)
-      {
-        section: "C",
-        question: "Which rewrite fixes the error?\n\"Because she revised every evening. She passed with confidence.\"",
-        options: {
-          A: "Because she revised every evening, so she passed with confidence.",
-          B: "She revised every evening. Because she passed with confidence.",
-          C: "Because she revised every evening; she passed with confidence.",
-          D: "She passed with confidence because she revised every morning.",
-        },
-        answer: "D",
-        explanation:
-          "The original sentence is incorrect because 'Because she revised every evening' is a fragment. The correct rewrite combines the ideas into one complete sentence without a comma before 'because': She passed with confidence because she revised every morning.",
-      },
-      {
-        section: "C",
-        question: "Where should the comma go?\n\"Harry and James play cricket and watch football.\"",
-        options: {
-          A: "Harry, and James play cricket and watch football.",
-          B: "Harry and James, play cricket and watch football.",
-          C: "Harry and James play cricket, and watch football.",
-          D: "No comma is needed.",
-        },
-        answer: "D",
-        explanation:
-          "No comma is needed because 'Harry and James' is a compound subject, and 'play cricket and watch football' is a compound predicate. Commas are not used to separate compound subjects or verbs joined by 'and'.",
-      },
-      {
-        section: "C",
-        question: "Which sentence is written correctly?",
-        options: {
-          A: "She practised daily however her scores barely moved.",
-          B: "She practised daily, yet her scores barely moved.",
-          C: "She practised daily yet, her scores barely moved.",
-          D: "She practised daily; yet her scores barely moved.",
-        },
-        answer: "B",
-        explanation:
-          '"Yet" joins two independent clauses like "but," with a comma before it: "She practised daily, yet her scores barely moved." A is wrong because "however" is not a plain coordinator here — you would need a full stop or semicolon before "However,". C misplaces the comma; D uses a semicolon before "yet," which is heavy and non-standard for this pattern.',
-      },
-    ],
-  },
-
-  "mcq-common-grammatical-errors": {
-    id: "mcq-common-grammatical-errors",
-    title: "5-Minute Drill: Common Errors",
-    description:
-      "10 questions · 5 minutes. Quick checks on words, tense, and punctuation that often cost marks — plain wording throughout.",
-    timeLimit: 300,
-    questions: [
-      // SECTION A — Basic Accuracy (3)
-      {
-        section: "A",
-        question: "Which sentence is written correctly?",
-        options: {
-          A: "Neither of the answers are correct.",
-          B: "Neither of the answers is correct.",
-          C: "Neither of the answers were correct.",
-          D: "Neither of the answers be correct.",
-        },
-        answer: "B",
-        explanation:
-          'Use a singular verb with "neither of": "Neither of the answers is correct."',
-      },
-      {
-        section: "A",
-        question: "Which sentence is written correctly?",
-        options: {
-          A: "\"That’s amazing\", she said.",
-          B: "\"That’s amazing!\", she said.",
-          C: "\"That’s amazing\"! she said.",
-          D: "\"That’s amazing!\" she said.",
-        },
-        answer: "D",
-        explanation:
-          "Use the exclamation mark inside the quotation marks, and do not add a comma before the reporting clause. The exclamation mark already ends the sentence: \"That's amazing!\" she said.",
-      },
-      {
-        section: "A",
-        question: "Which word fits best?\n\"The new rules will _____ everyone in Year 11.\"",
-        options: {
-          A: "affect",
-          B: "effect",
-          C: "affects",
-          D: "effects",
-        },
-        answer: "A",
-        explanation:
-          'You need a verb meaning "influence": "will affect everyone."',
-      },
-      // SECTION B — Common Exam Errors (4)
-      {
-        section: "B",
-        question: "Which sentence uses the correct word?",
-        options: {
-          A: "We reached the station than boarded the train.",
-          B: "We reached the station then boarded the train.",
-          C: "We reached the station then the train was late than expected.",
-          D: "We reached the station than the train was late then expected.",
-        },
-        answer: "B",
-        explanation:
-          '"Then" relates to time or sequence. "Than" is used for comparison.',
-      },
-      {
-        section: "B",
-        question: "Which sentence is written correctly?",
-        options: {
-          A: "There were less students on the bus today.",
-          B: "She has fewer money than her sister.",
-          C: "There were fewer students on the bus today.",
-          D: "She has fewer time to finish than him.",
-        },
-        answer: "C",
-        explanation:
-          'Use "fewer" with things you can count ("students"); "less" with amounts like time or money.',
-      },
-      {
-        section: "B",
-        question: "Which sentence uses the correct word?",
-        options: {
-          A: "Their is a quiet corner near the library.",
-          B: "There revision notes are on the desk.",
-          C: "Their revision group meets after school.",
-          D: "The students left there bags in class.",
-        },
-        answer: "C",
-        explanation:
-          '"Their" shows possession. "There" refers to a place or position.',
-      },
-      {
-        section: "B",
-        question: "Which sentence is written correctly?",
-        options: {
-          A: "Every one of the players were ready for kick-off.",
-          B: "Every one of the players was ready for kick-off.",
-          C: "Each of the players were ready for kick-off.",
-          D: "Everyone of the players was ready for kick-off.",
-        },
-        answer: "B",
-        explanation:
-          'With "every one of the + plural noun," the phrase "every one" is singular, so use "was." "Each of the players" also needs a singular verb ("was") — C is wrong. "Everyone of" is not standard English (say "everyone in the team").',
-      },
-      // SECTION C — Fix the Sentence (3)
-      {
-        section: "C",
-        question: "Which version fixes the mistake?\n\"Running for the bus, her books fell on the steps.\"",
-        options: {
-          A: "Running for the bus, her books dropped on the steps.",
-          B: "Running for the bus, she dropped her books on the steps.",
-          C: "Her books, running for the bus, fell on the steps.",
-          D: "She was running for the bus her books fell on the steps.",
-        },
-        answer: "B",
-        explanation:
-          'The person running should follow the opening phrase: "she dropped her books."',
-      },
-      {
-        section: "C",
-        question: "Which sentence is written correctly?",
-        options: {
-          A: "The research, carried out over three years, have produced useful results.",
-          B: "The research, carried out over three years, has produced useful results.",
-          C: "The research carried out over three years have produced useful results.",
-          D: "The research, carried out over three years has produced useful results.",
-        },
-        answer: "B",
-        explanation:
-          '"Research" is singular here, so use "has produced"; keep commas around the added phrase.',
-      },
-      {
-        section: "C",
-        question: "Where is the mistake?\n\"The evidence shows that the results supports our idea.\"",
-        options: {
-          A: "\"Evidence shows\" should be \"evidence show.\"",
-          B: "\"Results supports\" should be \"results support.\"",
-          C: "The word \"that\" should be removed.",
-          D: "\"Our idea\" should be \"us idea.\"",
-        },
-        answer: "B",
-        explanation:
-          'Plural "results" needs "support," not "supports."',
-      },
-    ],
-  },
-
-  // ══════════════════════════════════════════════════════════════════════
-  // 5-MINUTE DRILL: SENTENCES & COMMAS
-  // ══════════════════════════════════════════════════════════════════════
-  "mcq-sentence-comma-5min": {
-    id: "mcq-sentence-comma-5min",
-    title: "5-Minute Drill: Sentences & Commas",
-    description:
-      "10 questions · 5 minutes. Identify sentences vs fragments, place commas correctly, and fix common exam errors — built from real 1123 marking patterns.",
-    timeLimit: 300,
-    questions: [
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION A — Identify sentence vs fragment
-      // ──────────────────────────────────────────────────────────────────
-      {
-        section: "A",
-        question: "Which of the following is a complete sentence?",
-        options: {
-          A: "Running through the park every morning.",
-          B: "Because she was tired.",
-          C: "The dog barked loudly.",
-          D: "After the long and exhausting journey.",
-        },
-        answer: "C",
-        explanation:
-          'A complete sentence needs a subject and a verb that together express a full thought. "The dog barked loudly" has both (subject: "The dog"; verb: "barked") and makes sense on its own. The other options are fragments — they either lack a main verb or do not finish the idea on their own.',
-      },
-      {
-        section: "A",
-        question: "Which of the following is a fragment, not a sentence?",
-        options: {
-          A: "She finished her homework before dinner.",
-          B: "The concert was very loud.",
-          C: "Although it was raining heavily.",
-          D: "They arrived at the station on time.",
-        },
-        answer: "C",
-        explanation:
-          '"Although it was raining heavily" cannot stand alone as a sentence — it leaves the reader waiting for the rest of the idea. The other options each finish a full thought on their own.',
-      },
-      {
-        section: "A",
-        question: "Identify the sentence.",
-        options: {
-          A: "During the summer holidays in July.",
-          B: "The scientists discovered a new species.",
-          C: "Working hard to meet the deadline.",
-          D: "Before the sun had even risen.",
-        },
-        answer: "B",
-        explanation:
-          '"The scientists discovered a new species" is the only option with a clear subject ("The scientists") and a finite verb ("discovered") that together form a complete thought. The remaining options are fragments — they do not stand alone as full sentences.',
-      },
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION B — Comma placement
-      // ──────────────────────────────────────────────────────────────────
-      {
-        section: "B",
-        question:
-          "Which sentence uses commas correctly when listing items?",
-        options: {
-          A: "She bought apples oranges, and bananas.",
-          B: "She bought apples, oranges, and bananas.",
-          C: "She bought, apples, oranges and bananas.",
-          D: "She bought apples, oranges and, bananas.",
-        },
-        answer: "B",
-        explanation:
-          'In a list of three or more items, commas must separate each item: "She bought apples, oranges, and bananas." A comma before the final "and" (sometimes called an Oxford comma) is acceptable in Cambridge international English and avoids ambiguity. A omits the comma after "apples"; C and D misplace commas.',
-      },
-      {
-        section: "B",
-        question:
-          "Where should the comma be placed in this sentence?\n\"After finishing her homework she went out to play.\"",
-        options: {
-          A: "After \"finishing\"",
-          B: "After \"she\"",
-          C: "After \"homework\"",
-          D: "No comma is needed.",
-        },
-        answer: "C",
-        explanation:
-          'When an opening phrase comes before the main idea, put a comma after that phrase. "After finishing her homework" is the opening part, so the comma goes after "homework": "After finishing her homework, she went out to play."',
-      },
-      {
-        section: "B",
-        question:
-          "Which sentence correctly uses a comma before a joining word like \"but\"?",
-        options: {
-          A: "She wanted to go, but she was tired.",
-          B: "She wanted to go but, she was tired.",
-          C: "She wanted, to go but she was tired.",
-          D: "She, wanted to go but she was tired.",
-        },
-        answer: "A",
-        explanation:
-          'When two full ideas are joined by a word like "and," "but," or "yet," use a comma before that word: "She wanted to go, but she was tired." The other options misplace or omit the comma.',
-      },
-      {
-        section: "B",
-        question:
-          "My brother is a doctor. Which sentence adds where he lives, using commas correctly?",
-        options: {
-          A: "My brother who lives in London is a doctor.",
-          B: "My brother, who lives in London, is a doctor.",
-          C: "My brother, who lives in London is a doctor.",
-          D: "My brother who lives, in London, is a doctor.",
-        },
-        answer: "B",
-        explanation:
-          'When the extra detail could be lifted out and the sentence still works ("My brother is a doctor"), put a comma before and after that detail: "My brother, who lives in London, is a doctor."',
-      },
-      // ──────────────────────────────────────────────────────────────────
-      // SECTION C — Exam-style corrections
-      // ──────────────────────────────════════════════════════════════════
-      {
-        section: "C",
-        question:
-          "Choose the correctly punctuated version of the following:\n\"The teacher explained the lesson the students took notes.\"",
-        options: {
-          A: "The teacher explained the lesson, the students took notes.",
-          B: "The teacher explained the lesson; the students took notes.",
-          C: "The teacher explained, the lesson the students took notes.",
-          D: "The teacher explained the lesson the students, took notes.",
-        },
-        answer: "B",
-        explanation:
-          'The original is a run-on — two full sentences joined without punctuation. A semicolon correctly separates two closely related full sentences. Option A creates a comma splice (two full sentences joined only by a comma, which is incorrect). Options C and D misplace punctuation.',
-      },
-      {
-        section: "C",
-        question:
-          "Which of the following fixes the fragment by turning it into a complete sentence?",
-        options: {
-          A: "Because the match was cancelled. The team was disappointed.",
-          B: "The team was disappointed because the match was cancelled.",
-          C: "Because the match was cancelled, and the team was disappointed.",
-          D: "The team, because the match was cancelled.",
-        },
-        answer: "B",
-        explanation:
-          '"The team was disappointed because the match was cancelled" combines the ideas into one correct sentence. The part starting with "because" explains why and follows the main idea. Option A keeps them as two separate (incorrect) units; Options C and D remain grammatically incomplete.',
-      },
-      {
-        section: "C",
-        question:
-          "Which sentence is correctly punctuated throughout?",
-        options: {
-          A: "Despite the rain the match continued and the fans, cheered loudly.",
-          B: "Despite the rain, the match continued, and the fans cheered loudly.",
-          C: "Despite, the rain the match continued and the fans cheered loudly.",
-          D: "Despite the rain, the match continued and the fans, cheered loudly.",
-        },
-        answer: "B",
-        explanation:
-          'After the opening adverbial ("Despite the rain,"), a comma separates two independent clauses joined by "and": "the match continued" + "the fans cheered loudly." That needs a comma before "and." Correct line: "Despite the rain, the match continued, and the fans cheered loudly." A omits the first comma and misplaces another; C breaks "Despite the rain"; D wrongly splits "the fans cheered."',
-      },
-    ],
-  },
-
   // ══════════════════════════════════════════════════════════════════════
   // 5-MINUTE DRILL: PUNCTUATION
   // ══════════════════════════════════════════════════════════════════════
@@ -644,6 +195,610 @@ const mcqSetsInternal: Record<string, McqSet> = {
         answer: "B",
         explanation:
           '"The coach said, \"Train harder,\" and the players agreed." applies all rules correctly: a comma follows the dialogue tag; the spoken words begin with a capital; a comma inside the closing quotation mark separates the speech from what follows; and "and" continues in lower case because the sentence is not finished. Option A lacks a capital and a comma inside the quotes; Option C omits the comma after "said"; Option D creates a fragment after the full stop.',
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // FEELINGS PRACTICE WORKSHEET
+  // ══════════════════════════════════════════════════════════════════════
+  "mcq-feelings-practice": {
+    id: "mcq-feelings-practice",
+    title: "Feelings Practice Worksheet",
+    description:
+      "20 questions · 10 minutes. Read the quote and the context, then choose the feeling that best fits — exam-style vocabulary, no vague words.",
+    timeLimit: 600,
+    questions: [
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — From Dialogue
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "A",
+        question:
+          "\"I've never been on a stage before. What if I forget everything?\"\n— a student speaking before their first school assembly\n\nWhich feeling best describes the speaker?",
+        options: {
+          A: "Anxious",
+          B: "Proud",
+          C: "Excited",
+          D: "Relieved",
+        },
+        answer: "A",
+        explanation:
+          'The speaker fears forgetting and has never done this before — both are signs of anxiety. "Proud" or "excited" would imply confidence or anticipation, which the words do not support.',
+      },
+      {
+        section: "A",
+        question:
+          "\"You actually finished the whole thing? In two days?\"\n— said to a classmate who completed a group project alone\n\nWhich feeling best describes the speaker?",
+        options: {
+          A: "Angry",
+          B: "Relieved",
+          C: "Impressed",
+          D: "Sad",
+        },
+        answer: "C",
+        explanation:
+          'The question and emphasis on "In two days?" show the speaker cannot quite believe what they are hearing — they are impressed and astonished by the achievement.',
+      },
+      {
+        section: "A",
+        question:
+          "\"I told you I could do it, and I did. Nobody believed me.\"\n— after winning first place in a competition nobody expected them to win\n\nWhich feeling best describes the speaker?",
+        options: {
+          A: "Shocked",
+          B: "Proud",
+          C: "Amused",
+          D: "Lonely",
+        },
+        answer: "B",
+        explanation:
+          'The speaker has proved doubters wrong and explicitly states their achievement — this is pride. "Shocked" would imply the speaker did not expect to win, which contradicts "I told you I could do it."',
+      },
+      {
+        section: "A",
+        question:
+          "\"Oh, it doesn't matter. It's fine. I'm used to it.\"\n— said quietly after being left out of a group activity again\n\nWhich feeling best describes the speaker?",
+        options: {
+          A: "Angry",
+          B: "Excited",
+          C: "Nostalgic",
+          D: "Hurt",
+        },
+        answer: "D",
+        explanation:
+          'The quiet tone and "I\'m used to it" signal resignation and suppressed hurt. The speaker is hiding pain, not expressing anger. "Angry" is possible but the tone here is sadness, not rage.',
+      },
+      {
+        section: "A",
+        question:
+          "\"I can't believe they picked me. There must be a mistake.\"\n— after being selected as head prefect\n\nWhich feeling best describes the speaker?",
+        options: {
+          A: "Shocked",
+          B: "Proud",
+          C: "Amused",
+          D: "Relieved",
+        },
+        answer: "A",
+        explanation:
+          '"There must be a mistake" shows the speaker cannot accept the news as real — they are shocked and disbelieving. Accept "surprised" only if paired with self-doubt.',
+      },
+      {
+        section: "A",
+        question:
+          "\"Just jump. It's only water. You've done harder things than this.\"\n— said to themselves before diving off a high board for the first time\n\nWhich feeling best describes the speaker?",
+        options: {
+          A: "Nostalgic",
+          B: "Amused",
+          C: "Nervous",
+          D: "Bitter",
+        },
+        answer: "C",
+        explanation:
+          'The speaker is giving themselves a pep talk — which only happens when someone is scared or nervous. The self-talk shows fear being overridden by willpower.',
+      },
+      {
+        section: "A",
+        question:
+          "\"That was my grandmother's recipe. She used to make it every Friday.\"\n— looking at an old family photo album while cooking\n\nWhich feeling best describes the speaker?",
+        options: {
+          A: "Proud",
+          B: "Nostalgic",
+          C: "Anxious",
+          D: "Eager",
+        },
+        answer: "B",
+        explanation:
+          'The speaker is recalling a memory tied to a lost or absent person — this is nostalgia. The past tense "used to" reinforces that the experience is remembered rather than present.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION B — From Narrative Detail
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "B",
+        question:
+          "\"She read the email three times, then closed her laptop without replying.\"\n— after receiving unexpected criticism from her manager\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Amused",
+          B: "Carefree",
+          C: "Nostalgic",
+          D: "Hurt",
+        },
+        answer: "D",
+        explanation:
+          'Reading something multiple times and then going silent — without replying — shows the character has been stunned or hurt. The unexpected nature of the criticism deepens the impact.',
+      },
+      {
+        section: "B",
+        question:
+          "\"His hands shook as he unfolded the letter, but his voice was steady when he read it aloud.\"\n— opening exam results in front of his family\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Tense",
+          B: "Relieved",
+          C: "Carefree",
+          D: "Proud",
+        },
+        answer: "A",
+        explanation:
+          'The shaking hands reveal physical anxiety even as the character tries to appear calm. The contrast between inner tension and outward composure is the key detail here.',
+      },
+      {
+        section: "B",
+        question:
+          "\"She stood at the back of the room, arms folded, watching everyone else celebrate.\"\n— after her team won but she had been benched for the final match\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Relieved",
+          B: "Frustrated",
+          C: "Amused",
+          D: "Nostalgic",
+        },
+        answer: "B",
+        explanation:
+          'Standing apart with arms folded while others celebrate shows the character feels left out and bitter. She should share in the victory but cannot, because she was excluded from playing.',
+      },
+      {
+        section: "B",
+        question:
+          "\"He kept checking over his shoulder, walking faster with each step.\"\n— walking home alone through an unfamiliar street at night\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Nostalgic",
+          B: "Excited",
+          C: "Scared",
+          D: "Amused",
+        },
+        answer: "C",
+        explanation:
+          'Checking over the shoulder and speeding up are instinctive fear responses. The unfamiliar setting at night reinforces that the character feels vulnerable and frightened.',
+      },
+      {
+        section: "B",
+        question:
+          "\"For the first time in months, she put her phone down and just listened to the rain.\"\n— sitting by the window after a long period of stress\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Relieved",
+          B: "Anxious",
+          C: "Frustrated",
+          D: "Proud",
+        },
+        answer: "A",
+        explanation:
+          '"For the first time in months" tells us this moment is rare. The act of putting the phone down and simply listening suggests the stress has lifted — the character is finally at peace.',
+      },
+      {
+        section: "B",
+        question:
+          "\"He laughed so hard that his drink came out of his nose, and he didn't even care.\"\n— during a lunch break with old school friends he hadn't seen in years\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Lonely",
+          B: "Amused",
+          C: "Tense",
+          D: "Determined",
+        },
+        answer: "B",
+        explanation:
+          'Uncontrollable laughter and not caring about embarrassment show complete carefree amusement. The reunion context deepens the happiness — he is fully at ease.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION C — Mixed Feelings (Harder)
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "C",
+        question:
+          "\"She wanted to scream at him, but instead she smiled and said, 'Good luck with that.'\"\n— responding to someone who had just taken credit for her idea in a meeting\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Happy",
+          B: "Relieved",
+          C: "Nostalgic",
+          D: "Angry",
+        },
+        answer: "D",
+        explanation:
+          'The urge to scream reveals rage. The sarcastic smile and dismissive comment are controlled ways of expressing contempt. Students who write "happy" should be redirected — the smile is not genuine.',
+      },
+      {
+        section: "C",
+        question:
+          "\"I know I should be excited, but honestly, I just feel tired.\"\n— said the night before leaving for a trip they had planned for a year\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Overwhelmed",
+          B: "Proud",
+          C: "Amused",
+          D: "Nostalgic",
+        },
+        answer: "A",
+        explanation:
+          'The character is fighting conflicting feelings — they know excitement is expected but feel drained instead. This exhaustion alongside a big event signals being overwhelmed. Accept "conflicted" if the student explains the contradiction.',
+      },
+      {
+        section: "C",
+        question:
+          "\"He stared at the empty chair across the dinner table and set down two plates anyway.\"\n— a father on the first evening after his daughter left for university\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Proud",
+          B: "Amused",
+          C: "Lonely",
+          D: "Relieved",
+        },
+        answer: "C",
+        explanation:
+          'Setting two plates out of habit shows the father has not yet adjusted to his daughter\'s absence. The empty chair is a symbol of loss. The dominant feeling is loneliness, with traces of nostalgia.',
+      },
+      {
+        section: "C",
+        question:
+          "\"She didn't clap when the announcement was made. She just nodded, once, and left.\"\n— after someone else was promoted to the position she had applied for\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Happy",
+          B: "Disappointed",
+          C: "Relieved",
+          D: "Amused",
+        },
+        answer: "B",
+        explanation:
+          'The restrained, silent exit — no clapping, just a single nod — communicates controlled disappointment. Restraint and silence are the key cues here. The feeling is defeat, not anger.',
+      },
+      {
+        section: "C",
+        question:
+          "\"'You're mad,' he said, grinning. 'Completely, absolutely mad.' He followed her anyway.\"\n— said to a friend who suggested climbing a fence to get into a closed park\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Frightened",
+          B: "Annoyed",
+          C: "Frustrated",
+          D: "Amused",
+        },
+        answer: "D",
+        explanation:
+          'The grin and the fact that he follows her reveal genuine delight, not criticism. He calls her "mad" playfully — the word "grinning" and "He followed her anyway" together show he is thrilled by the idea.',
+      },
+      {
+        section: "C",
+        question:
+          "\"I don't understand why they're making us do this. None of it makes any sense.\"\n— muttered during a confusing group task with no clear instructions\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Confused",
+          B: "Nostalgic",
+          C: "Relieved",
+          D: "Proud",
+        },
+        answer: "A",
+        explanation:
+          '"I don\'t understand" and "None of it makes any sense" both directly state the character\'s confusion. Frustration is present too, but confusion is the dominant and most specific feeling.',
+      },
+      {
+        section: "C",
+        question:
+          "\"She kept her hand raised even after the teacher had moved on, whispering 'please' under her breath.\"\n— a student desperate to answer a question she finally understood\n\nWhich feeling best describes the character?",
+        options: {
+          A: "Frightened",
+          B: "Nostalgic",
+          C: "Eager",
+          D: "Sad",
+        },
+        answer: "C",
+        explanation:
+          'The persistence — keeping her hand up after being passed over, whispering "please" — shows intense eagerness. The "please" signals desire, not politeness. The character is desperate to be heard.',
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // RESULT ADJECTIVES PRACTICE WORKSHEET
+  // ══════════════════════════════════════════════════════════════════════
+  "mcq-result-adjectives": {
+    id: "mcq-result-adjectives",
+    title: "Result Adjectives Practice Worksheet",
+    description:
+      "20 questions · 10 minutes. Read the quote, picture the scene, and choose the adjective cluster that best describes it — using the 8-cluster framework.",
+    timeLimit: 600,
+    questions: [
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — Clusters 1–4
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "A",
+        question:
+          "\"The dog planted its legs wide apart, every muscle locked, a low growl building in its chest.\"\n— a stray dog blocking the path ahead\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Calm / Peaceful",
+          B: "Dangerous / Threatening",
+          C: "Beautiful / Captivating",
+          D: "Tense / Dramatic",
+        },
+        answer: "B",
+        explanation:
+          'Every detail — the wide stance, locked muscles, low growl — signals threat. The dog is actively blocking the path and preparing to attack. The scene is Dangerous / Threatening.',
+      },
+      {
+        section: "A",
+        question:
+          "\"The current dragged at her ankles, pulling harder with each step, the rocks invisible beneath the foam.\"\n— crossing a swollen river after heavy rain\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Chaotic / Frantic",
+          B: "Powerful / Energetic",
+          C: "Dangerous / Threatening",
+          D: "Mysterious / Otherworldly",
+        },
+        answer: "C",
+        explanation:
+          'The pulling current and invisible rocks create a direct personal threat. Students may choose "chaotic" — but the focus is on danger to the character, not disorder. The scene is Dangerous / Threatening.',
+      },
+      {
+        section: "A",
+        question:
+          "\"The wave hit the seawall and hurled spray thirty feet into the air, shaking the ground beneath us.\"\n— watching a winter storm from a harbour wall\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Dangerous / Threatening",
+          B: "Powerful / Energetic",
+          C: "Chaotic / Frantic",
+          D: "Tense / Dramatic",
+        },
+        answer: "B",
+        explanation:
+          'Spray hurled thirty feet and the ground shaking demonstrate enormous force. The observers are watching from safety — the emphasis is on power and energy, not personal danger. The scene is Powerful / Energetic.',
+      },
+      {
+        section: "A",
+        question:
+          "\"She launched herself from the starting block like something fired from a cannon, arms slicing the water.\"\n— the opening seconds of a swimming race\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Tense / Dramatic",
+          B: "Calm / Peaceful",
+          C: "Powerful / Energetic",
+          D: "Chaotic / Frantic",
+        },
+        answer: "C",
+        explanation:
+          '"Fired from a cannon" and "arms slicing the water" are images of explosive, controlled power. The scene is Powerful / Energetic.',
+      },
+      {
+        section: "A",
+        question:
+          "\"The frost had turned every blade of grass into a slender crystal, and the whole field glittered as if someone had scattered diamonds.\"\n— early morning in winter\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Mysterious / Otherworldly",
+          B: "Beautiful / Captivating",
+          C: "Calm / Peaceful",
+          D: "Powerful / Energetic",
+        },
+        answer: "B",
+        explanation:
+          'The simile of scattered diamonds focuses on visual beauty. The scene is still and lovely — not mysterious or threatening. The scene is Beautiful / Captivating.',
+      },
+      {
+        section: "A",
+        question:
+          "\"The fabric was so finely woven that it seemed to change colour with every fold, shifting from copper to gold to deep burgundy.\"\n— examining a hand-crafted shawl at a market stall\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Beautiful / Captivating",
+          B: "Unpleasant / Cruel",
+          C: "Mysterious / Otherworldly",
+          D: "Powerful / Energetic",
+        },
+        answer: "A",
+        explanation:
+          'The shifting colours and fine craftsmanship draw the eye and hold attention. The scene is Beautiful / Captivating.',
+      },
+      {
+        section: "A",
+        question:
+          "\"The boat drifted without direction, the oars resting, the only sound the soft lap of water against wood.\"\n— floating on a lake at dusk\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Mysterious / Otherworldly",
+          B: "Tense / Dramatic",
+          C: "Calm / Peaceful",
+          D: "Beautiful / Captivating",
+        },
+        answer: "C",
+        explanation:
+          'Drifting without effort, resting oars, and the single soft sound all suggest complete stillness and ease. The scene is Calm / Peaceful.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION B — Clusters 5–8
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "B",
+        question:
+          "\"She closed her eyes and let the warmth of the sunlit wall soak into her back, the traffic noise fading to nothing.\"\n— sitting in a sheltered courtyard after a stressful morning\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Calm / Peaceful",
+          B: "Beautiful / Captivating",
+          C: "Chaotic / Frantic",
+          D: "Tense / Dramatic",
+        },
+        answer: "A",
+        explanation:
+          'The fading of noise and the sensation of warmth soaking in describe a moment of total quiet and recovery. The scene is Calm / Peaceful.',
+      },
+      {
+        section: "B",
+        question:
+          "\"Bags split open across the pavement, papers whipping in every direction, people shouting over each other and nobody listening.\"\n— a market stall collapsing in strong wind\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Dangerous / Threatening",
+          B: "Tense / Dramatic",
+          C: "Powerful / Energetic",
+          D: "Chaotic / Frantic",
+        },
+        answer: "D",
+        explanation:
+          'Split bags, flying papers, and overlapping shouts all create disorder without a clear focus. The scene is Chaotic / Frantic.',
+      },
+      {
+        section: "B",
+        question:
+          "\"He poured, stirred, tasted, spat, added salt, added sugar, tasted again, then started the whole thing over from scratch.\"\n— a student cooking without a recipe for the first time\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Chaotic / Frantic",
+          B: "Unpleasant / Cruel",
+          C: "Tense / Dramatic",
+          D: "Powerful / Energetic",
+        },
+        answer: "A",
+        explanation:
+          'The rapid repetition of actions with no clear method signals disorder, not tension. Starting over from scratch confirms the lack of control. The scene is Chaotic / Frantic.',
+      },
+      {
+        section: "B",
+        question:
+          "\"The fog swallowed the path ahead, and where the trees should have been there was only white silence.\"\n— walking through a forest at dawn\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Calm / Peaceful",
+          B: "Mysterious / Otherworldly",
+          C: "Tense / Dramatic",
+          D: "Dangerous / Threatening",
+        },
+        answer: "B",
+        explanation:
+          '"Swallowed" and "white silence" give the scene a surreal, dreamlike quality. The familiar (trees, path) has been erased by something unnatural. The scene is Mysterious / Otherworldly.',
+      },
+      {
+        section: "B",
+        question:
+          "\"Roots twisted upward through the stone floor as if the building had grown out of the earth rather than been built on it.\"\n— entering an abandoned temple deep in the jungle\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Mysterious / Otherworldly",
+          B: "Beautiful / Captivating",
+          C: "Unpleasant / Cruel",
+          D: "Dangerous / Threatening",
+        },
+        answer: "A",
+        explanation:
+          'Roots breaking through stone and the sense that the building "grew" rather than was built give the scene an unnatural, otherworldly quality. Students may choose "beautiful" — accept only if they also identify the strangeness.',
+      },
+      {
+        section: "B",
+        question:
+          "\"Nobody moved. The clock above the door ticked once, twice. Then the headteacher cleared her throat.\"\n— a disciplinary meeting in the school office\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Calm / Peaceful",
+          B: "Unpleasant / Cruel",
+          C: "Tense / Dramatic",
+          D: "Chaotic / Frantic",
+        },
+        answer: "C",
+        explanation:
+          'The stillness, the ticking clock, and the deliberate throat-clearing build suspense. Everyone is waiting for something uncomfortable to begin. The scene is Tense / Dramatic.',
+      },
+      {
+        section: "B",
+        question:
+          "\"His finger hovered over the send button for a full ten seconds before he pressed it.\"\n— submitting a university application at the last minute\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Tense / Dramatic",
+          B: "Chaotic / Frantic",
+          C: "Powerful / Energetic",
+          D: "Calm / Peaceful",
+        },
+        answer: "A",
+        explanation:
+          'The hesitation and the precision of "ten seconds" are tension cues. This single moment carries enormous weight. The scene is Tense / Dramatic.',
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION C — Nuanced choices
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "C",
+        question:
+          "\"The smell hit them before they saw it — a thick, rotten sweetness that sat at the back of the throat and refused to leave.\"\n— discovering spoiled food in a storage room\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Chaotic / Frantic",
+          B: "Dangerous / Threatening",
+          C: "Unpleasant / Cruel",
+          D: "Mysterious / Otherworldly",
+        },
+        answer: "C",
+        explanation:
+          '"Rotten sweetness" that "refused to leave" describes something repulsive and oppressive. There is no danger or chaos — only discomfort and revulsion. The scene is Unpleasant / Cruel.',
+      },
+      {
+        section: "C",
+        question:
+          "\"He spoke to her without looking up, waving his hand as though shooing a fly.\"\n— a manager responding to an employee\'s question\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Tense / Dramatic",
+          B: "Unpleasant / Cruel",
+          C: "Dangerous / Threatening",
+          D: "Chaotic / Frantic",
+        },
+        answer: "B",
+        explanation:
+          'The dismissive gesture — waving her away like a fly — is degrading and contemptuous. The behaviour is rude and cruel, not threatening or tense. The scene is Unpleasant / Cruel.',
+      },
+      {
+        section: "C",
+        question:
+          "\"The firework split the sky open, scattering gold and silver across the darkness, the boom arriving a half-second later and shaking the windows.\"\n— watching a firework display from a rooftop\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Beautiful / Captivating",
+          B: "Chaotic / Frantic",
+          C: "Powerful / Energetic",
+          D: "Tense / Dramatic",
+        },
+        answer: "C",
+        explanation:
+          '"Split the sky" and "shaking the windows" signal force and impact. Students may choose "beautiful" — but the verbs of force and the physical boom signal power, not delicacy. The scene is Powerful / Energetic.',
+      },
+      {
+        section: "C",
+        question:
+          "\"The corridor stretched ahead without end, every door identical, every light the same sickly yellow.\"\n— walking through an unfamiliar hospital at night\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Unpleasant / Cruel",
+          B: "Calm / Peaceful",
+          C: "Tense / Dramatic",
+          D: "Mysterious / Otherworldly",
+        },
+        answer: "D",
+        explanation:
+          'The endless, identical corridor and the sickly light create a surreal, disorienting quality. The repetition and endlessness suggest something outside normal reality. The scene is Mysterious / Otherworldly.',
+      },
+      {
+        section: "C",
+        question:
+          "\"She didn't run. She walked, slowly, straight towards the smoke, while everyone else went the other way.\"\n— a volunteer firefighter arriving at the scene\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Powerful / Energetic",
+          B: "Dangerous / Threatening",
+          C: "Tense / Dramatic",
+          D: "Calm / Peaceful",
+        },
+        answer: "C",
+        explanation:
+          'The contrast between her calm, deliberate walk and everyone else fleeing creates dramatic tension. The scene is Tense / Dramatic, not simply powerful — the drama comes from her composure against the chaos.',
+      },
+      {
+        section: "C",
+        question:
+          "\"The playground had been cemented over. Where the swings had been, there was a car park.\"\n— revisiting a childhood neighbourhood after many years\n\nWhich adjective cluster best describes the scene?",
+        options: {
+          A: "Calm / Peaceful",
+          B: "Mysterious / Otherworldly",
+          C: "Beautiful / Captivating",
+          D: "Unpleasant / Cruel",
+        },
+        answer: "D",
+        explanation:
+          'The childhood playground has been erased and replaced with something functional and cold. The scene is not simply sad — the cement is unnatural and oppressive to the memory. The scene is Unpleasant / Cruel.',
       },
     ],
   },

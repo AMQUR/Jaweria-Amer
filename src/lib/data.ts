@@ -1538,45 +1538,6 @@ const resourceLibrary: Resource[] = [
   },
   // ── Quick Worksheets — MCQs ──────────────────────────────────────────
   {
-    id: "mcq-compound-complex-sentences",
-    title: "5-Minute Drill: Clear Sentences & Joining",
-    category: "quick-worksheets",
-    type: "mcq",
-    subject: "English Language 1123",
-    level: "O Level",
-    paper: "Grammar",
-    year: "Practice",
-    fileUrl: "",
-    description:
-      "10 questions · 5 minutes. Sentences and fragments, commas, and quick fixes — exam-style wording, no grammar labels.",
-  },
-  {
-    id: "mcq-common-grammatical-errors",
-    title: "5-Minute Drill: Common Errors",
-    category: "quick-worksheets",
-    type: "mcq",
-    subject: "English Language 1123",
-    level: "O Level",
-    paper: "Grammar",
-    year: "Practice",
-    fileUrl: "",
-    description:
-      "10 exam-style multiple-choice questions on common grammar and wording mistakes, with instant scoring and explanations.",
-  },
-  {
-    id: "mcq-sentence-comma-5min",
-    title: "5-Minute Drill: Sentences & Commas",
-    category: "quick-worksheets",
-    type: "mcq",
-    subject: "English Language 1123",
-    level: "O Level",
-    paper: "Grammar",
-    year: "Practice",
-    fileUrl: "",
-    description:
-      "10 questions · 5 minutes. Identify sentences vs fragments, place commas correctly, and fix common exam errors — built from real 1123 marking patterns.",
-  },
-  {
     id: "mcq-punctuation-5min",
     title: "5-Minute Drill: Punctuation",
     category: "quick-worksheets",
@@ -1588,6 +1549,32 @@ const resourceLibrary: Resource[] = [
     fileUrl: "",
     description:
       "10 questions · 5 minutes. Dialogue format, em dashes, colons, and comma rules — the marks most students leave on the table.",
+  },
+  {
+    id: "mcq-feelings-practice",
+    title: "Feelings Practice Worksheet",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Reading",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "20 questions · 10 minutes. Read the quote and the context, then choose the feeling that best fits — exam-style vocabulary, no vague words.",
+  },
+  {
+    id: "mcq-result-adjectives",
+    title: "Result Adjectives Practice Worksheet",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Reading",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "20 questions · 10 minutes. Read the quote, picture the scene, and choose the adjective cluster that best describes it — using the 8-cluster framework.",
   },
 ];
 
