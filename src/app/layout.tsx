@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
-import { GoogleAnalytics } from "@/components/analytics/google-analytics";
+import Script from "next/script";
 import { StructuredData } from "@/components/analytics/structured-data";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
@@ -65,7 +65,26 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
-        <GoogleAnalytics />
+        {process.env.NEXT_PUBLIC_GA_ID &&
+          process.env.NODE_ENV === "production" && (
+            <>
+              <Script
+                src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+                strategy="afterInteractive"
+              />
+              <Script id="google-analytics" strategy="afterInteractive">
+                {`
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  window.gtag = gtag;
+                  gtag('js', new Date());
+                  gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}', {
+                    page_path: window.location.pathname,
+                  });
+                `}
+              </Script>
+            </>
+          )}
         <StructuredData />
         {children}
       </body>
