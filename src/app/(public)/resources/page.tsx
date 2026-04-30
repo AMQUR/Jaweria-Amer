@@ -9,7 +9,7 @@ import { ResourcesHub } from "@/components/resources-hub";
 import { FileVaultCard } from "@/components/file-vault-card";
 import { FiveDayPlanBanner } from "@/components/five-day-plan-banner";
 import { ResourcesPageScroll } from "@/components/resources-page-scroll";
-import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
+import { CARD_BASE, CARD_BUTTON, CARD_CONTENT, CARD_HOVER } from "@/components/resource-card-system";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -64,10 +64,10 @@ export default async function ResourcesPage() {
       />
 
       <section className="border-b border-border/70 bg-white pb-14 pt-10 sm:pb-16 sm:pt-12">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 sm:px-6 lg:px-8">
           {/* 1 — YouTube */}
           <div
-            className={`${CARD_BASE} group flex-col gap-5 border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] text-white sm:flex-row sm:gap-6`}
+            className={`${CARD_BASE} ${CARD_HOVER} group flex-col gap-5 border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] text-white sm:flex-row sm:gap-6`}
           >
             <div className="min-w-0 flex-1 self-stretch sm:self-auto">
               <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-transform duration-300 group-hover:scale-105">

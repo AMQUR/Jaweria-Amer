@@ -4,7 +4,7 @@ import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card
 
 export function FiveDayPlanBanner() {
   return (
-    <div className={`${CARD_BASE} flex-col gap-5 bg-gradient-to-r from-red-500 to-red-600 text-white border border-red-400 sm:flex-row sm:gap-6`}>
+    <div className={`${CARD_BASE} flex-col gap-5 bg-gradient-to-r from-red-500 to-red-600 text-white border border-red-400 shadow-md hover:scale-[1.015] hover:shadow-lg hover:shadow-[0_10px_30px_rgba(239,68,68,0.25)] sm:flex-row sm:gap-6`}>
       <div className="min-w-0 flex-1 self-stretch sm:self-auto">
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/15 text-white">
           <CalendarDays className="h-6 w-6" aria-hidden />

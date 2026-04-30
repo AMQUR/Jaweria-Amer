@@ -1,6 +1,6 @@
 import { ArrowRight, FolderOpen } from "lucide-react";
 
-import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
+import { CARD_BASE, CARD_BUTTON, CARD_CONTENT, CARD_HOVER } from "@/components/resource-card-system";
 
 const DRIVE_URL = "https://drive.google.com/drive/folders/1B3MN_5TiHfknp6Ao4BwlFRlmc89F1AHF";
 
@@ -10,7 +10,7 @@ export function FileVaultCard() {
       href={DRIVE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className={`${CARD_BASE} group flex-col gap-5 bg-gradient-to-r from-slate-100 to-slate-200 text-slate-900 border border-slate-300 sm:flex-row sm:gap-6`}
+      className={`${CARD_BASE} ${CARD_HOVER} group flex-col gap-5 bg-gradient-to-r from-slate-50 to-slate-100 text-slate-900 border border-slate-200 sm:flex-row sm:gap-6`}
     >
       <div className="min-w-0 flex-1 self-stretch sm:self-auto">
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/70 text-slate-900 transition-transform duration-300 group-hover:scale-105">
