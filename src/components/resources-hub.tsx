@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
+  ArrowRight,
   BookMarked,
   BookOpen,
   Brain,
@@ -571,8 +572,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
                   </span>
                   <h3 className="font-serif text-base font-semibold leading-snug text-ink">{pathway.title}</h3>
                   <p className="mt-3 text-sm leading-relaxed text-slate">{pathway.description}</p>
-                  <span className="mt-6 inline-flex items-center text-sm font-medium text-brand">
+                  <span className="mt-6 inline-flex items-center gap-1.5 rounded-lg bg-brand/10 px-3 py-1.5 text-sm font-semibold text-brand">
                     {pathway.cta}
+                    <ArrowRight className="h-3.5 w-3.5" aria-hidden />
                   </span>
                 </button>
               );

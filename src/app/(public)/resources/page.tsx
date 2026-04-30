@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     "Free hub: notes, topicals, yearlies, scripts, marking schemes, and MCQ drills for Cambridge O Level English (1123).",
   alternates: { canonical: "/resources" },
   openGraph: {
-    title: `Resources | ${siteConfig.name}`,
+    title: `Resources — ${siteConfig.name}`,
     description:
       "Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised for purposeful practice.",
     type: "website",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `Resources | ${siteConfig.name}`,
+    title: `Resources — ${siteConfig.name}`,
     description:
       "Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised for purposeful practice.",
   },

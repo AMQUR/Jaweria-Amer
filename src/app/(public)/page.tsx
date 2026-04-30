@@ -7,14 +7,15 @@ import {
   Users,
   Award,
   ChevronRight,
+  PlayCircle,
 } from "lucide-react";
 import { listMarketingCourses } from "@/lib/course-offerings";
 import { courses, siteConfig } from "@/lib/data";
 import { getSettings } from "@/lib/admin/store";
 import { getHomepageContent } from "@/lib/public-homepage";
-import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
+import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { whatsAppGroupUrl } from "@/lib/contact";
+import { contact, whatsAppGroupUrl } from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
 import { LiveSessionHero } from "@/components/live-session-hero";
@@ -99,6 +100,17 @@ export default async function HomePage() {
                   Join WhatsApp Community
                   <ArrowRight className="h-4 w-4" />
                 </TrackedWhatsAppLink>
+                <TrackedOutboundLink
+                  href={contact.youtube}
+                  channel="youtube"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Visit YouTube channel"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
+                >
+                  <PlayCircle className="h-4 w-4" aria-hidden />
+                  Watch on YouTube
+                </TrackedOutboundLink>
               </div>
               <Link
                 href="/courses"

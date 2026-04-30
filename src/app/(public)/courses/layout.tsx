@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     "Cambridge O Level, Literature, and Creative Writing programmes—rubric-aligned, feedback-driven, and structured for exam success.",
   alternates: { canonical: "/courses" },
   openGraph: {
-    title: "Courses",
+    title: "Courses — Jaweria Amer",
     description:
       "Cambridge O Level, Literature, and Creative Writing programmes—rubric-aligned, feedback-driven, and structured for exam success.",
     type: "website",
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Courses",
+    title: "Courses — Jaweria Amer",
     description:
       "Cambridge O Level, Literature, and Creative Writing programmes—rubric-aligned, feedback-driven, and structured for exam success.",
   },

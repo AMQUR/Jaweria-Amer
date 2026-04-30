@@ -51,13 +51,13 @@ export const metadata: Metadata = {
     "Meet Jaweria Amer. Cambridge English mentor focused on rubric-driven practice, examiner-aligned feedback, and calm mentorship for O Level students.",
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About",
+    title: "About — Jaweria Amer",
     description:
       "Meet Jaweria Amer. Cambridge English mentor focused on rubric-driven practice, examiner-aligned feedback, and calm mentorship for O Level students.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "About",
+    title: "About — Jaweria Amer",
     description:
       "Meet Jaweria Amer. Cambridge English mentor focused on rubric-driven practice, examiner-aligned feedback, and calm mentorship for O Level students.",
   },

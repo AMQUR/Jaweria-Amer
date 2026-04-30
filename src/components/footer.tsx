@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { SVGProps } from "react";
-import { Mail, MapPin, Phone, PlayCircle, UsersRound } from "lucide-react";
+import { Mail, MapPin, Phone, PlayCircle, UsersRound, Camera, Newspaper } from "lucide-react";
 import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { siteConfig } from "@/lib/data";
 import { ContactEmailLink } from "@/components/contact-email-link";
@@ -89,12 +89,41 @@ export function Footer() {
                   channel="youtube"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Visit YouTube channel"
                   className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
                 >
                   <PlayCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
                   <span>YouTube — English with Jaweria</span>
                 </TrackedOutboundLink>
               </li>
+              <li>
+                <TrackedOutboundLink
+                  href={contact.instagram}
+                  channel="instagram"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Follow on Instagram"
+                  className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
+                >
+                  <Camera className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
+                  <span>Instagram — @englishwithmissjay</span>
+                </TrackedOutboundLink>
+              </li>
+              {contact.facebook.trim() ? (
+                <li>
+                  <TrackedOutboundLink
+                    href={contact.facebook.trim()}
+                    channel="facebook"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Visit Facebook page"
+                    className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
+                  >
+                    <Newspaper className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
+                    <span>Facebook — Jaweria Amer</span>
+                  </TrackedOutboundLink>
+                </li>
+              ) : null}
               <li className="flex items-start gap-2.5 text-white/70">
                 <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
                 <span>{contact.locationLine}</span>
@@ -140,7 +169,7 @@ export function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-rose/50 hover:text-rose"
-              aria-label="English with Jaweria on Instagram"
+              aria-label="Follow on Instagram"
             >
               <InstagramGlyph className="h-5 w-5" />
             </TrackedOutboundLink>

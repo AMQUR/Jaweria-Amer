@@ -8,5 +8,5 @@ export function getSiteUrl(): URL {
       // fall through
     }
   }
-  return new URL("http://localhost:3000");
+  return new URL("https://jaweriaamer.com");
 }

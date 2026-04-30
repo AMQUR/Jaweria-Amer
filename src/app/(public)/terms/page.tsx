@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description:
     "Terms of Service for Jaweria Amer: usage of the Free Vault, intellectual property, and how student contact data is handled.",
   alternates: { canonical: "/terms" },
-  robots: { index: true, follow: true },
 };
 
 export default function TermsPage() {

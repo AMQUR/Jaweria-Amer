@@ -19,7 +19,10 @@ const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),
-  title: "Jaweria Amer",
+  title: {
+    default: "Jaweria Amer — O & A Level English with Miss Jay",
+    template: "%s — Jaweria Amer",
+  },
   description:
     "Cambridge English specialist helping students master O Level English 1123 with structured lessons, notes, and practice.",
   icons: {
@@ -35,6 +38,14 @@ export const metadata: Metadata = {
     "English Language Tuition Karachi",
   ],
   authors: [{ name: "Jaweria Amer" }],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+    },
+  },
   openGraph: {
     title: "Jaweria Amer",
     description:

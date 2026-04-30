@@ -8,7 +8,6 @@ export const metadata: Metadata = {
   description:
     "How Jaweria Amer collects and uses contact information for course enrollment.",
   alternates: { canonical: "/privacy" },
-  robots: { index: true, follow: true },
 };
 
 export default function PrivacyPage() {
