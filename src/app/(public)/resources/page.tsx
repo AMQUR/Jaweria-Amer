@@ -9,6 +9,7 @@ import { ResourcesHub } from "@/components/resources-hub";
 import { FileVaultCard } from "@/components/file-vault-card";
 import { FiveDayPlanBanner } from "@/components/five-day-plan-banner";
 import { ResourcesPageScroll } from "@/components/resources-page-scroll";
+import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -63,48 +64,44 @@ export default async function ResourcesPage() {
       />
 
       <section className="border-b border-border/70 bg-white pb-14 pt-10 sm:pb-16 sm:pt-12">
-        <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:px-8">
           {/* 1 — YouTube */}
           <div
-            className="group flex flex-col justify-between gap-8 rounded-2xl border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-xl transition-all duration-200 ease-out hover:scale-[1.02] hover:shadow-md hover:shadow-2xl sm:p-10 md:flex-row md:items-center md:gap-12"
+            className={`${CARD_BASE} group flex-col gap-5 border border-[#fecdd3]/20 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c] text-white sm:flex-row sm:gap-6`}
           >
-            <div className="min-w-0 flex-1">
-              <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-white/10 text-white transition-transform duration-300 group-hover:scale-110">
-                <PlayCircle className="h-7 w-7" aria-hidden />
+            <div className="min-w-0 flex-1 self-stretch sm:self-auto">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-white/10 text-white transition-transform duration-300 group-hover:scale-105">
+                <PlayCircle className="h-6 w-6" aria-hidden />
               </div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-white/60">
-                Channel
-              </p>
-              <h2 className="mt-2 text-2xl font-semibold text-white">
-                English with Jaweria on YouTube
-              </h2>
-              <p className="mt-3 max-w-2xl text-base leading-relaxed text-white/80">
-                Lesson-style explanations, exam thinking, and revision support — built to complement
-                the materials below.
-              </p>
+              <div className={CARD_CONTENT}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
+                  Channel
+                </p>
+                <h2 className="text-xl font-semibold text-white sm:text-2xl">
+                  English with Jaweria on YouTube
+                </h2>
+                <p className="max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
+                  Lesson-style explanations, exam thinking, and revision support — built to complement
+                  the materials below.
+                </p>
+              </div>
             </div>
-            <div className="shrink-0">
-              <TrackedOutboundLink
-                href={contact.youtube}
-                channel="youtube"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-white px-6 py-3 text-base font-medium text-[#7f1d1d] transition-all duration-200 hover:bg-[#ffe4e6] hover:scale-[1.03] active:scale-[0.98] sm:w-auto"
-              >
-                Open YouTube channel
-                <ExternalLink className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
-              </TrackedOutboundLink>
-            </div>
+            <TrackedOutboundLink
+              href={contact.youtube}
+              channel="youtube"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-[#7f1d1d] hover:bg-[#ffe4e6] sm:w-auto`}
+            >
+              Open YouTube channel
+              <ExternalLink className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+            </TrackedOutboundLink>
           </div>
 
           {/* 2 — File Vault (Google Drive) */}
           <FileVaultCard />
 
-        </div>
-      </section>
-
-      <section className="border-b border-border/70 bg-white pb-8 pt-0">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* 3 — 5-Day Plan */}
           <FiveDayPlanBanner />
         </div>
       </section>
