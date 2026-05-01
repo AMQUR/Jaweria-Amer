@@ -49,8 +49,9 @@ export function SecurePdfRenderer({
 
   if (isMobile) {
     const base = fileUrl.split("#")[0] ?? fileUrl;
-    const safeSrc =
-      base.startsWith("/resources/") && !base.includes("..")
+    const safeSrc = base.startsWith("http")
+      ? base
+      : base.startsWith("/resources/") && !base.includes("..")
         ? `${base}#toolbar=0&navpanes=0&scrollbar=1`
         : `/api/view-resource?id=${encodeURIComponent(resourceId)}`;
     return (

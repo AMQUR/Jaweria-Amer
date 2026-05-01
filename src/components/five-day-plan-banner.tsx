@@ -20,7 +20,7 @@ export function FiveDayPlanBanner() {
         </div>
       </div>
       <a
-        href="/resources/notes/5-day-plan-paper-1.pdf"
+        href="https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/5-day-plan-paper-1.pdf"
         target="_blank"
         rel="noopener noreferrer"
         className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-red-600 hover:bg-red-50 sm:w-auto`}

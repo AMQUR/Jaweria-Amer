@@ -44,7 +44,8 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
     (resource) =>
       Boolean(resource) &&
       (resource.type === "mcq" ||
-        (typeof resource.fileUrl === "string" && resource.fileUrl.startsWith("/resources/")))
+        (typeof resource.fileUrl === "string" &&
+          (resource.fileUrl.startsWith("/resources/") || resource.fileUrl.startsWith("http"))))
   );
   const resource = safeResources.find((r) => r.id === id);
   if (!resource) notFound();

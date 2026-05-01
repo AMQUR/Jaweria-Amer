@@ -17,6 +17,10 @@ export async function GET(req: NextRequest) {
       return new Response("Not found", { status: 404 });
     }
 
+    if (resource.fileUrl.startsWith("http")) {
+      return Response.redirect(resource.fileUrl, 302);
+    }
+
     if (!resource.fileUrl.startsWith("/resources/")) {
       return new Response("Not found", { status: 404 });
     }

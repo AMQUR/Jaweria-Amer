@@ -357,7 +357,8 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         (resource) =>
           Boolean(resource) &&
           (resource.type === "mcq" ||
-            (typeof resource.fileUrl === "string" && resource.fileUrl.startsWith("/resources/")))
+            (typeof resource.fileUrl === "string" &&
+              (resource.fileUrl.startsWith("/resources/") || resource.fileUrl.startsWith("https://"))))
       ),
     [resources]
   );
