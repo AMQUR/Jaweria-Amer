@@ -1,7 +1,7 @@
 import "server-only";
 
-import { mkdir, readFile, readdir, rm, stat, unlink, writeFile } from "fs/promises";
-import { basename, extname, join, relative } from "path";
+import { mkdir, readFile, rm, stat, unlink, writeFile } from "fs/promises";
+import { basename, extname, join } from "path";
 import { staticResources } from "@/lib/data";
 import { defaultHomepageContent } from "./defaults";
 import { mcqSets as staticMcqSets } from "@/lib/mcq-data";
@@ -9,10 +9,18 @@ import type { Resource, ResourceNotesSubCategory } from "@/lib/data";
 import type { McqSet, McqQuestion } from "@/lib/mcq-data";
 import { basenameFromFileUrl, cleanCopyOfTitlePrefix } from "@/lib/resource-ingestion";
 import type { CmsMcqSet, CmsResourceCategory, CmsResourceRecord, HomepageContent, UploadAsset } from "./cms-types";
+import {
+  bucketPathForUpload,
+  bucketPathFromUrl,
+  deleteByPublicUrl,
+  listSupabasePdfs,
+  readMetaJson,
+  uploadPdf,
+  writeMetaJson,
+} from "./supabase-storage";
 
 const DATA_DIR = join(process.cwd(), "data");
 const PUBLIC_DIR = join(process.cwd(), "public");
-const RESOURCE_ROOT = join(PUBLIC_DIR, "resources");
 const STATIC_RECORD_TIMESTAMP = "2024-01-01T00:00:00.000Z";
 
 const RESOURCE_RECORDS_FILE = "cms-resources.json";
@@ -50,14 +58,12 @@ async function ensureDir(pathname: string) {
 }
 
 async function readJSON<T>(filename: string, fallback: T): Promise<T> {
-  // ensureDir may throw on Vercel's read-only filesystem — swallow and attempt read anyway
+  // 1. Try local filesystem (works in local dev; fails gracefully on Vercel)
   try { await ensureDir(DATA_DIR); } catch {}
   try {
     const raw = await readFile(join(DATA_DIR, filename), "utf-8");
     const parsed: unknown = JSON.parse(raw) as unknown;
-    if (Array.isArray(fallback) && !Array.isArray(parsed)) {
-      return fallback;
-    }
+    if (Array.isArray(fallback) && !Array.isArray(parsed)) return fallback;
     if (
       fallback !== null &&
       typeof fallback === "object" &&
@@ -68,13 +74,22 @@ async function readJSON<T>(filename: string, fallback: T): Promise<T> {
     }
     return parsed as T;
   } catch {
-    return fallback;
+    // 2. Fall back to Supabase Storage (production / Vercel)
+    return readMetaJson(filename, fallback);
   }
 }
 
 async function writeJSON<T>(filename: string, value: T): Promise<void> {
-  await ensureDir(DATA_DIR);
-  await writeFile(join(DATA_DIR, filename), JSON.stringify(value, null, 2), "utf-8");
+  // 1. Try local filesystem
+  try {
+    await ensureDir(DATA_DIR);
+    await writeFile(join(DATA_DIR, filename), JSON.stringify(value, null, 2), "utf-8");
+    return;
+  } catch {
+    // Local FS is read-only (Vercel) — fall through to Supabase
+  }
+  // 2. Write to Supabase Storage as persistent backend
+  await writeMetaJson(filename, value);
 }
 
 function slugify(value: string) {
@@ -197,23 +212,16 @@ function defaultMcqMeta(id: string): Omit<CmsMcqSet, "questions" | "createdAt" |
 
 type SaveFileError = { error: string };
 
-async function saveFileToPublic(
+async function saveFileToSupabase(
   file: File,
   category: CmsResourceCategory,
   title: string
 ): Promise<string | SaveFileError> {
-  const fileExt = extname(file.name).toLowerCase();
-  if (fileExt !== ".pdf") {
-    return { error: "Only PDF files are allowed." };
-  }
   const folder = CATEGORY_TO_FOLDER[category];
-  const targetDir = join(RESOURCE_ROOT, folder);
-  await ensureDir(targetDir);
-  const targetName = `${slugify(title || file.name) || `resource-${Date.now()}`}.pdf`;
-  const targetPath = join(targetDir, targetName);
-  const buffer = Buffer.from(await file.arrayBuffer());
-  await writeFile(targetPath, buffer);
-  return `/resources/${folder}/${targetName}`;
+  const bucketPath = bucketPathForUpload(folder, title || file.name);
+  const result = await uploadPdf(file, bucketPath);
+  if ("error" in result) return result;
+  return result.url;
 }
 
 async function replaceHomepageBanner(file: File): Promise<string | SaveFileError> {
@@ -232,11 +240,17 @@ async function replaceHomepageBanner(file: File): Promise<string | SaveFileError
 }
 
 async function deletePublicFile(fileUrl: string | undefined) {
-  if (!fileUrl?.startsWith("/resources/")) return;
-  const target = join(PUBLIC_DIR, fileUrl.replace(/^\//, ""));
-  try {
-    await unlink(target);
-  } catch {}
+  if (!fileUrl) return;
+  // Supabase URLs — delete from bucket
+  if (fileUrl.startsWith("http")) {
+    await deleteByPublicUrl(fileUrl);
+    return;
+  }
+  // Legacy local path (dev only) — best-effort unlink
+  if (fileUrl.startsWith("/resources/")) {
+    const target = join(PUBLIC_DIR, fileUrl.replace(/^\//, ""));
+    try { await unlink(target); } catch {}
+  }
 }
 
 export async function getStoredResourceOverrides(): Promise<CmsResourceRecord[]> {
@@ -483,7 +497,7 @@ export async function saveCmsResource(input: {
 
   let fileUrl = current?.fileUrl ?? "";
   if (input.file && input.file.size > 0) {
-    const uploaded = await saveFileToPublic(input.file, input.category, input.title);
+    const uploaded = await saveFileToSupabase(input.file, input.category, input.title);
     if (typeof uploaded === "object" && "error" in uploaded) {
       return uploaded;
     }
@@ -549,21 +563,6 @@ export async function deleteCmsResource(id: string) {
   await writeJSON(RESOURCE_RECORDS_FILE, overrides.filter((item) => item.id !== id));
 }
 
-async function walkFiles(dir: string): Promise<string[]> {
-  let entries: string[] = [];
-  try {
-    const nodes = await readdir(dir, { withFileTypes: true });
-    for (const node of nodes) {
-      const full = join(dir, node.name);
-      if (node.isDirectory()) {
-        entries = entries.concat(await walkFiles(full));
-      } else {
-        entries.push(full);
-      }
-    }
-  } catch {}
-  return entries;
-}
 
 // ── MCQ Submission Tracking ─────────────────────────────────────────────────
 
@@ -642,30 +641,17 @@ export async function getSubmissionStats(): Promise<{
 
 export async function getUploadAssets(): Promise<UploadAsset[]> {
   try {
-    const files = await walkFiles(RESOURCE_ROOT);
-    const assets: UploadAsset[] = [];
+    // List PDFs from Supabase Storage (primary backend)
+    const supabaseAssets = await listSupabasePdfs();
 
-    for (const filePath of files) {
-      try {
-        const info = await stat(filePath);
-        const rel = relative(PUBLIC_DIR, filePath).replace(/\\/g, "/");
-        assets.push({
-          path: filePath,
-          url: `/${rel}`,
-          fileName: basename(filePath),
-          size: info.size,
-          updatedAt: info.mtime.toISOString(),
-          category: rel.split("/")[1] ?? "resources",
-        });
-      } catch {}
-    }
-
+    // Also surface the homepage banner if it exists locally (images are still local)
+    const localAssets: UploadAsset[] = [];
     try {
       for (const variant of [".png", ".jpg", ".jpeg", ".webp"]) {
         const bannerPath = join(PUBLIC_DIR, "images", `homepage-banner${variant}`);
         try {
           const banner = await stat(bannerPath);
-          assets.unshift({
+          localAssets.push({
             path: bannerPath,
             url: `/images/homepage-banner${variant}`,
             fileName: `homepage-banner${variant}`,
@@ -678,14 +664,21 @@ export async function getUploadAssets(): Promise<UploadAsset[]> {
       }
     } catch {}
 
-    return assets.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    return [...localAssets, ...supabaseAssets];
   } catch {
     return [];
   }
 }
 
 export async function deleteUploadAsset(url: string) {
-  if (!url.startsWith("/resources/")) return;
-  const target = join(PUBLIC_DIR, url.replace(/^\//, ""));
-  await rm(target, { force: true });
+  // Supabase URL — delete from bucket
+  if (url.startsWith("http")) {
+    await deleteByPublicUrl(url);
+    return;
+  }
+  // Legacy local path — best-effort unlink
+  if (url.startsWith("/resources/")) {
+    const target = join(PUBLIC_DIR, url.replace(/^\//, ""));
+    await rm(target, { force: true });
+  }
 }

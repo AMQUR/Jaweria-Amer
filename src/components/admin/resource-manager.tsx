@@ -65,7 +65,7 @@ const emptyForm = (defaultCategory?: ResourceFormState["category"]): ResourceFor
   file: null,
 });
 
-const MAX_FILE_BYTES = 20 * 1024 * 1024; // 20 MB hard cap (client-side pre-check)
+const MAX_FILE_BYTES = 25 * 1024 * 1024; // 25 MB hard cap (client-side pre-check)
 
 // Section order matching the public Resources page
 const SECTION_ORDER: CmsResourceRecord["category"][] = [
@@ -312,7 +312,7 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       {lastSaved && (
         <div className="flex items-center justify-between rounded-2xl border border-green-200 bg-green-50 px-5 py-3">
           <p className="text-sm font-medium text-green-700">
-            ✓ &ldquo;{lastSaved}&rdquo; saved successfully — live on site after next deploy.
+            ✓ &ldquo;{lastSaved}&rdquo; saved to Supabase Storage — live immediately.
           </p>
           <button
             type="button"
@@ -484,7 +484,7 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                   required
                 />
               </Field>
-              <Field label="PDF file (max 20 MB)">
+              <Field label="PDF file (max 25 MB)">
                 <div className="space-y-1.5">
                   <Input
                     type="file"
@@ -494,7 +494,7 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                   {form.file && (
                     <p className={`text-xs ${form.file.size > MAX_FILE_BYTES ? "text-red-600 font-medium" : "text-slate"}`}>
                       {form.file.name} — {(form.file.size / 1024 / 1024).toFixed(1)} MB
-                      {form.file.size > MAX_FILE_BYTES && " (exceeds 20 MB limit)"}
+                      {form.file.size > MAX_FILE_BYTES && " (exceeds 25 MB limit)"}
                     </p>
                   )}
                 </div>
@@ -626,9 +626,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
 
             <div className="flex items-center justify-between rounded-2xl border border-border/60 bg-cream p-4">
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Uploaded PDFs are saved into{" "}
-                <code className="rounded bg-white px-1.5 py-0.5">public/resources/&lt;category&gt;/</code> and served
-                locally. On Vercel, uploads require a writable storage backend.
+                PDFs are uploaded directly to{" "}
+                <code className="rounded bg-white px-1.5 py-0.5">Supabase Storage</code> and served
+                via CDN — no files are committed to the repo.
               </p>
               <div className="flex items-center gap-3">
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
