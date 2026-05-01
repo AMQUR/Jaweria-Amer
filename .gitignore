@@ -39,6 +39,9 @@ yarn-error.log*
 
 # local tooling
 .claude/
+jaweria-amer/
+scripts/source/
+data/
 
 # prevent accidentally committing a nested copy of the repo
 jaweria-amer/

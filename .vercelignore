@@ -10,3 +10,11 @@ scripts/
 
 # Nested project copy (safety net — also in .gitignore)
 jaweria-amer/
+
+# Archive formats never needed by runtime
+*.zip
+*.tar
+
+# Ignore PDFs by default, then explicitly re-include live assets
+*.pdf
+!public/resources/**

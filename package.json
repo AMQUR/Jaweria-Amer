@@ -9,6 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . || true",
+    "precommit": "node scripts/check-size.js || exit 1",
     "typecheck": "tsc --noEmit",
     "ingest:resources": "tsx scripts/ingest-resources.ts"
   },
