@@ -18,7 +18,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/english-assessment-1-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/english-assessment-1-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -30,7 +30,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-1-pieces-of-silver-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-1-pieces-of-silver-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -42,7 +42,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-10-whispering-meadow-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-10-whispering-meadow-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -54,7 +54,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-2-the-lost-lagoon-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-2-the-lost-lagoon-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -66,7 +66,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-3-road-from-coorain-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-3-road-from-coorain-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -78,7 +78,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-4-silver-boomerang-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-4-silver-boomerang-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -90,7 +90,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-5-house-in-the-mist-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-5-house-in-the-mist-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -102,7 +102,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-6-nuclear-landscape-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-6-nuclear-landscape-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -114,7 +114,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-7-barrow-airport-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-7-barrow-airport-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -126,7 +126,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/ms/pc-8-the-poisonous-snake-ms.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/ms/pc-8-the-poisonous-snake-ms.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -138,7 +138,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-5-pdf.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-5-pdf.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -150,7 +150,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-1.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -162,7 +162,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-4.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-4.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -174,7 +174,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-9.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-9.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -186,7 +186,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-10.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-10.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -198,7 +198,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-2.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-2.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -210,7 +210,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-3.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-3.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -222,7 +222,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-6.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-6.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -234,7 +234,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-7.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-7.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -246,7 +246,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Comprehension",
-    fileUrl: "/resources/topicals/paper-1/comprehension/qp/practice-comprehension-8.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/comprehension/qp/practice-comprehension-8.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -258,7 +258,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-1-train-solution.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-1-train-solution.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -270,7 +270,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-10-aurora-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-10-aurora-solved.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -282,7 +282,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-3-heavy-traffic.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-3-heavy-traffic.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -294,7 +294,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-4-mobile-phones-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-4-mobile-phones-solved.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -306,7 +306,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-5-sharks-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-5-sharks-solved.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -318,7 +318,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-6-uniforms-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-6-uniforms-solved.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -330,7 +330,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-7-dam-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-7-dam-solved.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -342,7 +342,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-8-tourism-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-8-tourism-solved.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -354,7 +354,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/ms/summary-9-berlin-school-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/ms/summary-9-berlin-school-solved.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -366,7 +366,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-1.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -378,7 +378,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-10.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-10.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -390,7 +390,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-2.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-2.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -402,7 +402,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-3.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-3.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -414,7 +414,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-4.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-4.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -426,7 +426,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-5.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-5.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -438,7 +438,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-6.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-6.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -450,7 +450,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-7.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-7.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -462,7 +462,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-8.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-8.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -474,7 +474,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Summary",
-    fileUrl: "/resources/topicals/paper-1/summary/qp/practice-summary-9.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-9.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
   {
@@ -486,7 +486,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-1-47-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-1-47-50.pdf",
     description: "Scored student script for review and practice.",
   },
   {
@@ -498,7 +498,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-1-48-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-1-48-50.pdf",
     description: "Scored student script for review and practice.",
   },
   {
@@ -510,7 +510,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-2-46-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-2-46-50.pdf",
     description: "Scored student script for review and practice.",
   },
   {
@@ -522,7 +522,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-2-48-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-2-48-50.pdf",
     description: "Scored student script for review and practice.",
   },
   {
@@ -534,7 +534,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-2-49-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-2-49-50.pdf",
     description: "Scored student script for review and practice.",
   },
   {
@@ -546,7 +546,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-2-50-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-2-50-50.pdf",
     description: "Scored student script for review and practice.",
   },
   {
@@ -558,7 +558,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "W25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/w25-paper-2-45-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/w25-paper-2-45-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // ── New Scripts ─────────────────────────────────────────────────────────
@@ -572,7 +572,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/narrative-essay-18-25.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/narrative-essay-18-25.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: letter-writing-23-25.pdf
@@ -585,7 +585,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/letter-writing-23-25.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/letter-writing-23-25.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: paper-1-38-50.pdf
@@ -598,7 +598,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "Practice",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/paper-1-38-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/paper-1-38-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: paper-2-44-50.pdf
@@ -611,7 +611,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "Practice",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/paper-2-44-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/paper-2-44-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: s25-paper-1-38-50.pdf
@@ -624,7 +624,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-1-38-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-1-38-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: s25-paper-1-45-50.pdf
@@ -637,7 +637,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-1-45-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-1-45-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: s25-paper-1-41-50.pdf
@@ -650,7 +650,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-1-41-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-1-41-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: s25-paper-2-41-50.pdf
@@ -663,7 +663,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-2-41-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-2-41-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // Added: s25-paper-2-45-50.pdf
@@ -676,7 +676,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/s25-paper-2-45-50.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/s25-paper-2-45-50.pdf",
     description: "Scored student script for review and practice.",
   },
   // Skipped duplicate: S25- Paper 1 (47_50).pdf → script-s25-paper-1-47-50 already registered
@@ -700,7 +700,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "Practice",
     section: "Essay",
-    fileUrl: "/resources/topicals/paper-2/essay/p2-essay-writing-topics.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-2/essay/p2-essay-writing-topics.pdf",
     description: "Paper 2 essay topic bank for planning and practice.",
   },
   {
@@ -712,7 +712,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "Practice",
     section: "Directed Writing",
-    fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-article-topics.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-2/directed-writing/p2-directed-writing-article-topics.pdf",
     description: "Article-style directed writing prompts for Paper 2.",
   },
   {
@@ -724,7 +724,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "Practice",
     section: "Directed Writing",
-    fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-email-topics.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-2/directed-writing/p2-directed-writing-email-topics.pdf",
     description: "Email-format directed writing prompts for Paper 2.",
   },
   {
@@ -736,7 +736,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "Practice",
     section: "Directed Writing",
-    fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-letter-topics.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-2/directed-writing/p2-directed-writing-letter-topics.pdf",
     description: "Letter-format directed writing prompts for Paper 2.",
   },
   {
@@ -748,7 +748,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "Practice",
     section: "Directed Writing",
-    fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-report-topics.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-2/directed-writing/p2-directed-writing-report-topics.pdf",
     description: "Report-format directed writing prompts for Paper 2.",
   },
   {
@@ -760,7 +760,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 2",
     year: "Practice",
     section: "Directed Writing",
-    fileUrl: "/resources/topicals/paper-2/directed-writing/p2-directed-writing-speech-topics.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-2/directed-writing/p2-directed-writing-speech-topics.pdf",
     description: "Speech-format directed writing prompts for Paper 2.",
   },
   // ── Notes — Directed Writing (supplement; hub order: see ResourcesHub sort) ─
@@ -773,7 +773,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/directed-writing/pde-explained.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/directed-writing/pde-explained.pdf",
     description:
       "Master how to develop and evaluate points using real examiner techniques, examples, and practice questions.",
   },
@@ -786,7 +786,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "S24",
-    fileUrl: "/resources/notes/solved-papers/s24-qp12-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/s24-qp12-solved.pdf",
     description: "Fully worked solution with examiner-style answers.",
   },
   {
@@ -797,7 +797,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "S24",
-    fileUrl: "/resources/notes/solved-papers/s24-qp11-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/s24-qp11-solved.pdf",
     description: "Fully worked solution with examiner-style answers.",
   },
   {
@@ -808,7 +808,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "W24",
-    fileUrl: "/resources/notes/solved-papers/w24-qp11-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/w24-qp11-solved.pdf",
     description: "Fully worked solution with examiner-style answers.",
   },
   {
@@ -819,7 +819,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "W24",
-    fileUrl: "/resources/notes/solved-papers/w24-qp12-solved.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/w24-qp12-solved.pdf",
     description: "Fully worked solution with examiner-style answers.",
   },
   {
@@ -830,7 +830,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Practice",
-    fileUrl: "/resources/notes/solved-papers/all-solved-summaries.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/all-solved-summaries.pdf",
     description: "Complete collection of solved summary questions with model answers.",
   },
   {
@@ -842,7 +842,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Practice",
-    fileUrl: "/resources/notes/solved-papers/all-directed-writings.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/all-directed-writings.pdf",
     description: "Collection of high-quality directed writing sample answers for exam practice.",
   },
   {
@@ -854,7 +854,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/solved-papers/sample-essays.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/sample-essays.pdf",
     description: "High-quality narrative and descriptive essays for Paper 2 practice.",
   },
   // ── Vocabulary ───────────────────────────────────────────────────────────
@@ -867,7 +867,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/vocabulary/comprehension-vocabulary.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/comprehension-vocabulary.pdf",
     description: "Feelings, synonym scales, and precision vocabulary for comprehension tasks.",
   },
   {
@@ -879,7 +879,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/vocabulary/essay-vocabulary.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/essay-vocabulary.pdf",
     description: "Dialogue words, tone shifts, and expressive verbs for essay writing.",
   },
   {
@@ -891,7 +891,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/vocabulary/p2-50-words-writing.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/p2-50-words-writing.pdf",
     description:
       "High-impact vocabulary bank for Directed Writing and Essay responses, including connectors, development phrases, evaluation language, and examiner-level words. Use at least 3–5 of these in every response for stronger examiner impact.",
   },
@@ -904,7 +904,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/vocabulary/directed-writing-vocabulary-bank.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/vocabulary/directed-writing-vocabulary-bank.pdf",
     description: "High-impact vocabulary, evaluative phrases, and power words for Directed Writing.",
   },
   {
@@ -916,7 +916,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/vocabulary/summary-vocabulary-bank.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/vocabulary/summary-vocabulary-bank.pdf",
     description: "Core vocabulary bank for summary writing with high-utility exam words.",
   },
   // ── Featured (vault: Notes → Essay Writing) ─────────────────────────────
@@ -929,7 +929,7 @@ const supplementalHubResourcesBase: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/final-p2-checklist.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/final-p2-checklist.pdf",
     description: "Complete your final exam prep before Paper 2.",
   },
   // ── Examiner Reports ─────────────────────────────────────────────────────
@@ -942,7 +942,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S24",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/copy-of-1123-s24-er.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/copy-of-1123-s24-er.pdf",
     description: "Official principal examiner report (1123).",
   },
   {
@@ -954,7 +954,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/copy-of-1123-s25-er.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/copy-of-1123-s25-er.pdf",
     description: "Official principal examiner report (1123).",
   },
   {
@@ -966,7 +966,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "W24",
     section: "Scripts",
-    fileUrl: "/resources/examiner-reports/copy-of-1123-w24-er.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/examiner-reports/copy-of-1123-w24-er.pdf",
     description: "Official principal examiner report (1123).",
   },
   {
@@ -978,7 +978,7 @@ const supplementalHubResourcesBase: Resource[] = [
     paper: "Paper 1",
     year: "S25",
     section: "Scripts",
-    fileUrl: "/resources/scripts/script-english-p1-mj25-cambridge-connect-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/scripts/script-english-p1-mj25-cambridge-connect-1.pdf",
     description: "O Level English 1123 · Scripts · Exam resource",
   },
 ];

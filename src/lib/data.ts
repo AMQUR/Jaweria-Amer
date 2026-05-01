@@ -400,7 +400,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 insert",
     year: "May/June 2024",
-    fileUrl: "/resources/1123-s24-insert-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s24-insert-11.pdf",
     description: "Official insert booklet paired with the matching question paper.",
   },
   {
@@ -411,7 +411,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 11)",
     year: "May/June 2024",
-    fileUrl: "/resources/1123-s24-ms-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s24-ms-11.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -422,7 +422,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 12)",
     year: "May/June 2024",
-    fileUrl: "/resources/1123-s24-ms-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s24-ms-12.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -433,7 +433,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 (variant 21)",
     year: "May/June 2024",
-    fileUrl: "/resources/1123-s24-ms-21.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s24-ms-21.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -444,7 +444,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 insert",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-insert-11-alt.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-insert-11-alt.pdf",
     description: "Official insert booklet paired with the matching question paper.",
   },
   {
@@ -455,7 +455,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 insert",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-insert-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-insert-12.pdf",
     description: "Official insert booklet paired with the matching question paper.",
   },
   {
@@ -466,7 +466,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 11)",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-ms-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-ms-11.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -477,7 +477,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 12)",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-ms-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-ms-12.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -488,7 +488,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 11)",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-qp-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-qp-11.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -499,7 +499,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 12)",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-qp-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-qp-12.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -510,7 +510,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 (variant 21)",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-qp-21.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-qp-21.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -521,7 +521,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 (variant 22)",
     year: "May/June 2025",
-    fileUrl: "/resources/1123-s25-qp-22.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-s25-qp-22.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -532,7 +532,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Specimen",
-    fileUrl: "/resources/1123-specimen-answers-paper-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-specimen-answers-paper-1.pdf",
     description: "Cambridge specimen materials for examination from 2024.",
   },
   {
@@ -543,7 +543,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Specimen",
-    fileUrl: "/resources/1123-specimen-answers-paper-2.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-specimen-answers-paper-2.pdf",
     description: "Cambridge specimen materials for examination from 2024.",
   },
   {
@@ -554,7 +554,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 insert",
     year: "Specimen",
-    fileUrl: "/resources/1123-specimen-insert-paper-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-specimen-insert-paper-1.pdf",
     description: "Cambridge specimen materials for examination from 2024.",
   },
   {
@@ -565,7 +565,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Specimen",
-    fileUrl: "/resources/1123-specimen-ms-paper-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-specimen-ms-paper-1.pdf",
     description: "Cambridge specimen materials for examination from 2024.",
   },
   {
@@ -576,7 +576,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Specimen",
-    fileUrl: "/resources/1123-specimen-qp-paper-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-specimen-qp-paper-1.pdf",
     description: "Cambridge specimen materials for examination from 2024.",
   },
   {
@@ -587,7 +587,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Specimen",
-    fileUrl: "/resources/1123-specimen-qp-paper-2.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-specimen-qp-paper-2.pdf",
     description: "Cambridge specimen materials for examination from 2024.",
   },
   {
@@ -598,7 +598,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 insert",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-insert-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-insert-11.pdf",
     description: "Official insert booklet paired with the matching question paper.",
   },
   {
@@ -609,7 +609,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 insert",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-insert-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-insert-12.pdf",
     description: "Official insert booklet paired with the matching question paper.",
   },
   {
@@ -620,7 +620,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 11)",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-ms-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-ms-11.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -631,7 +631,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 12)",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-ms-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-ms-12.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -642,7 +642,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 11)",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-qp-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-qp-11.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -653,7 +653,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 12)",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-qp-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-qp-12.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -664,7 +664,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 (variant 21)",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-qp-21.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-qp-21.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -675,7 +675,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 (variant 22)",
     year: "Nov 2024",
-    fileUrl: "/resources/1123-w24-qp-22.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w24-qp-22.pdf",
     description: "Official past question paper for timed practice and pacing.",
   },
   {
@@ -686,7 +686,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 insert",
     year: "Nov 2025",
-    fileUrl: "/resources/1123-w25-insert-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w25-insert-11.pdf",
     description: "Official insert booklet paired with the matching question paper.",
   },
   {
@@ -697,7 +697,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 insert",
     year: "Nov 2025",
-    fileUrl: "/resources/1123-w25-insert-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w25-insert-12.pdf",
     description: "Official insert booklet paired with the matching question paper.",
   },
   {
@@ -708,7 +708,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 11)",
     year: "Nov 2025",
-    fileUrl: "/resources/1123-w25-ms-11.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w25-ms-11.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -719,7 +719,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1 (variant 12)",
     year: "Nov 2025",
-    fileUrl: "/resources/1123-w25-ms-12.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w25-ms-12.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -730,7 +730,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 2 (variant 21)",
     year: "Nov 2025",
-    fileUrl: "/resources/1123-w25-ms-21.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/1123-w25-ms-21.pdf",
     description: "Official mark scheme for accurate self-marking and gap analysis.",
   },
   {
@@ -774,7 +774,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/olevel-directed-writing-all-formats-notes.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/olevel-directed-writing-all-formats-notes.pdf",
     description: "Layouts and moves for common directed writing formats on Paper 1.",
   },
   {
@@ -829,7 +829,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/notes/descriptive-essay.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/descriptive-essay.pdf",
     description: "Notes and examples for controlled descriptive writing in Paper 1.",
   },
   {
@@ -840,7 +840,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/notes/narrative-essay.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/narrative-essay.pdf",
     description: "Narrative writing notes focused on plot control, pacing, and clarity.",
   },
   {
@@ -851,7 +851,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/notes/sample-essay-writing.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/sample-essay-writing.pdf",
     description: "Sample essay notes to model structure, development, and language choices.",
   },
   {
@@ -862,7 +862,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/notes/final-vocabulary-for-essay-writing.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/final-vocabulary-for-essay-writing.pdf",
     description: "Essay-writing vocabulary support for stronger precision and range.",
   },
   {
@@ -873,7 +873,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/notes/directed-writing-notes.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/directed-writing-notes.pdf",
     description: "Core directed-writing notes for task fit, register, and structure.",
   },
   {
@@ -895,7 +895,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/notes/pde-format.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/pde-format.pdf",
     description: "Format guide for planning and organising PDE-style responses.",
   },
   {
@@ -906,7 +906,7 @@ const resourceLibrary: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Current",
-    fileUrl: "/resources/notes/part-b-short-response.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/part-b-short-response.pdf",
     description: "Short-response guidance for concise, mark-aware Paper 1 answers.",
   },
   {
@@ -1614,7 +1614,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/olevel-directed-writing-all-formats-notes.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/olevel-directed-writing-all-formats-notes.pdf",
     description: "Complete article, report, speech, email, and letter formats for directed writing.",
   },
   {
@@ -1626,7 +1626,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/pde-format.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/pde-format.pdf",
     description: "Core Point–Development–Evaluation structure for high-control directed responses.",
   },
   {
@@ -1638,7 +1638,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/directed-writing-notes.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/directed-writing-notes.pdf",
     description: "Development and evaluation logic for stronger ideas, flaws, and expansion.",
   },
   {
@@ -1650,7 +1650,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Current",
-    fileUrl: "/resources/notes/paper-2-marathon.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/paper-2-marathon.pdf",
     description: "Complete walkthrough for Paper 2 writing mastery — Miss Jay's marathon guide.",
   },
   {
@@ -1662,7 +1662,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/narrative-essay.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/narrative-essay.pdf",
     description: "Narrative planning, conflict, climax, and resolution support for Paper 1 essays.",
   },
   {
@@ -1674,7 +1674,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/descriptive-essay.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/descriptive-essay.pdf",
     description: "Descriptive writing guidance for controlled imagery, detail, and atmosphere.",
   },
   {
@@ -1686,7 +1686,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/final-vocabulary-for-essay-writing.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/final-vocabulary-for-essay-writing.pdf",
     description: "Vocabulary bank with dialogue words, tone shifts, and expressive verbs for essays.",
   },
   {
@@ -1698,7 +1698,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "/resources/notes/sample-essay-writing.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/sample-essay-writing.pdf",
     description: "Model essay samples showing structure, development, and exam-ready control.",
   },
   {
@@ -1710,7 +1710,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/summary-writing-part-a.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/summary-writing-part-a.pdf",
     description: "Core summary extraction method: skim, underline, and collect the best 12 points.",
   },
   {
@@ -1722,7 +1722,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/part-b-short-response.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/part-b-short-response.pdf",
     description: "Opinion plus three developed details for the Paper 2 short-response rubric.",
   },
   {
@@ -1734,7 +1734,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/grammar-complete-guide.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/grammar-complete-guide.pdf",
     description: "Single source of truth for grammar, punctuation, sentence control, and writing-quality scoring.",
   },
   {
@@ -1746,7 +1746,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/comprehension-question-1.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/comprehension-question-1.pdf",
     description: "Core notes for understanding explicit and implicit meaning in Question 1.",
   },
   {
@@ -1758,7 +1758,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/comprehension-question-2-use-of-language.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/comprehension-question-2-use-of-language.pdf",
     description: "Vocabulary choice and reader-effect notes for Use of Language work in Paper 2.",
   },
   {
@@ -1770,7 +1770,7 @@ const curatedGeneralNotes: Resource[] = [
     level: "O Level",
     paper: "Paper 2",
     year: "Core",
-    fileUrl: "/resources/notes/vocabulary-for-comprehension.pdf",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/vocabulary-for-comprehension.pdf",
     description: "Feelings, synonym scales, and precision vocabulary support for comprehension tasks.",
   },
 ];

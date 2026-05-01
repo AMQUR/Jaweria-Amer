@@ -15,6 +15,5 @@ jaweria-amer/
 *.zip
 *.tar
 
-# Ignore PDFs by default, then explicitly re-include live assets
+# PDFs are served via Supabase Storage — exclude all from deploy bundle
 *.pdf
-!public/resources/**
