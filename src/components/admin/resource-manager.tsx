@@ -1,7 +1,20 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Eye, FilePenLine, FileText, Filter, Plus, Search, Sparkles, Trash2 } from "lucide-react";
+import Link from "next/link";
+import {
+  ChevronDown,
+  ChevronRight,
+  ExternalLink,
+  Eye,
+  EyeOff,
+  FilePenLine,
+  FileText,
+  Plus,
+  Search,
+  Trash2,
+  Upload,
+} from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -9,13 +22,15 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   CMS_NOTES_SUBCATEGORY_OPTIONS,
   CMS_RESOURCE_CATEGORY_LABELS,
   CMS_RESOURCE_CATEGORY_OPTIONS,
   type CmsResourceRecord,
 } from "@/lib/admin/cms-types";
+import { cn } from "@/lib/utils";
+
+// ── Types ─────────────────────────────────────────────────────────────────────
 
 type ResourceFormState = {
   id?: string;
@@ -35,9 +50,9 @@ type ResourceFormState = {
 
 const PDF_CATEGORY_OPTIONS = CMS_RESOURCE_CATEGORY_OPTIONS.filter((item) => item.value !== "quick-worksheets");
 
-const emptyForm = (): ResourceFormState => ({
+const emptyForm = (defaultCategory?: ResourceFormState["category"]): ResourceFormState => ({
   title: "",
-  category: "general-notes",
+  category: defaultCategory ?? "general-notes",
   subCategory: "",
   paper: "",
   section: "",
@@ -50,6 +65,20 @@ const emptyForm = (): ResourceFormState => ({
   file: null,
 });
 
+// Section order matching the public Resources page
+const SECTION_ORDER: CmsResourceRecord["category"][] = [
+  "general-notes",
+  "topicals",
+  "yearly-past-papers",
+  "examiner-reports",
+  "checklists",
+  "vocabulary",
+  "solved-papers",
+  "quick-worksheets",
+];
+
+// ── Component ─────────────────────────────────────────────────────────────────
+
 type ResourceManagerProps = {
   initialResources?: CmsResourceRecord[];
 };
@@ -61,20 +90,18 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
   const [loading, setLoading] = useState(initialResources === undefined);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [search, setSearch] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("all");
-  const [paperFilter, setPaperFilter] = useState("all");
-  const [sectionFilter, setSectionFilter] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all");
   const [form, setForm] = useState<ResourceFormState>(emptyForm());
   const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
 
   async function loadResources() {
     try {
       setLoading(true);
       const response = await fetch("/api/admin/resources", { cache: "no-store" });
       const data = response.ok ? await response.json() : null;
-      const list =
+      const list: CmsResourceRecord[] =
         data && typeof data === "object" && Array.isArray((data as { resources?: unknown }).resources)
           ? (data as { resources: CmsResourceRecord[] }).resources
           : Array.isArray(data)
@@ -92,32 +119,15 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
     void loadResources();
   }, []);
 
-  const filteredResources = useMemo(() => {
-    return resources.filter((resource) => {
-      if (search && !(resource?.title ?? "").toLowerCase().includes(search.toLowerCase())) return false;
-      if (categoryFilter !== "all" && resource.category !== categoryFilter) return false;
-      if (paperFilter !== "all" && resource.paper !== paperFilter) return false;
-      if (sectionFilter !== "all" && (resource.section || "") !== sectionFilter) return false;
-      if (typeFilter !== "all" && resource.type !== typeFilter) return false;
-      return true;
-    });
-  }, [resources, search, categoryFilter, paperFilter, sectionFilter, typeFilter]);
+  // Filter by search (section filtering is always shown)
+  const visibleResources = useMemo(() => {
+    if (!search.trim()) return resources;
+    const q = search.toLowerCase();
+    return resources.filter((r) => (r?.title ?? "").toLowerCase().includes(q));
+  }, [resources, search]);
 
-  const groupingPreview = useMemo(() => {
-    return ["Paper 1", "Paper 2"].map((paper) => {
-      const rows = resources.filter(
-        (resource) =>
-          (resource.category === "topicals" || resource.category === "checklists") &&
-          resource.paper === paper &&
-          !resource.deleted
-      );
-      const sections = [...new Set(rows.map((row) => row.section).filter(Boolean) as string[])];
-      return { paper, count: rows.length, sections };
-    });
-  }, [resources]);
-
-  function openCreate() {
-    setForm(emptyForm());
+  function openCreate(defaultCategory?: ResourceFormState["category"]) {
+    setForm(emptyForm(defaultCategory));
     setDialogOpen(true);
   }
 
@@ -144,8 +154,39 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
     setDialogOpen(true);
   }
 
+  async function handleToggleVisibility(resource: CmsResourceRecord) {
+    const newVis = resource.visibility === "published" ? "draft" : "published";
+    const body = new FormData();
+    body.set("id", resource.id);
+    body.set("title", resource.title);
+    body.set("category", resource.category);
+    body.set("subCategory", resource.subCategory ?? "");
+    body.set("paper", resource.paper);
+    body.set("section", resource.section ?? "");
+    body.set("visibility", newVis);
+    body.set("subject", resource.subject);
+    body.set("level", resource.level);
+    body.set("year", resource.year);
+    body.set("description", resource.description);
+    body.set("autoDetectSection", String(resource.autoDetectSection ?? false));
+
+    const response = await fetch("/api/admin/resources", { method: "POST", body });
+    const data = await response.json();
+    if (!response.ok) {
+      toast.error((data as { error?: string }).error ?? "Could not update visibility.");
+      return;
+    }
+    toast.success(newVis === "published" ? "Resource published." : "Resource hidden.");
+    await loadResources();
+  }
+
   async function handleDelete(resource: CmsResourceRecord) {
-    const confirmed = window.confirm(`Delete "${resource.title}"? This also removes uploaded files when applicable.`);
+    const isStatic = resource.source === "static";
+    const label = isStatic ? "hide" : "delete";
+    const message = isStatic
+      ? `Hide "${resource.title}" from the public? Built-in resources can only be hidden, not permanently removed.`
+      : `Delete "${resource.title}"? This will also remove the uploaded file.`;
+    const confirmed = window.confirm(message);
     if (!confirmed) return;
 
     const response = await fetch("/api/admin/resources", {
@@ -155,16 +196,17 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
     });
     const data = await response.json();
     if (!response.ok) {
-      toast.error(data.error ?? "Could not delete resource.");
+      toast.error((data as { error?: string }).error ?? `Could not ${label} resource.`);
       return;
     }
-    toast.success("Resource deleted.");
+    toast.success(isStatic ? "Resource hidden from public." : "Resource deleted.");
     await loadResources();
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true);
+
     const body = new FormData();
     if (form.id) body.set("id", form.id);
     body.set("title", form.title);
@@ -180,28 +222,78 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
     body.set("autoDetectSection", String(form.autoDetectSection));
     if (form.file) body.set("file", form.file);
 
-    const response = await fetch("/api/admin/resources", { method: "POST", body });
-    const data = await response.json();
-    setSaving(false);
-
-    if (!response.ok) {
-      toast.error(data.error ?? "Could not save resource.");
-      return;
+    if (form.file && form.file.size > 0) {
+      // Use XHR for upload progress tracking
+      await new Promise<void>((resolve) => {
+        const xhr = new XMLHttpRequest();
+        xhr.upload.addEventListener("progress", (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        });
+        xhr.addEventListener("load", () => {
+          setUploadProgress(null);
+          setSaving(false);
+          try {
+            const data = JSON.parse(xhr.responseText) as { error?: string };
+            if (xhr.status < 200 || xhr.status >= 300 || data.error) {
+              toast.error(data.error ?? "Could not save resource.");
+            } else {
+              setLastSaved(form.title);
+              toast.success(form.id ? "Resource updated." : "Resource added.");
+              setDialogOpen(false);
+              setForm(emptyForm());
+              void loadResources();
+            }
+          } catch {
+            toast.error("Could not save resource.");
+          }
+          resolve();
+        });
+        xhr.addEventListener("error", () => {
+          setUploadProgress(null);
+          setSaving(false);
+          toast.error("Network error while uploading.");
+          resolve();
+        });
+        xhr.open("POST", "/api/admin/resources");
+        xhr.send(body);
+      });
+    } else {
+      const response = await fetch("/api/admin/resources", { method: "POST", body });
+      const data = await response.json();
+      setSaving(false);
+      if (!response.ok) {
+        toast.error((data as { error?: string }).error ?? "Could not save resource.");
+        return;
+      }
+      setLastSaved(form.title);
+      toast.success(form.id ? "Resource updated." : "Resource added.");
+      setDialogOpen(false);
+      setForm(emptyForm());
+      await loadResources();
     }
-
-    setLastSaved(form.title);
-    toast.success(form.id ? "Resource updated." : "Resource added.");
-    setDialogOpen(false);
-    setForm(emptyForm());
-    await loadResources();
   }
+
+  function toggleSection(category: string) {
+    setCollapsedSections((prev) => {
+      const next = new Set(prev);
+      if (next.has(category)) next.delete(category);
+      else next.add(category);
+      return next;
+    });
+  }
+
+  const totalCount = resources.filter((r) => !r.deleted).length;
+  const publishedCount = resources.filter((r) => !r.deleted && r.visibility === "published").length;
 
   return (
     <div className="space-y-6">
+      {/* Upload success banner */}
       {lastSaved && (
         <div className="flex items-center justify-between rounded-2xl border border-green-200 bg-green-50 px-5 py-3">
           <p className="text-sm font-medium text-green-700">
-            ✓ &ldquo;{lastSaved}&rdquo; uploaded successfully → Live on site
+            ✓ &ldquo;{lastSaved}&rdquo; saved successfully — live on site after next deploy.
           </p>
           <button
             type="button"
@@ -213,172 +305,150 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
         </div>
       )}
 
-      <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+      {/* Header */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink">Resources Control Center</h1>
           <p className="mt-1 text-sm text-slate">
-            Manage the live resource library, file metadata, paper/section grouping, and publication status.
+            {totalCount} resources · {publishedCount} published. Sections mirror the public Resources page layout.
           </p>
         </div>
-        <Button onClick={openCreate} className="gap-2 shadow-sm">
-          <Plus className="h-4 w-4" />
-          Add Resource
-        </Button>
-      </div>
-
-      <div className="grid gap-4 xl:grid-cols-[1.5fr_1fr]">
-        <div className="rounded-2xl border border-border/60 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-brand" />
-            <h2 className="font-serif text-lg font-semibold tracking-tight text-ink">Filter Library</h2>
+        <div className="flex items-center gap-3">
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-light" />
+            <Input
+              className="w-56 pl-9"
+              placeholder="Search resources…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-          <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-            <label className="space-y-1.5">
-              <span className="text-xs font-medium text-slate">Search</span>
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-light" />
-                <Input className="pl-9" value={search} onChange={(event) => setSearch(event.target.value)} />
-              </div>
-            </label>
-            <SelectField label="Category" value={categoryFilter} onChange={setCategoryFilter}>
-              <option value="all">All categories</option>
-              {CMS_RESOURCE_CATEGORY_OPTIONS.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </SelectField>
-            <SelectField label="Paper" value={paperFilter} onChange={setPaperFilter}>
-              <option value="all">All papers</option>
-              <option value="Paper 1">Paper 1</option>
-              <option value="Paper 2">Paper 2</option>
-              <option value="Grammar">Grammar</option>
-            </SelectField>
-            <SelectField label="Section" value={sectionFilter} onChange={setSectionFilter}>
-              <option value="all">All sections</option>
-              {[...new Set(resources.map((item) => item.section).filter(Boolean) as string[])].map((section) => (
-                <option key={section} value={section}>
-                  {section}
-                </option>
-              ))}
-            </SelectField>
-            <SelectField label="Type" value={typeFilter} onChange={setTypeFilter}>
-              <option value="all">All types</option>
-              <option value="pdf">PDF</option>
-              <option value="mcq">MCQ</option>
-            </SelectField>
-          </div>
-        </div>
-
-        <div className="rounded-2xl border border-border/60 bg-white p-5 shadow-sm">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-brand" />
-            <h2 className="font-serif text-lg font-semibold tracking-tight text-ink">Paper → Section Preview</h2>
-          </div>
-          <div className="mt-4 grid gap-3 md:grid-cols-2 xl:grid-cols-1">
-            {groupingPreview.map((group) => (
-              <div key={group.paper} className="rounded-2xl border border-border/60 bg-cream p-4">
-                <div className="flex items-center justify-between">
-                  <p className="font-serif text-base font-semibold tracking-tight text-ink">{group.paper}</p>
-                  <span className="text-xs text-muted-foreground">{group.count} items</span>
-                </div>
-                <p className="mt-2 text-xs leading-relaxed text-slate">
-                  {group.sections.length ? group.sections.join(" · ") : "No sections assigned yet"}
-                </p>
-              </div>
-            ))}
-          </div>
+          <Button onClick={() => openCreate()} className="gap-2 shadow-sm">
+            <Plus className="h-4 w-4" />
+            Add Resource
+          </Button>
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
-        {loading ? (
-          <div className="p-12 text-center text-sm text-slate">Loading resources…</div>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Title</TableHead>
-                <TableHead>Category → Sub</TableHead>
-                <TableHead>Paper</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Source</TableHead>
-                <TableHead className="w-[120px]">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredResources.map((resource) => (
-                <TableRow key={resource.id}>
-                  <TableCell>
-                    <div className="flex items-start gap-3">
-                      <span className="mt-0.5 rounded-xl bg-muted p-2 text-brand">
-                        <FileText className="h-4 w-4" />
-                      </span>
-                      <div>
-                        <p className="font-medium text-ink">{resource.title}</p>
-                        <p className="text-xs text-muted-foreground">{resource.fileName}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-sm text-slate">
-                    {CMS_RESOURCE_CATEGORY_LABELS[resource.category]}
-                    {resource.subCategory && (
-                      <span className="ml-1 text-muted-foreground">→ {resource.subCategory}</span>
+      {/* Legend */}
+      <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-white px-5 py-3 text-xs shadow-sm">
+        <span className="font-medium text-slate">Badges:</span>
+        <Badge variant="builtin">Built-in</Badge>
+        <span className="text-muted-foreground">= static resource (read-only)</span>
+        <Badge variant="published">published</Badge>
+        <span className="text-muted-foreground">= visible to students</span>
+        <Badge variant="draft">draft</Badge>
+        <span className="text-muted-foreground">= hidden from public</span>
+      </div>
+
+      {/* Section cards */}
+      {loading ? (
+        <div className="p-12 text-center text-sm text-slate">Loading resources…</div>
+      ) : (
+        <div className="space-y-4">
+          {SECTION_ORDER.map((category) => {
+            const sectionAll = visibleResources.filter((r) => r.category === category);
+            const sectionVisible = sectionAll.filter((r) => !r.deleted);
+            const hiddenCount = resources.filter((r) => r.category === category && r.deleted).length;
+            const label = CMS_RESOURCE_CATEGORY_LABELS[category];
+            const collapsed = collapsedSections.has(category);
+            const isQuickWorksheets = category === "quick-worksheets";
+
+            return (
+              <div key={category} className="overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
+                {/* Section header */}
+                <div className="flex items-center gap-3 border-b border-border/60 bg-cream/40 px-5 py-3.5">
+                  <button
+                    type="button"
+                    onClick={() => toggleSection(category)}
+                    className="flex flex-1 items-center gap-3 text-left"
+                  >
+                    {collapsed ? (
+                      <ChevronRight className="h-4 w-4 shrink-0 text-slate-light" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4 shrink-0 text-slate-light" />
                     )}
-                  </TableCell>
-                  <TableCell className="text-sm text-slate">{resource.paper || "—"}</TableCell>
-                  <TableCell className="text-sm text-slate uppercase">{resource.type}</TableCell>
-                  <TableCell>
-                    <span
-                      className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                        resource.visibility === "published" ? "bg-green-50 text-green-700" : "bg-muted text-muted-foreground"
-                      }`}
-                    >
-                      {resource.visibility}
+                    <span className="font-serif text-base font-semibold tracking-tight text-ink">{label}</span>
+                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                      {sectionVisible.length}
                     </span>
-                  </TableCell>
-                  <TableCell className="text-xs uppercase tracking-[0.14em] text-muted-foreground">{resource.source}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-1">
-                      <a
-                        href={`/resources/view/${resource.id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="rounded-xl p-2 text-slate transition-[background-color,color] hover:bg-muted hover:text-ink"
-                        aria-label={`View ${resource.title}`}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </a>
-                      {resource.source !== "static" && (
-                        <>
-                          <button
-                            type="button"
-                            onClick={() => openEdit(resource)}
-                            className="rounded-xl p-2 text-slate transition-[background-color,color] hover:bg-muted hover:text-ink"
-                            aria-label={`Edit ${resource.title}`}
-                          >
-                            <FilePenLine className="h-4 w-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => void handleDelete(resource)}
-                            className="rounded-xl p-2 text-slate transition-[background-color,color] hover:bg-brand-soft hover:text-brand"
-                            aria-label={`Delete ${resource.title}`}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
-      </div>
+                    {hiddenCount > 0 && (
+                      <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-600">
+                        {hiddenCount} hidden
+                      </span>
+                    )}
+                  </button>
+                  {isQuickWorksheets ? (
+                    <Link href="/admin/mcq">
+                      <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        Open MCQ Builder
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-1.5 text-xs"
+                      onClick={() => openCreate(category as ResourceFormState["category"])}
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                      Add
+                    </Button>
+                  )}
+                </div>
 
+                {/* Section body */}
+                {!collapsed && (
+                  <div className="p-4">
+                    {isQuickWorksheets ? (
+                      <p className="py-2 text-sm text-slate">
+                        Quick Worksheets (MCQ assessments) are managed from the{" "}
+                        <Link href="/admin/mcq" className="font-medium text-crimson hover:underline">
+                          MCQ Builder
+                        </Link>
+                        . Use that page to create, edit, and preview quizzes.
+                      </p>
+                    ) : sectionVisible.length === 0 ? (
+                      <div className="flex flex-col items-center gap-3 py-8 text-center">
+                        <FileText className="h-8 w-8 text-muted-foreground/30" />
+                        <p className="text-sm text-muted-foreground">
+                          {search ? "No matching resources in this section." : "No resources yet — add the first one."}
+                        </p>
+                        {!search && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="gap-2"
+                            onClick={() => openCreate(category as ResourceFormState["category"])}
+                          >
+                            <Plus className="h-3.5 w-3.5" />
+                            Add Resource
+                          </Button>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="divide-y divide-border/50">
+                        {sectionVisible.map((resource) => (
+                          <ResourceRow
+                            key={resource.id}
+                            resource={resource}
+                            onEdit={openEdit}
+                            onToggleVisibility={handleToggleVisibility}
+                            onDelete={handleDelete}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Add / Edit dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-h-[90vh] max-w-3xl overflow-y-auto bg-white">
           <DialogHeader>
@@ -390,15 +460,53 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
           <form className="space-y-5" onSubmit={(event) => void handleSubmit(event)}>
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Title">
-                <Input value={form.title} onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))} required />
+                <Input
+                  value={form.title}
+                  onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
+                  required
+                />
               </Field>
               <Field label="PDF file">
-                <Input type="file" accept=".pdf" onChange={(event) => setForm((prev) => ({ ...prev, file: event.target.files?.[0] ?? null }))} />
+                <div className="space-y-1.5">
+                  <Input
+                    type="file"
+                    accept=".pdf"
+                    onChange={(event) => setForm((prev) => ({ ...prev, file: event.target.files?.[0] ?? null }))}
+                  />
+                  {form.file && (
+                    <p className="text-xs text-slate">
+                      {form.file.name} ({(form.file.size / 1024 / 1024).toFixed(1)} MB)
+                    </p>
+                  )}
+                </div>
               </Field>
             </div>
 
+            {/* Upload progress bar */}
+            {uploadProgress !== null && (
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs text-slate">
+                  <span className="flex items-center gap-1.5">
+                    <Upload className="h-3.5 w-3.5" />
+                    Uploading…
+                  </span>
+                  <span className="tabular-nums font-medium text-ink">{uploadProgress}%</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                  <div
+                    className="h-full rounded-full bg-crimson transition-[width] duration-200 ease-out"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="grid gap-4 md:grid-cols-3">
-              <SelectField label="Category" value={form.category} onChange={(value) => setForm((prev) => ({ ...prev, category: value as ResourceFormState["category"] }))}>
+              <SelectField
+                label="Category"
+                value={form.category}
+                onChange={(value) => setForm((prev) => ({ ...prev, category: value as ResourceFormState["category"] }))}
+              >
                 {PDF_CATEGORY_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -409,7 +517,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                 <select
                   className="w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm shadow-sm"
                   value={form.visibility}
-                  onChange={(event) => setForm((prev) => ({ ...prev, visibility: event.target.value as ResourceFormState["visibility"] }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, visibility: event.target.value as ResourceFormState["visibility"] }))
+                  }
                 >
                   <option value="published">Published</option>
                   <option value="draft">Draft</option>
@@ -465,16 +575,25 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                 />
               </Field>
               <Field label="Year / session">
-                <Input value={form.year} onChange={(event) => setForm((prev) => ({ ...prev, year: event.target.value }))} />
+                <Input
+                  value={form.year}
+                  onChange={(event) => setForm((prev) => ({ ...prev, year: event.target.value }))}
+                />
               </Field>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Subject">
-                <Input value={form.subject} onChange={(event) => setForm((prev) => ({ ...prev, subject: event.target.value }))} />
+                <Input
+                  value={form.subject}
+                  onChange={(event) => setForm((prev) => ({ ...prev, subject: event.target.value }))}
+                />
               </Field>
               <Field label="Level">
-                <Input value={form.level} onChange={(event) => setForm((prev) => ({ ...prev, level: event.target.value }))} />
+                <Input
+                  value={form.level}
+                  onChange={(event) => setForm((prev) => ({ ...prev, level: event.target.value }))}
+                />
               </Field>
             </div>
 
@@ -488,15 +607,27 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
 
             <div className="flex items-center justify-between rounded-2xl border border-border/60 bg-cream p-4">
               <p className="text-xs leading-relaxed text-muted-foreground">
-                Quick Worksheets are managed from the MCQ Builder. Uploaded PDFs are auto-saved into
-                <code className="ml-1 rounded bg-white px-1.5 py-0.5">public/resources/&lt;category&gt;/</code>.
+                Uploaded PDFs are saved into{" "}
+                <code className="rounded bg-white px-1.5 py-0.5">public/resources/&lt;category&gt;/</code> and served
+                locally. On Vercel, uploads require a writable storage backend.
               </p>
               <div className="flex items-center gap-3">
                 <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button type="submit" disabled={saving} className="shadow-sm">
-                  {saving ? "Saving…" : form.id ? "Save Changes" : "Create Resource"}
+                <Button type="submit" disabled={saving} className="gap-2 shadow-sm">
+                  {saving && uploadProgress !== null ? (
+                    <>
+                      <Upload className="h-4 w-4" />
+                      {uploadProgress}%
+                    </>
+                  ) : saving ? (
+                    "Saving…"
+                  ) : form.id ? (
+                    "Save Changes"
+                  ) : (
+                    "Create Resource"
+                  )}
                 </Button>
               </div>
             </div>
@@ -504,6 +635,137 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
+
+function ResourceRow({
+  resource,
+  onEdit,
+  onToggleVisibility,
+  onDelete,
+}: {
+  resource: CmsResourceRecord;
+  onEdit: (r: CmsResourceRecord) => void;
+  onToggleVisibility: (r: CmsResourceRecord) => void;
+  onDelete: (r: CmsResourceRecord) => void;
+}) {
+  const isStatic = resource.source === "static";
+  const isPublished = resource.visibility === "published";
+
+  return (
+    <div className="flex items-center gap-3 py-3">
+      <span className="shrink-0 rounded-xl bg-muted p-2 text-brand">
+        <FileText className="h-4 w-4" />
+      </span>
+
+      {/* Info */}
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-ink">{resource.title}</p>
+        <div className="mt-1 flex flex-wrap items-center gap-1.5">
+          {resource.paper && (
+            <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+              {resource.paper}
+            </span>
+          )}
+          {resource.section && (
+            <span className="text-[11px] text-muted-foreground">{resource.section}</span>
+          )}
+          <Badge variant={isPublished ? "published" : "draft"}>
+            {isPublished ? "published" : "draft"}
+          </Badge>
+          {isStatic && <Badge variant="builtin">Built-in</Badge>}
+        </div>
+      </div>
+
+      {/* Actions */}
+      <div className="flex shrink-0 items-center gap-0.5">
+        {resource.fileUrl ? (
+          <a
+            href={resource.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-xl p-2 text-slate transition-colors hover:bg-muted hover:text-ink"
+            aria-label={`Open ${resource.title}`}
+            title="Open file"
+          >
+            <Eye className="h-4 w-4" />
+          </a>
+        ) : (
+          <span className="w-8" />
+        )}
+
+        {!isStatic && (
+          <>
+            {/* Visibility toggle */}
+            <button
+              type="button"
+              onClick={() => void onToggleVisibility(resource)}
+              className="rounded-xl p-2 text-slate transition-colors hover:bg-muted hover:text-ink"
+              aria-label={isPublished ? "Hide resource" : "Publish resource"}
+              title={isPublished ? "Hide from public" : "Make public"}
+            >
+              {isPublished ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+            {/* Edit */}
+            <button
+              type="button"
+              onClick={() => onEdit(resource)}
+              className="rounded-xl p-2 text-slate transition-colors hover:bg-muted hover:text-ink"
+              aria-label={`Edit ${resource.title}`}
+              title="Edit"
+            >
+              <FilePenLine className="h-4 w-4" />
+            </button>
+            {/* Delete */}
+            <button
+              type="button"
+              onClick={() => void onDelete(resource)}
+              className="rounded-xl p-2 text-slate transition-colors hover:bg-red-50 hover:text-red-600"
+              aria-label={`Delete ${resource.title}`}
+              title="Delete"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </>
+        )}
+
+        {isStatic && (
+          /* Built-in: only allow hiding */
+          <button
+            type="button"
+            onClick={() => void onDelete(resource)}
+            className="rounded-xl p-2 text-slate transition-colors hover:bg-amber-50 hover:text-amber-600"
+            aria-label={`Hide ${resource.title}`}
+            title="Hide from public"
+          >
+            <EyeOff className="h-4 w-4" />
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Badge({
+  variant,
+  children,
+}: {
+  variant: "builtin" | "published" | "draft";
+  children: React.ReactNode;
+}) {
+  return (
+    <span
+      className={cn(
+        "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
+        variant === "builtin" && "bg-blue-50 text-blue-600",
+        variant === "published" && "bg-green-50 text-green-700",
+        variant === "draft" && "bg-amber-50 text-amber-700"
+      )}
+    >
+      {children}
+    </span>
   );
 }
 

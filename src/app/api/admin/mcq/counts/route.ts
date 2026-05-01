@@ -1,5 +1,5 @@
 import { getSession } from "@/lib/admin/auth";
-import { getSubmissionCounts } from "@/lib/admin/cms-store";
+import { getSubmissionStats } from "@/lib/admin/cms-store";
 
 export async function GET() {
   const session = await getSession();
@@ -8,9 +8,9 @@ export async function GET() {
   }
 
   try {
-    const counts = await getSubmissionCounts();
-    return Response.json(counts);
+    const stats = await getSubmissionStats();
+    return Response.json(stats);
   } catch {
-    return Response.json({});
+    return Response.json({ counts: {}, avgScores: {} });
   }
 }

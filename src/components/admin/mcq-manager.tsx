@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Grip, Plus, Save, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { ExternalLink, Grip, Plus, Save, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,9 +51,17 @@ type McqManagerProps = {
   submissionCounts?: Record<string, number>;
 };
 
+type SubmissionStats = {
+  counts: Record<string, number>;
+  avgScores: Record<string, number>;
+};
+
 export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerProps) {
   const [mcqs, setMcqs] = useState<CmsMcqSet[]>(() => (Array.isArray(initialMcqs) ? initialMcqs : []));
-  const [counts, setCounts] = useState<Record<string, number>>(submissionCounts);
+  const [stats, setStats] = useState<SubmissionStats>({
+    counts: submissionCounts,
+    avgScores: {},
+  });
   const [loading, setLoading] = useState(initialMcqs === undefined);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<McqForm>(emptyMcqForm());
@@ -60,15 +69,25 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
   async function loadMcqs() {
     try {
       setLoading(true);
-      const [mcqRes, countsRes] = await Promise.all([
+      const [mcqRes, statsRes] = await Promise.all([
         fetch("/api/admin/mcq", { cache: "no-store" }),
         fetch("/api/admin/mcq/counts", { cache: "no-store" }),
       ]);
       const data = mcqRes.ok ? await mcqRes.json() : null;
-      const countsData = countsRes.ok ? await countsRes.json() : null;
+      const statsData = statsRes.ok ? await statsRes.json() : null;
       setMcqs(Array.isArray(data) ? data : []);
-      if (countsData && typeof countsData === "object" && !Array.isArray(countsData)) {
-        setCounts(countsData as Record<string, number>);
+      if (statsData && typeof statsData === "object" && !Array.isArray(statsData)) {
+        const s = statsData as Record<string, unknown>;
+        setStats({
+          counts:
+            s.counts && typeof s.counts === "object" && !Array.isArray(s.counts)
+              ? (s.counts as Record<string, number>)
+              : (statsData as Record<string, number>),
+          avgScores:
+            s.avgScores && typeof s.avgScores === "object" && !Array.isArray(s.avgScores)
+              ? (s.avgScores as Record<string, number>)
+              : {},
+        });
       }
     } catch {
       setMcqs([]);
@@ -81,7 +100,7 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
     void loadMcqs();
   }, []);
 
-  const stats = useMemo(() => {
+  const quizStats = useMemo(() => {
     const list = mcqs ?? [];
     const published = list.filter((mcq) => mcq?.visibility === "published" && !mcq.deleted).length;
     return {
@@ -191,9 +210,9 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
           <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink">MCQ Builder</h1>
           <p className="mt-1 text-sm text-slate">Create and edit Quick Worksheets with live answer logic and explanations.</p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
-            <StatCard label="Total sets" value={stats.total} />
-            <StatCard label="Published" value={stats.published} />
-            <StatCard label="Drafts" value={stats.drafts} />
+            <StatCard label="Total sets" value={quizStats.total} />
+            <StatCard label="Published" value={quizStats.published} />
+            <StatCard label="Drafts" value={quizStats.drafts} />
           </div>
           <Button variant="outline" onClick={resetForm} className="mt-4 w-full">
             New MCQ Set
@@ -211,13 +230,23 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
               mcqs.map((mcq) => (
                 <div key={mcq.id} className="mb-3 rounded-2xl border border-border/60 bg-cream p-4 last:mb-0">
                   <button type="button" className="w-full text-left" onClick={() => loadIntoForm(mcq)}>
-                    <p className="font-medium text-ink">{mcq.title}</p>
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="font-medium text-ink">{mcq.title}</p>
+                      {mcq.source === "static" && (
+                        <span className="shrink-0 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-blue-600">
+                          Built-in
+                        </span>
+                      )}
+                    </div>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                       {(mcq?.questions ?? []).length} questions · {String(mcq?.visibility ?? "")} · {String(mcq?.paper ?? "")}
                     </p>
-                    <p className="mt-0.5 text-xs font-medium text-crimson">
-                      Submissions: {counts[mcq.id] ?? 0}
-                    </p>
+                    <div className="mt-1 flex items-center gap-3 text-xs font-medium text-crimson">
+                      <span>Submissions: {stats.counts[mcq.id] ?? 0}</span>
+                      {stats.avgScores[mcq.id] !== undefined && (
+                        <span className="text-slate">Avg: {stats.avgScores[mcq.id]}%</span>
+                      )}
+                    </div>
                   </button>
                   <div className="mt-3 flex items-center gap-2">
                     <Button size="sm" variant="outline" onClick={() => loadIntoForm(mcq)}>
@@ -226,6 +255,15 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                     <Button size="sm" variant="outline" onClick={() => void handleDelete(mcq.id)}>
                       Delete
                     </Button>
+                    <Link
+                      href={`/resources/view/${mcq.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 rounded-xl border border-border/60 bg-white px-3 py-1.5 text-xs font-medium text-slate shadow-sm transition-colors hover:bg-muted hover:text-ink"
+                    >
+                      <ExternalLink className="h-3 w-3" />
+                      Preview
+                    </Link>
                   </div>
                 </div>
               ))

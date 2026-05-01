@@ -603,6 +603,33 @@ export async function getSubmissionCounts(): Promise<Record<string, number>> {
   }
 }
 
+export async function getSubmissionStats(): Promise<{
+  counts: Record<string, number>;
+  avgScores: Record<string, number>;
+}> {
+  try {
+    const submissions = await getMcqSubmissions();
+    const counts: Record<string, number> = {};
+    const scoreSums: Record<string, number> = {};
+
+    for (const sub of submissions) {
+      if (!sub?.quizId) continue;
+      counts[sub.quizId] = (counts[sub.quizId] ?? 0) + 1;
+      const pct = sub.total > 0 ? (sub.score / sub.total) * 100 : 0;
+      scoreSums[sub.quizId] = (scoreSums[sub.quizId] ?? 0) + pct;
+    }
+
+    const avgScores: Record<string, number> = {};
+    for (const [id, count] of Object.entries(counts)) {
+      avgScores[id] = Math.round((scoreSums[id] ?? 0) / count);
+    }
+
+    return { counts, avgScores };
+  } catch {
+    return { counts: {}, avgScores: {} };
+  }
+}
+
 export async function getUploadAssets(): Promise<UploadAsset[]> {
   try {
     const files = await walkFiles(RESOURCE_ROOT);
