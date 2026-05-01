@@ -40,9 +40,30 @@ yarn-error.log*
 # local tooling
 .claude/
 
+# prevent accidentally committing a nested copy of the repo
+jaweria-amer/
+
 # typescript
 *.tsbuildinfo
 
 # server-only admin secrets (password hash + reset tokens)
 /data/admin-password.json
 /data/password-reset-tokens.json
+
+# ingest source files — local-only inputs, never deployed
+scripts/source/
+
+# orphaned public PDFs — not referenced by the site, excluded to keep deploy lean
+public/resources/1123-s24-examiner-candidate-responses-p1.pdf
+public/resources/1123-s24-examiner-candidate-responses-p2.pdf
+public/resources/1123-s24-examiner-report.pdf
+public/resources/1123-s25-examiner-report.pdf
+public/resources/1123-specimen-examiner-candidate-responses-p1.pdf
+public/resources/1123-specimen-examiner-candidate-responses-p2.pdf
+public/resources/1123-w24-examiner-report.pdf
+public/resources/examiner-reports/s25-paper-2-48-50-1.pdf
+public/resources/examiner-reports/s25-paper-2-49-50-1.pdf
+public/resources/examiner-reports/s25-paper-2-49-50-2.pdf
+public/resources/featured/last-5-day-plan.pdf
+public/resources/notes/5-day-plan-paper-1.pdf
+public/resources/notes/solved-papers/w25-qp21-solved.pdf

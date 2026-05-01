@@ -1,0 +1,12 @@
+# Files and directories that should not be included in the Vercel deployment.
+# Vercel also respects .gitignore, so anything there is already excluded.
+
+# Runtime data written by the app (CMS JSON, submissions) — filesystem is
+# read-only on Vercel, so these are irrelevant to the deploy bundle.
+data/
+
+# Scripts only used locally
+scripts/
+
+# Nested project copy (safety net — also in .gitignore)
+jaweria-amer/
