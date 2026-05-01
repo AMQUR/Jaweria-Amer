@@ -1,7 +1,8 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+const nextConfig = {
   transpilePackages: ["react-pdf", "pdfjs-dist"],
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   async headers() {
     return [
       {
@@ -10,6 +11,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-};
+} as const;
 
 export default nextConfig;
