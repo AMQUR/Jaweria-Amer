@@ -969,6 +969,18 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "/resources/examiner-reports/copy-of-1123-w24-er.pdf",
     description: "Official principal examiner report (1123).",
   },
+  {
+    id: "script-english-p1-mj25-cambridge-connect-1",
+    title: "Script · English P1 · May/June 2025 · Cambridge Connect",
+    category: "examiner-reports",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "S25",
+    section: "Scripts",
+    fileUrl: "/resources/scripts/script-english-p1-mj25-cambridge-connect-1.pdf",
+    description: "O Level English 1123 · Scripts · Exam resource",
+  },
 ];
 
 export const supplementalHubResources: Resource[] = supplementalHubResourcesBase.map((r) => {
