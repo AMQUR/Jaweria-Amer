@@ -802,6 +802,400 @@ const mcqSetsInternal: Record<string, McqSet> = {
       },
     ],
   },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // REWORDING WORKSHOP — PICK THE BEST REWORDING (EXERCISE B)
+  // ══════════════════════════════════════════════════════════════════════
+  "mcq-rewording-workshop": {
+    id: "mcq-rewording-workshop",
+    title: "Rewording Workshop: Pick the Best Rewording",
+    description:
+      "15 questions · 8 minutes. Cambridge marking scheme points — pick the rewording that is precise, clear, and captures the full meaning without lifting, vagueness, or added content.",
+    timeLimit: 480,
+    questions: [
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — Q1–5 (Exercise B)
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "A",
+        question:
+          "[S24 V11 — Plogging]\nMS Point: \"makes a noticeable difference // helps solve a big problem // has a huge impact\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Creates a visible change in the local area",
+          B: "Makes things better for the environment",
+          C: "Helps solve things and makes a difference",
+          D: "No correct option",
+        },
+        answer: "A",
+        explanation:
+          "B is too vague — 'makes things better' does not specify what changes or for whom. C lifts 'solve' and 'makes a difference' directly from the MS. A rewrites the MS point precisely: 'visible change' captures 'noticeable difference', and 'local area' provides the scope.",
+      },
+      {
+        section: "A",
+        question:
+          "[W24 V12 — Fitness App]\nMS Point: \"shares personal information / stats whether you want it to or not / without consent\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Private data is exposed to other users without permission",
+          B: "The app shares your information with people",
+          C: "Personal information is shared whether you want it to or not",
+          D: "No correct option",
+        },
+        answer: "A",
+        explanation:
+          "B is too vague — 'your information' and 'with people' lose the key detail of personal data and lack of consent. C lifts 'personal information' and 'whether you want it to or not' directly from the MS. A rewrites the point cleanly using 'private data', 'exposed', and 'without permission'.",
+      },
+      {
+        section: "A",
+        question:
+          "[W25 V11 — Everest]\nMS Point: \"not doing it first // do not have to figure out how to do it\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "The route is already challenging and dangerous for new climbers",
+          B: "Modern climbers do not need to pioneer the path themselves",
+          C: "Climbers today have not done it first",
+          D: "No correct option",
+        },
+        answer: "B",
+        explanation:
+          "A changes the meaning — it is about difficulty and danger, not about pioneering. C lifts 'done it first' directly from the MS. B rewrites the core idea cleanly: 'pioneer the path' captures 'figure out how to do it / not doing it first' without lifting any key word.",
+      },
+      {
+        section: "A",
+        question:
+          "[S24 V12 — Authentic Travel]\nMS Point: \"clean / hygienic / comfortable / relaxing hotels / guesthouses // good standard of accommodation\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Travellers stay in clean, hygienic and comfortable guesthouses",
+          B: "Accommodation is of a satisfactory standard",
+          C: "The company provides luxurious five-star lodgings that pamper every guest",
+          D: "No correct option",
+        },
+        answer: "D",
+        explanation:
+          "A lifts 'clean, hygienic and comfortable' directly from the MS. B is too vague — 'satisfactory standard' loses the specific qualities listed. C changes the meaning by adding 'five-star' and 'pamper' which are not in the MS. None of the three reword the point correctly — D is correct.",
+      },
+      {
+        section: "A",
+        question:
+          "[S25 V11 — Swimming Pools]\nMS Point: \"eco-pools can be cheaper to run // natural purification can be cheaper\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Eco-friendly pools are less expensive to operate due to natural cleaning methods",
+          B: "These pools are cheap",
+          C: "Natural purification reduces the cost of running the pool significantly and saves money",
+          D: "No correct option",
+        },
+        answer: "A",
+        explanation:
+          "B is too vague — 'cheap' loses the eco element and the reason for the saving. C is repetitive — 'reduces the cost' and 'saves money' say the same thing. A rewrites both MS elements precisely: 'less expensive to operate' = 'cheaper to run', and 'natural cleaning methods' = 'natural purification'.",
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION B — Q6–10 (Exercise B)
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "B",
+        question:
+          "[W24 V11 — Sanctuaries]\nMS Point: \"saving / focusing on individual animals is not a priority / not worthwhile\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Rescuing animals is not important at all",
+          B: "Individual animals are not a priority and not worthwhile",
+          C: "Saving animals one at a time is a waste of resources",
+          D: "No correct option",
+        },
+        answer: "D",
+        explanation:
+          "A overstates the MS point — 'not important at all' is too extreme. B lifts 'not a priority' and 'not worthwhile' directly from the MS. C changes the meaning — 'a waste of resources' is not stated. None of the three reword the point correctly — D is correct.",
+      },
+      {
+        section: "B",
+        question:
+          "[S25 V12 — Zoo]\nMS Point: \"popular animals are being sold to other zoos // not all animals are moving\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "The zoo is selling its animals because it needs money",
+          B: "Some beloved animals are going to be gotten rid of",
+          C: "Popular creatures will be relocated to other facilities",
+          D: "No correct option",
+        },
+        answer: "C",
+        explanation:
+          "A invents a reason ('because it needs money') not in the MS. B is too informal — 'gotten rid of' is colloquial and implies the animals are being discarded rather than transferred. C rewrites the point precisely: 'popular creatures' = 'popular animals', 'relocated' = 'sold/moved', 'other facilities' = 'other zoos'.",
+      },
+      {
+        section: "B",
+        question:
+          "[W25 V12 — Sneakers]\nMS Point: \"sporting endorsements // contracts signed with top athletes // athletes promote / advertise them\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Famous sportspeople endorse the products through lucrative agreements",
+          B: "Athletes sign contracts with big brands and promote them",
+          C: "Top athletes advertise sneakers to the world",
+          D: "No correct option",
+        },
+        answer: "D",
+        explanation:
+          "A adds 'lucrative' — a detail not in the MS. B lifts 'contracts signed' and 'promote' directly from the MS. C lifts 'top athletes' and 'advertise' from the MS, and 'to the world' adds detail not stated. None of the three reword the point cleanly — D is correct.",
+      },
+      {
+        section: "B",
+        question:
+          "[Specimen — Treehotel]\nMS Point: \"built sustainably / environmentally friendly / built with sensitivity to wildlife\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "The venue was constructed with care for the environment and measures to protect local animals",
+          B: "The hotel was built sustainably with sensitivity to wildlife",
+          C: "The place is green and eco-friendly in every way imaginable",
+          D: "No correct option",
+        },
+        answer: "A",
+        explanation:
+          "B lifts 'built sustainably' and 'sensitivity to wildlife' directly from the MS. C is vague and ornate — 'in every way imaginable' adds unwarranted emphasis. A rewrites all three MS elements without lifting: 'constructed with care for the environment' = 'built sustainably / environmentally friendly', and 'measures to protect local animals' = 'sensitivity to wildlife'.",
+      },
+      {
+        section: "B",
+        question:
+          "[S24 V11 — Plogging]\nMS Point: \"protects / helps ecosystem / wildlife / nature\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "The natural environment is safeguarded from harm",
+          B: "It helps the ecosystem and protects wildlife",
+          C: "Animals and plants benefit from cleaner areas",
+          D: "No correct option",
+        },
+        answer: "D",
+        explanation:
+          "A loses specificity — 'safeguarded from harm' does not name what is protected. B lifts 'helps the ecosystem' and 'protects wildlife' directly from the MS. C changes the meaning — 'animals and plants benefit from cleaner areas' is not the same as protecting the ecosystem or wildlife. None reword the point correctly — D is correct.",
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION C — Q11–15 (Exercise B)
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "C",
+        question:
+          "[W24 V12 — Fitness App]\nMS Point: \"makes you overtrain / not work at your own pace / run / ride too fast / too far\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Users exercise too much",
+          B: "The app pushes users beyond safe physical limits — disregarding their own pace",
+          C: "People are made to overtrain and not work at their own pace",
+          D: "No correct option",
+        },
+        answer: "B",
+        explanation:
+          "A is too vague — 'exercise too much' loses the pace, distance, and compulsive elements. C lifts 'overtrain' and 'not work at their own pace' directly from the MS. B rewrites the point precisely: 'pushes users beyond safe physical limits' = 'overtrain / too fast / too far', and 'disregarding their own pace' = 'not work at your own pace'.",
+      },
+      {
+        section: "C",
+        question:
+          "[W25 V11 — Everest]\nMS Point: \"microplastic / waste / belongings abandoned / environmental impact\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Discarded items and pollutants are causing environmental degradation on the mountain",
+          B: "The mountain has microplastic waste and abandoned belongings causing environmental impact",
+          C: "Climbers are messy and leave rubbish everywhere on the slopes",
+          D: "No correct option",
+        },
+        answer: "A",
+        explanation:
+          "B lifts 'microplastic waste', 'abandoned belongings', and 'environmental impact' directly from the MS. C is too informal — 'messy' and 'rubbish everywhere' are colloquial and lose precision. A rewrites all MS elements without lifting: 'discarded items' = 'belongings abandoned / waste', 'pollutants' = 'microplastic', 'environmental degradation' = 'environmental impact'.",
+      },
+      {
+        section: "C",
+        question:
+          "[S24 V12 — Authentic Travel]\nMS Point: \"feel more confident / supported / safe\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Customers feel confident, supported and safe on their trips",
+          B: "Customers no longer worry about their safety because they have guides",
+          C: "Travellers feel reassured and well looked after throughout the journey",
+          D: "No correct option",
+        },
+        answer: "C",
+        explanation:
+          "A lifts 'confident, supported and safe' directly from the MS — all three adjectives are copied unchanged. B changes the meaning — 'no longer worry about their safety' is a different point, and 'because they have guides' is not in the MS. C rewrites all three feelings without lifting: 'reassured' = 'confident / safe', 'well looked after' = 'supported'.",
+      },
+      {
+        section: "C",
+        question:
+          "[W24 V11 — Sanctuaries]\nMS Point: \"environmental impact of flying / using non eco-friendly transport to get to a sanctuary\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "Flying is bad for the planet",
+          B: "The carbon footprint of travelling to isolated sanctuaries undermines the conservation effort",
+          C: "Using non eco-friendly transport to reach a sanctuary has an environmental impact",
+          D: "No correct option",
+        },
+        answer: "B",
+        explanation:
+          "A is too vague — 'flying is bad for the planet' loses the sanctuary context entirely. C lifts 'non eco-friendly transport', 'sanctuary', and 'environmental impact' directly from the MS. B rewrites the point precisely: 'carbon footprint of travelling' = 'environmental impact of flying', 'isolated sanctuaries' = 'sanctuary', and 'undermines the conservation effort' explains the significance.",
+      },
+      {
+        section: "C",
+        question:
+          "[S25 V12 — Zoo]\nMS Point: \"no public consultation / discussion\"\n\nWhich option is the BEST rewording of this marking scheme point?",
+        options: {
+          A: "The decision was imposed without any public consultation or discussion",
+          B: "The community was not informed about what would happen",
+          C: "Nobody even talked about the plans with the people",
+          D: "No correct option",
+        },
+        answer: "D",
+        explanation:
+          "A lifts 'public consultation' and 'discussion' directly from the MS, and 'imposed without any' adds content beyond the MS. B changes the meaning — 'not informed' is a different point from 'no consultation or discussion'. C is too informal — 'nobody even talked about the plans with the people' is colloquial and imprecise. None reword the point correctly — D is correct.",
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // SHORT RESPONSE PRACTICE QUIZ — Q3(b) 1123 O LEVEL
+  // ══════════════════════════════════════════════════════════════════════
+  "mcq-short-response-q3b": {
+    id: "mcq-short-response-q3b",
+    title: "Short Response Practice Quiz — Q3(b)",
+    description:
+      "10 questions · 5 minutes. Five real-world scenarios — identify whether the speaker agrees or disagrees, then pick the development that best supports their stated reason.",
+    timeLimit: 300,
+    questions: [
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION A — Cases 1 & 2 (Elon Musk, The Rock)
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "A",
+        question:
+          "CASE 1 — Elon Musk: Train Travel in China\n\nPersona: A billionaire who recently chose to travel in Hard Class to experience ordinary life. He found it refreshing and honest.\n\nQuestion: 'Some people say that Hard Class carriages are uncomfortable, noisy and not worth recommending. Would you advise someone to book it?'\n\nQ1: Does Elon agree that Hard Class is not worth recommending?",
+        options: {
+          A: "Yes — he agrees it is uncomfortable and a poor experience overall",
+          B: "No — he disagrees and would recommend it for the human connection it offers",
+          C: "Partially — the conditions are difficult but worth enduring occasionally",
+          D: "His view on this cannot be determined from the passage",
+        },
+        answer: "B",
+        explanation:
+          "The persona states Elon found the experience 'refreshing and honest' and it 'gave him the sense of connection he was looking for.' He would recommend it. Q1 is always NO in this quiz — the speaker always disagrees with the negative framing of the question.",
+      },
+      {
+        section: "A",
+        question:
+          "CASE 1 — Elon Musk: Train Travel in China\n\nElon gives one reason for his view. The carriage was packed with ordinary people going about their daily lives — strangers of all kinds, carrying simple belongings, eating and talking unselfconsciously.\n\nQ2: Which development BEST supports his point?",
+        options: {
+          A: "This reminded him that most of the world lives nothing like he does — being surrounded by people from all walks of life gave him a genuine sense of perspective and human connection that no luxury experience could replicate.",
+          B: "The carriage also had air vents along the top which allowed fresh air to circulate throughout, making the environment feel less confined and considerably more comfortable than the description suggested.",
+          C: "Hard Class carriages are more environmentally sustainable than Soft Class because they carry significantly more passengers per journey, which reduces the overall carbon footprint of rail travel considerably.",
+          D: "This proved that Hard Class passengers are accustomed to long journeys with minimal luggage, making the carriage atmosphere unexpectedly efficient and orderly compared to Soft Class.",
+        },
+        answer: "A",
+        explanation:
+          "B talks about air vents from the passage — this is a passage detail, not a development of Elon's reason about human connection. C brings in carbon footprint — a new topic unconnected to his reason. D changes the focus to luggage and efficiency rather than human connection. A directly develops Elon's point: the ordinary people gave him perspective and connection.",
+      },
+      {
+        section: "A",
+        question:
+          "CASE 2 — The Rock: Personal Chef\n\nPersona: The Rock is a professional personal chef. A client asks about hiring a personal chef vs using food delivery apps.\n\nQuestion: 'I've been thinking of hiring a personal chef, but some people say it's an unnecessary expense when food delivery apps are so convenient. What is your opinion?'\n\nQ1: Does The Rock agree that hiring a personal chef is unnecessary?",
+        options: {
+          A: "Yes — he agrees that food delivery apps are just as effective for most people",
+          B: "No — he disagrees and believes a personal chef provides something no app can",
+          C: "Partially — apps work for everyday meals but a chef is better for health goals",
+          D: "His view on this is not clearly stated in the passage",
+        },
+        answer: "B",
+        explanation:
+          "The Rock observed his client's sodium intake 'with the quiet disapproval of someone who has seen this before' — this is clearly a professional who believes in the value of personal attention over apps. He disagrees that a personal chef is unnecessary.",
+      },
+      {
+        section: "A",
+        question:
+          "CASE 2 — The Rock: Personal Chef\n\nThe Rock gives one reason for his view. He noticed that his client was consuming a remarkable amount of sodium long before the client had realised it themselves.\n\nQ2: Which development BEST supports his point?",
+        options: {
+          A: "This proves that food delivery apps are becoming increasingly popular because people are too busy to cook for themselves, which shows there is a growing market for convenient meal solutions that personal chefs could also tap into.",
+          B: "This kind of attentiveness means problems are identified early — a personal chef looks after a client's long-term health, not just a single meal, in a way that no algorithm or delivery notification ever could.",
+          C: "Sodium is found in high quantities in most processed and restaurant food, which is why nutritionists generally recommend home-cooked meals as the healthiest option for people of all ages and dietary requirements.",
+          D: "This demonstrates that clients often lose track of their dietary habits over time, which is why keeping a personal food journal alongside any meal service can help maintain awareness of nutritional intake.",
+        },
+        answer: "B",
+        explanation:
+          "C explains what sodium is generally — it does not develop The Rock's point about noticing the problem early. A changes the subject entirely to app popularity. D introduces a food journal — a different solution not connected to The Rock's reason. B directly develops his point: noticing the sodium early = the chef's attentiveness = long-term care no algorithm provides.",
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION B — Cases 3 & 4 (Jane Margolis, Saad Imran)
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "B",
+        question:
+          "CASE 3 — Jane Margolis: Community Composting\n\nPersona: Jane Margolis is a waste management specialist giving a talk to a community group.\n\nQuestion: 'The best way to deal with our waste problem is to encourage more people in our community to compost. What is your opinion?'\n\nQ1: Does Jane agree that composting is the best way to deal with the waste problem?",
+        options: {
+          A: "Yes — she believes community composting is the most practical and effective solution",
+          B: "No — she disagrees and argues that legislation and business accountability are needed",
+          C: "Partially — composting helps individuals but falls short of a complete solution",
+          D: "Her opinion is ambiguous — she neither clearly agrees nor disagrees",
+        },
+        answer: "B",
+        explanation:
+          "Jane says she is 'a little impatient with the framing' and argues 'We need legislation. We need manufacturers to take responsibility.' She clearly disagrees that composting is the best solution — the real problem lies with businesses, not individuals.",
+      },
+      {
+        section: "B",
+        question:
+          "CASE 3 — Jane Margolis: Community Composting\n\nJane gives one reason for her view. She says that businesses created the waste problem through packaging, single-use plastics and food discarded before it reaches the consumer.\n\nQ2: Which development BEST supports her point?",
+        options: {
+          A: "Composting does have genuine environmental benefits — it produces rich fertiliser, supports soil microorganisms and prevents methane release, which is why so many communities have embraced it so enthusiastically in recent years.",
+          B: "This means composting only handles what remains after the damage is done — the real solution is to stop businesses producing that waste in the first place through legislation and mandatory packaging reform.",
+          C: "Businesses should encourage their employees to compost at home by providing composting bins as part of their corporate social responsibility programmes, which would make a meaningful difference to landfill levels nationally.",
+          D: "It follows that governments should invest in public education campaigns teaching individuals to reduce their personal environmental footprint at the household level.",
+        },
+        answer: "B",
+        explanation:
+          "A lists composting benefits — this actually supports the opposite view, not Jane's. C suggests businesses do something small (bins) — but Jane's point is about legislation, not corporate gestures. D is about public education — a different point. B directly develops Jane's reason: if businesses created the damage, composting only addresses the aftermath — the real fix is preventing the waste at source.",
+      },
+      {
+        section: "B",
+        question:
+          "CASE 4 — Saad Imran: Rooftop Gardens\n\nPersona: Saad Imran is an environmental engineer with twenty years of experience. A journalist asks about rooftop gardens.\n\nQuestion: 'Some people think that installing a rooftop garden is a significant and meaningful contribution to the environment. What is your opinion?'\n\nQ1: Does Saad agree that a rooftop garden is a significant environmental contribution?",
+        options: {
+          A: "Yes — he believes rooftop gardens are a meaningful step towards urban sustainability",
+          B: "No — he disagrees and argues they are not a genuine climate solution",
+          C: "Partially — they have modest benefits but their impact should not be overstated",
+          D: "His position shifts throughout the passage and cannot be clearly identified",
+        },
+        answer: "B",
+        explanation:
+          "Saad states directly: 'A rooftop garden is a fine thing. It is not, however, a climate solution. It is a conversation piece with excellent drainage.' He clearly disagrees that a rooftop garden is significant or meaningful as an environmental contribution.",
+      },
+      {
+        section: "B",
+        question:
+          "CASE 4 — Saad Imran: Rooftop Gardens\n\nSaad gives one reason for his view. A rooftop garden serves the residents of that one building rather than the surrounding community.\n\nQ2: Which development BEST supports his point?",
+        options: {
+          A: "Rooftop gardens are also very expensive to install and maintain, which means that only wealthy property developers can afford them, making them an exclusive rather than an inclusive form of green space that further widens inequality.",
+          B: "A well-maintained public park, by contrast, delivers benefits to an entire postcode — it supports biodiversity, cools surrounding streets and provides free accessible green space to residents who may have no private outdoor area at all.",
+          C: "Rooftop gardens increase property values significantly, which encourages more developers to invest in green features and creates a positive trend towards greener urban architecture that benefits cities in the long run.",
+          D: "This suggests that urban planners should require all new residential buildings to include shared green spaces on upper floors, making rooftop gardens a standard rather than an exclusive feature.",
+        },
+        answer: "B",
+        explanation:
+          "C says rooftop gardens raise property values — this contradicts Saad's argument against them. A talks about cost and inequality — a related but different point from community access. D suggests a policy fix but does not develop Saad's stated reason. B directly develops his point: a public park contrasts with the rooftop garden by serving an entire community — the comparison proves his reason.",
+      },
+      // ──────────────────────────────────────────────────────────────────
+      // SECTION C — Case 5 (Amy Santiago)
+      // ──────────────────────────────────────────────────────────────────
+      {
+        section: "C",
+        question:
+          "CASE 5 — Amy Santiago: The Office\n\nPersona: Amy Santiago recently returned to a traditional office after years of remote work. She really enjoyed the return.\n\nQuestion: 'Some people think that working in a traditional office is inefficient and outdated. What is your opinion?'\n\nQ1: Does Amy agree that the office is inefficient and outdated?",
+        options: {
+          A: "Yes — she found remote working more productive and regrets returning to the office",
+          B: "No — she disagrees and values the clarity and structure that office working provides",
+          C: "Partially — the office has real inefficiencies but remains better than remote working",
+          D: "Her opinion about office working is not stated clearly in the passage",
+        },
+        answer: "B",
+        explanation:
+          "The persona states Amy 'really enjoyed the return' to the office. She would not agree that offices are inefficient or outdated — her personal experience was the opposite. She disagrees with the negative framing.",
+      },
+      {
+        section: "C",
+        question:
+          "CASE 5 — Amy Santiago: The Office\n\nAmy gives one reason for her view. Working from home had blurred every boundary she possessed — her flat had become simultaneously her office and her place of rest, and neither was working well.\n\nQ2: Which development BEST supports her point?",
+        options: {
+          A: "Remote working technology, however sophisticated, requires enormous investment to function properly — the bespoke digital infrastructure needed to replicate office collaboration takes years and considerable resource to develop correctly.",
+          B: "Having a physical separation between work and home means that when Amy is at the office she can focus completely, and when she returns home she can genuinely rest — her mental health and productivity both improved as a result.",
+          C: "Open-plan offices have been shown by research to increase collaboration and creativity amongst employees, with workers in shared spaces generating more ideas and completing tasks more efficiently than those working in isolation.",
+          D: "This shows that interior design plays a crucial role in mental wellbeing — creating a clearly defined work zone within a home can reduce the psychological overlap between professional and personal life significantly.",
+        },
+        answer: "B",
+        explanation:
+          "C is about open-plan offices and research — a new claim, not a development of Amy's boundary point. A is about remote technology costs — relevant to the passage but not to Amy's personal reason. D proposes a home design solution — which doesn't develop her stated reason for valuing the office. B directly develops her boundary point: physical separation between work and home is precisely what resolved the blurring she described.",
+      },
+    ],
+  },
 };
 
 validateMcqAnswerKeys(mcqSetsInternal);

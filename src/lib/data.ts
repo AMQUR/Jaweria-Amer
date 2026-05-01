@@ -1576,6 +1576,32 @@ const resourceLibrary: Resource[] = [
     description:
       "20 questions · 10 minutes. Read the quote, picture the scene, and choose the adjective cluster that best describes it — using the 8-cluster framework.",
   },
+  {
+    id: "mcq-rewording-workshop",
+    title: "Rewording Workshop: Pick the Best Rewording",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "15 questions · 8 minutes. Cambridge marking scheme points — pick the rewording that is precise, clear, and captures the full meaning without lifting, vagueness, or added content.",
+  },
+  {
+    id: "mcq-short-response-q3b",
+    title: "Short Response Practice Quiz — Q3(b)",
+    category: "quick-worksheets",
+    type: "mcq",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 2",
+    year: "Practice",
+    fileUrl: "",
+    description:
+      "10 questions · 5 minutes. Five real-world scenarios — identify whether the speaker agrees or disagrees, then pick the development that best supports their stated reason.",
+  },
 ];
 
 const curatedGeneralNotes: Resource[] = [

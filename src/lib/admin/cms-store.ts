@@ -18,6 +18,16 @@ const STATIC_RECORD_TIMESTAMP = "2024-01-01T00:00:00.000Z";
 const RESOURCE_RECORDS_FILE = "cms-resources.json";
 const MCQ_RECORDS_FILE = "cms-mcqs.json";
 const HOMEPAGE_FILE = "cms-homepage.json";
+const MCQ_SUBMISSIONS_FILE = "mcq-submissions.json";
+
+export type McqSubmission = {
+  id: string;
+  quizId: string;
+  score: number;
+  total: number;
+  answers: string[];
+  createdAt: string;
+};
 
 const CATEGORY_TO_FOLDER: Record<CmsResourceCategory, string> = {
   "general-notes": "notes",
@@ -553,6 +563,44 @@ async function walkFiles(dir: string): Promise<string[]> {
     }
   } catch {}
   return entries;
+}
+
+// ── MCQ Submission Tracking ─────────────────────────────────────────────────
+
+export async function saveMcqSubmission(
+  submission: Omit<McqSubmission, "id" | "createdAt">
+): Promise<McqSubmission> {
+  const submissions = await readJSON<McqSubmission[]>(MCQ_SUBMISSIONS_FILE, []);
+  const record: McqSubmission = {
+    id: `sub-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    ...submission,
+    createdAt: nowIso(),
+  };
+  submissions.push(record);
+  try {
+    await writeJSON(MCQ_SUBMISSIONS_FILE, submissions);
+  } catch {
+    // Silently fail — submission tracking should not interrupt the quiz flow
+  }
+  return record;
+}
+
+export async function getMcqSubmissions(): Promise<McqSubmission[]> {
+  return readJSON<McqSubmission[]>(MCQ_SUBMISSIONS_FILE, []);
+}
+
+export async function getSubmissionCounts(): Promise<Record<string, number>> {
+  try {
+    const submissions = await getMcqSubmissions();
+    return submissions.reduce<Record<string, number>>((acc, sub) => {
+      if (sub?.quizId) {
+        acc[sub.quizId] = (acc[sub.quizId] ?? 0) + 1;
+      }
+      return acc;
+    }, {});
+  } catch {
+    return {};
+  }
 }
 
 export async function getUploadAssets(): Promise<UploadAsset[]> {

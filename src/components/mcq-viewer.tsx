@@ -49,8 +49,27 @@ export function McqViewer({ mcqSet }: Props) {
 
   function handleSubmit() {
     if (!allAnswered) return;
+
+    // Calculate score inline so it is available before state update
+    const finalScore = mcqSet.questions.reduce(
+      (acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0),
+      0
+    );
+
     setSubmitted(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // Fire-and-forget: record this attempt (errors are silently swallowed)
+    void fetch("/api/mcq/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        quizId: mcqSet.id,
+        score: finalScore,
+        total: totalQuestions,
+        answers: mcqSet.questions.map((_, i) => answers[i] ?? null),
+      }),
+    }).catch(() => undefined);
   }
 
   function handleReset() {

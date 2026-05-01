@@ -47,10 +47,12 @@ const emptyMcqForm = (): McqForm => ({
 
 type McqManagerProps = {
   initialMcqs?: CmsMcqSet[];
+  submissionCounts?: Record<string, number>;
 };
 
-export function McqManager({ initialMcqs }: McqManagerProps) {
+export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerProps) {
   const [mcqs, setMcqs] = useState<CmsMcqSet[]>(() => (Array.isArray(initialMcqs) ? initialMcqs : []));
+  const [counts, setCounts] = useState<Record<string, number>>(submissionCounts);
   const [loading, setLoading] = useState(initialMcqs === undefined);
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<McqForm>(emptyMcqForm());
@@ -58,9 +60,16 @@ export function McqManager({ initialMcqs }: McqManagerProps) {
   async function loadMcqs() {
     try {
       setLoading(true);
-      const response = await fetch("/api/admin/mcq", { cache: "no-store" });
-      const data = response.ok ? await response.json() : null;
+      const [mcqRes, countsRes] = await Promise.all([
+        fetch("/api/admin/mcq", { cache: "no-store" }),
+        fetch("/api/admin/mcq/counts", { cache: "no-store" }),
+      ]);
+      const data = mcqRes.ok ? await mcqRes.json() : null;
+      const countsData = countsRes.ok ? await countsRes.json() : null;
       setMcqs(Array.isArray(data) ? data : []);
+      if (countsData && typeof countsData === "object" && !Array.isArray(countsData)) {
+        setCounts(countsData as Record<string, number>);
+      }
     } catch {
       setMcqs([]);
     } finally {
@@ -205,6 +214,9 @@ export function McqManager({ initialMcqs }: McqManagerProps) {
                     <p className="font-medium text-ink">{mcq.title}</p>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                       {(mcq?.questions ?? []).length} questions · {String(mcq?.visibility ?? "")} · {String(mcq?.paper ?? "")}
+                    </p>
+                    <p className="mt-0.5 text-xs font-medium text-crimson">
+                      Submissions: {counts[mcq.id] ?? 0}
                     </p>
                   </button>
                   <div className="mt-3 flex items-center gap-2">
