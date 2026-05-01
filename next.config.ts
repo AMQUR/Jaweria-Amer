@@ -8,6 +8,13 @@ const nextConfig: NextConfig = {
         source: "/admin/:path*",
         headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow" }],
       },
+      {
+        source: "/resources/:path*.pdf",
+        headers: [
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Content-Disposition", value: "inline" },
+        ],
+      },
     ];
   },
 };
