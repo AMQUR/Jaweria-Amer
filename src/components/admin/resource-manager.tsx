@@ -65,6 +65,8 @@ const emptyForm = (defaultCategory?: ResourceFormState["category"]): ResourceFor
   file: null,
 });
 
+const MAX_FILE_BYTES = 20 * 1024 * 1024; // 20 MB hard cap (client-side pre-check)
+
 // Section order matching the public Resources page
 const SECTION_ORDER: CmsResourceRecord["category"][] = [
   "general-notes",
@@ -155,29 +157,39 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
   }
 
   async function handleToggleVisibility(resource: CmsResourceRecord) {
-    const newVis = resource.visibility === "published" ? "draft" : "published";
-    const body = new FormData();
-    body.set("id", resource.id);
-    body.set("title", resource.title);
-    body.set("category", resource.category);
-    body.set("subCategory", resource.subCategory ?? "");
-    body.set("paper", resource.paper);
-    body.set("section", resource.section ?? "");
-    body.set("visibility", newVis);
-    body.set("subject", resource.subject);
-    body.set("level", resource.level);
-    body.set("year", resource.year);
-    body.set("description", resource.description);
-    body.set("autoDetectSection", String(resource.autoDetectSection ?? false));
-
-    const response = await fetch("/api/admin/resources", { method: "POST", body });
-    const data = await response.json();
-    if (!response.ok) {
-      toast.error((data as { error?: string }).error ?? "Could not update visibility.");
+    // MCQ resources are managed from the MCQ Builder — should not reach here,
+    // but guard defensively so a category mismatch never fires a bad request.
+    if (resource.type === "mcq") {
+      toast.info("Quick Worksheets are managed from the MCQ Builder.");
       return;
     }
-    toast.success(newVis === "published" ? "Resource published." : "Resource hidden.");
-    await loadResources();
+    try {
+      const newVis = resource.visibility === "published" ? "draft" : "published";
+      const body = new FormData();
+      body.set("id", resource.id);
+      body.set("title", resource.title ?? "");
+      body.set("category", resource.category);
+      body.set("subCategory", resource.subCategory ?? "");
+      body.set("paper", resource.paper ?? "");
+      body.set("section", resource.section ?? "");
+      body.set("visibility", newVis);
+      body.set("subject", resource.subject ?? "English Language 1123");
+      body.set("level", resource.level ?? "O Level");
+      body.set("year", resource.year ?? "Practice");
+      body.set("description", resource.description ?? "");
+      body.set("autoDetectSection", String(resource.autoDetectSection ?? false));
+
+      const response = await fetch("/api/admin/resources", { method: "POST", body });
+      const data = await response.json();
+      if (!response.ok) {
+        toast.error((data as { error?: string }).error ?? "Could not update visibility.");
+        return;
+      }
+      toast.success(newVis === "published" ? "Resource published." : "Resource hidden.");
+      await loadResources();
+    } catch {
+      toast.error("Network error — could not update visibility.");
+    }
   }
 
   async function handleDelete(resource: CmsResourceRecord) {
@@ -205,6 +217,13 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    // Client-side file size guard
+    if (form.file && form.file.size > MAX_FILE_BYTES) {
+      toast.error(`File is too large (${(form.file.size / 1024 / 1024).toFixed(1)} MB). Max allowed: 20 MB.`);
+      return;
+    }
+
     setSaving(true);
 
     const body = new FormData();
@@ -347,8 +366,7 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       ) : (
         <div className="space-y-4">
           {SECTION_ORDER.map((category) => {
-            const sectionAll = visibleResources.filter((r) => r.category === category);
-            const sectionVisible = sectionAll.filter((r) => !r.deleted);
+            const sectionVisible = visibleResources.filter((r) => r.category === category && !r.deleted);
             const hiddenCount = resources.filter((r) => r.category === category && r.deleted).length;
             const label = CMS_RESOURCE_CATEGORY_LABELS[category];
             const collapsed = collapsedSections.has(category);
@@ -466,7 +484,7 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                   required
                 />
               </Field>
-              <Field label="PDF file">
+              <Field label="PDF file (max 20 MB)">
                 <div className="space-y-1.5">
                   <Input
                     type="file"
@@ -474,8 +492,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                     onChange={(event) => setForm((prev) => ({ ...prev, file: event.target.files?.[0] ?? null }))}
                   />
                   {form.file && (
-                    <p className="text-xs text-slate">
-                      {form.file.name} ({(form.file.size / 1024 / 1024).toFixed(1)} MB)
+                    <p className={`text-xs ${form.file.size > MAX_FILE_BYTES ? "text-red-600 font-medium" : "text-slate"}`}>
+                      {form.file.name} — {(form.file.size / 1024 / 1024).toFixed(1)} MB
+                      {form.file.size > MAX_FILE_BYTES && " (exceeds 20 MB limit)"}
                     </p>
                   )}
                 </div>

@@ -73,24 +73,29 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
         fetch("/api/admin/mcq", { cache: "no-store" }),
         fetch("/api/admin/mcq/counts", { cache: "no-store" }),
       ]);
-      const data = mcqRes.ok ? await mcqRes.json() : null;
-      const statsData = statsRes.ok ? await statsRes.json() : null;
-      setMcqs(Array.isArray(data) ? data : []);
-      if (statsData && typeof statsData === "object" && !Array.isArray(statsData)) {
-        const s = statsData as Record<string, unknown>;
-        setStats({
-          counts:
-            s.counts && typeof s.counts === "object" && !Array.isArray(s.counts)
-              ? (s.counts as Record<string, number>)
-              : (statsData as Record<string, number>),
-          avgScores:
-            s.avgScores && typeof s.avgScores === "object" && !Array.isArray(s.avgScores)
-              ? (s.avgScores as Record<string, number>)
-              : {},
-        });
+
+      const mcqData: unknown = mcqRes.ok ? await mcqRes.json() : null;
+      setMcqs(Array.isArray(mcqData) ? (mcqData as CmsMcqSet[]) : []);
+
+      if (statsRes.ok) {
+        const raw: unknown = await statsRes.json();
+        const s = raw && typeof raw === "object" && !Array.isArray(raw)
+          ? (raw as Record<string, unknown>)
+          : {};
+        const counts =
+          s.counts && typeof s.counts === "object" && !Array.isArray(s.counts)
+            ? (s.counts as Record<string, number>)
+            : {};
+        const avgScores =
+          s.avgScores && typeof s.avgScores === "object" && !Array.isArray(s.avgScores)
+            ? (s.avgScores as Record<string, number>)
+            : {};
+        setStats({ counts, avgScores });
       }
+      // If statsRes is not ok, keep whatever stats are already in state (SSR initial or previous fetch)
     } catch {
       setMcqs([]);
+      // Do not reset stats on MCQ-fetch failure — stale counts are better than losing them
     } finally {
       setLoading(false);
     }

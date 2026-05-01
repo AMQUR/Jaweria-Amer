@@ -613,15 +613,25 @@ export async function getSubmissionStats(): Promise<{
     const scoreSums: Record<string, number> = {};
 
     for (const sub of submissions) {
-      if (!sub?.quizId) continue;
-      counts[sub.quizId] = (counts[sub.quizId] ?? 0) + 1;
-      const pct = sub.total > 0 ? (sub.score / sub.total) * 100 : 0;
-      scoreSums[sub.quizId] = (scoreSums[sub.quizId] ?? 0) + pct;
+      const quizId = typeof sub?.quizId === "string" ? sub.quizId.trim() : "";
+      if (!quizId) continue;
+
+      // Coerce to numbers — JSON may contain strings if the file was manually edited
+      const score = Number(sub.score);
+      const total = Number(sub.total);
+
+      // Skip malformed records rather than propagating NaN
+      if (!isFinite(score) || !isFinite(total) || total <= 0) continue;
+
+      counts[quizId] = (counts[quizId] ?? 0) + 1;
+      const pct = (Math.max(0, Math.min(score, total)) / total) * 100;
+      scoreSums[quizId] = (scoreSums[quizId] ?? 0) + pct;
     }
 
     const avgScores: Record<string, number> = {};
     for (const [id, count] of Object.entries(counts)) {
-      avgScores[id] = Math.round((scoreSums[id] ?? 0) / count);
+      // count is always >= 1 here, but guard anyway
+      avgScores[id] = count > 0 ? Math.round((scoreSums[id] ?? 0) / count) : 0;
     }
 
     return { counts, avgScores };
