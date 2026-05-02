@@ -981,6 +981,30 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/scripts/script-english-p1-mj25-cambridge-connect-1.pdf",
     description: "O Level English 1123 · Scripts · Exam resource",
   },
+  {
+    id: "summary-answers",
+    title: "Sample Summary Answers",
+    category: "solved-papers",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Practice",
+    section: "Solved Papers",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/solved-papers/summary-answers.pdf",
+    description: "Band 9-level summaries covering multiple exam variants with structure, keywords, and examiner-style phrasing.",
+  },
+  {
+    id: "short-response-answers",
+    title: "Short Response Model Answers",
+    category: "solved-papers",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Practice",
+    section: "Solved Papers",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/solved-papers/short-response-answers.pdf",
+    description: "High-scoring Q3(b) responses with full development, examiner expectations, and mark scheme alignment.",
+  },
 ];
 
 export const supplementalHubResources: Resource[] = supplementalHubResourcesBase.map((r) => {

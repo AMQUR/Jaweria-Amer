@@ -8,6 +8,7 @@ import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
 import { FileVaultCard } from "@/components/file-vault-card";
 import { FiveDayPlanBanner } from "@/components/five-day-plan-banner";
+import { SixHourPlanBanner } from "@/components/six-hour-plan-banner";
 import { ResourcesPageScroll } from "@/components/resources-page-scroll";
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT, CARD_HOVER } from "@/components/resource-card-system";
 
@@ -103,6 +104,9 @@ export default async function ResourcesPage() {
 
           {/* 3 — 5-Day Plan */}
           <FiveDayPlanBanner />
+
+          {/* 4 — 6-Hour Plan */}
+          <SixHourPlanBanner />
         </div>
       </section>
 
