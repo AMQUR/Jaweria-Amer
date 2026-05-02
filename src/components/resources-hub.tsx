@@ -193,6 +193,7 @@ const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; de
   { id: "summary-writing-vocabulary", label: "Summary Writing Vocabulary", description: "High-utility vocabulary for summary writing tasks." },
   { id: "general-vocabulary", label: "General Vocabulary", description: "Broad vocabulary banks for all paper tasks." },
   { id: "p2-50-words", label: "50 Words for P2", description: "High-impact bank for Paper 2 directed writing and essays." },
+  { id: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List", description: "High-frequency exam vocabulary with synonyms and structured usage." },
 ];
 
 const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
@@ -202,6 +203,7 @@ const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: 
   { value: "summary-writing-vocabulary", label: "Summary Writing Vocabulary" },
   { value: "general-vocabulary", label: "General Vocabulary" },
   { value: "p2-50-words", label: "50 Words for P2" },
+  { value: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List" },
 ];
 
 const NOTES_TOPIC_ACCENTS: Record<string, { gradient: string; border: string }> = {

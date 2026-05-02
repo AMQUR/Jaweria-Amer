@@ -823,17 +823,6 @@ const supplementalHubResourcesBase: Resource[] = [
     description: "Fully worked solution with examiner-style answers.",
   },
   {
-    id: "notes-solved-all-summaries",
-    title: "All Solved Summaries",
-    category: "solved-papers",
-    subject: "English Language 1123",
-    level: "O Level",
-    paper: "Paper 1",
-    year: "Practice",
-    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/solved-papers/all-solved-summaries.pdf",
-    description: "Complete collection of solved summary questions with model answers.",
-  },
-  {
     id: "notes-solved-all-directed-writings",
     title: "All Directed Writings",
     category: "general-notes",
@@ -918,6 +907,18 @@ const supplementalHubResourcesBase: Resource[] = [
     year: "Core",
     fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/vocabulary/summary-vocabulary-bank.pdf",
     description: "Core vocabulary bank for summary writing with high-utility exam words.",
+  },
+  {
+    id: "final-p1-vocabulary-list",
+    title: "Final P1 Vocabulary List",
+    category: "vocabulary",
+    subCategory: "final-p1-vocabulary-list",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Core",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/final-p1-vocabulary-list.pdf",
+    description: "High-frequency vocabulary, examiner-style synonyms, and structured word banks for Paper 1.",
   },
   // ── Featured (vault: Notes → Essay Writing) ─────────────────────────────
   {
