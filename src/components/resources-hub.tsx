@@ -890,11 +890,15 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
               </p>
             </div>
           ) : filtered.length > 0 ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {filtered.map((r) => (
-                <ResourceCard key={r.id} resource={r} />
-              ))}
-            </div>
+            category === "yearly-past-papers" ? (
+              <YearliesSplitGrid resources={filtered} />
+            ) : (
+              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                {filtered.map((r) => (
+                  <ResourceCard key={r.id} resource={r} />
+                ))}
+              </div>
+            )
           ) : category === "topicals" && paper !== "all" && isEmpty ? (
             <div className="rounded-2xl border border-border/60 bg-white p-6 text-center shadow-sm sm:p-8">
               <p className="text-sm leading-relaxed text-slate">
@@ -974,6 +978,64 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         </div>
       </div>
     </section>
+  );
+}
+
+function YearliesSplitGrid({ resources }: { resources: Resource[] }) {
+  const questionPapers = resources.filter((r) => r.section === "question-papers");
+  const inserts = resources.filter((r) => r.section === "inserts");
+  const other = resources.filter((r) => r.section !== "question-papers" && r.section !== "inserts");
+
+  const gridClass = "grid gap-5 sm:grid-cols-2 lg:grid-cols-3";
+
+  return (
+    <div className="space-y-10">
+      {questionPapers.length > 0 && (
+        <div>
+          <div className="mb-5 flex items-center gap-3">
+            <h3 className="font-serif text-lg font-semibold text-ink">Question Papers</h3>
+            <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700">
+              {questionPapers.length}
+            </span>
+          </div>
+          <div className={gridClass}>
+            {questionPapers.map((r) => (
+              <ResourceCard key={r.id} resource={r} />
+            ))}
+          </div>
+        </div>
+      )}
+      {inserts.length > 0 && (
+        <div>
+          <div className="mb-5 flex items-center gap-3">
+            <h3 className="font-serif text-lg font-semibold text-ink">Inserts</h3>
+            <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700">
+              {inserts.length}
+            </span>
+          </div>
+          <div className={gridClass}>
+            {inserts.map((r) => (
+              <ResourceCard key={r.id} resource={r} />
+            ))}
+          </div>
+        </div>
+      )}
+      {other.length > 0 && (
+        <div>
+          <div className="mb-5 flex items-center gap-3">
+            <h3 className="font-serif text-lg font-semibold text-ink">Other Resources</h3>
+            <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700">
+              {other.length}
+            </span>
+          </div>
+          <div className={gridClass}>
+            {other.map((r) => (
+              <ResourceCard key={r.id} resource={r} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 
