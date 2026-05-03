@@ -993,7 +993,8 @@ function classifyYearly(r: Resource): YearlyGroup | null {
   // Specimen check must come before insert/QP so specimen inserts
   // and specimen QPs land in specimens, not in their type buckets.
   if (title.includes("specimen")) return "specimens";
-  if (paper.includes("insert")) return "inserts";
+  // normalizeGuidedPaper strips "Paper 1 insert" → "Paper 1", so check title too
+  if (paper.includes("insert") || title.includes("insert")) return "inserts";
   if (title.includes("question paper")) return "question-papers";
 
   // Mark schemes and anything else are intentionally excluded.
