@@ -389,10 +389,18 @@ function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "file
     return resource.paper;
   }
 
+  const paperLower = resource.paper.toLowerCase();
+
+  // Inserts must never be normalized to plain "Paper N" — preserve the designation.
+  if (paperLower.includes("insert")) {
+    if (/paper\s*1/i.test(resource.paper)) return "Paper 1 insert";
+    if (/paper\s*2/i.test(resource.paper)) return "Paper 2 insert";
+    return resource.paper;
+  }
+
   const contentHaystack = `${resource.title} ${basenameFromFileUrl(resource.fileUrl)}`
     .toLowerCase()
     .replace(/[-_]+/g, " ");
-  const paperHaystack = resource.paper.toLowerCase();
 
   if (
     contentHaystack.includes("summary") ||
@@ -418,14 +426,11 @@ function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "file
     return "Paper 1";
   }
 
-  if (
-    paperHaystack.includes("paper 1") ||
-    /\bp1\b/.test(paperHaystack)
-  ) {
+  if (paperLower.includes("paper 1") || /\bp1\b/.test(paperLower)) {
     return "Paper 1";
   }
 
-  if (paperHaystack.includes("paper 2") || /\bp2\b/.test(paperHaystack)) {
+  if (paperLower.includes("paper 2") || /\bp2\b/.test(paperLower)) {
     return "Paper 2";
   }
 
