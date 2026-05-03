@@ -979,71 +979,83 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   );
 }
 
-function classifyYearly(r: Resource): "inserts" | "question-papers" | "other" {
+type YearlyGroup = "inserts" | "question-papers" | "specimens";
+
+function classifyYearly(r: Resource): YearlyGroup | null {
+  // Explicit section field wins
   if (r.section === "inserts") return "inserts";
   if (r.section === "question-papers") return "question-papers";
-  // Fallback: classify by paper field and title for legacy entries without section
+  if (r.section === "specimens") return "specimens";
+
   const paper = (r.paper ?? "").toLowerCase();
   const title = (r.title ?? "").toLowerCase();
+
+  // Specimen check must come before insert/QP so specimen inserts
+  // and specimen QPs land in specimens, not in their type buckets.
+  if (title.includes("specimen")) return "specimens";
   if (paper.includes("insert")) return "inserts";
-  if (title.includes("question paper") || paper.includes("variant")) return "question-papers";
-  return "other";
+  if (title.includes("question paper")) return "question-papers";
+
+  // Mark schemes and anything else are intentionally excluded.
+  return null;
+}
+
+/** Sort key: [year, session (S=0/W=1), paper number, variant] */
+function yearlySort(r: Resource): [number, number, number, number] {
+  const year = r.year ?? "";
+  const title = (r.title ?? "").toLowerCase();
+  const paper = (r.paper ?? "").toLowerCase();
+
+  const yearMatch = year.match(/(\d{4})/);
+  const numYear = yearMatch ? parseInt(yearMatch[1]) : 9999;
+  const session = year.toLowerCase().includes("june") || year.toLowerCase().includes("may") ? 0 : 1;
+  const paperNum = title.includes("paper 2") || paper.includes("paper 2") ? 1 : 0;
+  const variantMatch = paper.match(/variant (\d+)/);
+  const variant = variantMatch ? parseInt(variantMatch[1]) : 0;
+
+  return [numYear, session, paperNum, variant];
+}
+
+function sortYearlies(items: Resource[]): Resource[] {
+  return [...items].sort((a, b) => {
+    const ka = yearlySort(a);
+    const kb = yearlySort(b);
+    for (let i = 0; i < ka.length; i++) {
+      if (ka[i] !== kb[i]) return ka[i] - kb[i];
+    }
+    return 0;
+  });
+}
+
+function YearliesSection({ title, items }: { title: string; items: Resource[] }) {
+  if (items.length === 0) return null;
+  return (
+    <div>
+      <div className="mb-5 flex items-center gap-3">
+        <h3 className="font-serif text-lg font-semibold text-ink">{title}</h3>
+        <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700">
+          {items.length}
+        </span>
+      </div>
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((r) => (
+          <ResourceCard key={r.id} resource={r} />
+        ))}
+      </div>
+    </div>
+  );
 }
 
 function YearliesSplitGrid({ resources }: { resources: Resource[] }) {
-  const questionPapers = resources.filter((r) => classifyYearly(r) === "question-papers");
-  const inserts = resources.filter((r) => classifyYearly(r) === "inserts");
-  const other = resources.filter((r) => classifyYearly(r) === "other");
-
-  const gridClass = "grid gap-5 sm:grid-cols-2 lg:grid-cols-3";
+  const inserts = sortYearlies(resources.filter((r) => classifyYearly(r) === "inserts"));
+  const questionPapers = sortYearlies(resources.filter((r) => classifyYearly(r) === "question-papers"));
+  const specimens = sortYearlies(resources.filter((r) => classifyYearly(r) === "specimens"));
 
   return (
     <div className="space-y-10">
-      {questionPapers.length > 0 && (
-        <div>
-          <div className="mb-5 flex items-center gap-3">
-            <h3 className="font-serif text-lg font-semibold text-ink">Question Papers</h3>
-            <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700">
-              {questionPapers.length}
-            </span>
-          </div>
-          <div className={gridClass}>
-            {questionPapers.map((r) => (
-              <ResourceCard key={r.id} resource={r} />
-            ))}
-          </div>
-        </div>
-      )}
-      {inserts.length > 0 && (
-        <div>
-          <div className="mb-5 flex items-center gap-3">
-            <h3 className="font-serif text-lg font-semibold text-ink">Inserts</h3>
-            <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700">
-              {inserts.length}
-            </span>
-          </div>
-          <div className={gridClass}>
-            {inserts.map((r) => (
-              <ResourceCard key={r.id} resource={r} />
-            ))}
-          </div>
-        </div>
-      )}
-      {other.length > 0 && (
-        <div>
-          <div className="mb-5 flex items-center gap-3">
-            <h3 className="font-serif text-lg font-semibold text-ink">Other Resources</h3>
-            <span className="rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700">
-              {other.length}
-            </span>
-          </div>
-          <div className={gridClass}>
-            {other.map((r) => (
-              <ResourceCard key={r.id} resource={r} />
-            ))}
-          </div>
-        </div>
-      )}
+      <YearliesSection title="Inserts" items={inserts} />
+      <YearliesSection title="Question Papers" items={questionPapers} />
+      <YearliesSection title="Specimens" items={specimens} />
     </div>
   );
 }
