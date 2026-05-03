@@ -434,6 +434,8 @@ function normalizeGuidedPaper(resource: Pick<Resource, "paper" | "title" | "file
 
 function isMarkSchemeResource(resource: Pick<Resource, "title" | "fileUrl" | "category" | "subCategory">): boolean {
   const fileUrlLower = resource.fileUrl.toLowerCase();
+  /** Resources explicitly categorised as solved-papers must never be reclassified as checklists. */
+  if (resource.category === "solved-papers") return false;
   /** Solved worked papers live under Notes; "solved" in the stem must not force the MS → checklists path. */
   if (fileUrlLower.includes("/notes/solved-papers/")) return false;
   /** Notes vocabulary banks are not mark schemes. */
