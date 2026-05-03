@@ -48,7 +48,6 @@ export type ResourceNotesSubCategory =
   | "directed-writing-vocabulary"
   | "summary-writing-vocabulary"
   | "p2-50-words"
-  | "final-p1-vocabulary-list"
   | "checklists";
 
 export interface Resource {

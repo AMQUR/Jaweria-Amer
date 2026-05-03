@@ -956,7 +956,7 @@ const supplementalHubResourcesBase: Resource[] = [
     id: "final-p1-vocabulary-list",
     title: "Final P1 Vocabulary List",
     category: "vocabulary",
-    subCategory: "final-p1-vocabulary-list",
+    subCategory: "comprehension-vocabulary",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",

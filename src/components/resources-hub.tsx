@@ -187,7 +187,6 @@ const NOTES_SUBCATEGORY_OPTIONS = NOTES_HUB_SUBTOPICS.map((t) => ({ value: t.id,
 const NOTES_TOPIC_BLOCKS = NOTES_HUB_SUBTOPICS;
 
 const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; description: string }[] = [
-  { id: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List", description: "Complete high-impact vocabulary bank for Paper 1." },
   { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },
   { id: "essay-vocabulary", label: "Essay Vocabulary", description: "Expressive vocabulary for writing tasks." },
   { id: "directed-writing-vocabulary", label: "Directed Writing Vocabulary", description: "High-impact vocabulary and phrases for directed writing." },
@@ -197,7 +196,6 @@ const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; de
 ];
 
 const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
-  { value: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List" },
   { value: "comprehension-vocabulary", label: "Comprehension Vocabulary" },
   { value: "essay-vocabulary", label: "Essay Vocabulary" },
   { value: "directed-writing-vocabulary", label: "Directed Writing Vocabulary" },
