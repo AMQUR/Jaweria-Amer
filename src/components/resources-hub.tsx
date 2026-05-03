@@ -187,23 +187,23 @@ const NOTES_SUBCATEGORY_OPTIONS = NOTES_HUB_SUBTOPICS.map((t) => ({ value: t.id,
 const NOTES_TOPIC_BLOCKS = NOTES_HUB_SUBTOPICS;
 
 const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; description: string }[] = [
+  { id: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List", description: "Complete high-impact vocabulary bank for Paper 1." },
   { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },
   { id: "essay-vocabulary", label: "Essay Vocabulary", description: "Expressive vocabulary for writing tasks." },
   { id: "directed-writing-vocabulary", label: "Directed Writing Vocabulary", description: "High-impact vocabulary and phrases for directed writing." },
   { id: "summary-writing-vocabulary", label: "Summary Writing Vocabulary", description: "High-utility vocabulary for summary writing tasks." },
   { id: "general-vocabulary", label: "General Vocabulary", description: "Broad vocabulary banks for all paper tasks." },
   { id: "p2-50-words", label: "50 Words for P2", description: "High-impact bank for Paper 2 directed writing and essays." },
-  { id: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List", description: "High-frequency exam vocabulary with synonyms and structured usage." },
 ];
 
 const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
+  { value: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List" },
   { value: "comprehension-vocabulary", label: "Comprehension Vocabulary" },
   { value: "essay-vocabulary", label: "Essay Vocabulary" },
   { value: "directed-writing-vocabulary", label: "Directed Writing Vocabulary" },
   { value: "summary-writing-vocabulary", label: "Summary Writing Vocabulary" },
   { value: "general-vocabulary", label: "General Vocabulary" },
   { value: "p2-50-words", label: "50 Words for P2" },
-  { value: "final-p1-vocabulary-list", label: "Final P1 Vocabulary List" },
 ];
 
 const NOTES_TOPIC_ACCENTS: Record<string, { gradient: string; border: string }> = {
@@ -981,10 +981,21 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
   );
 }
 
+function classifyYearly(r: Resource): "inserts" | "question-papers" | "other" {
+  if (r.section === "inserts") return "inserts";
+  if (r.section === "question-papers") return "question-papers";
+  // Fallback: classify by paper field and title for legacy entries without section
+  const paper = (r.paper ?? "").toLowerCase();
+  const title = (r.title ?? "").toLowerCase();
+  if (paper.includes("insert")) return "inserts";
+  if (title.includes("question paper") || paper.includes("variant")) return "question-papers";
+  return "other";
+}
+
 function YearliesSplitGrid({ resources }: { resources: Resource[] }) {
-  const questionPapers = resources.filter((r) => r.section === "question-papers");
-  const inserts = resources.filter((r) => r.section === "inserts");
-  const other = resources.filter((r) => r.section !== "question-papers" && r.section !== "inserts");
+  const questionPapers = resources.filter((r) => classifyYearly(r) === "question-papers");
+  const inserts = resources.filter((r) => classifyYearly(r) === "inserts");
+  const other = resources.filter((r) => classifyYearly(r) === "other");
 
   const gridClass = "grid gap-5 sm:grid-cols-2 lg:grid-cols-3";
 
