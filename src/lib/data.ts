@@ -1602,6 +1602,30 @@ const resourceLibrary: Resource[] = [
     description:
       "10 questions · 5 minutes. Five real-world scenarios — identify whether the speaker agrees or disagrees, then pick the development that best supports their stated reason.",
   },
+  {
+    id: "impressions-mcq",
+    title: "Impressions — MCQ Practice",
+    category: "quick-worksheets",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Practice",
+    fileUrl:
+      "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/worksheets/impressions-mcq.pdf",
+    description: "Exam-style MCQs for Paper 1 Question 2 (impressions).",
+  },
+  {
+    id: "writers-effect-mcq",
+    title: "Writer's Effect — MCQ Practice",
+    category: "quick-worksheets",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Practice",
+    fileUrl:
+      "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/worksheets/writers-effect-mcq.pdf",
+    description: "3-step method MCQs for Paper 1 Question 2 (writer's effect).",
+  },
 ];
 
 const curatedGeneralNotes: Resource[] = [

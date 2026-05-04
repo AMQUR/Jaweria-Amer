@@ -953,16 +953,18 @@ const supplementalHubResourcesBase: Resource[] = [
     description: "Core vocabulary bank for summary writing with high-utility exam words.",
   },
   {
-    id: "final-p1-vocabulary-list",
-    title: "Final P1 Vocabulary List",
+    id: "vocabulary-full",
+    title: "Vocabulary Full PDF",
     category: "vocabulary",
     subCategory: "comprehension-vocabulary",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
     year: "Core",
-    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/final-p1-vocabulary-list.pdf",
-    description: "High-frequency vocabulary, examiner-style synonyms, and structured word banks for Paper 1.",
+    fileUrl:
+      "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/comprehension/vocabulary-full.pdf",
+    description:
+      "High-frequency vocabulary, synonyms, and structured word banks for Paper 1.",
   },
   // ── Featured (vault: Notes → Essay Writing) ─────────────────────────────
   {
