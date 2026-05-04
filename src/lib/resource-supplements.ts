@@ -966,6 +966,20 @@ const supplementalHubResourcesBase: Resource[] = [
     description:
       "Comprehensive vocabulary bank with meanings, synonyms, and examiner-style word usage across past papers.",
   },
+  {
+    id: "final-p1-vocabulary-list",
+    title: "Final P1 Vocabulary List",
+    category: "vocabulary",
+    subCategory: "comprehension-vocabulary",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Core",
+    fileUrl:
+      "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/comprehension/final-p1-vocabulary-list.pdf",
+    description:
+      "High-frequency vocabulary, examiner-style synonyms, and structured word banks for Paper 1.",
+  },
   // ── Featured (vault: Notes → Essay Writing) ─────────────────────────────
   {
     id: "final-p2-checklist",
