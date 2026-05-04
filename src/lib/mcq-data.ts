@@ -1196,6 +1196,368 @@ const mcqSetsInternal: Record<string, McqSet> = {
       },
     ],
   },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // IMPRESSIONS PRACTICE QUIZ — PAPER 1 QUESTION 2
+  // ══════════════════════════════════════════════════════════════════════
+  "impressions-practice-quiz": {
+    id: "impressions-practice-quiz",
+    title: "Impressions Practice Quiz",
+    description:
+      "12 questions · 10 minutes. Tone, impression vocabulary, inference, and precise meaning for Paper 1 Question 2.",
+    timeLimit: 600,
+    questions: [
+      {
+        section: "A",
+        question:
+          "\"The hall fell silent the moment she stepped onto the stage.\"\n\nWhich impression does the writer chiefly create for the reader?",
+        options: {
+          A: "Joyful celebration and noisy festivity throughout the crowd",
+          B: "Heightened expectation and tension — attention is fixed and the moment feels significant",
+          C: "Open hostility and anger directed at the performer",
+          D: "Complete boredom and indifference from everyone present",
+        },
+        answer: "B",
+        explanation:
+          "Silence when someone appears often signals anticipation and importance. The writer does not describe cheering (A), aggression (C), or apathy (D). B captures the held-breath, expectant mood.",
+      },
+      {
+        section: "A",
+        question:
+          "\"His apology sounded rehearsed, each phrase weighted like a lawyer's brief.\"\n\nWhat does the writer suggest about the apology?",
+        options: {
+          A: "It was spontaneous and deeply sincere",
+          B: "It was carefully prepared and lacked genuine feeling",
+          C: "It was too quiet for anyone to hear",
+          D: "It was delivered in a foreign language",
+        },
+        answer: "B",
+        explanation:
+          "'Rehearsed' and comparison to a legal document imply polish without warmth. The writer is not praising sincerity (A), commenting on volume (C), or on language choice (D).",
+      },
+      {
+        section: "A",
+        question:
+          "\"Bitter wind clawed at the shutters.\"\n\nWhich word cluster best matches the dominant tone?",
+        options: {
+          A: "Gentle domestic comfort and cosiness",
+          B: "Threatening, hostile energy from the weather against the house",
+          C: "Light-hearted comic exaggeration with no real menace",
+          D: "Calm spring warmth and renewal",
+        },
+        answer: "B",
+        explanation:
+          "'Bitter' and 'clawed' personify the wind as aggressive. The tone is menacing, not cosy (A), purely comic (C), or warm (D).",
+      },
+      {
+        section: "A",
+        question:
+          "\"She spoke in a voice barely above a whisper, as if the words might break if raised.\"\n\nThe most reasonable inference is that she feels —",
+        options: {
+          A: "Arrogant and eager to command the room",
+          B: "Cautious, vulnerable, or afraid of being overheard",
+          C: "Amused by the acoustics of the hall",
+          D: "Determined to sing rather than speak",
+        },
+        answer: "B",
+        explanation:
+          "A whisper and fear of 'breaking' words suggest delicacy and inhibition. Nothing supports arrogance (A), humour about sound (C), or singing (D).",
+      },
+      {
+        section: "B",
+        question:
+          "'Progress,' he muttered, eyes fixed on the bulldozers lined up like predators.\n\nWhat impression does the simile 'like predators' create?",
+        options: {
+          A: "The machines look weak, outdated, and harmless",
+          B: "The machines seem patient, nurturing, and protective",
+          C: "The machines seem threatening, purposeful, and unstoppable",
+          D: "The machines are colourful toys in a child's drawing",
+        },
+        answer: "C",
+        explanation:
+          "Predators hunt — the image casts bulldozers as dangerous and intent. They are not weak (A), caring (B), or playful (D).",
+      },
+      {
+        section: "B",
+        question:
+          "\"The newsroom had the stale energy of a waiting room.\"\n\nWhich impression is conveyed to the reader?",
+        options: {
+          A: "Creative buzz and constant breaking news",
+          B: "Stagnation, delay, and drained enthusiasm",
+          C: "Violent argument between colleagues",
+          D: "Festive celebration after a success",
+        },
+        answer: "B",
+        explanation:
+          "'Stale' parallels a waiting room — boredom and limbo. This contradicts energy and celebration (A, D) and does not imply violence (C).",
+      },
+      {
+        section: "B",
+        question:
+          "\"The smile did not reach her eyes.\"\n\nWhat does this phrase most strongly imply?",
+        options: {
+          A: "She is genuinely delighted and relaxed",
+          B: "Her warmth is only surface-level; she may be guarded or insincere",
+          C: "She has poor eyesight",
+          D: "She is telling a joke",
+        },
+        answer: "B",
+        explanation:
+          "Eyes often signal real emotion. A smile that stops at the mouth suggests performance, not true joy (A). The line is not about vision (C) or humour (D).",
+      },
+      {
+        section: "B",
+        question:
+          "\"Children pressed their faces to the glass, noses flattened like cartoon characters.\"\n\nThe dominant tone is closest to —",
+        options: {
+          A: "Tragic moralising about poverty",
+          B: "Affectionate, lightly comic observation of childhood curiosity",
+          C: "Furious accusation against the shopkeeper",
+          D: "Detached scientific measurement",
+        },
+        answer: "B",
+        explanation:
+          "Cartoon noses invite a smile — gentle humour and fondness. The scene is not tragic (A), angry (C), or clinical (D).",
+      },
+      {
+        section: "C",
+        question:
+          "\"He counted every second, the clock's tick mocking him.\"\n\nWhat is the main effect of personifying the tick as 'mocking'?",
+        options: {
+          A: "Time seems actively hostile and oppressive to him",
+          B: "The clock is literally broken beyond repair",
+          C: "He enjoys rhythmic sound as music",
+          D: "Silence has made him calmer",
+        },
+        answer: "A",
+        explanation:
+          "Personification makes the passage of time feel personal and cruel. The clock is not literally broken (B), and he is not enjoying sound (C) or calm (D).",
+      },
+      {
+        section: "C",
+        question:
+          "\"The village welcomed them with bread still warm from the oven.\"\n\nWhich impression of the village is strongest?",
+        options: {
+          A: "Hostile suspicion towards strangers",
+          B: "Generosity, homeliness, and human warmth",
+          C: "Cold indifference",
+          D: "Dishonest trickery",
+        },
+        answer: "B",
+        explanation:
+          "Warm bread is a classic symbol of hospitality and care. It contradicts hostility (A), indifference (C), and deceit (D).",
+      },
+      {
+        section: "C",
+        question:
+          "\"Rain blurred the headlights into halos.\"\n\nWhat visual impression does the writer create?",
+        options: {
+          A: "Crystal-clear precision in bright sunshine",
+          B: "Soft, uncertain shapes — reduced visibility and a dreamlike edge",
+          C: "A crowded midday market",
+          D: "Complete darkness with no light at all",
+        },
+        answer: "B",
+        explanation:
+          "Blurred lights into halos suggest misted glass, rain, and softened edges — not clarity (A), a market (C), or total dark (D).",
+      },
+      {
+        section: "C",
+        question:
+          "\"He straightened his tie in the mirror, practising confidence he did not feel.\"\n\nWhich impression of his inner state is most accurate?",
+        options: {
+          A: "Genuine self-assurance before an audience",
+          B: "Outward composure masking insecurity or anxiety",
+          C: "Vanity about fashion with no emotional subtext",
+          D: "Carefree excitement before a party",
+        },
+        answer: "B",
+        explanation:
+          "'Practising confidence he did not feel' exposes the gap between appearance and reality. He is not truly assured (A), merely vain without emotion (C), or carefree (D).",
+      },
+    ],
+  },
+
+  // ══════════════════════════════════════════════════════════════════════
+  // WRITER'S EFFECT PRACTICE QUIZ — PAPER 1 QUESTION 2
+  // ══════════════════════════════════════════════════════════════════════
+  "writers-effect-practice-quiz": {
+    id: "writers-effect-practice-quiz",
+    title: "Writer's Effect Practice Quiz",
+    description:
+      "12 questions · 10 minutes. Word class, meaning in context, and reader effect for Paper 1 Question 2 (writer's effect).",
+    timeLimit: 600,
+    questions: [
+      {
+        section: "A",
+        question:
+          "\"The corridor folded back on itself like a badly written sentence.\"\n\nWhat is the main effect of this simile on the reader?",
+        options: {
+          A: "It suggests mathematical precision in the building's measurements",
+          B: "It conveys confusion, repetition, and disorientation in the space",
+          C: "It praises the architect's clever design",
+          D: "It proves the narrator cannot read",
+        },
+        answer: "B",
+        explanation:
+          "A sentence that 'folds back' is tangled and hard to follow — the simile maps that onto the corridor. It is not praise (C), maths (A), or literacy proof (D).",
+      },
+      {
+        section: "A",
+        question:
+          "\"She snapped the ledger shut with a crack that silenced the office.\"\n\nWhy is 'crack' an effective word choice?",
+        options: {
+          A: "It suggests humour and playfulness only",
+          B: "It implies the ledger is physically weak",
+          C: "It suggests sharp finality and authority — sound enforces attention",
+          D: "It indicates the office has no windows",
+        },
+        answer: "C",
+        explanation:
+          "Onomatopoeia makes the action audible and decisive; the following silence shows its impact. Weak paper (B) or jokes (A) are not the focus.",
+      },
+      {
+        section: "A",
+        question:
+          "\"Dust motes drifted in the single shaft of light.\"\n\nWhat atmosphere does this image chiefly create?",
+        options: {
+          A: "Chaos, speed, and loud confusion",
+          B: "Stillness, suspension, and a forgotten or neglected space",
+          C: "Immediate danger of fire spreading",
+          D: "A crowded festival street",
+        },
+        answer: "B",
+        explanation:
+          "Slow-drifting motes in one beam suggest quiet and stasis. There is no chaos (A), fire (C), or crowd (D).",
+      },
+      {
+        section: "A",
+        question:
+          "\"He was hunched over the keyboard, shoulders meeting his ears.\"\n\nIn a three-step analysis, the strongest middle step (meaning in context) is —",
+        options: {
+          A: "'Hunched' is an adverb showing typing speed",
+          B: "'Hunched' is a verb/adjective suggesting prolonged strain and a closed, defensive posture over the work",
+          C: "'Hunched' is a conjunction linking two clauses",
+          D: "'Hunched' names a brand of computer",
+        },
+        answer: "B",
+        explanation:
+          "Word class + contextual meaning: the body is curled and tight from concentration or stress — not speed as adverb (A), grammar (C), or a name (D).",
+      },
+      {
+        section: "B",
+        question:
+          "\"The headlines screamed from every stall.\"\n\nWhat is the main effect of 'screamed' here?",
+        options: {
+          A: "Literal physical injury to readers",
+          B: "Headlines feel loud, urgent, and alarmingly everywhere — news dominates the scene",
+          C: "The market sells only musical instruments",
+          D: "The scene is silent and peaceful",
+        },
+        answer: "B",
+        explanation:
+          "Personification heightens intensity and omnipresence of bad or shocking news. It is figurative, not literal harm (A), and not peaceful (D).",
+      },
+      {
+        section: "B",
+        question:
+          "\"His laugh was a rusty hinge that rarely opened.\"\n\nWhat does the metaphor suggest about his laughter?",
+        options: {
+          A: "It is frequent, youthful, and effortless",
+          B: "It is rare, awkward, and joy-starved — humour does not come easily",
+          C: "He is a trained engineer",
+          D: "The hinge needs oil only in summer",
+        },
+        answer: "B",
+        explanation:
+          "Rust and rarity imply stiffness and lack of use — emotional dryness. Not youth (A) or literal profession (C).",
+      },
+      {
+        section: "B",
+        question:
+          "\"Footsteps echoed hollowly down the stairwell.\"\n\nWhat effect does the sound imagery mainly produce?",
+        options: {
+          A: "Warm intimacy between friends",
+          B: "Emptiness, isolation, and a sense of abandoned space",
+          C: "A crowded carnival atmosphere",
+          D: "Underwater muffling with no echo",
+        },
+        answer: "B",
+        explanation:
+          "Echoes in an empty stairwell amplify loneliness. Not warmth (A), crowds (C), or underwater quiet without echo (D).",
+      },
+      {
+        section: "B",
+        question:
+          "\"The medal hung heavy around his neck.\"\n\nBeyond literal weight, which reader effect is most justified?",
+        options: {
+          A: "The honour feels burdensome — guilt, pressure, or emotional weight",
+          B: "Gold medals are always cheap metal",
+          C: "He cannot swim with medals on",
+          D: "The scene is purely slapstick comedy",
+        },
+        answer: "A",
+        explanation:
+          "'Heavy' often shifts to abstract burden — responsibility or shame. The line is not about metal value (B), swimming (C), or only comedy (D).",
+      },
+      {
+        section: "C",
+        question:
+          "\"The bus lurched forward, throwing passengers forward.\"\n\nBest three-step style comment on 'lurched':",
+        options: {
+          A: "Adjective of colour — shows the bus is painted red",
+          B: "Verb of sudden, violent movement — creates unease and loss of physical control for passengers",
+          C: "Proper noun naming the driver's hometown",
+          D: "Shows the journey is always perfectly smooth",
+        },
+        answer: "B",
+        explanation:
+          "Class: verb of motion. Context: jerky start. Effect: instability and discomfort — matches examiner expectations for writer's effect.",
+      },
+      {
+        section: "C",
+        question:
+          "\"Wait—\" He stopped.\n\nWhat is the main effect of the em dash after 'Wait'?",
+        options: {
+          A: "It marks an abrupt cut-off or interrupted thought in speech",
+          B: "It introduces a numbered list",
+          C: "It must always end the paragraph in Cambridge scripts",
+          D: "It shows the speaker cannot spell",
+        },
+        answer: "A",
+        explanation:
+          "A dash after a fragment often signals interruption or sudden break — standard punctuation effect for drama.",
+      },
+      {
+        section: "C",
+        question:
+          "\"Fragile hope.\"\n\nWhat combined effect does the adjective + noun pairing create?",
+        options: {
+          A: "Scientific measurement of mass only",
+          B: "Hope feels vulnerable and easily destroyed — invites reader empathy",
+          C: "Comic exaggeration with no emotional content",
+          D: "Neutral reportage with no tone",
+        },
+        answer: "B",
+        explanation:
+          "'Fragile' qualifies 'hope' emotionally — delicacy and risk. Not pure science (A), empty comedy (C), or neutrality (D).",
+      },
+      {
+        section: "C",
+        question:
+          "\"The engine growled, ready.\"\n\nWhat is the chief effect of personifying the engine?",
+        options: {
+          A: "The vehicle seems alive and eager — tension builds before movement",
+          B: "Wild animals have entered the garage",
+          C: "The engine is permanently broken",
+          D: "The scene is completely silent",
+        },
+        answer: "A",
+        explanation:
+          "Growling readiness animates the machine and heightens anticipation. Not literal animals (B), broken (C), or silence (D).",
+      },
+    ],
+  },
 };
 
 validateMcqAnswerKeys(mcqSetsInternal);

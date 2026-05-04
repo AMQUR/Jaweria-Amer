@@ -1603,28 +1603,30 @@ const resourceLibrary: Resource[] = [
       "10 questions · 5 minutes. Five real-world scenarios — identify whether the speaker agrees or disagrees, then pick the development that best supports their stated reason.",
   },
   {
-    id: "impressions-mcq",
-    title: "Impressions — MCQ Practice",
+    id: "impressions-practice-quiz",
+    title: "Impressions Practice Quiz",
     category: "quick-worksheets",
+    type: "mcq",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
     year: "Practice",
-    fileUrl:
-      "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/worksheets/impressions-mcq.pdf",
-    description: "Exam-style MCQs for Paper 1 Question 2 (impressions).",
+    fileUrl: "",
+    description:
+      "12 questions · 10 minutes. Tone, impression words, inference, and precise meaning for Paper 1 Question 2.",
   },
   {
-    id: "writers-effect-mcq",
-    title: "Writer's Effect — MCQ Practice",
+    id: "writers-effect-practice-quiz",
+    title: "Writer's Effect Practice Quiz",
     category: "quick-worksheets",
+    type: "mcq",
     subject: "English Language 1123",
     level: "O Level",
     paper: "Paper 1",
     year: "Practice",
-    fileUrl:
-      "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/worksheets/writers-effect-mcq.pdf",
-    description: "3-step method MCQs for Paper 1 Question 2 (writer's effect).",
+    fileUrl: "",
+    description:
+      "12 questions · 10 minutes. Word class, meaning in context, and reader effect — Paper 1 Question 2 (writer's effect).",
   },
 ];
 
