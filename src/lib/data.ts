@@ -1,4 +1,3 @@
-import { contact } from "./contact";
 import type { CourseCategory } from "./course-offerings";
 import { finalizeResourcesForSite } from "./resource-ingestion";
 import { supplementalHubResources } from "./resource-supplements";

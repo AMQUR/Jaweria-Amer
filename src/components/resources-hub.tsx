@@ -1139,7 +1139,7 @@ function ResourceCard({ resource }: { resource: Resource }) {
             className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <Eye className="h-4 w-4 shrink-0" aria-hidden />
-            Open PDF
+            View Resource
           </Link>
         )}
       </div>

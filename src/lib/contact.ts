@@ -10,7 +10,6 @@ export const contact = {
   youtube: "https://www.youtube.com/@englishwithjaweria",
   /** Stable featured lesson for the About page embed (`youtube.com/watch?v=…` ID). */
   youtubeFeaturedVideoId: "Qyl5kB_uv-0",
-  drive: "https://drive.google.com/drive/folders/1B3MN_5TiHfknp6Ao4BwlFRlmc89F1AHF",
   instagram: "https://instagram.com/englishwithmissjay",
   /** Public Facebook page — leave empty to hide the Facebook card on marketing pages. */
   facebook: "https://www.facebook.com/jaweria.amer",

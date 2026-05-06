@@ -27,7 +27,6 @@ const SecurePdfRendererDesktop = dynamic(
 
 export function SecurePdfRenderer({
   resourceId,
-  fileUrl,
 }: {
   resourceId: string;
   fileUrl: string;
@@ -48,12 +47,7 @@ export function SecurePdfRenderer({
   }
 
   if (isMobile) {
-    const base = fileUrl.split("#")[0] ?? fileUrl;
-    const safeSrc = base.startsWith("http")
-      ? base
-      : base.startsWith("/resources/") && !base.includes("..")
-        ? `${base}#toolbar=0&navpanes=0&scrollbar=1`
-        : `/api/view-resource?id=${encodeURIComponent(resourceId)}`;
+    const safeSrc = `/api/view-resource?id=${encodeURIComponent(resourceId)}#toolbar=0&navpanes=0&scrollbar=1`;
     return (
       <div className="w-full max-h-[85vh] overflow-y-auto rounded-xl border border-border/80 bg-neutral-50 shadow-sm">
         <iframe title="Resource preview" src={safeSrc} className="h-[85vh] w-full min-h-[50vh] border-0" />

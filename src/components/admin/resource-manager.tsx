@@ -702,12 +702,10 @@ function ResourceRow({
       <div className="flex shrink-0 items-center gap-0.5">
         {resource.fileUrl ? (
           <a
-            href={resource.fileUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            href={`/resources/view/${resource.id}`}
             className="rounded-xl p-2 text-slate transition-colors hover:bg-muted hover:text-ink"
             aria-label={`Open ${resource.title}`}
-            title="Open file"
+            title="View resource"
           >
             <Eye className="h-4 w-4" />
           </a>

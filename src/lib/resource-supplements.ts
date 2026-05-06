@@ -10,6 +10,28 @@ import type { Resource } from "./data";
  */
 const supplementalHubResourcesBase: Resource[] = [
   {
+    id: "five-day-plan-paper-1",
+    title: "5-Day Plan - Paper 1",
+    category: "featured",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Practice",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/5-day-plan-paper-1.pdf",
+    description: "Structured daily plan to prepare effectively.",
+  },
+  {
+    id: "six-hour-plan",
+    title: "6 Hour Plan",
+    category: "featured",
+    subject: "English Language 1123",
+    level: "O Level",
+    paper: "Paper 1",
+    year: "Practice",
+    fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/plans/6-hour-plan.pdf",
+    description: "Complete Paper 1 strategy in one day.",
+  },
+  {
     id: "topical-p1-3d51a75bae9c",
     title: "Copy of English Assessment 1- MS",
     category: "topicals",

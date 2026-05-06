@@ -1,4 +1,5 @@
-import { CalendarDays, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { CalendarDays, Eye } from "lucide-react";
 
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
 
@@ -19,15 +20,13 @@ export function FiveDayPlanBanner() {
           </p>
         </div>
       </div>
-      <a
-        href="https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/notes/5-day-plan-paper-1.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href="/resources/view/five-day-plan-paper-1"
         className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-red-600 hover:bg-red-50 sm:w-auto`}
       >
-        Open PDF
-        <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
-      </a>
+        View Plan
+        <Eye className="h-4 w-4 shrink-0" aria-hidden />
+      </Link>
     </div>
   );
 }

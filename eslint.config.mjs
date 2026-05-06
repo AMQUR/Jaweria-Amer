@@ -9,14 +9,22 @@ const eslintConfig = defineConfig([
   globalIgnores([
     // Default ignores of eslint-config-next:
     ".next/**",
+    "**/.next/**",
     "node_modules/**",
     ".claude/**",
     "dist/**",
     "out/**",
     "build/**",
+    "jaweria-amer/**",
     "next-env.d.ts",
     "public/pdf.worker.min.mjs",
   ]),
+  {
+    files: ["scripts/**/*.js"],
+    rules: {
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
   // Async client fetch + setState after await is intentional for admin CRUD pages.
   {
     files: ["src/app/admin/**/*.tsx"],

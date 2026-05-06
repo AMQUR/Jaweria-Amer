@@ -18,7 +18,7 @@ export function RevisionGuideCard() {
               Last Minute P2 – Writing Revision Guide
             </h2>
             <p className="mt-0.5 text-sm text-gray-600">
-              Open the complete PDF guide — read in-browser or download before exam day.
+              Open the complete PDF guide in the resource viewer.
             </p>
           </div>
         </div>

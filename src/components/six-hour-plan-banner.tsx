@@ -1,4 +1,5 @@
-import { Clock, ExternalLink } from "lucide-react";
+import Link from "next/link";
+import { Clock, Eye } from "lucide-react";
 
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
 
@@ -19,15 +20,13 @@ export function SixHourPlanBanner() {
           </p>
         </div>
       </div>
-      <a
-        href="https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/plans/6-hour-plan.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href="/resources/view/six-hour-plan"
         className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-violet-600 hover:bg-violet-50 sm:w-auto`}
       >
-        Open PDF
-        <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
-      </a>
+        View Plan
+        <Eye className="h-4 w-4 shrink-0" aria-hidden />
+      </Link>
     </div>
   );
 }

@@ -160,7 +160,7 @@ After material edits, run `npm run build` to confirm types and static generation
 
 ## Optional future improvements
 
-- Wire vault downloads to real PDFs or official CAIE links.
+- Keep vault resources routed through the in-app resource viewer.
 - Replace the About page portrait placeholder with a production image.
 - Stronger admin auth (e.g. SSO) if multiple operators need access.
 - Automated smoke or E2E tests on deploy.

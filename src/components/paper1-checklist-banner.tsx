@@ -2,16 +2,14 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { X, CheckCircle2, Circle, Download, ClipboardCheck } from "lucide-react";
+import { X, CheckCircle2, Circle, ClipboardCheck } from "lucide-react";
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
 
 const STORAGE_KEY = "paper1_checklist_progress";
 const TOTAL = 16;
 
-const POKEMON_LOW =
-  "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/rewards/pokemon-low.png";
-const POKEMON_HIGH =
-  "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/rewards/pokemon-high.png";
+const POKEMON_LOW = "/assets/pokemon-low.png";
+const POKEMON_HIGH = "/assets/pokemon-high.png";
 
 const SECTIONS = [
   {
@@ -70,21 +68,6 @@ function loadSaved(): number[] {
 
 function persist(completed: number[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify({ completed }));
-}
-
-async function triggerDownload(url: string, filename: string) {
-  try {
-    const res = await fetch(url);
-    const blob = await res.blob();
-    const blobUrl = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = blobUrl;
-    a.download = filename;
-    a.click();
-    URL.revokeObjectURL(blobUrl);
-  } catch {
-    window.open(url, "_blank");
-  }
 }
 
 export function Paper1ChecklistBanner() {
@@ -318,18 +301,11 @@ export function Paper1ChecklistBanner() {
               />
             </div>
 
-            {/* Download — only here, only after reveal */}
             <button
-              onClick={() =>
-                triggerDownload(
-                  rewardSrc,
-                  isHigh ? "paper1-reward-card.png" : "paper1-result-card.png",
-                )
-              }
+              onClick={() => setRewardOpen(false)}
               className="mt-6 flex items-center gap-2 rounded-xl bg-amber-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-amber-600 active:scale-95"
             >
-              <Download className="h-4 w-4" aria-hidden />
-              Download your reward
+              Done
             </button>
 
             {isHigh && (
