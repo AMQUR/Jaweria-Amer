@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
 
+import { PrefetchResourceViewAction } from "@/components/prefetch-resource-view-action";
+
 const BULLETS = [
   "Paper pattern explained",
   "Directed writing mastery",
@@ -10,10 +12,11 @@ const BULLETS = [
 
 export function MarathonBanner() {
   return (
-    <Link
-      href="/resources/view/paper-2-marathon"
-      className="block rounded-2xl bg-gradient-to-r from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-md transition-all duration-300 hover:shadow-xl sm:p-10"
-    >
+    <PrefetchResourceViewAction resourceId="paper-2-marathon">
+      <Link
+        href="/resources/view/paper-2-marathon"
+        className="block rounded-2xl bg-gradient-to-r from-[#7f1d1d] via-[#9f1239] to-[#be123c] p-8 shadow-md transition-all duration-300 hover:shadow-xl sm:p-10"
+      >
       <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-4">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white">
@@ -50,5 +53,6 @@ export function MarathonBanner() {
         </span>
       </div>
     </Link>
+    </PrefetchResourceViewAction>
   );
 }

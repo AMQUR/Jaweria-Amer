@@ -1,12 +1,15 @@
 import Link from "next/link";
 import { ArrowRight, BookOpen } from "lucide-react";
 
+import { PrefetchResourceViewAction } from "@/components/prefetch-resource-view-action";
+
 export function RevisionGuideCard() {
   return (
-    <Link
-      href="/resources/view/final-p2-checklist"
-      className="block rounded-2xl border border-[#f59e0b] bg-gradient-to-r from-[#fff7ed] via-[#ffedd5] to-[#fdba74] px-6 py-5 shadow-xl transition-all duration-300 hover:shadow-2xl"
-    >
+    <PrefetchResourceViewAction resourceId="final-p2-checklist">
+      <Link
+        href="/resources/view/final-p2-checklist"
+        className="block rounded-2xl border border-[#f59e0b] bg-gradient-to-r from-[#fff7ed] via-[#ffedd5] to-[#fdba74] px-6 py-5 shadow-xl transition-all duration-300 hover:shadow-2xl"
+      >
       <div className="flex min-h-[90px] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-4">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-orange-100 text-orange-700">
@@ -28,5 +31,6 @@ export function RevisionGuideCard() {
         </span>
       </div>
     </Link>
+    </PrefetchResourceViewAction>
   );
 }

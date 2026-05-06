@@ -8,7 +8,13 @@ export const dynamic = "force-dynamic";
 const SUPABASE_RESOURCE_BUCKET =
   process.env.SUPABASE_RESOURCE_BUCKET || process.env.SUPABASE_BUCKET_NAME || "resources";
 const SIGNED_URL_TTL_SECONDS = 60 * 5;
+/** Signed URLs remain valid for 300s; cache slightly shorter so Range-heavy PDF viewers reuse one signature. */
+const SIGNED_URL_CACHE_MS = (SIGNED_URL_TTL_SECONDS - 90) * 1000;
 const IS_DEV = process.env.NODE_ENV !== "production";
+
+type CachedSignedUrl = { url: string; expiresAtMs: number };
+const signedUrlCache = new Map<string, CachedSignedUrl>();
+const signedUrlInflight = new Map<string, Promise<string | null>>();
 
 function contentTypeFor(pathname: string, fallback = "application/octet-stream") {
   switch (extname(pathname).toLowerCase()) {
@@ -34,12 +40,16 @@ function contentTypeFor(pathname: string, fallback = "application/octet-stream")
   }
 }
 
-function inlineHeaders(pathname: string, contentType: string) {
+function inlineHeaders(pathname: string, contentType: string, browserCache: "none" | "short-private" = "short-private") {
   const filename = basename(pathname).replace(/["\r\n]/g, "");
+  const cacheControl =
+    browserCache === "short-private"
+      ? "private, max-age=120"
+      : "private, no-store";
   return {
     "Content-Type": contentType,
     "Content-Disposition": `inline${filename ? `; filename="${filename}"` : ""}`,
-    "Cache-Control": "no-store, private",
+    "Cache-Control": cacheControl,
     "X-Content-Type-Options": "nosniff",
   };
 }
@@ -155,6 +165,31 @@ async function createSignedSupabaseUrl(parsed: NonNullable<ReturnType<typeof par
   return toAbsoluteSignedUrl(supabaseUrl, signedPath);
 }
 
+async function getOrCreateSignedSupabaseUrl(parsed: NonNullable<ReturnType<typeof parseSupabaseResourceUrl>>) {
+  const key = `${parsed.bucket}:${parsed.path}`;
+  const now = Date.now();
+  const hit = signedUrlCache.get(key);
+  if (hit && hit.expiresAtMs > now + 15_000) {
+    return hit.url;
+  }
+
+  let inflight = signedUrlInflight.get(key);
+  if (!inflight) {
+    inflight = (async () => {
+      const url = await createSignedSupabaseUrl(parsed);
+      if (url) {
+        signedUrlCache.set(key, { url, expiresAtMs: Date.now() + SIGNED_URL_CACHE_MS });
+      }
+      return url;
+    })().finally(() => {
+      signedUrlInflight.delete(key);
+    });
+    signedUrlInflight.set(key, inflight);
+  }
+
+  return inflight;
+}
+
 function cloneUpstreamHeaders(fileUrl: string, upstream: Response) {
   const contentType = contentTypeFor(fileUrl, upstream.headers.get("Content-Type") || undefined);
   const headers = new Headers(inlineHeaders(fileUrl, contentType));
@@ -173,7 +208,7 @@ async function streamRemoteResource(fileUrl: string, req: NextRequest) {
   }
 
   const hasPrivateEnv = Boolean(getSupabaseUrl() && process.env.SUPABASE_SERVICE_ROLE_KEY);
-  const signedUrl = hasPrivateEnv ? await createSignedSupabaseUrl(parsed) : null;
+  const signedUrl = hasPrivateEnv ? await getOrCreateSignedSupabaseUrl(parsed) : null;
   const viewUrl = signedUrl ?? parsed.publicUrl;
   const upstream = await fetch(viewUrl, {
     cache: "no-store",
@@ -249,7 +284,7 @@ async function streamLocalResource(fileUrl: string, req: NextRequest) {
   if (range) {
     const fileBuffer = await readFile(filePath);
     const chunk = fileBuffer.subarray(range.start, range.end + 1);
-    const headers = new Headers(inlineHeaders(filePath, contentType));
+    const headers = new Headers(inlineHeaders(filePath, contentType, "short-private"));
     headers.set("Accept-Ranges", "bytes");
     headers.set("Content-Length", String(chunk.length));
     headers.set("Content-Range", `bytes ${range.start}-${range.end}/${fileInfo.size}`);
@@ -257,7 +292,7 @@ async function streamLocalResource(fileUrl: string, req: NextRequest) {
   }
 
   const fileBuffer = await readFile(filePath);
-  const headers = new Headers(inlineHeaders(filePath, contentType));
+  const headers = new Headers(inlineHeaders(filePath, contentType, "short-private"));
   headers.set("Accept-Ranges", "bytes");
   headers.set("Content-Length", String(fileInfo.size));
   return new Response(fileBuffer, { headers });

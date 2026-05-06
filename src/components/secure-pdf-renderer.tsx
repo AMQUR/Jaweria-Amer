@@ -7,9 +7,15 @@ function PdfSkeleton() {
   return (
     <div
       className="w-full overflow-hidden rounded-xl border border-border/80 bg-neutral-100/80 shadow-sm"
-      aria-hidden
+      role="status"
+      aria-live="polite"
+      aria-label="Loading resource viewer"
     >
-      <div className="h-[90vh] min-h-[320px] animate-pulse bg-gradient-to-b from-muted/40 to-muted/20" />
+      <div className="pointer-events-none space-y-3 p-6">
+        <div className="h-3 w-40 animate-pulse rounded bg-muted/55" />
+        <div className="h-[90vh] min-h-[320px] animate-pulse rounded-lg bg-gradient-to-b from-muted/45 via-muted/25 to-muted/35 ring-1 ring-border/30" />
+        <p className="text-center text-xs text-muted-foreground">Preparing viewer…</p>
+      </div>
     </div>
   );
 }

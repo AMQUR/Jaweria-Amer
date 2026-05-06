@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CalendarDays, Eye } from "lucide-react";
 
+import { PrefetchResourceViewAction } from "@/components/prefetch-resource-view-action";
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
 
 export function FiveDayPlanBanner() {
@@ -20,13 +21,15 @@ export function FiveDayPlanBanner() {
           </p>
         </div>
       </div>
-      <Link
-        href="/resources/view/five-day-plan-paper-1"
-        className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-red-600 hover:bg-red-50 sm:w-auto`}
-      >
-        View Plan
-        <Eye className="h-4 w-4 shrink-0" aria-hidden />
-      </Link>
+      <PrefetchResourceViewAction resourceId="five-day-plan-paper-1">
+        <Link
+          href="/resources/view/five-day-plan-paper-1"
+          className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-red-600 hover:bg-red-50 sm:w-auto`}
+        >
+          View Plan
+          <Eye className="h-4 w-4 shrink-0" aria-hidden />
+        </Link>
+      </PrefetchResourceViewAction>
     </div>
   );
 }

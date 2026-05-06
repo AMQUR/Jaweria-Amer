@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Clock, Eye } from "lucide-react";
 
+import { PrefetchResourceViewAction } from "@/components/prefetch-resource-view-action";
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
 
 export function SixHourPlanBanner() {
@@ -20,13 +21,15 @@ export function SixHourPlanBanner() {
           </p>
         </div>
       </div>
-      <Link
-        href="/resources/view/six-hour-plan"
-        className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-violet-600 hover:bg-violet-50 sm:w-auto`}
-      >
-        View Plan
-        <Eye className="h-4 w-4 shrink-0" aria-hidden />
-      </Link>
+      <PrefetchResourceViewAction resourceId="six-hour-plan">
+        <Link
+          href="/resources/view/six-hour-plan"
+          className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-violet-600 hover:bg-violet-50 sm:w-auto`}
+        >
+          View Plan
+          <Eye className="h-4 w-4 shrink-0" aria-hidden />
+        </Link>
+      </PrefetchResourceViewAction>
     </div>
   );
 }

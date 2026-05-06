@@ -33,6 +33,7 @@ import {
   splitScriptsCardTitle,
 } from "@/lib/resource-ingestion";
 import { cn } from "@/lib/utils";
+import { PrefetchResourceViewAction } from "@/components/prefetch-resource-view-action";
 
 /** Hub category is virtual for legacy items: they keep `category: "general-notes"` and `subCategory: "solved-papers"`. */
 function resourceBelongsToHubCategory(
@@ -1131,16 +1132,18 @@ function ResourceCard({ resource }: { resource: Resource }) {
             Take Assessment
           </Link>
         ) : (
-          <Link
-            href={`/resources/view/${resource.id}`}
-            onClick={() =>
-              trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
-            }
-            className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
-          >
-            <Eye className="h-4 w-4 shrink-0" aria-hidden />
-            View Resource
-          </Link>
+          <PrefetchResourceViewAction resourceId={resource.id}>
+            <Link
+              href={`/resources/view/${resource.id}`}
+              onClick={() =>
+                trackResourceView(resource.id, displayTitle, { interaction: "hub_listing" })
+              }
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
+            >
+              <Eye className="h-4 w-4 shrink-0" aria-hidden />
+              View Resource
+            </Link>
+          </PrefetchResourceViewAction>
         )}
       </div>
     </article>

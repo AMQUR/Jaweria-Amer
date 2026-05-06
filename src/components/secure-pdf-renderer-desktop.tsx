@@ -7,6 +7,38 @@ import "react-pdf/dist/Page/TextLayer.css";
 
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 
+function PdfDocumentLoadingChrome() {
+  return (
+    <div className="flex flex-col gap-4 px-2 py-2">
+      <div className="flex justify-center gap-2 opacity-70">
+        <div className="h-9 w-24 animate-pulse rounded-lg bg-muted/70" />
+        <div className="h-9 w-36 animate-pulse rounded-lg bg-muted/60" />
+        <div className="h-9 w-24 animate-pulse rounded-lg bg-muted/70" />
+      </div>
+      <div className="flex justify-center">
+        <div className="h-[72vh] w-full max-w-[760px] animate-pulse rounded-lg bg-gradient-to-b from-white via-muted/30 to-muted/50 shadow-inner ring-1 ring-border/40" />
+      </div>
+      <p className="text-center text-xs text-muted-foreground">Opening resource…</p>
+    </div>
+  );
+}
+
+function PdfPageLoadingChrome() {
+  return (
+    <div className="flex min-h-[62vh] w-full max-w-[760px] items-start justify-center rounded-lg bg-white/95 pb-12 pt-10 shadow-inner ring-1 ring-border/40">
+      <div className="w-[92%] max-w-xl space-y-3 pt-4">
+        <div className="h-3 w-5/6 max-w-md animate-pulse rounded bg-muted/65" />
+        <div className="h-3 w-full animate-pulse rounded bg-muted/50" />
+        <div className="h-3 w-[93%] animate-pulse rounded bg-muted/45" />
+        <div className="h-3 w-[88%] animate-pulse rounded bg-muted/55" />
+        <div className="pt-8">
+          <div className="h-48 w-full animate-pulse rounded-md bg-muted/35" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function SecurePdfRendererDesktop({ resourceId }: { resourceId: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(720);
@@ -110,23 +142,20 @@ export function SecurePdfRendererDesktop({ resourceId }: { resourceId: string })
         file={file}
         onLoadSuccess={onLoadSuccess}
         onLoadError={onLoadError}
-        loading={
-          <div className="px-4 py-12 text-center text-sm text-muted-foreground">Loading…</div>
-        }
+        loading={<PdfDocumentLoadingChrome />}
         externalLinkTarget="_blank"
         externalLinkRel="noopener noreferrer nofollow"
       >
-        {numPages !== null && (
-          <div className="flex justify-center px-2">
-            <Page
-              pageNumber={currentPage}
-              width={width}
-              renderTextLayer
-              renderAnnotationLayer
-              className="shadow-sm"
-            />
-          </div>
-        )}
+        <div className="flex justify-center px-2">
+          <Page
+            pageNumber={currentPage}
+            width={width}
+            renderTextLayer
+            renderAnnotationLayer
+            loading={<PdfPageLoadingChrome />}
+            className="shadow-sm"
+          />
+        </div>
       </Document>
     </div>
   );
