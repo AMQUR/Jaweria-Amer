@@ -11,7 +11,7 @@ export function SecurePdfRendererDesktop({ resourceId }: { resourceId: string })
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(720);
   const [numPages, setNumPages] = useState<number | null>(null);
-  const [loadError, setLoadError] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
 
   const file = useMemo(
@@ -48,21 +48,33 @@ export function SecurePdfRendererDesktop({ resourceId }: { resourceId: string })
     try {
       setNumPages(n);
       setPage(1);
-      setLoadError(false);
+      setLoadError(null);
     } catch {
-      setLoadError(true);
+      setLoadError("The resource opened, but the PDF viewer could not render it.");
     }
   }, []);
 
   const onLoadError = useCallback(() => {
-    setLoadError(true);
+    fetch(`/api/view-resource?id=${encodeURIComponent(resourceId)}`, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    })
+      .then(async (response) => {
+        if (response.ok) {
+          setLoadError("The resource loaded, but the browser PDF viewer could not render it.");
+          return;
+        }
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        setLoadError(payload?.error ?? "The resource could not be loaded.");
+      })
+      .catch(() => setLoadError("The resource could not be loaded. Please try again."));
     setNumPages(null);
-  }, []);
+  }, [resourceId]);
 
   if (loadError) {
     return (
       <div className="rounded-xl border border-border/80 bg-white p-8 text-center text-sm text-slate shadow-sm">
-        Unable to load resource. Please refresh.
+        {loadError}
       </div>
     );
   }

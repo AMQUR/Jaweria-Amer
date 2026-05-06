@@ -20,7 +20,7 @@ const eslintConfig = defineConfig([
     "public/pdf.worker.min.mjs",
   ]),
   {
-    files: ["scripts/**/*.js"],
+    files: ["scripts/**/*.js", "scripts/test-resources-view-only.ts"],
     rules: {
       "@typescript-eslint/no-require-imports": "off",
     },

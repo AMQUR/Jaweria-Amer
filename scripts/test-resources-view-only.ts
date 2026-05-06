@@ -1,5 +1,5 @@
-import { readFileSync } from "fs";
-import { join } from "path";
+const { readFileSync } = require("fs");
+const { join } = require("path");
 
 const root = process.cwd();
 
@@ -35,7 +35,7 @@ for (const [name, source] of [
   ["five day plan banner", fiveDayBanner],
   ["file vault card", fileVaultCard],
   ["paper 1 checklist banner", paper1ChecklistBanner],
-] as const) {
+]) {
   assert(!/\sdownload(?:=|\s|>)/i.test(source), `${name} must not render download attributes or actions`);
   assert(!/target=["']_blank["']/.test(source), `${name} must not open resource files in a new tab`);
   assert(!/Open in new tab/i.test(source), `${name} must not expose raw-file new-tab actions`);
@@ -45,10 +45,7 @@ assert(
   resourceSlot.includes("SecurePdfRenderer") && resourceSlot.includes("<Image") && resourceSlot.includes("<iframe"),
   "resource slot must cover PDF resources plus non-PDF image and text-like previews"
 );
-assert(
-  resourceSlot.includes("/api/view-resource?id="),
-  "resource slot must route file previews through the inline API"
-);
+assert(resourceSlot.includes("/api/view-resource?id="), "resource slot must route file previews through the inline API");
 assert(
   securePdf.includes("/api/view-resource?id=") && !securePdf.includes("startsWith(\"http\")"),
   "mobile PDF rendering must use the inline API instead of raw resource URLs"
@@ -62,9 +59,14 @@ assert(
   "view-resource API must force inline responses and must not redirect to raw storage URLs"
 );
 assert(
-  apiRoute.includes("createSignedSupabaseUrl") && apiRoute.includes("SUPABASE_SERVICE_ROLE_KEY"),
-  "view-resource API must support server-only Supabase signed URLs"
+  apiRoute.includes("toAbsoluteSignedUrl") && apiRoute.includes("/storage/v1"),
+  "view-resource API must build absolute Supabase signed URLs under /storage/v1"
 );
+assert(
+  apiRoute.includes("SUPABASE_SERVICE_ROLE_KEY") && apiRoute.includes("SUPABASE_BUCKET_NAME"),
+  "view-resource API must support server-only Supabase env vars and the existing bucket env alias"
+);
+assert(apiRoute.includes("Range") && apiRoute.includes("Content-Range"), "view-resource API must support range requests");
 assert(
   !apiRoute.includes(".download(") && !apiRoute.includes("storage.download"),
   "view-resource API must not call Supabase download APIs"
