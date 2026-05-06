@@ -4,8 +4,11 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 import "react-pdf/dist/Page/TextLayer.css";
+import { cn } from "@/lib/utils";
 
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
+
+export type SecurePdfRendererLayout = "desktop" | "mobile";
 
 function PdfDocumentLoadingChrome() {
   return (
@@ -39,7 +42,14 @@ function PdfPageLoadingChrome() {
   );
 }
 
-export function SecurePdfRendererDesktop({ resourceId }: { resourceId: string }) {
+export function SecurePdfRendererDesktop({
+  resourceId,
+  layout = "desktop",
+}: {
+  resourceId: string;
+  layout?: SecurePdfRendererLayout;
+}) {
+  const isMobileLayout = layout === "mobile";
   const containerRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(720);
   const [numPages, setNumPages] = useState<number | null>(null);
@@ -58,13 +68,14 @@ export function SecurePdfRendererDesktop({ resourceId }: { resourceId: string })
     if (!el) return;
     const measure = () => {
       const w = el.getBoundingClientRect().width;
-      setWidth(Math.max(280, Math.floor(w - 8)));
+      const pad = isMobileLayout ? 12 : 8;
+      setWidth(Math.max(260, Math.floor(w - pad)));
     };
     measure();
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [isMobileLayout]);
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -111,52 +122,89 @@ export function SecurePdfRendererDesktop({ resourceId }: { resourceId: string })
     );
   }
 
+  const navButtonClass = cn(
+    "rounded-xl border border-border/80 bg-white font-semibold text-ink shadow-sm transition-colors touch-manipulation select-none",
+    isMobileLayout
+      ? "min-h-12 min-w-[5.5rem] px-4 py-3 text-base active:bg-muted disabled:opacity-40 disabled:active:bg-white"
+      : "px-3 py-1.5 text-sm enabled:hover:bg-muted disabled:opacity-40"
+  );
+
+  const pageIndicatorClass = cn(
+    "text-center font-medium tabular-nums text-slate",
+    isMobileLayout ? "min-w-[7.5rem] flex-1 text-sm sm:text-base" : "min-w-[8rem] text-sm"
+  );
+
+  const controls = (
+    <div
+      className={cn(
+        "flex flex-wrap items-center justify-center gap-2 px-2",
+        isMobileLayout &&
+          "sticky bottom-0 z-20 shrink-0 border-t border-border/60 bg-neutral-100/95 py-3 backdrop-blur-md supports-[backdrop-filter]:bg-neutral-100/85 pb-[max(0.75rem,env(safe-area-inset-bottom))]"
+      )}
+      role="toolbar"
+      aria-label="PDF page navigation"
+    >
+      <button
+        type="button"
+        onClick={() => setPage((p) => Math.max(1, p - 1))}
+        disabled={numPages == null || currentPage <= 1}
+        className={navButtonClass}
+      >
+        Previous
+      </button>
+      <span className={pageIndicatorClass} aria-live="polite">
+        {numPages != null ? `Page ${currentPage} of ${numPages}` : "…"}
+      </span>
+      <button
+        type="button"
+        onClick={() => setPage((p) => (numPages != null ? Math.min(numPages, p + 1) : p + 1))}
+        disabled={numPages == null || currentPage >= (numPages ?? 0)}
+        className={navButtonClass}
+      >
+        Next
+      </button>
+    </div>
+  );
+
   return (
     <div
       ref={containerRef}
-      className="max-h-[90vh] w-full overflow-y-auto rounded-xl border border-border/80 bg-neutral-100/80 py-4 shadow-sm"
+      className={cn(
+        "w-full rounded-xl border border-border/80 bg-neutral-100/80 shadow-sm",
+        isMobileLayout
+          ? "flex max-h-[min(88vh,calc(100dvh-7rem))] flex-col overflow-hidden py-2"
+          : "max-h-[90vh] overflow-y-auto py-4"
+      )}
       onContextMenu={(e) => e.preventDefault()}
     >
-      <div className="mb-4 flex flex-wrap items-center justify-center gap-2 px-2">
-        <button
-          type="button"
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={numPages == null || currentPage <= 1}
-          className="rounded-lg border border-border/80 bg-white px-3 py-1.5 text-sm font-medium text-ink shadow-sm transition-colors enabled:hover:bg-muted disabled:opacity-40"
-        >
-          Previous
-        </button>
-        <span className="min-w-[8rem] text-center text-sm text-slate" aria-live="polite">
-          {numPages != null ? `Page ${currentPage} of ${numPages}` : "…"}
-        </span>
-        <button
-          type="button"
-          onClick={() => setPage((p) => (numPages != null ? Math.min(numPages, p + 1) : p + 1))}
-          disabled={numPages == null || currentPage >= (numPages ?? 0)}
-          className="rounded-lg border border-border/80 bg-white px-3 py-1.5 text-sm font-medium text-ink shadow-sm transition-colors enabled:hover:bg-muted disabled:opacity-40"
-        >
-          Next
-        </button>
-      </div>
-      <Document
-        file={file}
-        onLoadSuccess={onLoadSuccess}
-        onLoadError={onLoadError}
-        loading={<PdfDocumentLoadingChrome />}
-        externalLinkTarget="_blank"
-        externalLinkRel="noopener noreferrer nofollow"
+      {!isMobileLayout && <div className="mb-4">{controls}</div>}
+      <div
+        className={cn(
+          isMobileLayout &&
+            "min-h-0 flex-1 overflow-y-auto overscroll-y-contain [-webkit-overflow-scrolling:touch] px-1"
+        )}
       >
-        <div className="flex justify-center px-2">
-          <Page
-            pageNumber={currentPage}
-            width={width}
-            renderTextLayer
-            renderAnnotationLayer
-            loading={<PdfPageLoadingChrome />}
-            className="shadow-sm"
-          />
-        </div>
-      </Document>
+        <Document
+          file={file}
+          onLoadSuccess={onLoadSuccess}
+          onLoadError={onLoadError}
+          loading={<PdfDocumentLoadingChrome />}
+          externalLinkTarget="_blank"
+          externalLinkRel="noopener noreferrer nofollow"
+        >
+          <div className={cn("flex justify-center", isMobileLayout ? "px-1 pb-3" : "px-2")}>
+            <Page
+              pageNumber={currentPage}
+              width={width}
+              renderTextLayer
+              renderAnnotationLayer
+              loading={<PdfPageLoadingChrome />}
+              className="max-w-full shadow-sm"
+            />
+          </div>
+        </Document>
+      </div>
+      {isMobileLayout && controls}
     </div>
   );
 }

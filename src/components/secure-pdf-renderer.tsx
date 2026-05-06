@@ -3,6 +3,11 @@
 import dynamic from "next/dynamic";
 import { useLayoutEffect, useState } from "react";
 
+/**
+ * All PDF pages load through the secure proxy path `/api/view-resource?id=` (see SecurePdfRendererDesktop).
+ * Raw storage URLs must never be passed to the renderer.
+ */
+
 function PdfSkeleton() {
   return (
     <div
@@ -52,14 +57,7 @@ export function SecurePdfRenderer({
     return <PdfSkeleton />;
   }
 
-  if (isMobile) {
-    const safeSrc = `/api/view-resource?id=${encodeURIComponent(resourceId)}#toolbar=0&navpanes=0&scrollbar=1`;
-    return (
-      <div className="w-full max-h-[85vh] overflow-y-auto rounded-xl border border-border/80 bg-neutral-50 shadow-sm">
-        <iframe title="Resource preview" src={safeSrc} className="h-[85vh] w-full min-h-[50vh] border-0" />
-      </div>
-    );
-  }
-
-  return <SecurePdfRendererDesktop resourceId={resourceId} />;
+  return (
+    <SecurePdfRendererDesktop resourceId={resourceId} layout={isMobile ? "mobile" : "desktop"} />
+  );
 }
