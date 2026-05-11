@@ -80,7 +80,7 @@ export function Footer() {
                   className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
                 >
                   <UsersRound className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
-                  <span>Join WhatsApp Community</span>
+                  <span>Text us on WhatsApp</span>
                 </TrackedWhatsAppLink>
               </li>
               <li>

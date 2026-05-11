@@ -116,7 +116,7 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
           rel="noopener noreferrer"
           className="mt-8 inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background motion-reduce:hover:translate-y-0"
         >
-          Join WhatsApp Community
+          Text us
           <ArrowRight className="size-4 shrink-0" aria-hidden />
         </TrackedWhatsAppLink>
       </section>

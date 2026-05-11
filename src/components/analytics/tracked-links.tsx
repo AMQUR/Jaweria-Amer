@@ -11,7 +11,7 @@ type TrackedWhatsAppProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"
   variant?: "group";
 };
 
-/** WhatsApp community link with click analytics. Always opens the community — never direct chat. */
+/** WhatsApp direct-chat link with click analytics. Always opens a direct chat with the teacher. */
 export function TrackedWhatsAppLink({
   href,
   location,

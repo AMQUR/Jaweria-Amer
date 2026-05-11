@@ -77,7 +77,7 @@ export function Navigation() {
                 onClick={() => trackWhatsAppClick({ location: "nav_desktop", variant: "group" })}
                 className="rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
               >
-                Join Community
+                Text us
               </Link>
             </div>
           </div>
@@ -125,7 +125,7 @@ export function Navigation() {
                     }}
                     className="rounded-2xl bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                   >
-                    Join WhatsApp Community
+                    Text us
                   </Link>
                 </div>
               </div>

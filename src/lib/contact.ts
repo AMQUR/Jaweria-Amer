@@ -1,9 +1,9 @@
 /**
- * Single source of truth for contact info and WhatsApp community link.
- * All WhatsApp entry points go to the community — direct messaging is not supported.
+ * Single source of truth for contact info and WhatsApp direct-chat link.
+ * All WhatsApp entry points open a direct chat with the teacher.
  */
 
-const WHATSAPP_COMMUNITY_URL = "https://chat.whatsapp.com/I9p7rCopafq51oG93lJAap";
+const WHATSAPP_DIRECT_URL = "https://wa.me/923253708069";
 
 export const contact = {
   phone: "+923253708069",
@@ -22,30 +22,26 @@ export function telUrl(): string {
   return `tel:${contact.phone.replace(/\s/g, "")}`;
 }
 
-/** Returns the WhatsApp community invite link. */
+/** Returns the WhatsApp direct-chat link for the teacher. */
 export function whatsAppGroupUrl(): string {
-  return WHATSAPP_COMMUNITY_URL;
+  return WHATSAPP_DIRECT_URL;
 }
 
 /** Alias for whatsAppGroupUrl — use this in all components. */
 export function getWhatsAppUrl(): string {
-  return WHATSAPP_COMMUNITY_URL;
+  return WHATSAPP_DIRECT_URL;
 }
 
 export function workshopRegisterUrl(): string {
-  return WHATSAPP_COMMUNITY_URL;
+  return WHATSAPP_DIRECT_URL;
 }
 
 /**
- * Returns true if the URL is a direct WhatsApp link (wa.me, api.whatsapp.com,
- * or contains a phone number). Used to block CMS-injected direct links.
+ * Returns true if the URL is a WhatsApp community/group link (chat.whatsapp.com).
+ * Used to block CMS-injected community links — all CTAs should use direct chat.
  */
 export function isInvalidWhatsAppLink(url: string): boolean {
-  return (
-    url.includes("wa.me") ||
-    url.includes("api.whatsapp.com") ||
-    /\d{8,}/.test(url)
-  );
+  return url.includes("chat.whatsapp.com");
 }
 
 /** Privacy-enhanced single-video embed for marketing (no playlist / uploads params). */

@@ -24,7 +24,7 @@ export function StickyWorkshopBar() {
   const barContent = (
     <div className="flex min-h-[56px] items-center justify-between gap-3 px-4 py-2 sm:px-6">
       <p className="min-w-0 flex-1 text-xs font-medium leading-snug text-white sm:text-sm">
-        Join the community for updates, resources, and help
+        Text us for updates, resources, and help
       </p>
       <div className="flex shrink-0 items-center gap-2">
         <a
@@ -33,7 +33,7 @@ export function StickyWorkshopBar() {
           rel="noopener noreferrer"
           className="rounded-xl bg-white px-4 py-1.5 text-xs font-bold text-[#ea580c] shadow-sm transition-colors hover:bg-orange-50 sm:text-sm"
         >
-          Join Community
+          Text us
         </a>
         <button
           type="button"
@@ -57,7 +57,7 @@ export function StickyWorkshopBar() {
           visible ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0"
         )}
         role="banner"
-        aria-label="Community invite"
+        aria-label="Text us invite"
       >
         {barContent}
       </div>
@@ -69,7 +69,7 @@ export function StickyWorkshopBar() {
           visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0"
         )}
         role="banner"
-        aria-label="Community invite"
+        aria-label="Text us invite"
       >
         {barContent}
       </div>

@@ -53,10 +53,10 @@ export default async function HomePage() {
     heroTitleSecondary: "with Clarity and Care",
     heroDescription:
       "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
-    primaryCtaText: "Join WhatsApp Community",
-    primaryCtaLink: "/contact/whatsapp-group",
-    secondaryCtaText: "Join WhatsApp Community",
-    secondaryCtaLink: "/contact/whatsapp-group",
+    primaryCtaText: "Text us",
+    primaryCtaLink: "https://wa.me/923253708069",
+    secondaryCtaText: "Text us",
+    secondaryCtaLink: "https://wa.me/923253708069",
     bannerImagePath: "/assets/hero-legacy.jpg",
   };
 
@@ -97,7 +97,7 @@ export default async function HomePage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 >
-                  Join WhatsApp Community
+                  Text us
                   <ArrowRight className="h-4 w-4" />
                 </TrackedWhatsAppLink>
                 <TrackedOutboundLink
@@ -285,7 +285,7 @@ export default async function HomePage() {
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
             >
-              Join WhatsApp Community
+              Text us
               <ArrowRight className="h-4 w-4" />
             </TrackedWhatsAppLink>
           </div>

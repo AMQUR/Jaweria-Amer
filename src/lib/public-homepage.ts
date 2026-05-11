@@ -26,9 +26,9 @@ export async function getHomepageContent() {
       heroTitleSecondary: "with Clarity and Care",
       heroDescription:
         "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
-      primaryCtaText: "Join WhatsApp Community",
+      primaryCtaText: "Text us",
       primaryCtaLink: getWhatsAppUrl(),
-      secondaryCtaText: "Join WhatsApp Community",
+      secondaryCtaText: "Text us",
       secondaryCtaLink: getWhatsAppUrl(),
       bannerImagePath: "/assets/hero-legacy.jpg",
       updatedAt: "2024-01-01T00:00:00.000Z",

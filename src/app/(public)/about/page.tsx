@@ -244,10 +244,10 @@ export default function AboutPage() {
                 <IconWhatsApp className="h-5 w-5" />
               </span>
               <h3 className="flex-1 font-serif text-base font-semibold leading-snug text-ink sm:text-lg">
-                Ask questions and get updates in the community
+                Text us with questions or to get updates
               </h3>
               <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-semibold text-crimson">
-                Join WhatsApp Community
+                Text us
                 <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
               </span>
             </TrackedWhatsAppLink>
@@ -354,7 +354,7 @@ export default function AboutPage() {
               rel="noopener noreferrer"
               className="inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-rose px-7 py-3.5 text-sm font-medium text-white shadow-sm transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-rose-dark hover:shadow-md active:scale-100 motion-reduce:hover:scale-100 sm:w-auto"
             >
-              Join WhatsApp Community
+              Text us
               <ArrowRight className="w-4 h-4" />
             </TrackedWhatsAppLink>
           </div>

@@ -176,7 +176,7 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                   rel="noopener noreferrer"
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
                 >
-                  Join WhatsApp Community
+                  Text us
                   <ArrowRight className="h-4 w-4" />
                 </TrackedWhatsAppLink>
               </div>

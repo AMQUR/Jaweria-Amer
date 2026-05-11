@@ -57,7 +57,7 @@ export function CourseCard({ course }: { course: Course }) {
             className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             <MessageCircle className="h-4 w-4" aria-hidden />
-            Join WhatsApp Community
+            Text us
             <ArrowRight className="h-4 w-4" />
           </TrackedWhatsAppLink>
           <TrackedCourseSyllabusLink
