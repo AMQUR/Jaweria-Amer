@@ -6,7 +6,6 @@ import { contact } from "@/lib/contact";
 import { siteConfig } from "@/lib/data";
 import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
-import { FileVaultCard } from "@/components/file-vault-card";
 import { FiveDayPlanBanner } from "@/components/five-day-plan-banner";
 import { SixHourPlanBanner } from "@/components/six-hour-plan-banner";
 import { Paper1ChecklistBanner } from "@/components/paper1-checklist-banner";
@@ -100,16 +99,13 @@ export default async function ResourcesPage() {
             </TrackedOutboundLink>
           </div>
 
-          {/* 2 — File Vault (Google Drive) */}
-          <FileVaultCard />
-
-          {/* 3 — 5-Day Plan */}
+          {/* 2 — 5-Day Plan */}
           <FiveDayPlanBanner />
 
-          {/* 4 — 6-Hour Plan */}
+          {/* 3 — 6-Hour Plan */}
           <SixHourPlanBanner />
 
-          {/* 5 — Paper 1 Checklist + Reward */}
+          {/* 4 — Paper 1 Checklist + Reward */}
           <Paper1ChecklistBanner />
         </div>
       </section>

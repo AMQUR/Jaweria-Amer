@@ -21,7 +21,6 @@ const apiRoute = read("src/app/api/view-resource/route.ts");
 const resourcesHub = read("src/components/resources-hub.tsx");
 const sixHourBanner = read("src/components/six-hour-plan-banner.tsx");
 const fiveDayBanner = read("src/components/five-day-plan-banner.tsx");
-const fileVaultCard = read("src/components/file-vault-card.tsx");
 const paper1ChecklistBanner = read("src/components/paper1-checklist-banner.tsx");
 const resourceSupplements = read("src/lib/resource-supplements.ts");
 
@@ -33,7 +32,6 @@ for (const [name, source] of [
   ["resources hub", resourcesHub],
   ["six hour plan banner", sixHourBanner],
   ["five day plan banner", fiveDayBanner],
-  ["file vault card", fileVaultCard],
   ["paper 1 checklist banner", paper1ChecklistBanner],
 ]) {
   assert(!/\sdownload(?:=|\s|>)/i.test(source), `${name} must not render download attributes or actions`);
@@ -86,9 +84,4 @@ assert(
     !paper1ChecklistBanner.includes("window.open"),
   "Resources checklist rewards must not expose public storage URLs or new-tab fallbacks"
 );
-assert(
-  !fileVaultCard.includes("drive.google.com") && fileVaultCard.includes("/resources?cat=featured"),
-  "Resources vault card must not link to an external raw file vault"
-);
-
 console.log("Resources view-only regression checks passed.");
