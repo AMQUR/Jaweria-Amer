@@ -207,8 +207,11 @@ async function streamRemoteResource(fileUrl: string, req: NextRequest) {
     return jsonError("Resource URL is not a supported Supabase Storage URL.", 404, { fileUrl });
   }
 
+  // Public bucket objects are accessible without signing — skip signed URL generation.
+  const isPublicBucketUrl = parsed.url.pathname.includes("/object/public/");
+
   const hasPrivateEnv = Boolean(getSupabaseUrl() && process.env.SUPABASE_SERVICE_ROLE_KEY);
-  const signedUrl = hasPrivateEnv ? await getOrCreateSignedSupabaseUrl(parsed) : null;
+  const signedUrl = (!isPublicBucketUrl && hasPrivateEnv) ? await getOrCreateSignedSupabaseUrl(parsed) : null;
   const viewUrl = signedUrl ?? parsed.publicUrl;
   const upstream = await fetch(viewUrl, {
     cache: "no-store",
@@ -222,7 +225,7 @@ async function streamRemoteResource(fileUrl: string, req: NextRequest) {
       usedSignedUrl: Boolean(signedUrl),
       hasPrivateEnv,
     });
-    if (hasPrivateEnv && !signedUrl) {
+    if (!isPublicBucketUrl && hasPrivateEnv && !signedUrl) {
       return jsonError("Could not create a signed Supabase resource URL.", 500, {
         bucket: parsed.bucket,
         path: parsed.path,
