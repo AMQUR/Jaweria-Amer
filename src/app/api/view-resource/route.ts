@@ -240,13 +240,35 @@ async function streamRemoteResource(fileUrl: string, req: NextRequest) {
   });
 
   if (!upstream.ok || !upstream.body) {
-    console.error("[view-resource] Supabase fetch failed", {
-      status: upstream.status,
+    const supabaseEnvUrl = getSupabaseUrl();
+    console.error("[view-resource] public fetch failed", {
+      originalFileUrl: fileUrl,
+      supabaseUrl: supabaseEnvUrl || "(not set)",
+      objectPath: parsed.path,
+      reconstructedUrl: viewUrl,
+      fetchStatus: upstream.status,
+      fetchStatusText: upstream.statusText,
       bucket: parsed.bucket,
-      path: parsed.path,
-      viewUrl,
       isPublicBucketUrl,
     });
+    if (IS_DEV) {
+      return Response.json(
+        {
+          error: "Resource file was not found in Supabase Storage.",
+          debug: {
+            originalFileUrl: fileUrl,
+            supabaseUrl: supabaseEnvUrl || "(not set — check SUPABASE_URL / NEXT_PUBLIC_SUPABASE_URL env var)",
+            objectPath: parsed.path,
+            reconstructedUrl: viewUrl,
+            fetchStatus: upstream.status,
+            fetchStatusText: upstream.statusText,
+            bucket: parsed.bucket,
+            hint: "Open reconstructedUrl directly in a browser to verify the file exists and the bucket is public.",
+          },
+        },
+        { status: 404 }
+      );
+    }
     return jsonError("Resource file was not found in Supabase Storage.", 404, {
       bucket: parsed.bucket,
       path: parsed.path,
