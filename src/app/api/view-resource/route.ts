@@ -207,34 +207,49 @@ async function streamRemoteResource(fileUrl: string, req: NextRequest) {
     return jsonError("Resource URL is not a supported Supabase Storage URL.", 404, { fileUrl });
   }
 
-  // Public bucket objects are accessible without signing — skip signed URL generation.
+  // Public bucket objects (/object/public/…) are served directly — no signing needed.
   const isPublicBucketUrl = parsed.url.pathname.includes("/object/public/");
 
-  const hasPrivateEnv = Boolean(getSupabaseUrl() && process.env.SUPABASE_SERVICE_ROLE_KEY);
-  const signedUrl = (!isPublicBucketUrl && hasPrivateEnv) ? await getOrCreateSignedSupabaseUrl(parsed) : null;
-  const viewUrl = signedUrl ?? parsed.publicUrl;
-  const upstream = await fetch(viewUrl, {
-    cache: "no-store",
-    headers: req.headers.get("range") ? { Range: req.headers.get("range") as string } : undefined,
-  });
-  if (!upstream.ok || !upstream.body) {
-    console.error("[view-resource] Supabase fetch failed", {
-      status: upstream.status,
-      bucket: parsed.bucket,
-      path: parsed.path,
-      usedSignedUrl: Boolean(signedUrl),
-      hasPrivateEnv,
-    });
-    if (!isPublicBucketUrl && hasPrivateEnv && !signedUrl) {
+  let viewUrl: string;
+  if (isPublicBucketUrl) {
+    // Reconstruct the canonical public URL from the env-var Supabase origin so the request
+    // always targets the live project even if fileUrl has a stale hostname.
+    // Object path inside the bucket is everything after /object/public/<bucket>/
+    // e.g. "vocabulary/final-p1-vocabulary-list.pdf" — no bucket prefix, no storage prefix.
+    const supabaseOrigin = getSupabaseUrl();
+    viewUrl = supabaseOrigin
+      ? `${supabaseOrigin}/storage/v1/object/public/${parsed.bucket}/${encodeStoragePath(parsed.path)}`
+      : parsed.publicUrl;
+  } else {
+    // Private / authenticated objects require a signed URL.
+    const hasPrivateEnv = Boolean(getSupabaseUrl() && process.env.SUPABASE_SERVICE_ROLE_KEY);
+    const signedUrl = hasPrivateEnv ? await getOrCreateSignedSupabaseUrl(parsed) : null;
+    // Fail fast — don't proceed to a fetch that will also fail without a valid signed URL.
+    if (hasPrivateEnv && !signedUrl) {
       return jsonError("Could not create a signed Supabase resource URL.", 500, {
         bucket: parsed.bucket,
         path: parsed.path,
       });
     }
-    return jsonError("Resource file was not found in Supabase Storage.", upstream.status || 404, {
+    viewUrl = signedUrl ?? parsed.publicUrl;
+  }
+
+  const upstream = await fetch(viewUrl, {
+    cache: "no-store",
+    headers: req.headers.get("range") ? { Range: req.headers.get("range") as string } : undefined,
+  });
+
+  if (!upstream.ok || !upstream.body) {
+    console.error("[view-resource] Supabase fetch failed", {
+      status: upstream.status,
       bucket: parsed.bucket,
       path: parsed.path,
-      usedSignedUrl: Boolean(signedUrl),
+      viewUrl,
+      isPublicBucketUrl,
+    });
+    return jsonError("Resource file was not found in Supabase Storage.", 404, {
+      bucket: parsed.bucket,
+      path: parsed.path,
     });
   }
 
