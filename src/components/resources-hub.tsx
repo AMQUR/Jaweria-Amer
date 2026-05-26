@@ -142,6 +142,12 @@ function uniqueSorted(values: string[]) {
 
 const ALL_HUB_CATEGORY_IDS = new Set(RESOURCE_HUB_CATEGORIES.map((c) => c.id));
 
+// Temporarily hidden from public view — data and files are untouched.
+const HIDDEN_RESOURCE_CATEGORIES = new Set<ResourceHubCategory>([
+  "general-notes",
+  "solved-papers",
+]);
+
 function isResourceHubCategoryId(s: string): s is ResourceHubCategory {
   return ALL_HUB_CATEGORY_IDS.has(s as ResourceHubCategory);
 }
@@ -162,7 +168,7 @@ function isValidSubForCategory(
 function readHubFromSearchParams(sp: URLSearchParams) {
   const rawCat = sp.get("cat");
   const category: ResourceHubCategory | "all" =
-    rawCat && isResourceHubCategoryId(rawCat) ? rawCat : "all";
+    rawCat && isResourceHubCategoryId(rawCat) && !HIDDEN_RESOURCE_CATEGORIES.has(rawCat as ResourceHubCategory) ? rawCat : "all";
 
   const subRaw = sp.get("sub");
   let notesSubCategory: NotesSubCategoryFilter = "unset";
@@ -552,7 +558,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
             Choose a path based on what you want to improve.
           </p>
           <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {START_PATHWAYS.map((pathway) => {
+            {START_PATHWAYS.filter((p) => !HIDDEN_RESOURCE_CATEGORIES.has(p.category)).map((pathway) => {
               const Icon = pathway.icon;
               return (
                 <button
@@ -598,7 +604,7 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
               Pick a category to unlock guided navigation.
             </p>
           </button>
-          {RESOURCE_HUB_CATEGORIES.map((cat) => {
+          {RESOURCE_HUB_CATEGORIES.filter((cat) => !HIDDEN_RESOURCE_CATEGORIES.has(cat.id)).map((cat) => {
             const Icon = categoryIcon[cat.id];
             const active = category === cat.id;
             const isSolved = cat.id === "solved-papers";
