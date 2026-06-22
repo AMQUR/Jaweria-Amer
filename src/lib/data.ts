@@ -27,6 +27,7 @@ export type ResourceHubCategory =
   | "topicals"
   | "yearly-past-papers"
   | "examiner-reports"
+  | "examiner-guides"
   | "checklists"
   | "quick-worksheets"
   | "vocabulary"
@@ -119,6 +120,11 @@ export const RESOURCE_HUB_CATEGORIES: {
     blurb: "Real student scripts with examiner-style feedback and examples.",
   },
   {
+    id: "examiner-guides",
+    label: "Examiner Guides",
+    blurb: "Examiner reports and Examiner Candidate Responses (ECR) — what gains and loses marks.",
+  },
+  {
     id: "checklists",
     label: "Marking Schemes",
     blurb: "Solutions and mark schemes grouped by paper, then by section or session.",
@@ -141,17 +147,18 @@ export const RESOURCE_HUB_CATEGORIES: {
 ];
 
 /**
- * TODO (Task 2 — real offerings): the four programmes to surface are
- *   1. O Level English Language — 1123  (present below: `o-level-english-1123`)
- *   2. IGCSE English as a Second Language — 0510 / 0511  (NOT YET ADDED)
- *   3. IGCSE English as a First Language — 0500          (NOT YET ADDED)
- *   4. AS Level English Language — 9093  (present below: `a-level-english-9093`)
- * The two IGCSE entries are not added yet because they need a new "igcse"
- * CourseCategory in `course-offerings.ts` AND a Cambridge syllabus PDF hosted on
- * Supabase. Add the IGCSE courses + a Supabase `syllabusPdfUrl` per course once the
- * syllabus PDFs are supplied (do NOT commit the PDFs to the repo / use `/public`).
- * The current `english-literature` / `creative-writing` rows are kept for now;
- * remove them when the IGCSE offerings replace them.
+ * The four real offerings surfaced on `/courses` (see `COURSE_CATEGORY_SLUGS_OFFERED`):
+ *   1. O Level English Language — 1123          (`o-level-english-1123`)
+ *   2. IGCSE English as a Second Language 0510/0511 (`igcse-esl-0510-0511`)
+ *   3. IGCSE English as a First Language — 0500 (`igcse-fle-0500`)
+ *   4. AS Level English Language — 9093         (`a-level-english-9093`)
+ * `english-literature` / `creative-writing-workshop` remain as legacy data but are
+ * filtered out of the public directory.
+ *
+ * TODO (Task 2 — syllabus PDFs): the Cambridge syllabus PDFs are not yet hosted.
+ * The "View syllabus" card link points at the in-app syllabus/curriculum page (text),
+ * so nothing is broken. When the syllabus PDFs are supplied, host them on Supabase
+ * (do NOT commit PDFs to the repo) and add a download link per course.
  */
 export const courses: Course[] = [
   {
@@ -216,6 +223,134 @@ export const courses: Course[] = [
       "Produce directed writing that hits every assessment objective",
       "Develop a repeatable approach to comprehension and summary",
       "Build confidence through consistent, measurable progress",
+    ],
+  },
+  {
+    id: "igcse-esl-0510-0511",
+    title: "IGCSE English as a Second Language",
+    subtitle: "CAIE 0510 / 0511 - Complete Preparation",
+    category: "igcse",
+    categoryLabel: "IGCSE",
+    price: "PKR 25,000",
+    duration: "4 Months",
+    schedule: "3 sessions/week",
+    description:
+      "A structured programme for Cambridge IGCSE English as a Second Language (0510 / 0511). We build reading, writing, listening, and speaking skills with rubric-aligned practice and checked work.",
+    featured: true,
+    syllabus: [
+      "Paper 1: Reading & Writing",
+      "Paper 2: Listening",
+      "Speaking endorsement (0511)",
+      "Exam-aligned marking practice",
+    ],
+    curriculum: [
+      {
+        title: "Reading Skills",
+        topics: [
+          "Skimming, scanning, and locating detail",
+          "Note-making and information transfer",
+          "Understanding tone, purpose, and audience",
+          "Multiple-matching and gap-fill techniques",
+        ],
+      },
+      {
+        title: "Writing Skills",
+        topics: [
+          "Emails, letters, reports, and articles",
+          "Register and audience adaptation",
+          "Summary writing within word limits",
+          "Accuracy: grammar, spelling, and punctuation",
+        ],
+      },
+      {
+        title: "Listening Skills",
+        topics: [
+          "Listening for gist and specific detail",
+          "Note completion and multiple choice",
+          "Following conversations and monologues",
+          "Timed practice under exam conditions",
+        ],
+      },
+      {
+        title: "Speaking (0511)",
+        topics: [
+          "Conversation and topic development",
+          "Fluency, range, and accuracy",
+          "Handling follow-up questions confidently",
+          "Mock speaking tests with feedback",
+        ],
+      },
+    ],
+    outcomes: [
+      "Read and respond to a range of text types with confidence",
+      "Write clearly for different audiences and purposes",
+      "Answer listening tasks accurately under timed conditions",
+      "Communicate fluently in the speaking assessment (0511)",
+      "Apply examiner marking criteria across all papers",
+    ],
+  },
+  {
+    id: "igcse-fle-0500",
+    title: "IGCSE English as a First Language",
+    subtitle: "CAIE 0500 - Complete Preparation",
+    category: "igcse",
+    categoryLabel: "IGCSE",
+    price: "PKR 27,000",
+    duration: "4 Months",
+    schedule: "3 sessions/week",
+    description:
+      "A structured programme for Cambridge IGCSE English as a First Language (0500). We develop close reading, directed writing, and composition skills through examiner-aligned practice and feedback.",
+    featured: true,
+    syllabus: [
+      "Paper 1: Reading",
+      "Paper 2: Directed Writing & Composition",
+      "Coursework / Speaking component",
+      "Exam-aligned marking practice",
+    ],
+    curriculum: [
+      {
+        title: "Reading & Analysis",
+        topics: [
+          "Comprehension of explicit and implicit meaning",
+          "Analysing language and writer's effect",
+          "Summary writing with precision",
+          "Selecting and synthesising information",
+        ],
+      },
+      {
+        title: "Directed Writing",
+        topics: [
+          "Responding to reading material",
+          "Form, audience, and purpose control",
+          "Evaluating ideas and arguments",
+          "Structuring a clear, developed response",
+        ],
+      },
+      {
+        title: "Composition",
+        topics: [
+          "Descriptive writing: detail and atmosphere",
+          "Narrative writing: structure and pacing",
+          "Crafting accurate, varied sentences",
+          "Planning under timed conditions",
+        ],
+      },
+      {
+        title: "Exam Strategy",
+        topics: [
+          "Time allocation per question",
+          "Common deduction patterns and how to avoid them",
+          "Full paper mock under exam conditions",
+          "Personalised feedback and improvement plans",
+        ],
+      },
+    ],
+    outcomes: [
+      "Read critically and analyse a writer's craft",
+      "Produce directed writing that meets every assessment objective",
+      "Write vivid descriptive and narrative compositions",
+      "Summarise and synthesise with accuracy",
+      "Achieve top-band marks through rubric-aligned practice",
     ],
   },
   {

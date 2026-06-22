@@ -73,6 +73,7 @@ const SECTION_ORDER: CmsResourceRecord["category"][] = [
   "topicals",
   "yearly-past-papers",
   "examiner-reports",
+  "examiner-guides",
   "checklists",
   "vocabulary",
   "solved-papers",

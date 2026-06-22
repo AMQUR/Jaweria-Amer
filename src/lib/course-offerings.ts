@@ -25,21 +25,27 @@ export function getAdminCourseLevelSelectOptions(currentLevel: CourseLevel | und
 
 // --- Public marketing courses (`Course.category` slug) ---
 
-export const COURSE_CATEGORY_SLUGS_ALL = ["o-level", "a-level", "literature", "creative-writing"] as const;
+export const COURSE_CATEGORY_SLUGS_ALL = ["o-level", "igcse", "a-level", "literature", "creative-writing"] as const;
 export type CourseCategory = (typeof COURSE_CATEGORY_SLUGS_ALL)[number];
 
 const CATEGORY_LABELS: Record<CourseCategory, string> = {
   "o-level": "O Level",
+  igcse: "IGCSE",
   "a-level": "A Level",
   literature: "Literature",
   "creative-writing": "Creative Writing",
 };
 
-/** Categories listed on `/courses` and home featured carousel. Append `"a-level"` to surface A Level again. */
+/**
+ * Categories listed on `/courses` and home featured carousel — the four real offerings:
+ * O Level (1123), IGCSE (0500 / 0510 / 0511), A Level (9093).
+ * `literature` / `creative-writing` rows stay valid in the type for legacy data but are
+ * not surfaced. Re-add a slug here to bring its courses back.
+ */
 export const COURSE_CATEGORY_SLUGS_OFFERED: readonly CourseCategory[] = [
   "o-level",
-  "literature",
-  "creative-writing",
+  "igcse",
+  "a-level",
 ];
 
 export function isCourseCategoryOffered(slug: CourseCategory): boolean {

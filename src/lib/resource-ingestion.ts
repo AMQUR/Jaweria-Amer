@@ -43,6 +43,7 @@ export const RESOURCE_FOLDER_TO_CATEGORY: Record<string, ResourceHubCategory> = 
   worksheets: "topicals",
   "past-papers": "yearly-past-papers",
   "examiner-reports": "examiner-reports",
+  "examiner-guides": "examiner-guides",
   checklists: "checklists",
 };
 

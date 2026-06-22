@@ -34,6 +34,7 @@ const CATEGORY_TO_FOLDER: Record<CmsResourceCategory, string> = {
   topicals: "topicals",
   "yearly-past-papers": "yearlies",
   "examiner-reports": "scripts",
+  "examiner-guides": "examiner-guides",
   checklists: "marking-schemes",
   "quick-worksheets": "mcq",
   vocabulary: "vocabulary",

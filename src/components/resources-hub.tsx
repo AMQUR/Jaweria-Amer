@@ -52,6 +52,7 @@ const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
   topicals: LayoutGrid,
   "yearly-past-papers": FolderOpen,
   "examiner-reports": FileSearch,
+  "examiner-guides": FileSearch,
   checklists: ClipboardList,
   "quick-worksheets": Brain,
   vocabulary: BookMarked,
@@ -144,8 +145,8 @@ function uniqueSorted(values: string[]) {
 const ALL_HUB_CATEGORY_IDS = new Set(RESOURCE_HUB_CATEGORIES.map((c) => c.id));
 
 // Temporarily hidden from public view — data and files are untouched.
+// Notes (`general-notes`) is shown again so students can browse the five subtopics.
 const HIDDEN_RESOURCE_CATEGORIES = new Set<ResourceHubCategory>([
-  "general-notes",
   "solved-papers",
 ]);
 
@@ -274,6 +275,7 @@ const categoryTintClass: Partial<Record<ResourceHubCategory, string>> = {
   topicals: SURFACE_ROSE,
   "yearly-past-papers": SURFACE_ROSE,
   "examiner-reports": SURFACE_ROSE,
+  "examiner-guides": SURFACE_ROSE,
   checklists: SURFACE_ROSE,
   "quick-worksheets": SURFACE_ROSE,
   vocabulary: "bg-rose-50/60 border-rose-200/50 hover:bg-rose-50",
@@ -548,6 +550,10 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     // Gentle enrolment nudge for empty notes subcategories (Task 8).
     emptyState =
       "Updated notes are being added soon. Enrolled students receive the complete guided version inside the LMS.";
+  } else if (category === "examiner-guides") {
+    // Examiner Guides structure ready ahead of files (Task 7).
+    emptyState =
+      "Examiner reports and Examiner Candidate Responses (ECR) are being added here soon. Enrolled students get them broken down inside the LMS — exactly what gains and loses marks.";
   } else if (category !== "all") {
     emptyState = "No resources match these filters.";
   }

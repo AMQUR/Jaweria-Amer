@@ -24,6 +24,7 @@ import {
 
 const categoryColors: Record<string, string> = {
   "o-level": "border-crimson/15 bg-crimson/8 text-crimson",
+  igcse: "border-rose/15 bg-rose/8 text-rose-dark",
   "a-level": "border-rose/20 bg-rose/10 text-rose-dark",
   literature: "border-border bg-brand-soft/80 text-brand",
   "creative-writing": "border-border bg-muted text-ink-muted",
