@@ -5,11 +5,20 @@
 
 const WHATSAPP_DIRECT_URL = "https://wa.me/923253708069";
 
+/** Paid enrolment form — the primary conversion CTA across the site. */
+export const ENROL_NOW_URL = "https://forms.gle/LbYPC63MWP1foWZC6";
+
+/** Public WhatsApp community group ("Join Our Community" secondary CTA). */
+export const COMMUNITY_WHATSAPP_URL = "https://chat.whatsapp.com/KEDYUPcMemQENBf3H053jf?mode=gi_t";
+
 export const contact = {
   phone: "+923253708069",
-  youtube: "https://www.youtube.com/@englishwithjaweria",
+  youtube: "https://youtube.com/@englishwithmissjay?si=eaaHaSzNSPLDratp",
   /** Stable featured lesson for the About page embed (`youtube.com/watch?v=…` ID). */
-  youtubeFeaturedVideoId: "Qyl5kB_uv-0",
+  youtubeFeaturedVideoId: "JKrLqtVcdso",
+  // TODO: Replace with the real Instagram profile URL when supplied. The user temporarily
+  // provided the WhatsApp community link as a stand-in for Instagram; we keep this existing
+  // handle as the better-known link until the real one is confirmed.
   instagram: "https://instagram.com/englishwithmissjay",
   /** Public Facebook page — leave empty to hide the Facebook card on marketing pages. */
   facebook: "https://www.facebook.com/jaweria.amer",

@@ -7,6 +7,16 @@ import type { Resource } from "./data";
  * Ingest: `node scripts/ingest-jaweria-vault.mjs` (logs each topical file as Added to stderr).
  * Not registered here (near-duplicate of existing public PDFs, left on disk): s25-paper-2-48-50-1.pdf,
  * s25-paper-2-49-50-1.pdf, s25-paper-2-49-50-2.pdf.
+ *
+ * TODO (Task 6 — add four yearly Question Papers). PDFs not yet on Supabase (probed paths
+ * returned HTTP 400). When supplied, upload to bucket `resources` under
+ * `resources/yearlies/question-papers/` (kebab-case), verify HTTP 200, then add as
+ * `category: "yearly-past-papers"`, `section: "question-papers"` entries:
+ *   - `s24 21` → "May/June 2024 — Paper 21 Question Paper"
+ *   - `s24 22` → "May/June 2024 — Paper 22 Question Paper"
+ *   - `w25 21` → "October/November 2025 — Paper 21 Question Paper"
+ *   - `w25 22` → "October/November 2025 — Paper 22 Question Paper"
+ * Do not commit PDFs to the repo / use `/public`; do not add entries with empty/fake URLs.
  */
 const supplementalHubResourcesBase: Resource[] = [
   {
@@ -499,6 +509,13 @@ const supplementalHubResourcesBase: Resource[] = [
     fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/topicals/paper-1/summary/qp/practice-summary-9.pdf",
     description: "Curated Paper 1 topical pack — vetted from the class materials set.",
   },
+  // TODO (Task 7 — Examiner Guides): these `examiner-reports` items currently render
+  // inside the "Scripts" hub category. To split a dedicated "Examiner Guides" section
+  // (examiner reports + ECR / Examiner Candidate Responses), add an `"examiner-guides"`
+  // value to `ResourceHubCategory` in data.ts, wire it through the admin manager,
+  // `resource-ingestion.ts`, and the hub icon/surface maps, then move the GUIDANCE-chip
+  // items here (real examiner reports) into that category. Add ECR entries only when the
+  // ECR PDFs are supplied on Supabase (verify HTTP 200) — do not create broken links.
   {
     id: "script-s25-paper-1-47-50",
     title: "S25 Paper 1 (47/50)",

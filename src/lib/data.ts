@@ -140,6 +140,19 @@ export const RESOURCE_HUB_CATEGORIES: {
   },
 ];
 
+/**
+ * TODO (Task 2 — real offerings): the four programmes to surface are
+ *   1. O Level English Language — 1123  (present below: `o-level-english-1123`)
+ *   2. IGCSE English as a Second Language — 0510 / 0511  (NOT YET ADDED)
+ *   3. IGCSE English as a First Language — 0500          (NOT YET ADDED)
+ *   4. AS Level English Language — 9093  (present below: `a-level-english-9093`)
+ * The two IGCSE entries are not added yet because they need a new "igcse"
+ * CourseCategory in `course-offerings.ts` AND a Cambridge syllabus PDF hosted on
+ * Supabase. Add the IGCSE courses + a Supabase `syllabusPdfUrl` per course once the
+ * syllabus PDFs are supplied (do NOT commit the PDFs to the repo / use `/public`).
+ * The current `english-literature` / `creative-writing` rows are kept for now;
+ * remove them when the IGCSE offerings replace them.
+ */
 export const courses: Course[] = [
   {
     id: "o-level-english-1123",

@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { courses } from "@/lib/data";
 import { CourseCard } from "@/components/course-card";
 import { cn } from "@/lib/utils";
+import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
+import { ENROL_NOW_URL } from "@/lib/contact";
 import {
   listMarketingCourses,
   MARKETING_COURSE_FILTER_CHIPS,
@@ -30,15 +33,42 @@ export default function CoursesPage() {
           <h1 className="mb-4 max-w-2xl font-serif text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-[2.35rem] lg:leading-snug">
             Course directory
           </h1>
-          <p className="max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
-            Structured programmes for Cambridge O Level, Literature, and Creative Writing. Each course is
-            rubric-aligned and feedback-driven.
+          <p className="mb-7 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
+            Guided live programmes for Cambridge O Level, IGCSE, and A Level English. Every course includes
+            checked work, personalised feedback, biweekly tests, and progress reports — not just materials.
           </p>
+          <TrackedOutboundLink
+            href={ENROL_NOW_URL}
+            channel="enrol"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-crimson shadow-md transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:scale-[0.98] motion-reduce:hover:translate-y-0"
+          >
+            Enrol Now
+            <ArrowRight className="h-4 w-4" />
+          </TrackedOutboundLink>
         </div>
       </section>
 
       <section className="bg-cream py-16 sm:py-24">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          {/* Nudge band — free resources vs guided programme */}
+          <div className="mb-10 flex flex-col items-start justify-between gap-4 rounded-2xl border border-crimson/15 bg-crimson/5 px-6 py-5 sm:mb-12 sm:flex-row sm:items-center">
+            <p className="max-w-2xl text-sm leading-relaxed text-slate sm:text-base">
+              <span className="font-semibold text-ink">Want checked copies, personalised feedback, and progress reports?</span>{" "}
+              Use the free resources to start, then join the guided batch for structure and accountability.
+            </p>
+            <TrackedOutboundLink
+              href={ENROL_NOW_URL}
+              channel="enrol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
+            >
+              Enrol Now
+              <ArrowRight className="h-4 w-4" />
+            </TrackedOutboundLink>
+          </div>
           <div className="mb-12 flex flex-wrap gap-2 sm:mb-14">
             {MARKETING_COURSE_FILTER_CHIPS.map((cat) => (
               <button

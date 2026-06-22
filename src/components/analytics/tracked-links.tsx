@@ -44,7 +44,7 @@ export function TrackedWhatsAppLink({
   );
 }
 
-type OutboundChannel = "youtube" | "instagram" | "facebook" | "drive" | "other";
+type OutboundChannel = "youtube" | "instagram" | "facebook" | "drive" | "enrol" | "community" | "other";
 
 type TrackedOutboundProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
   href: string;

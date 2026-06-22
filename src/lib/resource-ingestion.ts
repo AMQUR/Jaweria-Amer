@@ -67,6 +67,29 @@ export function cleanCopyOfTitlePrefix(title: string): string {
 }
 
 /**
+ * Standardise Cambridge session naming for display (Task 5). Does not touch stored data.
+ *   `S24` / `S 24` / `Summer 2024` / `May June 2024` → `May/June 2024`
+ *   `W24` / `W 24` / `Winter 2024` / `Oct Nov 2024`  → `October/November 2024`
+ * Also collapses stray bracketed years like `( 2024 )` → `2024`.
+ */
+export function normalizeSessionLabel(text: string): string {
+  if (!text) return text;
+  return text
+    // Bare session codes: S24 / W25 (with optional space). Word-boundary guarded.
+    .replace(/\bS\s?(\d{2})\b/g, "May/June 20$1")
+    .replace(/\bW\s?(\d{2})\b/g, "October/November 20$1")
+    // Spelled-out / hyphenated variants.
+    .replace(/\bsummer\s+(\d{4})\b/gi, "May/June $1")
+    .replace(/\bwinter\s+(\d{4})\b/gi, "October/November $1")
+    .replace(/\bmay[\s/-]+june\b/gi, "May/June")
+    .replace(/\boct(?:ober)?[\s/-]+nov(?:ember)?\b/gi, "October/November")
+    // Tidy brackets around a lone year: "( 2024 )" → "2024".
+    .replace(/\(\s*(\d{4})\s*\)/g, "$1")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/**
  * Human-readable label for vault UI only. Does not change stored `Resource.title`.
  * Runs after {@link cleanCopyOfTitlePrefix} (applied internally).
  * Pass `category` so Scripts (`examiner-reports`) scored papers can use `SESSION (Paper N) score/max`.
@@ -106,7 +129,9 @@ export function formatDisplayTitle(title: string, category?: ResourceHubCategory
   }
 
   // Drop stray syllabus-framework tokens; collapse spaces
-  return t.replace(/\bFOA2\b/gi, "").replace(/\s+/g, " ").trim() || t;
+  const cleaned = t.replace(/\bFOA2\b/gi, "").replace(/\s+/g, " ").trim() || t;
+  // Standardise session naming for everything except Scripts (handled above).
+  return category === "examiner-reports" ? cleaned : normalizeSessionLabel(cleaned);
 }
 
 /** Vault chip for Scripts (`examiner-reports`) cards — display only. */

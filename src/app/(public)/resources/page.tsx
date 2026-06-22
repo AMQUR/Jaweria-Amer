@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ExternalLink, PlayCircle } from "lucide-react";
+import { ArrowRight, ExternalLink, PlayCircle } from "lucide-react";
 import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
-import { contact } from "@/lib/contact";
+import { contact, ENROL_NOW_URL } from "@/lib/contact";
 import { siteConfig } from "@/lib/data";
 import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
-import { FiveDayPlanBanner } from "@/components/five-day-plan-banner";
-import { SixHourPlanBanner } from "@/components/six-hour-plan-banner";
 import { Paper1ChecklistBanner } from "@/components/paper1-checklist-banner";
 import { ResourcesPageScroll } from "@/components/resources-page-scroll";
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT, CARD_HOVER } from "@/components/resource-card-system";
@@ -99,14 +97,38 @@ export default async function ResourcesPage() {
             </TrackedOutboundLink>
           </div>
 
-          {/* 2 — 5-Day Plan */}
-          <FiveDayPlanBanner />
-
-          {/* 3 — 6-Hour Plan */}
-          <SixHourPlanBanner />
-
-          {/* 4 — Paper 1 Checklist + Reward */}
+          {/* 2 — Batch readiness checklist + Pokémon reward (the one interactive popup we keep) */}
           <Paper1ChecklistBanner />
+
+          {/* 3 — Enrol nudge: free resources → guided programme */}
+          <div
+            className={`${CARD_BASE} ${CARD_HOVER} group flex-col gap-5 border border-crimson/15 bg-crimson/5 sm:flex-row sm:gap-6`}
+          >
+            <div className="min-w-0 flex-1 self-stretch sm:self-auto">
+              <div className={CARD_CONTENT}>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-crimson/70">
+                  Go further
+                </p>
+                <h2 className="text-xl font-semibold text-ink sm:text-2xl">
+                  Free resources help you practise. The live programme helps you improve.
+                </h2>
+                <p className="max-w-2xl text-sm leading-relaxed text-slate sm:text-base">
+                  Enrol for checked work, personalised feedback, biweekly tests, progress reports, and a
+                  complete study plan — accountability that turns practice into marks.
+                </p>
+              </div>
+            </div>
+            <TrackedOutboundLink
+              href={ENROL_NOW_URL}
+              channel="enrol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto`}
+            >
+              Enrol Now
+              <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
+            </TrackedOutboundLink>
+          </div>
         </div>
       </section>
 

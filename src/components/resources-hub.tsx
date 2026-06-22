@@ -29,6 +29,7 @@ import {
 import { trackResourceView } from "@/lib/analytics";
 import {
   formatDisplayTitle,
+  normalizeSessionLabel,
   scriptsResourceVaultChip,
   splitScriptsCardTitle,
 } from "@/lib/resource-ingestion";
@@ -543,6 +544,10 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     emptyState = "Choose a paper to begin targeted practice.";
   } else if (GUIDED_SECTION_CATEGORIES.has(category as ResourceHubCategory) && section === "all" && category !== "topicals") {
     emptyState = "Select a section to see the matching files.";
+  } else if (category === "general-notes") {
+    // Gentle enrolment nudge for empty notes subcategories (Task 8).
+    emptyState =
+      "Updated notes are being added soon. Enrolled students receive the complete guided version inside the LMS.";
   } else if (category !== "all") {
     emptyState = "No resources match these filters.";
   }
@@ -1080,11 +1085,13 @@ const BEST_FOR_MAP: Partial<Record<string, string>> = {
 };
 
 function ResourceCard({ resource }: { resource: Resource }) {
-  const meta = [resource.level, resource.subject, resource.section, resource.year, resource.paper]
+  const isScripts = resource.category === "examiner-reports";
+  // Standardise the session in the meta line (e.g. "S24" → "May/June 2024"), Scripts excluded.
+  const displayYear = isScripts ? resource.year : normalizeSessionLabel(resource.year ?? "");
+  const meta = [resource.level, resource.subject, resource.section, displayYear, resource.paper]
     .filter(Boolean)
     .join(" · ");
   const displayTitle = formatDisplayTitle(resource.title, resource.category);
-  const isScripts = resource.category === "examiner-reports";
   const isMcq = resource.type === "mcq";
   const isPdfResource = !isMcq;
   const vaultChip = isScripts ? scriptsResourceVaultChip(resource.title, displayTitle) : null;

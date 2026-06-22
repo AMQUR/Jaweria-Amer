@@ -98,8 +98,9 @@ export function Paper1ChecklistBanner() {
 
   const completedCount = completed.length;
   const progressPct = Math.round((completedCount / TOTAL) * 100);
-  const isHigh = rewardPercent >= 50;
-  const rewardSrc = isHigh ? POKEMON_HIGH : POKEMON_LOW;
+  // Task 3 threshold: < 80% → recommend May/June batch; >= 80% → ready for October/November.
+  const isReady = rewardPercent >= 80;
+  const rewardSrc = isReady ? POKEMON_HIGH : POKEMON_LOW;
 
   return (
     <>
@@ -113,13 +114,13 @@ export function Paper1ChecklistBanner() {
           </div>
           <div className={CARD_CONTENT}>
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600/80">
-              Exam Prep
+              Batch readiness
             </p>
             <h2 className="text-xl font-semibold text-amber-900 sm:text-2xl">
-              Paper 1 Checklist
+              Are you ready for the October/November batch?
             </h2>
             <p className="max-w-2xl text-sm leading-relaxed text-amber-800/70 sm:text-base">
-              Track your prep. Complete the checklist.
+              Run the readiness check. Score 80% or more and you&apos;re set for Oct/Nov — below that and May/June is the smarter call.
             </p>
           </div>
         </div>
@@ -127,7 +128,7 @@ export function Paper1ChecklistBanner() {
           onClick={() => setChecklistOpen(true)}
           className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-amber-500 text-white hover:bg-amber-600 sm:w-auto`}
         >
-          Start Checklist
+          Check my readiness
         </button>
       </div>
 
@@ -150,10 +151,10 @@ export function Paper1ChecklistBanner() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-100/80">
-                    Exam prep
+                    Batch readiness
                   </p>
                   <h2 className="mt-1 font-serif text-xl font-bold text-white">
-                    Paper 1 Checklist
+                    October/November Readiness Check
                   </h2>
                 </div>
                 <button
@@ -272,28 +273,30 @@ export function Paper1ChecklistBanner() {
               {Math.round(rewardPercent)}%
             </p>
             <h2 className="mt-3 text-xl font-bold text-ink">
-              {isHigh ? "You're on track for an A*" : "You're close — keep pushing"}
+              {isReady
+                ? "You are ready to appear in the October/November batch."
+                : "You should opt for the May/June batch."}
             </h2>
             <p className="mt-1 text-sm text-slate-500">
-              {isHigh
-                ? "Great prep. Stay consistent and finish strong."
-                : "Complete more tasks before exam day."}
+              {isReady
+                ? "Strong prep. Lock in your place and finish strong with the guided batch."
+                : "A little more time will pay off. Build your foundations and aim for May/June."}
             </p>
 
             {/* Animated card */}
             <div
               ref={cardRef}
-              className={`reward-reveal mt-6 w-full max-w-[260px] ${!isHigh ? "card-shake" : ""}`}
+              className={`reward-reveal mt-6 w-full max-w-[260px] ${!isReady ? "card-shake" : ""}`}
               style={{
                 borderRadius: "1rem",
-                boxShadow: isHigh
+                boxShadow: isReady
                   ? "0 0 0 2px rgba(234,179,8,0.4), 0 0 40px rgba(234,179,8,0.35), 0 16px 40px rgba(0,0,0,0.18)"
                   : "0 0 0 2px rgba(239,68,68,0.3), 0 0 24px rgba(239,68,68,0.2), 0 16px 40px rgba(0,0,0,0.15)",
               }}
             >
               <Image
                 src={rewardSrc}
-                alt={isHigh ? "Reward unlocked — you're on track!" : "Keep going!"}
+                alt={isReady ? "Ready for the October/November batch!" : "Aim for the May/June batch"}
                 width={520}
                 height={726}
                 className="w-full rounded-2xl"
@@ -308,7 +311,7 @@ export function Paper1ChecklistBanner() {
               Done
             </button>
 
-            {isHigh && (
+            {isReady && (
               <button
                 onClick={() => {
                   setRewardOpen(false);

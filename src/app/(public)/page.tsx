@@ -15,7 +15,7 @@ import { getSettings } from "@/lib/admin/store";
 import { getHomepageContent } from "@/lib/public-homepage";
 import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { contact, whatsAppGroupUrl } from "@/lib/contact";
+import { contact, whatsAppGroupUrl, ENROL_NOW_URL } from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
 import { LiveSessionHero } from "@/components/live-session-hero";
@@ -89,13 +89,23 @@ export default async function HomePage() {
             </p>
             <div className="premium-reveal premium-reveal-delay-3 flex flex-col gap-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <TrackedOutboundLink
+                  href={ENROL_NOW_URL}
+                  channel="enrol"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-crimson shadow-md transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:scale-[0.98] motion-reduce:hover:translate-y-0"
+                >
+                  Enrol Now
+                  <ArrowRight className="h-4 w-4" />
+                </TrackedOutboundLink>
                 <TrackedWhatsAppLink
                   href={whatsAppGroupUrl()}
                   location="home_hero"
                   variant="group"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
+                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                 >
                   Text us
                   <ArrowRight className="h-4 w-4" />
@@ -267,25 +277,36 @@ export default async function HomePage() {
       <section className="border-t border-crimson-dark/20 bg-gradient-to-b from-crimson to-crimson-dark py-[4.75rem] sm:py-28">
         <div className="premium-reveal mx-auto max-w-2xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-4 font-serif text-xl font-semibold leading-[1.2] tracking-tight text-white sm:text-2xl lg:text-[2rem]">
-            Ready to Build a Clear Plan?
+            Ready for Structure, Feedback &amp; Real Progress?
           </h2>
           <p className="mx-auto mb-4 max-w-lg text-sm leading-relaxed text-white/75 sm:text-base">
-            Book a short clarity call to discuss your goals, current level, and the programme that fits. No pressure,
-            no commitment.
+            Free resources help you practise. The live programme helps you improve — with checked work,
+            personalised feedback, biweekly tests, and progress reports. Enrol when you&apos;re ready, or
+            book a short clarity call first. No pressure.
           </p>
           <p className="mx-auto mb-10 max-w-lg text-sm text-white/55">
             Or write to <ContactEmailLink variant="onDark" className="font-medium" />
           </p>
           <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:justify-center">
+            <TrackedOutboundLink
+              href={ENROL_NOW_URL}
+              channel="enrol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-crimson shadow-md transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
+            >
+              Enrol Now
+              <ArrowRight className="h-4 w-4" />
+            </TrackedOutboundLink>
             <TrackedWhatsAppLink
               href={whatsAppGroupUrl()}
               location="home_footer_cta"
               variant="group"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
             >
-              Text us
+              Book a call
               <ArrowRight className="h-4 w-4" />
             </TrackedWhatsAppLink>
           </div>
