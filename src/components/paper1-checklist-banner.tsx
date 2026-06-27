@@ -1,106 +1,118 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { X, CheckCircle2, Circle, ClipboardCheck } from "lucide-react";
+import { X, CheckCircle2, Circle, ClipboardCheck, CheckCircle, XCircle } from "lucide-react";
 import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
+import {
+  READINESS_QUIZ_SECTIONS,
+  READINESS_QUIZ_THRESHOLD,
+  READINESS_QUIZ_TOTAL,
+  readinessQuizQuestions,
+  type ReadinessQuizSectionId,
+} from "@/lib/readiness-quiz-data";
+import { cn } from "@/lib/utils";
 
 const STORAGE_KEY = "paper1_checklist_progress";
-const TOTAL = 16;
 
 const POKEMON_LOW = "/assets/pokemon-low.png";
 const POKEMON_HIGH = "/assets/pokemon-high.png";
 
-const SECTIONS = [
-  {
-    title: "COMPREHENSION — Q1 & Q2",
-    tag: "8 XP",
-    items: [
-      "I know the difference between explicit questions (find it directly in the text) and implicit questions (read between the lines — what is suggested but not stated).",
-      "I can answer synonym questions correctly — one word that means the same as the given word in context.",
-      "I have gone through the feelings reference sheet and can confidently name feelings using precise synonyms (not just \"happy,\" \"sad,\" or \"angry\").",
-      "I can identify a character's feeling AND provide 2 supporting details from the text to prove it.",
-      "I know the 5 types of Q2 questions and how each one is answered: Two-words comparison • Impressions • Writer's effect (LM → Association → Result) • Language effectively • Suggestion (what the writer implies, not states).",
-      "I know the result adjectives from the 8 situational clusters and when to use them.",
-      "I keep my answers concise — no unnecessary info for explicit answers, no copying phrases for implicit answers.",
-      "I have attempted at least the last 2 years' comprehension papers and checked my answers against the mark scheme.",
-    ],
-  },
-  {
-    title: "SUMMARY — Q3(a)",
-    tag: "5 XP",
-    items: [
-      "I know the summary rules: 150 words max, continuous writing, own words, no note form, no copying.",
-      "I can scan a text and pick out 10+ content points relevant to what the question asks — not everything in the text.",
-      "I can paraphrase content points in my own words without lifting phrases from the text.",
-      "I have read all sample summaries.",
-      "I have attempted at least 2 summary questions under timed conditions.",
-    ],
-  },
-  {
-    title: "INTERVIEWER'S QUESTION — Q3(b)",
-    tag: "2 XP",
-    items: [
-      "I understand the agree/disagree format — I can read a viewpoint and decide whether I agree or disagree with clear reasoning.",
-      "I have read all short response sample answers.",
-    ],
-  },
-  {
-    title: "WORKSHEETS",
-    tag: "1 XP",
-    items: [
-      "I have attempted all 5 Paper 1 worksheets (feelings, adjectives, writer's effect, impressions and rewording).",
-    ],
-  },
-] as const;
+interface SavedProgress {
+  answers?: Record<string, number>;
+  submitted?: boolean;
+}
 
-function loadSaved(): number[] {
-  if (typeof window === "undefined") return [];
+function loadSaved(): SavedProgress {
+  if (typeof window === "undefined") return {};
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw) as { completed?: unknown };
-    return Array.isArray(parsed.completed) ? (parsed.completed as number[]) : [];
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as SavedProgress & { completed?: unknown };
+    // Legacy checklist shape — ignore completed indices
+    if (Array.isArray(parsed.completed)) return {};
+    return {
+      answers: parsed.answers ?? {},
+      submitted: parsed.submitted ?? false,
+    };
   } catch {
-    return [];
+    return {};
   }
 }
 
-function persist(completed: number[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({ completed }));
+function persist(data: SavedProgress) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+function computeScore(answers: Record<number, number>): number {
+  return readinessQuizQuestions.reduce(
+    (acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0),
+    0
+  );
 }
 
 export function Paper1ChecklistBanner() {
-  const [completed, setCompleted] = useState<number[]>([]);
-  const [checklistOpen, setChecklistOpen] = useState(false);
+  const [answers, setAnswers] = useState<Record<number, number>>({});
+  const [quizOpen, setQuizOpen] = useState(false);
   const [rewardOpen, setRewardOpen] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [rewardPercent, setRewardPercent] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setCompleted(loadSaved());
+    const saved = loadSaved();
+    const parsedAnswers: Record<number, number> = {};
+    if (saved.answers) {
+      for (const [key, value] of Object.entries(saved.answers)) {
+        parsedAnswers[Number(key)] = value;
+      }
+    }
+    setAnswers(parsedAnswers);
+    setSubmitted(saved.submitted ?? false);
+    if (saved.submitted && Object.keys(parsedAnswers).length > 0) {
+      const score = computeScore(parsedAnswers);
+      setRewardPercent(Math.round((score / READINESS_QUIZ_TOTAL) * 100));
+    }
   }, []);
 
-  function toggle(idx: number) {
-    setCompleted((prev) => {
-      const next = prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx];
-      persist(next);
+  function selectAnswer(questionIndex: number, optionIndex: number) {
+    if (submitted) return;
+    setAnswers((prev) => {
+      const next = { ...prev, [questionIndex]: optionIndex };
+      persist({ answers: Object.fromEntries(Object.entries(next)), submitted: false });
       return next;
     });
   }
 
   function handleSubmit() {
-    const pct = (completed.length / TOTAL) * 100;
+    const score = computeScore(answers);
+    const pct = Math.round((score / READINESS_QUIZ_TOTAL) * 100);
     setRewardPercent(pct);
-    setChecklistOpen(false);
+    setSubmitted(true);
+    persist({
+      answers: Object.fromEntries(Object.entries(answers)),
+      submitted: true,
+    });
+    setQuizOpen(false);
     setRewardOpen(true);
   }
 
-  const completedCount = completed.length;
-  const progressPct = Math.round((completedCount / TOTAL) * 100);
-  // Task 3 threshold: < 80% → recommend May/June batch; >= 80% → ready for October/November.
-  const isReady = rewardPercent >= 80;
+  const answeredCount = Object.keys(answers).length;
+  const progressPct = Math.round((answeredCount / READINESS_QUIZ_TOTAL) * 100);
+  const allAnswered = answeredCount === READINESS_QUIZ_TOTAL;
+  const isReady = rewardPercent >= READINESS_QUIZ_THRESHOLD;
   const rewardSrc = isReady ? POKEMON_HIGH : POKEMON_LOW;
+
+  const questionsBySection = useMemo(() => {
+    const map = new Map<ReadinessQuizSectionId, { index: number; question: (typeof readinessQuizQuestions)[0] }[]>();
+    for (const section of READINESS_QUIZ_SECTIONS) {
+      map.set(section.id, []);
+    }
+    readinessQuizQuestions.forEach((q, index) => {
+      map.get(q.section)?.push({ index, question: q });
+    });
+    return map;
+  }, []);
 
   return (
     <>
@@ -125,24 +137,24 @@ export function Paper1ChecklistBanner() {
           </div>
         </div>
         <button
-          onClick={() => setChecklistOpen(true)}
+          onClick={() => setQuizOpen(true)}
           className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-amber-500 text-white hover:bg-amber-600 sm:w-auto`}
         >
           Check my readiness
         </button>
       </div>
 
-      {/* ── CHECKLIST MODAL ── */}
-      {checklistOpen && (
+      {/* ── QUIZ MODAL ── */}
+      {quizOpen && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
-          aria-label="Paper 1 Checklist"
+          aria-label="October/November Readiness Quiz"
         >
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setChecklistOpen(false)}
+            onClick={() => setQuizOpen(false)}
             aria-hidden
           />
           <div className="relative z-10 flex max-h-[90dvh] w-full max-w-lg flex-col animate-in fade-in zoom-in-95 duration-200 rounded-2xl bg-white shadow-[0_24px_60px_rgba(0,0,0,0.22)]">
@@ -158,7 +170,7 @@ export function Paper1ChecklistBanner() {
                   </h2>
                 </div>
                 <button
-                  onClick={() => setChecklistOpen(false)}
+                  onClick={() => setQuizOpen(false)}
                   className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/15 text-white transition-colors hover:bg-white/25"
                   aria-label="Close"
                 >
@@ -167,80 +179,197 @@ export function Paper1ChecklistBanner() {
               </div>
               <div className="mt-4">
                 <div className="mb-1.5 flex items-center justify-between">
-                  <span className="text-xs font-medium text-amber-100/90">Progress</span>
-                  <span className="text-xs font-bold text-white">{progressPct}%</span>
+                  <span className="text-xs font-medium text-amber-100/90">
+                    {submitted ? "Score" : "Progress"}
+                  </span>
+                  <span className="text-xs font-bold text-white">
+                    {submitted ? `${rewardPercent}%` : `${progressPct}%`}
+                  </span>
                 </div>
                 <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">
                   <div
                     className="h-full rounded-full bg-white transition-all duration-500 ease-out"
-                    style={{ width: `${progressPct}%` }}
+                    style={{ width: `${submitted ? rewardPercent : progressPct}%` }}
                   />
                 </div>
                 <p className="mt-1.5 text-[11px] text-amber-100/70">
-                  {completedCount} of {TOTAL} tasks complete
+                  {submitted
+                    ? `${computeScore(answers)} of ${READINESS_QUIZ_TOTAL} correct`
+                    : `${answeredCount} of ${READINESS_QUIZ_TOTAL} answered`}
                 </p>
               </div>
             </div>
 
-            {/* Scrollable items */}
+            {/* Scrollable questions */}
             <div className="flex-1 space-y-6 overflow-y-auto px-6 py-5">
-              {(() => {
-                let idx = 0;
-                return SECTIONS.map((section, si) => (
-                  <div key={si}>
-                    <div className="mb-3 flex items-center gap-2">
+              {READINESS_QUIZ_SECTIONS.map((section) => {
+                const items = questionsBySection.get(section.id) ?? [];
+                if (!items.length) return null;
+
+                return (
+                  <div key={section.id}>
+                    <div className="mb-3">
                       <p className="text-[11px] font-bold uppercase tracking-[0.15em] text-amber-700">
                         {section.title}
                       </p>
-                      <span className="rounded-full bg-amber-100 px-2 py-0.5 text-[10px] font-bold text-amber-600">
-                        {section.tag}
-                      </span>
+                      <p className="mt-1 text-xs leading-relaxed text-slate-500">
+                        {section.instruction}
+                      </p>
                     </div>
-                    <ul className="space-y-2">
-                      {section.items.map((item) => {
-                        const i = idx++;
-                        const checked = completed.includes(i);
+                    <ul className="space-y-4">
+                      {items.map(({ index, question: q }) => {
+                        const selected = answers[index];
+                        const isCorrect = submitted && selected === q.answer;
+                        const isWrong =
+                          submitted && selected !== undefined && selected !== q.answer;
+
                         return (
-                          <li key={i}>
-                            <button
-                              onClick={() => toggle(i)}
-                              className={`flex w-full items-start gap-3 rounded-xl border px-4 py-3 text-left transition-all duration-150 ${
-                                checked
-                                  ? "border-amber-200 bg-amber-50"
-                                  : "border-border/60 bg-white hover:border-amber-200/60 hover:bg-amber-50/40"
-                              }`}
-                            >
-                              {checked ? (
-                                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-amber-500" aria-hidden />
-                              ) : (
-                                <Circle className="mt-0.5 h-4 w-4 shrink-0 text-slate-300" aria-hidden />
-                              )}
+                          <li
+                            key={index}
+                            className={cn(
+                              "rounded-xl border px-4 py-3 transition-all duration-150",
+                              !submitted && "border-border/60 bg-white",
+                              isCorrect && "border-green-200 bg-green-50/60",
+                              isWrong && "border-red-200 bg-red-50/60"
+                            )}
+                          >
+                            <div className="mb-3 flex items-start gap-2">
                               <span
-                                className={`text-sm leading-snug ${
-                                  checked ? "text-amber-700/60 line-through" : "text-ink"
-                                }`}
+                                className={cn(
+                                  "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white",
+                                  !submitted && "bg-amber-500",
+                                  isCorrect && "bg-green-600",
+                                  isWrong && "bg-red-600"
+                                )}
                               >
-                                {item}
+                                {index + 1}
                               </span>
-                            </button>
+                              <p className="whitespace-pre-line text-sm leading-snug text-ink">
+                                {q.question}
+                              </p>
+                            </div>
+
+                            <div className="space-y-2 pl-8" role="radiogroup">
+                              {q.options.map((option, optIdx) => {
+                                const isSelected = selected === optIdx;
+                                const isCorrectOpt = submitted && optIdx === q.answer;
+                                const isWrongSelected =
+                                  submitted && isSelected && optIdx !== q.answer;
+
+                                return (
+                                  <button
+                                    key={optIdx}
+                                    type="button"
+                                    role="radio"
+                                    aria-checked={isSelected}
+                                    onClick={() => selectAnswer(index, optIdx)}
+                                    disabled={submitted}
+                                    className={cn(
+                                      "flex w-full items-center gap-2.5 rounded-lg border px-3 py-2.5 text-left text-sm transition-all duration-150",
+                                      !submitted &&
+                                        !isSelected &&
+                                        "border-border/60 bg-white hover:border-amber-200/60 hover:bg-amber-50/40",
+                                      !submitted &&
+                                        isSelected &&
+                                        "border-amber-300 bg-amber-50",
+                                      isCorrectOpt &&
+                                        "border-green-400 bg-green-100 text-green-900",
+                                      isWrongSelected &&
+                                        "border-red-400 bg-red-100 text-red-900",
+                                      submitted &&
+                                        !isSelected &&
+                                        !isCorrectOpt &&
+                                        "border-border/40 opacity-60"
+                                    )}
+                                  >
+                                    {!submitted ? (
+                                      isSelected ? (
+                                        <CheckCircle2
+                                          className="h-4 w-4 shrink-0 text-amber-500"
+                                          aria-hidden
+                                        />
+                                      ) : (
+                                        <Circle
+                                          className="h-4 w-4 shrink-0 text-slate-300"
+                                          aria-hidden
+                                        />
+                                      )
+                                    ) : isCorrectOpt ? (
+                                      <CheckCircle
+                                        className="h-4 w-4 shrink-0 text-green-600"
+                                        aria-hidden
+                                      />
+                                    ) : isWrongSelected ? (
+                                      <XCircle
+                                        className="h-4 w-4 shrink-0 text-red-600"
+                                        aria-hidden
+                                      />
+                                    ) : (
+                                      <Circle
+                                        className="h-4 w-4 shrink-0 text-slate-300"
+                                        aria-hidden
+                                      />
+                                    )}
+                                    <span className="flex-1">{option}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+
+                            {submitted && (
+                              <p
+                                className={cn(
+                                  "mt-3 rounded-lg px-3 py-2 pl-8 text-xs leading-relaxed",
+                                  isCorrect && "bg-green-100/70 text-green-900",
+                                  isWrong && "bg-red-100/70 text-red-900"
+                                )}
+                              >
+                                <span className="font-semibold">
+                                  {isCorrect ? "Correct. " : "Incorrect. "}
+                                </span>
+                                {q.explanation}
+                              </p>
+                            )}
                           </li>
                         );
                       })}
                     </ul>
                   </div>
-                ));
-              })()}
+                );
+              })}
             </div>
 
             {/* Footer */}
             <div className="shrink-0 flex items-center justify-between gap-3 rounded-b-2xl border-t border-border/40 bg-cream px-6 py-4">
-              <p className="text-[11px] text-slate-400">{completedCount} of {TOTAL} complete</p>
-              <button
-                onClick={handleSubmit}
-                className="rounded-xl bg-amber-500 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-600 active:scale-95"
-              >
-                Submit
-              </button>
+              <p className="text-[11px] text-slate-400">
+                {submitted
+                  ? `${computeScore(answers)} / ${READINESS_QUIZ_TOTAL} correct`
+                  : `${answeredCount} of ${READINESS_QUIZ_TOTAL} answered`}
+              </p>
+              {submitted ? (
+                <button
+                  onClick={() => {
+                    setQuizOpen(false);
+                    setRewardOpen(true);
+                  }}
+                  className="rounded-xl bg-amber-500 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-amber-600 active:scale-95"
+                >
+                  View result
+                </button>
+              ) : (
+                <button
+                  onClick={handleSubmit}
+                  disabled={!allAnswered}
+                  className={cn(
+                    "rounded-xl px-5 py-2 text-sm font-semibold text-white transition-colors active:scale-95",
+                    allAnswered
+                      ? "bg-amber-500 hover:bg-amber-600"
+                      : "cursor-not-allowed bg-slate-300"
+                  )}
+                >
+                  Submit
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -268,7 +397,6 @@ export function Paper1ChecklistBanner() {
               <X className="h-4 w-4" aria-hidden />
             </button>
 
-            {/* Score */}
             <p className="text-5xl font-black leading-none text-amber-500">
               {Math.round(rewardPercent)}%
             </p>
@@ -283,7 +411,6 @@ export function Paper1ChecklistBanner() {
                 : "A little more time will pay off. Build your foundations and aim for May/June."}
             </p>
 
-            {/* Animated card */}
             <div
               ref={cardRef}
               className={`reward-reveal mt-6 w-full max-w-[260px] ${!isReady ? "card-shake" : ""}`}
@@ -311,17 +438,15 @@ export function Paper1ChecklistBanner() {
               Done
             </button>
 
-            {isReady && (
-              <button
-                onClick={() => {
-                  setRewardOpen(false);
-                  setChecklistOpen(true);
-                }}
-                className="mt-3 text-xs text-slate-400 underline underline-offset-2 transition hover:text-slate-600"
-              >
-                Go back to checklist
-              </button>
-            )}
+            <button
+              onClick={() => {
+                setRewardOpen(false);
+                setQuizOpen(true);
+              }}
+              className="mt-3 text-xs text-slate-400 underline underline-offset-2 transition hover:text-slate-600"
+            >
+              Review answers
+            </button>
           </div>
         </div>
       )}
