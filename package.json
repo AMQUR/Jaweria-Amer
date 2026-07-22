@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint . || true",
-    "test": "node scripts/test-resources-view-only.ts",
+    "test": "node scripts/test-resources-view-only.ts && tsx scripts/test-resource-visibility.ts",
     "precommit": "node scripts/check-size.js || exit 1",
     "typecheck": "tsc --noEmit",
     "ingest:resources": "tsx scripts/ingest-resources.ts"

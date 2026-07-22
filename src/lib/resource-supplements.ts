@@ -965,7 +965,7 @@ const supplementalHubResourcesBase: Resource[] = [
     year: "Core",
     fileUrl: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/vocabulary/p2-50-words-writing.pdf",
     description:
-      "High-impact vocabulary bank for Directed Writing and Essay responses, including connectors, development phrases, evaluation language, and examiner-level words. Use at least 3–5 of these in every response for stronger examiner impact.",
+      "High-impact vocabulary bank for Paper 2 writing responses, including connectors, development phrases, evaluation language, and examiner-level words. Use at least 3–5 of these in every response for stronger examiner impact.",
   },
   {
     id: "notes-vocab-directed-writing-bank",

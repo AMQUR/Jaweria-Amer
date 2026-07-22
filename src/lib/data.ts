@@ -1,6 +1,7 @@
 import type { CourseCategory } from "./course-offerings";
 import { finalizeResourcesForSite } from "./resource-ingestion";
 import { supplementalHubResources } from "./resource-supplements";
+import { isDirectedWritingResource } from "./resource-visibility";
 
 export interface Course {
   id: string;
@@ -2028,8 +2029,16 @@ const MISSING_PUBLIC_RESOURCE_URLS = new Set<string>([
   "/resources/worksheet-writing-words-day-15.pdf",
 ]);
 
+/**
+ * Student-facing resource list. `staticResources` stays complete (admin reads it);
+ * this export is the single gate every public surface goes through:
+ *   - Directed Writing is withheld from students (data and files untouched).
+ *   - Items whose local PDF is not hosted are dropped so no card 404s.
+ */
 export const resources = staticResources.filter(
-  (resource) => resource.type === "mcq" || !MISSING_PUBLIC_RESOURCE_URLS.has(resource.fileUrl)
+  (resource) =>
+    !isDirectedWritingResource(resource) &&
+    (resource.type === "mcq" || !MISSING_PUBLIC_RESOURCE_URLS.has(resource.fileUrl))
 );
 
 export const siteConfig = {

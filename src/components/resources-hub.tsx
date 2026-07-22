@@ -33,6 +33,7 @@ import {
   scriptsResourceVaultChip,
   splitScriptsCardTitle,
 } from "@/lib/resource-ingestion";
+import { withoutDirectedWritingLabels } from "@/lib/resource-visibility";
 import { cn } from "@/lib/utils";
 import { PrefetchResourceViewAction } from "@/components/prefetch-resource-view-action";
 
@@ -61,6 +62,15 @@ const categoryIcon: Record<ResourceHubCategory, typeof BookOpen> = {
 };
 
 const GUIDED_SECTION_CATEGORIES = new Set<ResourceHubCategory>(["topicals", "checklists"]);
+
+/** Always-on Topicals section pills, minus Directed Writing (withheld from students). */
+const TOPICALS_PAPER_1_STUDENT_SECTIONS = withoutDirectedWritingLabels([
+  ...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS,
+]);
+const TOPICALS_PAPER_2_STUDENT_SECTIONS = withoutDirectedWritingLabels([
+  ...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS,
+]);
+
 const TOPICALS_SECTION_ORDER = [
   "Directed Writing",
   "Composition",
@@ -144,11 +154,11 @@ function uniqueSorted(values: string[]) {
 
 const ALL_HUB_CATEGORY_IDS = new Set(RESOURCE_HUB_CATEGORIES.map((c) => c.id));
 
-// Temporarily hidden from public view — data and files are untouched.
-// Notes (`general-notes`) is shown again so students can browse the five subtopics.
-const HIDDEN_RESOURCE_CATEGORIES = new Set<ResourceHubCategory>([
-  "solved-papers",
-]);
+// No hub category is withheld from students. Directed Writing is excluded at the data
+// layer instead (see `resources` in `@/lib/data` and `@/lib/resource-visibility`), so it
+// stays out of listings, filters, counts, search, and direct routes without hiding a
+// whole category of legitimate content.
+const HIDDEN_RESOURCE_CATEGORIES = new Set<ResourceHubCategory>([]);
 
 function isResourceHubCategoryId(s: string): s is ResourceHubCategory {
   return ALL_HUB_CATEGORY_IDS.has(s as ResourceHubCategory);
@@ -159,7 +169,8 @@ function isValidSubForCategory(
   category: ResourceHubCategory | "all"
 ): sub is ResourceNotesSubCategory {
   if (category === "general-notes") {
-    return NOTES_HUB_SUBTOPICS.some((t) => t.id === sub);
+    // Filtered list: a `?sub=directed-writing` URL falls back to "unset".
+    return NOTES_TOPIC_BLOCKS.some((t) => t.id === sub);
   }
   if (category === "vocabulary") {
     return VOCABULARY_SUBCATEGORY_OPTIONS.some((o) => o.value === sub);
@@ -192,26 +203,22 @@ const selectClass =
 
 type NotesSubCategoryFilter = "unset" | ResourceNotesSubCategory;
 
-const NOTES_SUBCATEGORY_OPTIONS = NOTES_HUB_SUBTOPICS.map((t) => ({ value: t.id, label: t.label }));
-const NOTES_TOPIC_BLOCKS = NOTES_HUB_SUBTOPICS;
+/** Notes topic tiles/filters, minus Directed Writing (withheld from students). */
+const NOTES_TOPIC_BLOCKS = withoutDirectedWritingLabels(NOTES_HUB_SUBTOPICS);
+const NOTES_SUBCATEGORY_OPTIONS = NOTES_TOPIC_BLOCKS.map((t) => ({ value: t.id, label: t.label }));
 
-const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; description: string }[] = [
-  { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },
-  { id: "essay-vocabulary", label: "Essay Vocabulary", description: "Expressive vocabulary for writing tasks." },
-  { id: "directed-writing-vocabulary", label: "Directed Writing Vocabulary", description: "High-impact vocabulary and phrases for directed writing." },
-  { id: "summary-writing-vocabulary", label: "Summary Writing Vocabulary", description: "High-utility vocabulary for summary writing tasks." },
-  { id: "general-vocabulary", label: "General Vocabulary", description: "Broad vocabulary banks for all paper tasks." },
-  { id: "p2-50-words", label: "50 Words for P2", description: "High-impact bank for Paper 2 directed writing and essays." },
-];
+const VOCABULARY_TOPIC_BLOCKS: { id: ResourceNotesSubCategory; label: string; description: string }[] =
+  withoutDirectedWritingLabels([
+    { id: "comprehension-vocabulary", label: "Comprehension Vocabulary", description: "Words and phrases for reading and comprehension tasks." },
+    { id: "essay-vocabulary", label: "Essay Vocabulary", description: "Expressive vocabulary for writing tasks." },
+    { id: "directed-writing-vocabulary", label: "Directed Writing Vocabulary", description: "High-impact vocabulary and phrases for directed writing." },
+    { id: "summary-writing-vocabulary", label: "Summary Writing Vocabulary", description: "High-utility vocabulary for summary writing tasks." },
+    { id: "general-vocabulary", label: "General Vocabulary", description: "Broad vocabulary banks for all paper tasks." },
+    { id: "p2-50-words", label: "50 Words for P2", description: "High-impact bank for Paper 2 essays." },
+  ]);
 
-const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] = [
-  { value: "comprehension-vocabulary", label: "Comprehension Vocabulary" },
-  { value: "essay-vocabulary", label: "Essay Vocabulary" },
-  { value: "directed-writing-vocabulary", label: "Directed Writing Vocabulary" },
-  { value: "summary-writing-vocabulary", label: "Summary Writing Vocabulary" },
-  { value: "general-vocabulary", label: "General Vocabulary" },
-  { value: "p2-50-words", label: "50 Words for P2" },
-];
+const VOCABULARY_SUBCATEGORY_OPTIONS: { value: ResourceNotesSubCategory; label: string }[] =
+  VOCABULARY_TOPIC_BLOCKS.map((t) => ({ value: t.id, label: t.label }));
 
 const NOTES_TOPIC_ACCENTS: Record<string, { gradient: string; border: string }> = {
   "summary-writing":    { gradient: "to-rose-200/40",  border: "border-rose-300/50" },
@@ -416,11 +423,11 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
     }
 
     if (paper === "Paper 2") {
-      return sortTopicalSectionsForPaper2([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS]);
+      return sortTopicalSectionsForPaper2(TOPICALS_PAPER_2_STUDENT_SECTIONS);
     }
 
     if (paper === "Paper 1") {
-      return sortSections([...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS]);
+      return sortSections(TOPICALS_PAPER_1_STUDENT_SECTIONS);
     }
 
     return [];
@@ -440,9 +447,9 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
         );
         const sections =
           category === "topicals" && paperName === "Paper 2"
-            ? sortTopicalSectionsForPaper2([...TOPICALS_PAPER_2_ALWAYS_SECTION_LABELS])
+            ? sortTopicalSectionsForPaper2(TOPICALS_PAPER_2_STUDENT_SECTIONS)
             : category === "topicals" && paperName === "Paper 1"
-              ? sortSections([...TOPICALS_PAPER_1_ALWAYS_SECTION_LABELS])
+              ? sortSections(TOPICALS_PAPER_1_STUDENT_SECTIONS)
               : sortSections(fromResources);
         return { paper: paperName, sections };
       })
@@ -514,14 +521,6 @@ export function ResourcesHub({ resources = defaultResources }: { resources?: Res
       if (year !== "all" && r.year !== year) return false;
       return true;
     });
-
-    if (category === "general-notes" && notesSubCategory === "directed-writing") {
-      return [...matched].sort((a, b) => {
-        if (a.id === PDE_EXPLAINED_ID) return -1;
-        if (b.id === PDE_EXPLAINED_ID) return 1;
-        return 0;
-      });
-    }
 
     return matched;
   }, [category, scopedForResults, notesSubCategory, paper, section, subject, level, year, safeResources]);
