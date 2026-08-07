@@ -15,10 +15,13 @@ import { getSettings } from "@/lib/admin/store";
 import { getHomepageContent } from "@/lib/public-homepage";
 import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { contact, whatsAppGroupUrl, ENROL_NOW_URL } from "@/lib/contact";
+import { contact, whatsAppGroupUrl, ENROL_NOW_URL, COMMUNITY_WHATSAPP_URL } from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
 import { LiveSessionHero } from "@/components/live-session-hero";
+
+const stayConnectedLink =
+  "inline-flex items-center justify-center gap-2 rounded-2xl border border-border/70 bg-white px-5 py-2.5 text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-crimson/25 hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson/40 motion-reduce:hover:translate-y-0";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -319,6 +322,50 @@ export default async function HomePage() {
               <ArrowRight className="h-4 w-4" />
             </Link>
           </p>
+        </div>
+      </section>
+
+      {/* Stay Connected — secondary social/community actions (below primary enrolment journey) */}
+      <section className="border-t border-border/70 bg-cream py-14 sm:py-16">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-xl text-center">
+            <p className={`${sectionKicker} mb-3`}>Community</p>
+            <h2 className={`${sectionTitle} mb-3`}>Stay Connected</h2>
+            <p className={`${bodyLead} mb-8`}>
+              Lessons, updates, and a student community — useful alongside the programme, not instead of it.
+            </p>
+            <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <TrackedOutboundLink
+                href={contact.youtube}
+                channel="youtube"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={stayConnectedLink}
+              >
+                <PlayCircle className="h-4 w-4 shrink-0 text-crimson" aria-hidden />
+                YouTube
+              </TrackedOutboundLink>
+              <TrackedOutboundLink
+                href={COMMUNITY_WHATSAPP_URL}
+                channel="community"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={stayConnectedLink}
+              >
+                <Users className="h-4 w-4 shrink-0 text-crimson" aria-hidden />
+                Join Community
+              </TrackedOutboundLink>
+              <TrackedOutboundLink
+                href={contact.instagram}
+                channel="instagram"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={stayConnectedLink}
+              >
+                Instagram
+              </TrackedOutboundLink>
+            </div>
+          </div>
         </div>
       </section>
     </>
