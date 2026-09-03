@@ -24,6 +24,7 @@ import {
 import { anonymousLabel, distributeRows, getMj26Headline, getMj26Results } from "../src/lib/results/public";
 import { BASE_SPEED_PX_PER_SECOND, LOOP_TAIL_COUNT, ROW_DIRECTIONS, ROW_SPEED_FACTORS, rowSpeedFor } from "../src/components/results/result-capsule-rows";
 import { selectHeadline } from "../src/components/results/results-headline";
+import { defaultSettings } from "../src/lib/admin/defaults";
 
 let failed = 0;
 const check = (label: string, ok: boolean) => {
@@ -152,6 +153,10 @@ check("rows: no row is all A*", rows3.every((r) => r.some((x) => x.grade !== "A*
 check("rows: balanced within 2", Math.max(...rows3.map((r) => r.length)) - Math.min(...rows3.map((r) => r.length)) <= 2);
 const hl = selectHeadline(headline);
 check("headline: 'the norm' only when A/A* ≥ 75%", (headline.aOrAStarPct >= 75) === (hl.key === "norm") && selectHeadline({ aOrAStarPct: 60, aStar: 10, aOrAStar: 20, sharedResults: 33 }).key === "count");
+
+/* ── homepage stats strip must agree with the dataset ── */
+const strip = defaultSettings.stats.find((s) => /A or A\*/.test(s.label));
+check("stats strip: default A/A* stat equals the verified shareable percentage", !!strip && strip.value === `${Math.round(headline.aOrAStarPct)}%` && /M\/J 2026 shared/.test(strip.label));
 
 /* ── animation contract ── */
 check("speed: desktop 26–32 px/s for every row", [0, 1, 2].every((i) => rowSpeedFor(1440, i) >= 26 && rowSpeedFor(1440, i) <= 32));
