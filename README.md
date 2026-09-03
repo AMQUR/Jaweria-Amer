@@ -168,3 +168,15 @@ After material edits, run `npm run build` to confirm types and static generation
 ## License
 
 MIT — see [LICENSE](./LICENSE).
+
+## M/J 2026 Results showcase
+
+The homepage proof block and `/results` page are generated from the private May/June 2026 results form export — never typed in by hand and never exposed to the browser. See [docs/results/MJ26_RESULTS_METHODOLOGY.md](docs/results/MJ26_RESULTS_METHODOLOGY.md) for the consent model, de-duplication rules and every denominator.
+
+```bash
+npm run results:build        # scripts/source/mj26_source.csv (git-ignored) → src/lib/results/mj-2026.public.json + audit
+npm run results:portraits -- --from <dir>   # consent-gated portrait import → public/results/mj-2026/
+npm run test:results         # pipeline, consent, reconciliation, speed-contract and PII regression checks
+```
+
+`prebuild` / `postbuild` run `scripts/results/verify-mj26-public.mjs`, which fails the build if any private field, e-mail, phone number or Drive link reaches the public artifacts or the static output.

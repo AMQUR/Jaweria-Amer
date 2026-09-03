@@ -1,0 +1,181 @@
+{
+  "source": "English With Miss Jay M/J 26 Results (Responses) — Google Form export (CSV)",
+  "sourceFingerprint": "8221580849f05068",
+  "generatedAt": "2026-09-03T02:15:32.863Z",
+  "summary": {
+    "session": "May/June 2026",
+    "board": "Cambridge",
+    "rawResponses": 325,
+    "incompleteRows": 1,
+    "exactDuplicatesRemoved": 7,
+    "ambiguousDuplicates": 0,
+    "uniqueRecords": 317,
+    "uniqueStudents": 317,
+    "multiSyllabusStudents": 0,
+    "gradeUnclassified": 3,
+    "syllabusUnknown": 3,
+    "graded": {
+      "total": 314,
+      "byGrade": {
+        "A*": 142,
+        "A": 123,
+        "B": 39,
+        "C": 7,
+        "D": 3,
+        "E": 0,
+        "U": 0
+      },
+      "aStar": 142,
+      "a": 123,
+      "aOrAStar": 265,
+      "aOrAStarPct": 84.4,
+      "aStarPct": 45.2
+    },
+    "shareable": {
+      "total": 293,
+      "byGrade": {
+        "A*": 134,
+        "A": 118,
+        "B": 34,
+        "C": 6,
+        "D": 1,
+        "E": 0,
+        "U": 0
+      },
+      "aStar": 134,
+      "a": 118,
+      "aOrAStar": 252,
+      "aOrAStarPct": 86,
+      "aStarPct": 45.7,
+      "named": 211,
+      "anonymous": 82,
+      "withPhoto": 73,
+      "bySyllabus": {
+        "1123": {
+          "total": 287,
+          "byGrade": {
+            "A*": 133,
+            "A": 116,
+            "B": 32,
+            "C": 5,
+            "D": 1,
+            "E": 0,
+            "U": 0
+          },
+          "aStar": 133,
+          "a": 116,
+          "aOrAStar": 249,
+          "aOrAStarPct": 86.8,
+          "aStarPct": 46.3
+        },
+        "9093": {
+          "total": 0,
+          "byGrade": {
+            "A*": 0,
+            "A": 0,
+            "B": 0,
+            "C": 0,
+            "D": 0,
+            "E": 0,
+            "U": 0
+          },
+          "aStar": 0,
+          "a": 0,
+          "aOrAStar": 0,
+          "aOrAStarPct": null,
+          "aStarPct": null
+        },
+        "0500": {
+          "total": 2,
+          "byGrade": {
+            "A*": 1,
+            "A": 0,
+            "B": 1,
+            "C": 0,
+            "D": 0,
+            "E": 0,
+            "U": 0
+          },
+          "aStar": 1,
+          "a": 0,
+          "aOrAStar": 1,
+          "aOrAStarPct": 50,
+          "aStarPct": 50
+        },
+        "0510": {
+          "total": 4,
+          "byGrade": {
+            "A*": 0,
+            "A": 2,
+            "B": 1,
+            "C": 1,
+            "D": 0,
+            "E": 0,
+            "U": 0
+          },
+          "aStar": 0,
+          "a": 2,
+          "aOrAStar": 2,
+          "aOrAStarPct": 50,
+          "aStarPct": 0
+        }
+      }
+    },
+    "privateRecords": 18,
+    "holdsByReason": {
+      "incomplete_row": 1,
+      "exact_duplicate_superseded": 7,
+      "ambiguous_duplicate": 0,
+      "grade_unclassified": 3,
+      "syllabus_unknown": 3,
+      "consent_private": 15,
+      "consent_missing": 1,
+      "consent_conflict_private_photo_answer": 2,
+      "photo_without_name_consent": 2,
+      "photo_consent_without_file": 2
+    }
+  },
+  "holdsByReason": {
+    "incomplete_row": 1,
+    "exact_duplicate_superseded": 7,
+    "ambiguous_duplicate": 0,
+    "grade_unclassified": 3,
+    "syllabus_unknown": 3,
+    "consent_private": 15,
+    "consent_missing": 1,
+    "consent_conflict_private_photo_answer": 2,
+    "photo_without_name_consent": 2,
+    "photo_consent_without_file": 2
+  },
+  "portraits": {
+    "consentedWithFile": 73,
+    "published": 67,
+    "held": 6,
+    "holds": [
+      {
+        "id": "MJ26-127",
+        "reason": "held after review: not the student — public figure's photo"
+      },
+      {
+        "id": "MJ26-170",
+        "reason": "held after review: no person in frame"
+      },
+      {
+        "id": "MJ26-173",
+        "reason": "held after review: no face in frame"
+      },
+      {
+        "id": "MJ26-181",
+        "reason": "held after review: upload is a video, not a photograph"
+      },
+      {
+        "id": "MJ26-284",
+        "reason": "held after review: group photo — other people did not consent"
+      },
+      {
+        "id": "MJ26-285",
+        "reason": "held after review: third-party institution graphic"
+      }
+    ]
+  }
+}
