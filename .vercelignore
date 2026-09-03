@@ -5,8 +5,11 @@
 # read-only on Vercel, so these are irrelevant to the deploy bundle.
 data/
 
-# Scripts only used locally
-scripts/
+# Scripts only used locally — except scripts/results/, whose privacy gate runs
+# as prebuild/postbuild on Vercel (a parent-excluded path cannot be re-included,
+# so exclude the children of scripts/ instead of the directory itself).
+scripts/*
+!scripts/results/
 
 # Nested project copy (safety net — also in .gitignore)
 jaweria-amer/
