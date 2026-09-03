@@ -22,7 +22,9 @@ export const defaultSettings = {
   whatsappNumber: "923253708069",
   stats: [
     { value: "3+", label: "Years Teaching Experience" },
-    { value: "80%", label: "Students scored A+/A" },
+    // Mirrors the verified M/J 2026 figure (86.0% of 293 publicly shared result
+    // records); scripts/test-mj26-results.ts fails if this drifts from the dataset.
+    { value: "86%", label: "A or A* in M/J 2026 shared results" },
     { value: "6", label: "CAIE Exam Sessions" },
   ],
 } as const;
