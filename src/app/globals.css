@@ -257,3 +257,117 @@
     animation: none;
   }
 }
+
+/* ─────────────────────────────────────────────────────────────
+   M/J 2026 RESULTS — dark editorial proof block (public only)
+   Near-matte black · hot pink · cream type · technical grid.
+   Self-contained tokens so the light site theme cannot wash it out.
+   ───────────────────────────────────────────────────────────── */
+.results-ink {
+  --results-bg: #0c0a0b;
+  --results-bg-2: #151215;
+  --results-pink: #ff3d8f; /* 6.3:1 on --results-bg — large text / accents */
+  --results-pink-2: #ff7ab5; /* softer pink for small type on dark */
+  --results-cream: #f6efe4;
+  --results-mute: rgba(246, 239, 228, 0.68);
+  --results-line: rgba(246, 239, 228, 0.12);
+  --results-card: rgba(246, 239, 228, 0.045);
+  --results-card-2: rgba(246, 239, 228, 0.085);
+  --results-gap: 0.75rem;
+  background-color: var(--results-bg);
+  color: var(--results-cream);
+  color-scheme: dark;
+}
+.results-ink ::selection { background: var(--results-pink); color: var(--results-bg); }
+.results-ink h1, .results-ink h2, .results-ink h3 { color: var(--results-cream); }
+.results-grid-texture {
+  background-image:
+    linear-gradient(to right, rgba(246, 239, 228, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(246, 239, 228, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 50% 30%, black 35%, transparent 80%);
+}
+.results-display {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 0.92;
+  text-transform: uppercase;
+  font-size: clamp(3.25rem, 11vw, 9.5rem);
+}
+.results-metric { font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+.results-eyebrow {
+  font-size: 0.6875rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 600;
+  color: var(--results-pink-2);
+}
+.results-flow { position: absolute; inset: 0; pointer-events: none; opacity: 0.55; }
+
+/* Capsule — one real result. Button semantics; ≥ 48px tall for touch. */
+.results-capsule {
+  display: inline-flex; align-items: center; gap: 0.7rem;
+  border: 1px solid var(--results-line); background: var(--results-card);
+  border-radius: 9999px; padding: 0.375rem 1.15rem 0.375rem 0.375rem;
+  color: var(--results-cream); min-height: 3rem;
+  transition: border-color 140ms ease-out, background-color 140ms ease-out, transform 140ms ease-out;
+  cursor: pointer; text-align: left; white-space: nowrap; flex: none;
+}
+.results-capsule:hover, .results-capsule:focus-visible { border-color: var(--results-pink); background: var(--results-card-2); }
+.results-capsule:focus-visible { outline: 2px solid var(--results-pink); outline-offset: 2px; }
+.results-capsule:active { transform: scale(0.985); }
+.results-capsule-name { font-size: 0.85rem; font-weight: 600; line-height: 1.15; }
+.results-capsule-meta { font-size: 0.72rem; line-height: 1.2; color: var(--results-mute); font-variant-numeric: tabular-nums; letter-spacing: 0.01em; }
+.results-grade-text { font-weight: 800; }
+.results-grade-text[data-tone="top"] { color: var(--results-pink); }
+.results-grade-text[data-tone="high"] { color: var(--results-cream); }
+.results-grade-text[data-tone="solid"] { color: var(--results-cream); opacity: 0.85; }
+.results-avatar {
+  width: 2.5rem; height: 2.5rem; border-radius: 9999px; overflow: hidden; flex: none;
+  border: 1.5px solid var(--results-pink); background: var(--results-bg-2);
+  display: grid; place-items: center; font-weight: 700; font-size: 0.78rem; color: var(--results-pink-2);
+  font-variant-numeric: tabular-nums;
+}
+.results-avatar[data-anonymous] { border-color: rgba(255, 122, 181, 0.45); color: var(--results-mute); font-size: 0.66rem; letter-spacing: 0.02em; }
+.results-avatar-lg { width: 4.5rem; height: 4.5rem; font-size: 1.375rem; }
+.results-avatar-lg[data-anonymous] { font-size: 1.1rem; }
+.results-grade {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 2.1rem; height: 1.5rem; padding: 0 0.45rem; border-radius: 0.4rem;
+  font-weight: 800; font-size: 0.78rem; letter-spacing: -0.01em; font-variant-numeric: tabular-nums;
+}
+.results-grade[data-tone="top"] { background: var(--results-pink); color: var(--results-bg); }
+.results-grade[data-tone="high"] { background: transparent; color: var(--results-cream); box-shadow: inset 0 0 0 1.5px var(--results-cream); }
+.results-grade[data-tone="solid"] { background: var(--results-card-2); color: var(--results-cream); }
+
+/* Moving rows — transform-only. Each track is one full segment plus a short
+   copy of its first capsules; the animation travels exactly one full-segment
+   width (--results-loop), so the loop is seamless. Loop distance and duration
+   are set per row from the measured segment width ÷ px-per-second. */
+@keyframes results-marquee-left { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(calc(-1 * var(--results-loop, 0px)), 0, 0); } }
+@keyframes results-marquee-right { from { transform: translate3d(calc(-1 * var(--results-loop, 0px)), 0, 0); } to { transform: translate3d(0, 0, 0); } }
+.results-row {
+  overflow: clip; /* not a scroll container: focus can never leave a row offset */
+  mask-image: linear-gradient(to right, transparent, black 7%, black 93%, transparent);
+}
+.results-track {
+  display: flex; width: max-content; will-change: transform;
+  animation-duration: var(--results-duration, 900s);
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.results-track[data-direction="left"] { animation-name: results-marquee-left; }
+.results-track[data-direction="right"] { animation-name: results-marquee-right; }
+.results-segment { display: flex; flex: none; gap: var(--results-gap); padding-right: var(--results-gap); }
+.results-row:hover .results-track,
+.results-row:focus-within .results-track,
+.results-track[data-paused="true"] { animation-play-state: paused; }
+@media (max-width: 640px) {
+  .results-row { mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent); }
+}
+/* Reduced motion is decided in CSS so the server-rendered markup is already
+   correct: rows stop, wrap into a static grid, the loop duplicate is hidden. */
+@media (prefers-reduced-motion: reduce) {
+  .results-track { animation: none !important; width: 100%; will-change: auto; }
+  .results-segment { flex-wrap: wrap; justify-content: center; padding-right: 0; width: 100%; }
+  .results-segment[data-dup] { display: none; }
+  .results-row { mask-image: none; }
+}

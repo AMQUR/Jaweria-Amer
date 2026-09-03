@@ -2084,6 +2084,7 @@ export const siteConfig = {
   navigation: [
     { label: "Home", href: "/" },
     { label: "Courses", href: "/courses" },
+    { label: "Results", href: "/results" },
     { label: "Resources", href: "/resources" },
     { label: "About", href: "/about" },
   ],

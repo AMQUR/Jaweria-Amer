@@ -3,16 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "license": "MIT",
-  "description": "Jaweria Amer Academy — Next.js marketing site and admin for Cambridge O Level English programmes.",
+  "description": "Jaweria Amer Academy \u2014 Next.js marketing site and admin for Cambridge O Level English programmes.",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "prebuild": "node scripts/results/verify-mj26-public.mjs",
+    "postbuild": "node scripts/results/verify-mj26-public.mjs --built",
     "start": "next start",
     "lint": "eslint . || true",
-    "test": "node scripts/test-resources-view-only.ts && tsx scripts/test-resource-visibility.ts",
+    "test": "node scripts/test-resources-view-only.ts && tsx scripts/test-resource-visibility.ts && tsx scripts/test-mj26-results.ts && node scripts/results/verify-mj26-public.mjs",
+    "test:results": "tsx scripts/test-mj26-results.ts && node scripts/results/verify-mj26-public.mjs",
     "precommit": "node scripts/check-size.js || exit 1",
     "typecheck": "tsc --noEmit",
-    "ingest:resources": "tsx scripts/ingest-resources.ts"
+    "ingest:resources": "tsx scripts/ingest-resources.ts",
+    "results:build": "tsx scripts/results/build-mj26-results.ts",
+    "results:portraits": "tsx scripts/results/import-mj26-portraits.ts"
   },
   "engines": {
     "node": ">=20.9.0"

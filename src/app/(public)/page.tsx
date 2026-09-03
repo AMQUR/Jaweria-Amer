@@ -19,6 +19,7 @@ import { contact, whatsAppGroupUrl, ENROL_NOW_URL, COMMUNITY_WHATSAPP_URL } from
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
 import { LiveSessionHero } from "@/components/live-session-hero";
+import { ResultsShowcase } from "@/components/results/results-showcase";
 
 const stayConnectedLink =
   "inline-flex items-center justify-center gap-2 rounded-2xl border border-border/70 bg-white px-5 py-2.5 text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-crimson/25 hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson/40 motion-reduce:hover:translate-y-0";
@@ -136,6 +137,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* M/J 2026 proof block — the results are the proof, so they sit straight after the hero */}
+      <ResultsShowcase />
 
       {/* Stats — tighter vertical rhythm */}
       <section className="border-b border-border/70 bg-white">
