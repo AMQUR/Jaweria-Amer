@@ -35,6 +35,7 @@ begin
   insert into evaluation_private.counters (key,attempts) values ('day:'||to_char(now() at time zone 'UTC','YYYYMMDD'),50);
   r := public.reserve_public_evaluation(e,s,ip,1);
   if r <> 'busy' then raise exception 'global cap'; end if;
+  if (select count(*) from evaluation_private.counters) <> 1 then raise exception 'blocked request allocated new counters'; end if;
   if has_function_privilege('anon','public.reserve_public_evaluation(text,text,text,integer)','EXECUTE') then raise exception 'anon executable'; end if;
   if has_function_privilege('authenticated','public.reserve_public_evaluation(text,text,text,integer)','EXECUTE') then raise exception 'authenticated executable'; end if;
   if has_schema_privilege('anon','evaluation_private','USAGE') then raise exception 'anon schema accessible'; end if;
