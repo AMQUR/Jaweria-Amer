@@ -5,10 +5,15 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { siteConfig } from "@/lib/data";
-import { whatsAppGroupUrl } from "@/lib/contact";
-import { trackWhatsAppClick } from "@/lib/analytics";
+import { ENROL_NOW_URL } from "@/lib/contact";
+import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
-import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 export function Navigation() {
   const [scrolled, setScrolled] = useState(false);
@@ -21,7 +26,7 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const isTransparent = !scrolled && pathname !== "/";
+  const isTransparent = false;
 
   return (
     <header
@@ -29,7 +34,7 @@ export function Navigation() {
         "fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,box-shadow] duration-200 ease-out",
         scrolled
           ? "border-b border-border/80 bg-white/95 shadow-[0_1px_0_rgba(34,16,18,0.04)] backdrop-blur-md"
-          : "bg-transparent"
+          : "border-b border-border/60 bg-white",
       )}
     >
       <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -38,18 +43,19 @@ export function Navigation() {
             href="/"
             className={cn(
               "font-serif text-lg font-semibold tracking-tight transition-colors sm:text-xl",
-              isTransparent ? "text-white" : "text-ink"
+              isTransparent ? "text-white" : "text-ink",
             )}
           >
             {siteConfig.name}
           </Link>
 
-          <div className="hidden items-center gap-10 md:flex">
+          <div className="hidden items-center gap-10 lg:flex">
             {siteConfig.navigation.map((item) => {
               const active =
                 item.href === "/"
                   ? pathname === "/"
-                  : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                  : pathname === item.href ||
+                    pathname.startsWith(`${item.href}/`);
               return (
                 <Link
                   key={item.href}
@@ -62,7 +68,7 @@ export function Navigation() {
                         : "text-white/72 hover:text-white"
                       : active
                         ? "font-medium text-ink after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-px after:rounded-full after:bg-brand"
-                        : "text-slate hover:text-ink"
+                        : "text-slate hover:text-ink",
                   )}
                 >
                   {item.label}
@@ -71,13 +77,17 @@ export function Navigation() {
             })}
             <div className="ml-1 flex items-center gap-2 border-l border-border/60 pl-8">
               <Link
-                href={whatsAppGroupUrl()}
+                href={ENROL_NOW_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick({ location: "nav_desktop", variant: "group" })}
+                onClick={() =>
+                  trackEvent("registration_cta_click", {
+                    surface: "nav_desktop",
+                  })
+                }
                 className="rounded-2xl bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
               >
-                Text us
+                Join the Next Batch
               </Link>
             </div>
           </div>
@@ -85,21 +95,25 @@ export function Navigation() {
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
               className={cn(
-                "rounded-2xl p-2 transition-[transform,background-color,color] duration-200 ease-out active:scale-[0.98] md:hidden",
-                isTransparent ? "text-white" : "text-ink"
+                "rounded-2xl p-2 transition-[transform,background-color,color] duration-200 ease-out active:scale-[0.98] lg:hidden",
+                isTransparent ? "text-white" : "text-ink",
               )}
               aria-label="Open menu"
             >
               <Menu className="h-5 w-5" />
             </SheetTrigger>
-            <SheetContent side="right" className="w-[min(100vw-2rem,20rem)] border-border/60 bg-white p-6">
+            <SheetContent
+              side="right"
+              className="w-[min(100vw-2rem,20rem)] border-border/60 bg-white p-6"
+            >
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <div className="mt-10 flex flex-col gap-1">
                 {siteConfig.navigation.map((item) => {
                   const active =
                     item.href === "/"
                       ? pathname === "/"
-                      : pathname === item.href || pathname.startsWith(`${item.href}/`);
+                      : pathname === item.href ||
+                        pathname.startsWith(`${item.href}/`);
                   return (
                     <Link
                       key={item.href}
@@ -107,7 +121,9 @@ export function Navigation() {
                       onClick={() => setOpen(false)}
                       className={cn(
                         "rounded-2xl px-3 py-2.5 text-base tracking-[0.02em] transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-sm active:scale-[0.98] motion-reduce:hover:translate-y-0",
-                        active ? "bg-muted font-medium text-ink" : "text-slate hover:bg-muted/60 hover:text-ink"
+                        active
+                          ? "bg-muted font-medium text-ink"
+                          : "text-slate hover:bg-muted/60 hover:text-ink",
                       )}
                     >
                       {item.label}
@@ -116,16 +132,18 @@ export function Navigation() {
                 })}
                 <div className="mt-6 flex flex-col gap-2 border-t border-border/60 pt-6">
                   <Link
-                    href={whatsAppGroupUrl()}
+                    href={ENROL_NOW_URL}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => {
-                      trackWhatsAppClick({ location: "nav_mobile_sheet", variant: "group" });
+                      trackEvent("registration_cta_click", {
+                        surface: "nav_mobile_sheet",
+                      });
                       setOpen(false);
                     }}
                     className="rounded-2xl bg-primary py-2.5 text-center text-sm font-medium text-primary-foreground shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
                   >
-                    Text us
+                    Join the Next Batch
                   </Link>
                 </div>
               </div>

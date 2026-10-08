@@ -58,3 +58,7 @@ scripts/source/
 
 # PDFs are served via Supabase Storage — never commit them to the repo
 public/resources/**/*.pdf
+# Local browser QA captures
+/output/playwright/
+/.playwright-cli/
+/supabase/.temp/

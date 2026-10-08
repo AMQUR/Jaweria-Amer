@@ -11,13 +11,14 @@
     "postbuild": "node scripts/results/verify-mj26-public.mjs --built",
     "start": "next start",
     "lint": "eslint . || true",
-    "test": "node scripts/test-resources-view-only.ts && tsx scripts/test-resource-visibility.ts && tsx scripts/test-mj26-results.ts && node scripts/results/verify-mj26-public.mjs",
+    "test": "node scripts/test-resources-view-only.ts && tsx scripts/test-resource-visibility.ts && tsx scripts/test-mj26-results.ts && node scripts/results/verify-mj26-public.mjs && tsx scripts/test-public-experience.ts",
     "test:results": "tsx scripts/test-mj26-results.ts && node scripts/results/verify-mj26-public.mjs",
     "precommit": "node scripts/check-size.js || exit 1",
     "typecheck": "tsc --noEmit",
     "ingest:resources": "tsx scripts/ingest-resources.ts",
     "results:build": "tsx scripts/results/build-mj26-results.ts",
-    "results:portraits": "tsx scripts/results/import-mj26-portraits.ts"
+    "results:portraits": "tsx scripts/results/import-mj26-portraits.ts",
+    "test:public-experience": "tsx scripts/test-public-experience.ts"
   },
   "engines": {
     "node": ">=20.9.0"

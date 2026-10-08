@@ -12,13 +12,25 @@ import {
 import { listMarketingCourses } from "@/lib/course-offerings";
 import { courses, siteConfig } from "@/lib/data";
 import { getSettings } from "@/lib/admin/store";
+import { defaultHomepageContent } from "@/lib/admin/defaults";
 import { getHomepageContent } from "@/lib/public-homepage";
-import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
+import {
+  TrackedOutboundLink,
+  TrackedWhatsAppLink,
+} from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { contact, whatsAppGroupUrl, ENROL_NOW_URL, COMMUNITY_WHATSAPP_URL } from "@/lib/contact";
+import {
+  contact,
+  whatsAppGroupUrl,
+  ENROL_NOW_URL,
+  COMMUNITY_WHATSAPP_URL,
+} from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
 import { LiveSessionHero } from "@/components/live-session-hero";
+import { isBatchAnnouncementActive } from "@/lib/public-experience";
+import { HomePreview } from "@/components/public-experience/home-preview";
+import { evaluationAvailable } from "@/lib/evaluation/server";
 import { ResultsShowcase } from "@/components/results/results-showcase";
 
 const stayConnectedLink =
@@ -45,101 +57,32 @@ const sectionKicker =
   "text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground";
 const sectionTitle =
   "font-serif text-2xl font-semibold leading-[1.18] tracking-tight text-ink sm:text-3xl lg:text-[2.05rem] lg:leading-[1.16]";
-const bodyLead = "text-sm leading-relaxed text-slate sm:text-base sm:leading-relaxed";
+const bodyLead =
+  "text-sm leading-relaxed text-slate sm:text-base sm:leading-relaxed";
 
 export default async function HomePage() {
-  const featuredCourses = listMarketingCourses(courses).filter((c) => c.featured);
-  const [settings, homepageContent] = await Promise.all([getSettings(), getHomepageContent()]);
+  const featuredCourses = listMarketingCourses(courses).filter(
+    (c) => c.featured,
+  );
+  const [settings, homepageContent] = await Promise.all([
+    getSettings(),
+    getHomepageContent(),
+  ]);
   const stats = settings?.stats ?? [];
-  const safeHomepageContent = homepageContent ?? {
-    heroKicker: siteConfig.brandSubtitle,
-    heroTitlePrimary: "Master CAIE English",
-    heroTitleSecondary: "with Clarity and Care",
-    heroDescription:
-      "Rubric-driven instruction, calm accountability, and mentorship that builds independent thinkers. Structured practice that holds up on exam day.",
-    primaryCtaText: "Text us",
-    primaryCtaLink: "https://wa.me/923253708069",
-    secondaryCtaText: "Text us",
-    secondaryCtaLink: "https://wa.me/923253708069",
-    bannerImagePath: "/assets/hero-legacy.jpg",
-  };
+  const safeHomepageContent = homepageContent ?? defaultHomepageContent;
 
   return (
     <>
-      <LiveSessionHero bannerImagePath={safeHomepageContent.bannerImagePath} />
-
-      {/* Hero */}
-      <section className="relative overflow-hidden pt-14 pb-24 sm:pt-20 sm:pb-32 lg:pt-24 lg:pb-36">
-        <div className="absolute inset-0 bg-gradient-to-br from-crimson via-crimson to-crimson-dark" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
-        <div
-          className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage:
-              "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
-          }}
-        />
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            <p className="premium-reveal mb-5 max-w-xl text-[11px] font-semibold leading-snug tracking-wide text-white/75 sm:mb-6 sm:text-xs">
-              {safeHomepageContent.heroKicker}
-            </p>
-            <h1 className="premium-reveal premium-reveal-delay-1 mb-6 font-serif text-3xl font-semibold leading-[1.08] tracking-tight text-white sm:text-4xl sm:leading-[1.06] lg:text-[2.95rem] lg:leading-[1.04]">
-              {safeHomepageContent.heroTitlePrimary}
-              <span className="mt-2 block font-normal text-white/90">{safeHomepageContent.heroTitleSecondary}</span>
-            </h1>
-            <p className="premium-reveal premium-reveal-delay-2 mb-9 max-w-xl text-sm leading-relaxed text-white/72 sm:mb-11 sm:text-base sm:leading-relaxed lg:text-lg">
-              {safeHomepageContent.heroDescription}
-            </p>
-            <div className="premium-reveal premium-reveal-delay-3 flex flex-col gap-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <TrackedOutboundLink
-                  href={ENROL_NOW_URL}
-                  channel="enrol"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-crimson shadow-md transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:scale-[0.98] motion-reduce:hover:translate-y-0"
-                >
-                  Enrol Now
-                  <ArrowRight className="h-4 w-4" />
-                </TrackedOutboundLink>
-                <TrackedWhatsAppLink
-                  href={whatsAppGroupUrl()}
-                  location="home_hero"
-                  variant="group"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
-                >
-                  Text us
-                  <ArrowRight className="h-4 w-4" />
-                </TrackedWhatsAppLink>
-                <TrackedOutboundLink
-                  href={contact.youtube}
-                  channel="youtube"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Visit YouTube channel"
-                  className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
-                >
-                  <PlayCircle className="h-4 w-4" aria-hidden />
-                  Watch on YouTube
-                </TrackedOutboundLink>
-              </div>
-              <Link
-                href="/courses"
-                className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-4 transition-colors hover:text-white"
-              >
-                Explore courses
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      <LiveSessionHero
+        bannerImagePath={safeHomepageContent.bannerImagePath}
+        heroContent={safeHomepageContent}
+        announcementActive={isBatchAnnouncementActive()}
+      />
 
       {/* M/J 2026 proof block — the results are the proof, so they sit straight after the hero */}
       <ResultsShowcase />
+
+      <HomePreview evaluationReady={evaluationAvailable()} />
 
       {/* Stats — tighter vertical rhythm */}
       <section className="border-b border-border/70 bg-white">
@@ -157,7 +100,9 @@ export default async function HomePage() {
                     delay={i * 100}
                   />
                 </h3>
-                <p className="text-sm leading-snug text-slate">{String(stat.label ?? "")}</p>
+                <p className="text-sm leading-snug text-slate">
+                  {String(stat.label ?? "")}
+                </p>
               </div>
             ))}
           </div>
@@ -171,8 +116,9 @@ export default async function HomePage() {
             <p className={`${sectionKicker} mb-3`}>Why Students Choose Us</p>
             <h2 className={`${sectionTitle} mb-5`}>Structure, Not Stress</h2>
             <p className={bodyLead}>
-              We don&apos;t do panic prep. We build repeatable exam thinking through a method that&apos;s rubric-led,
-              feedback-rich, and designed around how Cambridge actually marks.
+              We don&apos;t do panic prep. We build repeatable exam thinking
+              through a method that&apos;s rubric-led, feedback-rich, and
+              designed around how Cambridge actually marks.
             </p>
           </div>
 
@@ -206,8 +152,12 @@ export default async function HomePage() {
                 <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
                   <item.icon className="h-5 w-5 text-brand" aria-hidden />
                 </div>
-                <h3 className="mb-2 font-serif text-xl font-semibold tracking-tight text-ink">{item.title}</h3>
-                <p className="text-sm leading-relaxed text-slate sm:text-base">{item.desc}</p>
+                <h3 className="mb-2 font-serif text-xl font-semibold tracking-tight text-ink">
+                  {item.title}
+                </h3>
+                <p className="text-sm leading-relaxed text-slate sm:text-base">
+                  {item.desc}
+                </p>
               </div>
             ))}
           </div>
@@ -254,15 +204,20 @@ export default async function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="premium-reveal mx-auto mb-14 max-w-2xl text-center sm:mb-20">
             <p className={`${sectionKicker} mb-3`}>The Method</p>
-            <h2 className={`${sectionTitle} mb-5`}>Your Step-by-Step Roadmap</h2>
+            <h2 className={`${sectionTitle} mb-5`}>
+              Your Step-by-Step Roadmap
+            </h2>
             <p className={bodyLead}>
-              A clear, structured journey from diagnostic to exam day. Every step is designed to build skill,
-              confidence, and control.
+              A clear, structured journey from diagnostic to exam day. Every
+              step is designed to build skill, confidence, and control.
             </p>
           </div>
 
           <div className="relative mx-auto max-w-2xl">
-            <div className="absolute bottom-2 left-[1.125rem] top-2 w-px bg-border sm:left-6" aria-hidden />
+            <div
+              className="absolute bottom-2 left-[1.125rem] top-2 w-px bg-border sm:left-6"
+              aria-hidden
+            />
             <div className="space-y-10 sm:space-y-12">
               {siteConfig.roadmap.map((step) => (
                 <div key={step.step} className="relative flex gap-5 sm:gap-6">
@@ -270,8 +225,12 @@ export default async function HomePage() {
                     {step.step}
                   </div>
                   <div className="min-w-0 pt-0.5 sm:pt-1">
-                    <h3 className="mb-2 font-serif text-lg font-semibold text-ink sm:text-xl">{step.title}</h3>
-                    <p className="text-sm leading-relaxed text-slate">{step.description}</p>
+                    <h3 className="mb-2 font-serif text-lg font-semibold text-ink sm:text-xl">
+                      {step.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-slate">
+                      {step.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -287,12 +246,14 @@ export default async function HomePage() {
             Ready for Structure, Feedback &amp; Real Progress?
           </h2>
           <p className="mx-auto mb-4 max-w-lg text-sm leading-relaxed text-white/75 sm:text-base">
-            Free resources help you practise. The live programme helps you improve — with checked work,
-            personalised feedback, biweekly tests, and progress reports. Enrol when you&apos;re ready, or
-            book a short clarity call first. No pressure.
+            Free resources help you practise. The live programme helps you
+            improve — with checked work, personalised feedback, biweekly tests,
+            and progress reports. Enrol when you&apos;re ready, or book a short
+            clarity call first. No pressure.
           </p>
           <p className="mx-auto mb-10 max-w-lg text-sm text-white/55">
-            Or write to <ContactEmailLink variant="onDark" className="font-medium" />
+            Or write to{" "}
+            <ContactEmailLink variant="onDark" className="font-medium" />
           </p>
           <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:justify-center">
             <TrackedOutboundLink
@@ -336,7 +297,8 @@ export default async function HomePage() {
             <p className={`${sectionKicker} mb-3`}>Community</p>
             <h2 className={`${sectionTitle} mb-3`}>Stay Connected</h2>
             <p className={`${bodyLead} mb-8`}>
-              Lessons, updates, and a student community — useful alongside the programme, not instead of it.
+              Lessons, updates, and a student community — useful alongside the
+              programme, not instead of it.
             </p>
             <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <TrackedOutboundLink
@@ -346,7 +308,10 @@ export default async function HomePage() {
                 rel="noopener noreferrer"
                 className={stayConnectedLink}
               >
-                <PlayCircle className="h-4 w-4 shrink-0 text-crimson" aria-hidden />
+                <PlayCircle
+                  className="h-4 w-4 shrink-0 text-crimson"
+                  aria-hidden
+                />
                 YouTube
               </TrackedOutboundLink>
               <TrackedOutboundLink
