@@ -14,23 +14,25 @@ export const publicExperience = {
   lessons: [
     {
       id: "demo-1",
-      title: "A first look at a real lesson",
+      title: "Directed Writing — Complete Revision",
       description:
-        "See how Miss Jay explains a concept and turns it into useful exam practice.",
+        "Revise the approach to Directed Writing with a complete O Level lesson.",
       courseId: "o-level-english-1123",
-      src: "",
-      poster: "",
-      duration: "",
+      src: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/public-lessons/v1/directed-writing/index.m3u8",
+      poster:
+        "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/public-lessons/v1/directed-writing/poster-topic.jpg",
+      duration: "1 hr 14 min 28 sec",
     },
     {
       id: "demo-2",
-      title: "Put the technique into practice",
+      title: "Writer’s Effect",
       description:
-        "Follow a worked example, then bring the approach to your own answer.",
+        "Explore how a writer’s language creates effects, and how to explain them clearly. The original recording also references IGCSE 0500.",
       courseId: "o-level-english-1123",
-      src: "",
-      poster: "",
-      duration: "",
+      src: "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/public-lessons/v1/writers-effect/index.m3u8",
+      poster:
+        "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/public-lessons/v1/writers-effect/poster-topic.jpg",
+      duration: "54 min 44 sec",
     },
   ],
   walkthrough: {
@@ -45,4 +47,15 @@ export function isBatchAnnouncementActive(now = new Date()): boolean {
     now.getTime() >= Date.parse(publicExperience.batch.visibleFrom) &&
     now.getTime() < Date.parse(publicExperience.batch.expiresAt)
   );
+}
+
+export function getBatchAnnouncement(now = new Date()) {
+  return isBatchAnnouncementActive(now)
+    ? publicExperience.batch
+    : {
+        ...publicExperience.batch,
+        message:
+          "Build your English skills with guided lessons and personal feedback.",
+        cta: "Explore the Next Batch",
+      };
 }

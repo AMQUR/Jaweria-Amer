@@ -6,7 +6,8 @@ import Script from "next/script";
 export function GoogleAnalytics() {
   const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
   const isProd = process.env.NODE_ENV === "production";
-  if (!isProd || !gaId) return null;
+  if (!isProd || !gaId || !/^G-[A-Z0-9]+$/.test(gaId) || /^G-X+$/.test(gaId))
+    return null;
 
   return (
     <>

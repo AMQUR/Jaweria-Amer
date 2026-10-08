@@ -12,8 +12,6 @@ export function RegistrationLink({
   return (
     <a
       href={ENROL_NOW_URL}
-      target="_blank"
-      rel="noopener noreferrer"
       {...props}
       onClick={() => {
         trackEvent("registration_cta_click", { surface });

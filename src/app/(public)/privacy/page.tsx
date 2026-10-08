@@ -40,6 +40,27 @@ export default function PrivacyPage() {
               We do not sell, rent, or share your personal data with third
               parties for marketing or unrelated purposes.
             </p>
+            <section aria-labelledby="registration-privacy">
+              <h2
+                id="registration-privacy"
+                className="mb-3 font-serif text-2xl text-ink"
+              >
+                Registration interest
+              </h2>
+              <p>
+                We privately store your name, email, selected course and enquiry
+                date in Supabase so Miss Jay’s team can contact you by email
+                about batch details and enrollment. Only authorized website
+                administrators can review these requests. No payment or LMS
+                account is created. Records older than 180 days are removed when
+                the inbox is reviewed or another enquiry arrives. A keyed
+                network fingerprint and short-lived counters help prevent spam;
+                we do not store your plain IP address in this enquiry database.
+                Contact us below to request deletion sooner. The existing Google
+                registration form remains available separately and follows
+                Google’s privacy settings.
+              </p>
+            </section>
             <section aria-labelledby="evaluation-privacy">
               <h2
                 id="evaluation-privacy"
@@ -82,9 +103,9 @@ export default function PrivacyPage() {
                 unreadable work may use an attempt once processing starts.
               </p>
               <p className="mt-4">
-                These details are not a marketing signup. Registration is a
-                separate Google Form. Contact us below for privacy questions or
-                to request deletion of the evaluation identifier associated with
+                These details are not a marketing signup. Registration interest
+                is a separate form. Contact us below for privacy questions or to
+                request deletion of the evaluation identifier associated with
                 your email. Videos hosted by external platforms follow those
                 platforms’ privacy policies; lesson files load only when you
                 choose to play them.

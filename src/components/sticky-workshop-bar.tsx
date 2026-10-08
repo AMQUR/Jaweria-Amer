@@ -5,7 +5,13 @@ import { publicExperience } from "@/lib/public-experience";
 import { trackEvent } from "@/lib/analytics";
 
 /** Existing announcement surface, now in normal flow: never covers navigation or forms. */
-export function StickyWorkshopBar({ active = false }: { active?: boolean }) {
+export function StickyWorkshopBar({
+  active = false,
+  batch = publicExperience.batch,
+}: {
+  active?: boolean;
+  batch?: { headline: string; message: string; cta: string; href: string };
+}) {
   const [dismissed, setDismissed] = useState(false);
   const viewed = useRef(false);
   useEffect(() => {
@@ -15,7 +21,6 @@ export function StickyWorkshopBar({ active = false }: { active?: boolean }) {
     }
   }, [active]);
   if (!active) return null;
-  const batch = publicExperience.batch;
   return (
     <div className="pt-16 sm:pt-[4.25rem]">
       <aside
@@ -35,8 +40,6 @@ export function StickyWorkshopBar({ active = false }: { active?: boolean }) {
               </p>
               <a
                 href={batch.href}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-crimson px-4 py-2 text-xs font-semibold text-white hover:bg-crimson-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson"
                 onClick={() => {
                   trackEvent("batch_banner_click");

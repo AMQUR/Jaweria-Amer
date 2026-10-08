@@ -5,11 +5,14 @@
 
 const WHATSAPP_DIRECT_URL = "https://wa.me/923253708069";
 
-/** Paid enrolment form — the primary conversion CTA across the site. */
-export const ENROL_NOW_URL = "https://forms.gle/LbYPC63MWP1foWZC6";
+/** Verified first-party registration-interest route. */
+export const ENROL_NOW_URL = "/register";
+/** Historical enrollment form; preserved with its questions and responses unchanged. */
+export const LEGACY_ENROL_FORM_URL = "https://forms.gle/LbYPC63MWP1foWZC6";
 
 /** Public WhatsApp community group ("Join Our Community" secondary CTA). */
-export const COMMUNITY_WHATSAPP_URL = "https://chat.whatsapp.com/KEDYUPcMemQENBf3H053jf?mode=gi_t";
+export const COMMUNITY_WHATSAPP_URL =
+  "https://chat.whatsapp.com/KEDYUPcMemQENBf3H053jf?mode=gi_t";
 
 export const contact = {
   phone: "+923253708069",

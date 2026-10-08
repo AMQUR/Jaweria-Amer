@@ -1,4 +1,4 @@
-import { isBatchAnnouncementActive } from "@/lib/public-experience";
+import { getBatchAnnouncement } from "@/lib/public-experience";
 import { Navigation } from "@/components/navigation";
 import { StickyWorkshopBar } from "@/components/sticky-workshop-bar";
 import { Footer } from "@/components/footer";
@@ -18,7 +18,7 @@ export default function PublicLayout({
     <>
       <ScrollToTop />
       <Navigation />
-      <StickyWorkshopBar active={isBatchAnnouncementActive()} />
+      <StickyWorkshopBar active batch={getBatchAnnouncement()} />
       <main className="flex-1">{children}</main>
       <Footer />
       <BackToTop />

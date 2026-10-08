@@ -56,8 +56,13 @@ type SubmissionStats = {
   avgScores: Record<string, number>;
 };
 
-export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerProps) {
-  const [mcqs, setMcqs] = useState<CmsMcqSet[]>(() => (Array.isArray(initialMcqs) ? initialMcqs : []));
+export function McqManager({
+  initialMcqs,
+  submissionCounts = {},
+}: McqManagerProps) {
+  const [mcqs, setMcqs] = useState<CmsMcqSet[]>(() =>
+    Array.isArray(initialMcqs) ? initialMcqs : [],
+  );
   const [stats, setStats] = useState<SubmissionStats>({
     counts: submissionCounts,
     avgScores: {},
@@ -66,39 +71,42 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState<McqForm>(emptyMcqForm());
 
-  async function loadMcqs() {
-    try {
-      setLoading(true);
-      const [mcqRes, statsRes] = await Promise.all([
-        fetch("/api/admin/mcq", { cache: "no-store" }),
-        fetch("/api/admin/mcq/counts", { cache: "no-store" }),
-      ]);
+  function loadMcqs() {
+    return Promise.all([
+      fetch("/api/admin/mcq", { cache: "no-store" }),
+      fetch("/api/admin/mcq/counts", { cache: "no-store" }),
+    ])
+      .then(async ([mcqRes, statsRes]) => {
+        const mcqData: unknown = mcqRes.ok ? await mcqRes.json() : null;
+        setMcqs(Array.isArray(mcqData) ? (mcqData as CmsMcqSet[]) : []);
 
-      const mcqData: unknown = mcqRes.ok ? await mcqRes.json() : null;
-      setMcqs(Array.isArray(mcqData) ? (mcqData as CmsMcqSet[]) : []);
-
-      if (statsRes.ok) {
-        const raw: unknown = await statsRes.json();
-        const s = raw && typeof raw === "object" && !Array.isArray(raw)
-          ? (raw as Record<string, unknown>)
-          : {};
-        const counts =
-          s.counts && typeof s.counts === "object" && !Array.isArray(s.counts)
-            ? (s.counts as Record<string, number>)
-            : {};
-        const avgScores =
-          s.avgScores && typeof s.avgScores === "object" && !Array.isArray(s.avgScores)
-            ? (s.avgScores as Record<string, number>)
-            : {};
-        setStats({ counts, avgScores });
-      }
-      // If statsRes is not ok, keep whatever stats are already in state (SSR initial or previous fetch)
-    } catch {
-      setMcqs([]);
-      // Do not reset stats on MCQ-fetch failure — stale counts are better than losing them
-    } finally {
-      setLoading(false);
-    }
+        if (statsRes.ok) {
+          const raw: unknown = await statsRes.json();
+          const s =
+            raw && typeof raw === "object" && !Array.isArray(raw)
+              ? (raw as Record<string, unknown>)
+              : {};
+          const counts =
+            s.counts && typeof s.counts === "object" && !Array.isArray(s.counts)
+              ? (s.counts as Record<string, number>)
+              : {};
+          const avgScores =
+            s.avgScores &&
+            typeof s.avgScores === "object" &&
+            !Array.isArray(s.avgScores)
+              ? (s.avgScores as Record<string, number>)
+              : {};
+          setStats({ counts, avgScores });
+        }
+        // If statsRes is not ok, keep whatever stats are already in state (SSR initial or previous fetch)
+      })
+      .catch(() => {
+        setMcqs([]);
+        // Do not reset stats on MCQ-fetch failure — stale counts are better than losing them
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
@@ -107,7 +115,9 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
 
   const quizStats = useMemo(() => {
     const list = mcqs ?? [];
-    const published = list.filter((mcq) => mcq?.visibility === "published" && !mcq.deleted).length;
+    const published = list.filter(
+      (mcq) => mcq?.visibility === "published" && !mcq.deleted,
+    ).length;
     return {
       total: list.length,
       published,
@@ -122,7 +132,9 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
       title: String(mcq?.title ?? ""),
       description: String(mcq?.description ?? ""),
       timeLimit: mcq?.timeLimit ? String(mcq.timeLimit) : "",
-      visibility: (mcq?.visibility === "draft" ? "draft" : "published") as McqForm["visibility"],
+      visibility: (mcq?.visibility === "draft"
+        ? "draft"
+        : "published") as McqForm["visibility"],
       paper: String(mcq?.paper ?? ""),
       section: mcq.section ?? "",
       subject: String(mcq?.subject ?? ""),
@@ -141,10 +153,15 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
     setForm(emptyMcqForm());
   }
 
-  function updateQuestion(index: number, updater: (current: McqQuestion) => McqQuestion) {
+  function updateQuestion(
+    index: number,
+    updater: (current: McqQuestion) => McqQuestion,
+  ) {
     setForm((prev) => ({
       ...prev,
-      questions: prev.questions.map((question, questionIndex) => (questionIndex === index ? updater(question) : question)),
+      questions: prev.questions.map((question, questionIndex) =>
+        questionIndex === index ? updater(question) : question,
+      ),
     }));
   }
 
@@ -153,7 +170,10 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
       toast.error("Title is required.");
       return;
     }
-    if (!form.questions.length || form.questions.some((question) => !question.question.trim())) {
+    if (
+      !form.questions.length ||
+      form.questions.some((question) => !question.question.trim())
+    ) {
       toast.error("Each question needs text before saving.");
       return;
     }
@@ -185,6 +205,7 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
     }
 
     toast.success(form.id ? "MCQ set updated." : "MCQ set created.");
+    setLoading(true);
     await loadMcqs();
     loadIntoForm(data.mcq);
   }
@@ -205,6 +226,7 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
     }
     toast.success("MCQ set deleted.");
     if (form.id === id) resetForm();
+    setLoading(true);
     await loadMcqs();
   }
 
@@ -212,8 +234,13 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
     <div className="grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
       <div className="space-y-4">
         <div className="rounded-2xl border border-border/60 bg-white p-5 shadow-sm">
-          <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink">MCQ Builder</h1>
-          <p className="mt-1 text-sm text-slate">Create and edit Quick Worksheets with live answer logic and explanations.</p>
+          <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink">
+            MCQ Builder
+          </h1>
+          <p className="mt-1 text-sm text-slate">
+            Create and edit Quick Worksheets with live answer logic and
+            explanations.
+          </p>
           <div className="mt-4 grid gap-3 sm:grid-cols-3 xl:grid-cols-1">
             <StatCard label="Total sets" value={quizStats.total} />
             <StatCard label="Published" value={quizStats.published} />
@@ -226,15 +253,24 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
 
         <div className="overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
           <div className="border-b border-border/60 px-5 py-4">
-            <h2 className="font-serif text-lg font-semibold tracking-tight text-ink">Existing sets</h2>
+            <h2 className="font-serif text-lg font-semibold tracking-tight text-ink">
+              Existing sets
+            </h2>
           </div>
           <div className="max-h-[70vh] overflow-y-auto p-3">
             {loading ? (
               <p className="p-4 text-sm text-slate">Loading MCQs…</p>
             ) : (
               mcqs.map((mcq) => (
-                <div key={mcq.id} className="mb-3 rounded-2xl border border-border/60 bg-cream p-4 last:mb-0">
-                  <button type="button" className="w-full text-left" onClick={() => loadIntoForm(mcq)}>
+                <div
+                  key={mcq.id}
+                  className="mb-3 rounded-2xl border border-border/60 bg-cream p-4 last:mb-0"
+                >
+                  <button
+                    type="button"
+                    className="w-full text-left"
+                    onClick={() => loadIntoForm(mcq)}
+                  >
                     <div className="flex items-start justify-between gap-2">
                       <p className="font-medium text-ink">{mcq.title}</p>
                       {mcq.source === "static" && (
@@ -244,20 +280,32 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                       )}
                     </div>
                     <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                      {(mcq?.questions ?? []).length} questions · {String(mcq?.visibility ?? "")} · {String(mcq?.paper ?? "")}
+                      {(mcq?.questions ?? []).length} questions ·{" "}
+                      {String(mcq?.visibility ?? "")} ·{" "}
+                      {String(mcq?.paper ?? "")}
                     </p>
                     <div className="mt-1 flex items-center gap-3 text-xs font-medium text-crimson">
                       <span>Submissions: {stats.counts[mcq.id] ?? 0}</span>
                       {stats.avgScores[mcq.id] !== undefined && (
-                        <span className="text-slate">Avg: {stats.avgScores[mcq.id]}%</span>
+                        <span className="text-slate">
+                          Avg: {stats.avgScores[mcq.id]}%
+                        </span>
                       )}
                     </div>
                   </button>
                   <div className="mt-3 flex items-center gap-2">
-                    <Button size="sm" variant="outline" onClick={() => loadIntoForm(mcq)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => loadIntoForm(mcq)}
+                    >
                       Edit
                     </Button>
-                    <Button size="sm" variant="outline" onClick={() => void handleDelete(mcq.id)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => void handleDelete(mcq.id)}
+                    >
                       Delete
                     </Button>
                     <Link
@@ -284,10 +332,15 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
               {form.id ? "Edit MCQ set" : "Create MCQ set"}
             </h2>
             <p className="mt-1 text-sm text-slate">
-              Every saved set automatically powers the Quick Worksheets category on the public resources page.
+              Every saved set automatically powers the Quick Worksheets category
+              on the public resources page.
             </p>
           </div>
-          <Button onClick={() => void handleSave()} disabled={saving} className="gap-2 shadow-sm">
+          <Button
+            onClick={() => void handleSave()}
+            disabled={saving}
+            className="gap-2 shadow-sm"
+          >
             <Save className="h-4 w-4" />
             {saving ? "Saving…" : "Save MCQ Set"}
           </Button>
@@ -295,10 +348,20 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
 
         <div className="mt-6 grid gap-4 md:grid-cols-2">
           <Field label="Title">
-            <Input value={form.title} onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))} />
+            <Input
+              value={form.title}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, title: event.target.value }))
+              }
+            />
           </Field>
           <Field label="Time limit (seconds)">
-            <Input value={form.timeLimit} onChange={(event) => setForm((prev) => ({ ...prev, timeLimit: event.target.value }))} />
+            <Input
+              value={form.timeLimit}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, timeLimit: event.target.value }))
+              }
+            />
           </Field>
         </div>
 
@@ -307,46 +370,92 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
             <select
               className="w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm shadow-sm"
               value={form.visibility}
-              onChange={(event) => setForm((prev) => ({ ...prev, visibility: event.target.value as McqForm["visibility"] }))}
+              onChange={(event) =>
+                setForm((prev) => ({
+                  ...prev,
+                  visibility: event.target.value as McqForm["visibility"],
+                }))
+              }
             >
               <option value="published">Published</option>
               <option value="draft">Draft</option>
             </select>
           </Field>
           <Field label="Paper">
-            <Input value={form.paper} onChange={(event) => setForm((prev) => ({ ...prev, paper: event.target.value }))} />
+            <Input
+              value={form.paper}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, paper: event.target.value }))
+              }
+            />
           </Field>
           <Field label="Section">
-            <Input value={form.section} onChange={(event) => setForm((prev) => ({ ...prev, section: event.target.value }))} />
+            <Input
+              value={form.section}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, section: event.target.value }))
+              }
+            />
           </Field>
         </div>
 
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           <Field label="Subject">
-            <Input value={form.subject} onChange={(event) => setForm((prev) => ({ ...prev, subject: event.target.value }))} />
+            <Input
+              value={form.subject}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, subject: event.target.value }))
+              }
+            />
           </Field>
           <Field label="Level">
-            <Input value={form.level} onChange={(event) => setForm((prev) => ({ ...prev, level: event.target.value }))} />
+            <Input
+              value={form.level}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, level: event.target.value }))
+              }
+            />
           </Field>
           <Field label="Year / session">
-            <Input value={form.year} onChange={(event) => setForm((prev) => ({ ...prev, year: event.target.value }))} />
+            <Input
+              value={form.year}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, year: event.target.value }))
+              }
+            />
           </Field>
         </div>
 
         <div className="mt-4">
           <Field label="Description">
-            <Textarea rows={3} value={form.description} onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))} />
+            <Textarea
+              rows={3}
+              value={form.description}
+              onChange={(event) =>
+                setForm((prev) => ({
+                  ...prev,
+                  description: event.target.value,
+                }))
+              }
+            />
           </Field>
         </div>
 
         <div className="mt-8 space-y-5">
           <div className="flex items-center justify-between">
-            <h3 className="font-serif text-lg font-semibold tracking-tight text-ink">Questions</h3>
+            <h3 className="font-serif text-lg font-semibold tracking-tight text-ink">
+              Questions
+            </h3>
             <Button
               type="button"
               variant="outline"
               size="sm"
-              onClick={() => setForm((prev) => ({ ...prev, questions: [...prev.questions, blankQuestion()] }))}
+              onClick={() =>
+                setForm((prev) => ({
+                  ...prev,
+                  questions: [...prev.questions, blankQuestion()],
+                }))
+              }
               className="gap-2"
             >
               <Plus className="h-4 w-4" />
@@ -355,7 +464,10 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
           </div>
 
           {form.questions.map((question, index) => (
-            <div key={`${form.id ?? "new"}-${index}`} className="rounded-2xl border border-border/60 bg-cream p-5">
+            <div
+              key={`${form.id ?? "new"}-${index}`}
+              className="rounded-2xl border border-border/60 bg-cream p-5"
+            >
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-sm font-medium text-ink">
                   <Grip className="h-4 w-4 text-muted-foreground" />
@@ -366,7 +478,10 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                     className="rounded-2xl border border-input bg-white px-3 py-2 text-sm shadow-sm"
                     value={question.section}
                     onChange={(event) =>
-                      updateQuestion(index, (current) => ({ ...current, section: event.target.value as McqQuestion["section"] }))
+                      updateQuestion(index, (current) => ({
+                        ...current,
+                        section: event.target.value as McqQuestion["section"],
+                      }))
                     }
                   >
                     <option value="A">Section A</option>
@@ -381,7 +496,9 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                       onClick={() =>
                         setForm((prev) => ({
                           ...prev,
-                          questions: prev.questions.filter((_, questionIndex) => questionIndex !== index),
+                          questions: prev.questions.filter(
+                            (_, questionIndex) => questionIndex !== index,
+                          ),
                         }))
                       }
                     >
@@ -396,7 +513,12 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                   <Textarea
                     rows={3}
                     value={question.question}
-                    onChange={(event) => updateQuestion(index, (current) => ({ ...current, question: event.target.value }))}
+                    onChange={(event) =>
+                      updateQuestion(index, (current) => ({
+                        ...current,
+                        question: event.target.value,
+                      }))
+                    }
                   />
                 </Field>
 
@@ -408,7 +530,10 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                         onChange={(event) =>
                           updateQuestion(index, (current) => ({
                             ...current,
-                            options: { ...current.options, [optionKey]: event.target.value },
+                            options: {
+                              ...current.options,
+                              [optionKey]: event.target.value,
+                            },
                           }))
                         }
                       />
@@ -422,7 +547,10 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                       className="w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm shadow-sm"
                       value={question.answer}
                       onChange={(event) =>
-                        updateQuestion(index, (current) => ({ ...current, answer: event.target.value as McqOption }))
+                        updateQuestion(index, (current) => ({
+                          ...current,
+                          answer: event.target.value as McqOption,
+                        }))
                       }
                     >
                       <option value="A">A</option>
@@ -436,7 +564,10 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
                       rows={3}
                       value={question.explanation}
                       onChange={(event) =>
-                        updateQuestion(index, (current) => ({ ...current, explanation: event.target.value }))
+                        updateQuestion(index, (current) => ({
+                          ...current,
+                          explanation: event.target.value,
+                        }))
                       }
                     />
                   </Field>
@@ -450,7 +581,13 @@ export function McqManager({ initialMcqs, submissionCounts = {} }: McqManagerPro
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="space-y-1.5">
       <Label>{label}</Label>
@@ -462,8 +599,12 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function StatCard({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-2xl border border-border/60 bg-cream p-4">
-      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">{label}</p>
-      <p className="mt-2 font-serif text-2xl font-semibold tracking-tight text-ink">{value}</p>
+      <p className="text-xs uppercase tracking-[0.16em] text-muted-foreground">
+        {label}
+      </p>
+      <p className="mt-2 font-serif text-2xl font-semibold tracking-tight text-ink">
+        {value}
+      </p>
     </div>
   );
 }

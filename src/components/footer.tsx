@@ -1,7 +1,18 @@
 import Link from "next/link";
 import type { SVGProps } from "react";
-import { Mail, MapPin, Phone, PlayCircle, UsersRound, Camera, Newspaper } from "lucide-react";
-import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
+import {
+  Mail,
+  MapPin,
+  Phone,
+  PlayCircle,
+  UsersRound,
+  Camera,
+  Newspaper,
+} from "lucide-react";
+import {
+  TrackedOutboundLink,
+  TrackedWhatsAppLink,
+} from "@/components/analytics/tracked-links";
 import { siteConfig } from "@/lib/data";
 import { ContactEmailLink } from "@/components/contact-email-link";
 import { contact, telUrl, whatsAppGroupUrl } from "@/lib/contact";
@@ -58,7 +69,10 @@ export function Footer() {
             </h2>
             <ul className="space-y-4 text-sm">
               <li className="inline-flex items-start gap-2.5 text-sm">
-                <Mail className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
+                <Mail
+                  className="mt-0.5 h-4 w-4 shrink-0 text-rose"
+                  aria-hidden
+                />
                 <ContactEmailLink variant="onDark" />
               </li>
               <li>
@@ -79,7 +93,10 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
                 >
-                  <UsersRound className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
+                  <UsersRound
+                    className="mt-0.5 h-4 w-4 shrink-0 text-rose"
+                    aria-hidden
+                  />
                   <span>Text us on WhatsApp</span>
                 </TrackedWhatsAppLink>
               </li>
@@ -89,10 +106,12 @@ export function Footer() {
                   channel="youtube"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Visit YouTube channel"
                   className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
                 >
-                  <PlayCircle className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
+                  <PlayCircle
+                    className="mt-0.5 h-4 w-4 shrink-0 text-rose"
+                    aria-hidden
+                  />
                   <span>YouTube — English with Jaweria</span>
                 </TrackedOutboundLink>
               </li>
@@ -102,10 +121,12 @@ export function Footer() {
                   channel="instagram"
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Follow on Instagram"
                   className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
                 >
-                  <Camera className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
+                  <Camera
+                    className="mt-0.5 h-4 w-4 shrink-0 text-rose"
+                    aria-hidden
+                  />
                   <span>Instagram — @englishwithmissjay</span>
                 </TrackedOutboundLink>
               </li>
@@ -116,10 +137,12 @@ export function Footer() {
                     channel="facebook"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Visit Facebook page"
                     className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
                   >
-                    <Newspaper className="mt-0.5 h-4 w-4 shrink-0 text-rose" aria-hidden />
+                    <Newspaper
+                      className="mt-0.5 h-4 w-4 shrink-0 text-rose"
+                      aria-hidden
+                    />
                     <span>Facebook — Jaweria Amer</span>
                   </TrackedOutboundLink>
                 </li>
@@ -160,7 +183,7 @@ export function Footer() {
       <div className="border-t border-white/10 bg-crimson-dark/80">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-center text-xs text-white/50 sm:text-left">
+            <p className="text-center text-xs text-white/60 sm:text-left">
               © 2026 Jaweria Amer. All Rights Reserved.
             </p>
             <TrackedOutboundLink
@@ -175,9 +198,9 @@ export function Footer() {
             </TrackedOutboundLink>
           </div>
           <p className="mt-4 max-w-4xl text-center text-[11px] leading-relaxed text-[rgb(200,160,165)]/95 sm:text-left">
-            CAIE™ and O Level™ are trademarks of Cambridge
-            Assessment International Education. This site is not affiliated
-            with or endorsed by Cambridge Assessment.
+            CAIE™ and O Level™ are trademarks of Cambridge Assessment
+            International Education. This site is not affiliated with or
+            endorsed by Cambridge Assessment.
           </p>
         </div>
       </div>

@@ -28,7 +28,7 @@ import {
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
 import { LiveSessionHero } from "@/components/live-session-hero";
-import { isBatchAnnouncementActive } from "@/lib/public-experience";
+
 import { HomePreview } from "@/components/public-experience/home-preview";
 import { evaluationAvailable } from "@/lib/evaluation/server";
 import { ResultsShowcase } from "@/components/results/results-showcase";
@@ -76,7 +76,7 @@ export default async function HomePage() {
       <LiveSessionHero
         bannerImagePath={safeHomepageContent.bannerImagePath}
         heroContent={safeHomepageContent}
-        announcementActive={isBatchAnnouncementActive()}
+        announcementActive
       />
 
       {/* M/J 2026 proof block — the results are the proof, so they sit straight after the hero */}
@@ -259,8 +259,6 @@ export default async function HomePage() {
             <TrackedOutboundLink
               href={ENROL_NOW_URL}
               channel="enrol"
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-crimson shadow-md transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
             >
               Enrol Now

@@ -16,6 +16,68 @@ export function HomePreview({ evaluationReady }: { evaluationReady: boolean }) {
   return (
     <>
       <section
+        id="free-lessons"
+        className="scroll-mt-24 bg-white px-4 py-16 sm:px-6 sm:py-24"
+      >
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-9 max-w-2xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-crimson">
+              See the teaching. Try the technique.
+            </p>
+            <h2 className="font-serif text-3xl leading-tight text-ink sm:text-4xl">
+              Learn with Miss Jay before you join.
+            </h2>
+            <p className="mt-4 text-slate">
+              Watch two complete O Level English Language 1123 lessons. Pause,
+              practise the technique, and return to any part you want to
+              revisit.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-2">
+            {publicExperience.lessons.map((lesson, i) => (
+              <article
+                key={lesson.id}
+                className="rounded-3xl border border-border p-4 sm:p-5"
+              >
+                <MediaPlayer
+                  src={lesson.src}
+                  poster={lesson.poster}
+                  title={lesson.title}
+                  id={lesson.id}
+                />
+                <div className="p-3 pt-5">
+                  <p className="text-xs font-semibold text-crimson">
+                    {courses.find((c) => c.id === lesson.courseId)?.title} ·
+                    1123
+                  </p>
+                  <h3 className="mt-2 font-serif text-xl text-ink">
+                    {lesson.src ? lesson.title : `Lesson preview ${i + 1}`}
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-slate">
+                    {lesson.src
+                      ? lesson.description
+                      : "The lesson title, topic and recording will be confirmed before this preview goes live."}
+                  </p>
+                  {lesson.duration && (
+                    <p className="mt-3 text-xs text-slate">{lesson.duration}</p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+          <a
+            href={contact.youtube}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-crimson underline-offset-4 hover:underline"
+          >
+            <PlayCircle className="h-4 w-4" aria-hidden />
+            Watch more public lessons on YouTube{" "}
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </a>
+        </div>
+      </section>
+      <section
         id="try-it-free"
         className="scroll-mt-24 bg-cream px-4 py-16 sm:px-6 sm:py-24"
       >
@@ -72,7 +134,7 @@ export function HomePreview({ evaluationReady }: { evaluationReady: boolean }) {
                 key={item.n}
                 className="flex gap-4 border-t border-border py-5 last:pb-0"
               >
-                <span className="pt-1 text-xs font-semibold text-crimson/60">
+                <span className="pt-1 text-xs font-semibold text-crimson">
                   {item.n}
                 </span>
                 <div>
@@ -84,67 +146,6 @@ export function HomePreview({ evaluationReady }: { evaluationReady: boolean }) {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-      <section
-        id="free-lessons"
-        className="scroll-mt-24 bg-white px-4 py-16 sm:px-6 sm:py-24"
-      >
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-9 max-w-2xl">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-crimson">
-              See the teaching. Try the technique.
-            </p>
-            <h2 className="font-serif text-3xl leading-tight text-ink sm:text-4xl">
-              Learn with Miss Jay before you join.
-            </h2>
-            <p className="mt-4 text-slate">
-              Two lesson previews are being prepared. Until they&apos;re ready,
-              explore Miss Jay&apos;s existing public lessons on YouTube.
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2">
-            {publicExperience.lessons.map((lesson, i) => (
-              <article
-                key={lesson.id}
-                className="rounded-3xl border border-border p-4 sm:p-5"
-              >
-                <MediaPlayer
-                  src={lesson.src}
-                  poster={lesson.poster}
-                  title={lesson.title}
-                  id={lesson.id}
-                />
-                <div className="p-3 pt-5">
-                  <p className="text-xs font-semibold text-crimson">
-                    {courses.find((c) => c.id === lesson.courseId)?.title} ·
-                    1123
-                  </p>
-                  <h3 className="mt-2 font-serif text-xl text-ink">
-                    {lesson.src ? lesson.title : `Lesson preview ${i + 1}`}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate">
-                    {lesson.src
-                      ? lesson.description
-                      : "The lesson title, topic and recording will be confirmed before this preview goes live."}
-                  </p>
-                  {lesson.duration && (
-                    <p className="mt-3 text-xs text-slate">{lesson.duration}</p>
-                  )}
-                </div>
-              </article>
-            ))}
-          </div>
-          <a
-            href={contact.youtube}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-7 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-crimson underline-offset-4 hover:underline"
-          >
-            <PlayCircle className="h-4 w-4" aria-hidden />
-            Watch existing public lessons on YouTube{" "}
-            <ArrowRight className="h-4 w-4" aria-hidden />
-          </a>
         </div>
       </section>
       <section

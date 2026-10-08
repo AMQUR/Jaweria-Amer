@@ -8,7 +8,12 @@ import { getPublicResources } from "@/lib/public-cms";
 import { ResourcesHub } from "@/components/resources-hub";
 import { Paper1ChecklistBanner } from "@/components/paper1-checklist-banner";
 import { ResourcesPageScroll } from "@/components/resources-page-scroll";
-import { CARD_BASE, CARD_BUTTON, CARD_CONTENT, CARD_HOVER } from "@/components/resource-card-system";
+import {
+  CARD_BASE,
+  CARD_BUTTON,
+  CARD_CONTENT,
+  CARD_HOVER,
+} from "@/components/resource-card-system";
 
 export const metadata: Metadata = {
   title: "Resources",
@@ -48,8 +53,9 @@ export default async function ResourcesPage() {
             Resources
           </h1>
           <p className="max-w-2xl text-sm leading-relaxed text-white/72 sm:text-base">
-            Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised so you can
-            practise with a clear path instead of a file dump.
+            Notes, topicals, yearlies, scripts, marking schemes, and MCQs —
+            organised so you can practise with a clear path instead of a file
+            dump.
           </p>
         </div>
       </section>
@@ -57,7 +63,8 @@ export default async function ResourcesPage() {
       <div
         className="pointer-events-none h-12 w-full bg-white sm:h-14"
         style={{
-          backgroundImage: "linear-gradient(to bottom, rgba(198, 40, 57, 0.05), transparent)",
+          backgroundImage:
+            "linear-gradient(to bottom, rgba(198, 40, 57, 0.05), transparent)",
         }}
         aria-hidden
       />
@@ -80,8 +87,8 @@ export default async function ResourcesPage() {
                   English with Jaweria on YouTube
                 </h2>
                 <p className="max-w-2xl text-sm leading-relaxed text-white/80 sm:text-base">
-                  Lesson-style explanations, exam thinking, and revision support — built to complement
-                  the materials below.
+                  Lesson-style explanations, exam thinking, and revision support
+                  — built to complement the materials below.
                 </p>
               </div>
             </div>
@@ -93,7 +100,10 @@ export default async function ResourcesPage() {
               className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-white text-[#7f1d1d] hover:bg-[#ffe4e6] sm:w-auto`}
             >
               Open YouTube channel
-              <ExternalLink className="h-4 w-4 shrink-0 opacity-90" aria-hidden />
+              <ExternalLink
+                className="h-4 w-4 shrink-0 opacity-90"
+                aria-hidden
+              />
             </TrackedOutboundLink>
           </div>
 
@@ -110,19 +120,19 @@ export default async function ResourcesPage() {
                   Go further
                 </p>
                 <h2 className="text-xl font-semibold text-ink sm:text-2xl">
-                  Free resources help you practise. The live programme helps you improve.
+                  Free resources help you practise. The live programme helps you
+                  improve.
                 </h2>
                 <p className="max-w-2xl text-sm leading-relaxed text-slate sm:text-base">
-                  Enrol for checked work, personalised feedback, biweekly tests, progress reports, and a
-                  complete study plan — accountability that turns practice into marks.
+                  Enrol for checked work, personalised feedback, biweekly tests,
+                  progress reports, and a complete study plan — accountability
+                  that turns practice into marks.
                 </p>
               </div>
             </div>
             <TrackedOutboundLink
               href={ENROL_NOW_URL}
               channel="enrol"
-              target="_blank"
-              rel="noopener noreferrer"
               className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto`}
             >
               Enrol Now
@@ -132,7 +142,9 @@ export default async function ResourcesPage() {
         </div>
       </section>
 
-      <Suspense fallback={<div className="min-h-[40vh] bg-cream" aria-hidden />}>
+      <Suspense
+        fallback={<div className="min-h-[40vh] bg-cream" aria-hidden />}
+      >
         <ResourcesHub resources={resources} />
       </Suspense>
     </>

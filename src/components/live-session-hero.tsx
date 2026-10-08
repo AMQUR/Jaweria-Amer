@@ -150,8 +150,6 @@ export function LiveSessionHero({
             <div className="mb-6">
               <a
                 href={ENROL_NOW_URL}
-                target="_blank"
-                rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent("registration_cta_click", { surface: "home_hero" })
                 }
@@ -167,13 +165,13 @@ export function LiveSessionHero({
                 </svg>
               </a>
               <Link
-                href="#try-it-free"
+                href="#free-lessons"
                 className="mt-4 flex min-h-11 w-fit items-center text-sm font-semibold text-white underline decoration-white/40 underline-offset-4"
               >
                 Try the learning experience →
               </Link>
               <p className="mt-2.5 max-w-sm text-[11px] font-medium leading-snug text-white/75">
-                Registration opens Google Forms. Google sign-in may be required.
+                Share your interest. No Google sign-in required.
               </p>
             </div>
 
@@ -212,9 +210,9 @@ export function LiveSessionHero({
                 src={cutoutSrc}
                 alt="Miss Jay — O & A Level English teacher"
                 fill
-                priority
+                loading="eager"
                 quality={75}
-                sizes="(max-width: 1280px) 440px, 440px"
+                sizes="(min-width: 1024px) 320px, 1px"
                 className="object-contain object-bottom"
               />
             </div>
@@ -236,9 +234,9 @@ export function LiveSessionHero({
               src={cutoutSrc}
               alt="Miss Jay — O & A Level English teacher"
               fill
-              priority
+              loading="eager"
               quality={75}
-              sizes="320px"
+              sizes="(min-width: 1024px) 1px, 100px"
               className="object-contain object-bottom"
             />
           </div>
