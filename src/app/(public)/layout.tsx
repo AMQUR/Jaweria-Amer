@@ -1,9 +1,13 @@
+import { isBatchAnnouncementActive } from "@/lib/public-experience";
 import { Navigation } from "@/components/navigation";
 import { StickyWorkshopBar } from "@/components/sticky-workshop-bar";
 import { Footer } from "@/components/footer";
 import { BackToTop } from "@/components/back-to-top";
 import { WhatsAppButton } from "@/components/whatsapp-button";
 import { ScrollToTop } from "@/components/scroll-to-top";
+
+// Refresh time-sensitive announcements while preserving cached public pages.
+export const revalidate = 60;
 
 export default function PublicLayout({
   children,
@@ -14,7 +18,7 @@ export default function PublicLayout({
     <>
       <ScrollToTop />
       <Navigation />
-      <StickyWorkshopBar />
+      <StickyWorkshopBar active={isBatchAnnouncementActive()} />
       <main className="flex-1">{children}</main>
       <Footer />
       <BackToTop />

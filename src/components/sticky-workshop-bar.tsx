@@ -1,78 +1,69 @@
 "use client";
+import { useEffect, useRef, useState } from "react";
+import { ArrowUpRight, Sparkles, X } from "lucide-react";
+import { publicExperience } from "@/lib/public-experience";
+import { trackEvent } from "@/lib/analytics";
 
-import { useEffect, useState } from "react";
-import { X } from "lucide-react";
-import { getWhatsAppUrl } from "@/lib/contact";
-import { cn } from "@/lib/utils";
-
-const DISMISS_KEY = "community-bar-v1-dismissed";
-
-export function StickyWorkshopBar() {
-  const [visible, setVisible] = useState(false);
-
+/** Existing announcement surface, now in normal flow: never covers navigation or forms. */
+export function StickyWorkshopBar({ active = false }: { active?: boolean }) {
+  const [dismissed, setDismissed] = useState(false);
+  const viewed = useRef(false);
   useEffect(() => {
-    if (localStorage.getItem(DISMISS_KEY)) return;
-    const t = setTimeout(() => setVisible(true), 600);
-    return () => clearTimeout(t);
-  }, []);
-
-  function dismiss() {
-    localStorage.setItem(DISMISS_KEY, "1");
-    setVisible(false);
-  }
-
-  const barContent = (
-    <div className="flex min-h-[56px] items-center justify-between gap-3 px-4 py-2 sm:px-6">
-      <p className="min-w-0 flex-1 text-xs font-medium leading-snug text-white sm:text-sm">
-        Text us for updates, resources, and help
-      </p>
-      <div className="flex shrink-0 items-center gap-2">
-        <a
-          href={getWhatsAppUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-xl bg-white px-4 py-1.5 text-xs font-bold text-[#ea580c] shadow-sm transition-colors hover:bg-orange-50 sm:text-sm"
-        >
-          Text us
-        </a>
-        <button
-          type="button"
-          onClick={dismiss}
-          aria-label="Dismiss"
-          className="rounded-lg p-1 text-white/70 transition-colors hover:bg-white/15 hover:text-white"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
-    </div>
-  );
-
+    if (active && !viewed.current) {
+      trackEvent("batch_banner_view");
+      viewed.current = true;
+    }
+  }, [active]);
+  if (!active) return null;
+  const batch = publicExperience.batch;
   return (
-    <>
-      {/* Desktop: fixed top below nav */}
-      <div
-        className={cn(
-          "fixed left-0 right-0 z-40 hidden bg-[#ea580c] shadow-lg transition-[opacity,transform] duration-300 ease-out sm:block",
-          "top-16 sm:top-20",
-          visible ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-full opacity-0"
-        )}
-        role="banner"
-        aria-label="Text us invite"
+    <div className="pt-16 sm:pt-[4.25rem]">
+      <aside
+        aria-label="New batches"
+        className="border-y border-crimson/15 bg-rose-50"
       >
-        {barContent}
-      </div>
-
-      {/* Mobile: fixed bottom */}
-      <div
-        className={cn(
-          "fixed bottom-0 left-0 right-0 z-40 bg-[#ea580c] shadow-lg transition-[opacity,transform] duration-300 ease-out sm:hidden",
-          visible ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-full opacity-0"
-        )}
-        role="banner"
-        aria-label="Text us invite"
-      >
-        {barContent}
-      </div>
-    </>
+        <div className="mx-auto relative flex min-h-24 max-w-7xl flex-wrap items-center gap-3 px-4 py-3 sm:min-h-20 sm:flex-nowrap sm:px-6 lg:px-8">
+          {!dismissed && (
+            <>
+              <Sparkles
+                className="hidden h-6 w-6 shrink-0 text-crimson motion-safe:animate-pulse sm:block"
+                aria-hidden
+              />
+              <p className="min-w-0 basis-full pr-10 text-sm sm:basis-auto sm:flex-1 sm:pr-0 leading-relaxed text-ink">
+                <strong className="block sm:inline">{batch.headline} </strong>
+                {batch.message}
+              </p>
+              <a
+                href={batch.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-crimson px-4 py-2 text-xs font-semibold text-white hover:bg-crimson-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson"
+                onClick={() => {
+                  trackEvent("batch_banner_click");
+                  trackEvent("registration_cta_click", {
+                    surface: "batch_banner",
+                  });
+                }}
+              >
+                {batch.cta}
+                <ArrowUpRight className="h-4 w-4" aria-hidden />
+              </a>
+              <button
+                onClick={() => setDismissed(true)}
+                className="absolute right-2 top-2 flex h-11 w-11 shrink-0 sm:static items-center justify-center rounded-xl text-slate hover:bg-rose-100 focus-visible:outline-2 focus-visible:outline-crimson"
+                aria-label="Dismiss batch announcement"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </>
+          )}
+          {dismissed && (
+            <p className="text-sm text-slate">
+              English with Miss Jay · Learn. Practise. Improve.
+            </p>
+          )}
+        </div>
+      </aside>
+    </div>
   );
 }

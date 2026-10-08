@@ -2,10 +2,18 @@
 
 import Link from "next/link";
 import type { AnchorHTMLAttributes } from "react";
-import { trackCourseClick, trackOutboundLink, trackWhatsAppClick } from "@/lib/analytics";
+import {
+  trackCourseClick,
+  trackEvent,
+  trackOutboundLink,
+  trackWhatsAppClick,
+} from "@/lib/analytics";
 import { getWhatsAppUrl, isInvalidWhatsAppLink } from "@/lib/contact";
 
-type TrackedWhatsAppProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+type TrackedWhatsAppProps = Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+> & {
   href: string;
   location: string;
   variant?: "group";
@@ -44,9 +52,19 @@ export function TrackedWhatsAppLink({
   );
 }
 
-type OutboundChannel = "youtube" | "instagram" | "facebook" | "drive" | "enrol" | "community" | "other";
+type OutboundChannel =
+  | "youtube"
+  | "instagram"
+  | "facebook"
+  | "drive"
+  | "enrol"
+  | "community"
+  | "other";
 
-type TrackedOutboundProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, "href"> & {
+type TrackedOutboundProps = Omit<
+  AnchorHTMLAttributes<HTMLAnchorElement>,
+  "href"
+> & {
   href: string;
   channel: OutboundChannel;
 };
@@ -63,6 +81,10 @@ export function TrackedOutboundLink({
       href={href}
       onClick={(e) => {
         trackOutboundLink(href, channel);
+        if (channel === "enrol")
+          trackEvent("registration_cta_click", {
+            surface: "public_enrolment_link",
+          });
         onClick?.(e);
       }}
       {...rest}
@@ -72,13 +94,21 @@ export function TrackedOutboundLink({
   );
 }
 
-type TrackedCourseSyllabusProps = Omit<React.ComponentProps<typeof Link>, "href"> & {
+type TrackedCourseSyllabusProps = Omit<
+  React.ComponentProps<typeof Link>,
+  "href"
+> & {
   href: string;
   courseId: string;
 };
 
 /** Internal navigation to a course detail page (vault card "View syllabus"). */
-export function TrackedCourseSyllabusLink({ href, courseId, onClick, ...rest }: TrackedCourseSyllabusProps) {
+export function TrackedCourseSyllabusLink({
+  href,
+  courseId,
+  onClick,
+  ...rest
+}: TrackedCourseSyllabusProps) {
   return (
     <Link
       href={href}
