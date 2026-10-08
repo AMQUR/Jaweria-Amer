@@ -14,7 +14,8 @@ import {
 } from "@/lib/course-offerings";
 
 export default function CoursesPage() {
-  const [activeCategory, setActiveCategory] = useState<MarketingCourseFilterValue>("all");
+  const [activeCategory, setActiveCategory] =
+    useState<MarketingCourseFilterValue>("all");
 
   const marketingCourses = listMarketingCourses(courses);
 
@@ -34,14 +35,13 @@ export default function CoursesPage() {
             Course directory
           </h1>
           <p className="mb-7 max-w-xl text-sm leading-relaxed text-white/70 sm:text-base">
-            Guided live programmes for Cambridge O Level, IGCSE, and A Level English. Every course includes
-            checked work, personalised feedback, biweekly tests, and progress reports — not just materials.
+            Guided live programmes for Cambridge O Level, IGCSE, and A Level
+            English. Every course includes checked work, personalised feedback,
+            biweekly tests, and progress reports — not just materials.
           </p>
           <TrackedOutboundLink
             href={ENROL_NOW_URL}
             channel="enrol"
-            target="_blank"
-            rel="noopener noreferrer"
             className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-crimson shadow-md transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:scale-[0.98] motion-reduce:hover:translate-y-0"
           >
             Enrol Now
@@ -55,14 +55,16 @@ export default function CoursesPage() {
           {/* Nudge band — free resources vs guided programme */}
           <div className="mb-10 flex flex-col items-start justify-between gap-4 rounded-2xl border border-crimson/15 bg-crimson/5 px-6 py-5 sm:mb-12 sm:flex-row sm:items-center">
             <p className="max-w-2xl text-sm leading-relaxed text-slate sm:text-base">
-              <span className="font-semibold text-ink">Want checked copies, personalised feedback, and progress reports?</span>{" "}
-              Use the free resources to start, then join the guided batch for structure and accountability.
+              <span className="font-semibold text-ink">
+                Want checked copies, personalised feedback, and progress
+                reports?
+              </span>{" "}
+              Use the free resources to start, then join the guided batch for
+              structure and accountability.
             </p>
             <TrackedOutboundLink
               href={ENROL_NOW_URL}
               channel="enrol"
-              target="_blank"
-              rel="noopener noreferrer"
               className="inline-flex shrink-0 items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition-[transform,box-shadow] duration-200 ease-out hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0"
             >
               Enrol Now
@@ -79,7 +81,7 @@ export default function CoursesPage() {
                   "rounded-full border px-4 py-2 text-sm font-medium transition-all",
                   activeCategory === cat.value
                     ? "border-primary bg-primary text-primary-foreground shadow-[0_2px_8px_rgba(112,20,20,0.2)]"
-                    : "border-border/80 bg-white text-slate shadow-sm hover:border-border hover:bg-muted/40"
+                    : "border-border/80 bg-white text-slate shadow-sm hover:border-border hover:bg-muted/40",
                 )}
               >
                 {cat.label}
@@ -94,7 +96,9 @@ export default function CoursesPage() {
           </div>
 
           {filtered.length === 0 && (
-            <p className="py-20 text-center text-sm text-slate">No courses found in this category.</p>
+            <p className="py-20 text-center text-sm text-slate">
+              No courses found in this category.
+            </p>
           )}
         </div>
       </section>

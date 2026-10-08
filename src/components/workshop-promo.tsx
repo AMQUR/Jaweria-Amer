@@ -29,14 +29,16 @@ function getValidBanner(src?: string): string {
 /**
  * Homepage hero banner (image-driven — artwork includes all copy) + reserve CTA block below.
  */
-export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: string }) {
+export function WorkshopPromoSection({
+  bannerImagePath,
+}: {
+  bannerImagePath?: string;
+}) {
   const heroRef = useRef<HTMLDivElement | null>(null);
-  const [src, setSrc] = useState(() => getValidBanner(bannerImagePath));
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  const candidateSrc = getValidBanner(bannerImagePath);
+  const src = failedSrc === candidateSrc ? DEFAULT_BANNER : candidateSrc;
   const registerHref = workshopRegisterUrl();
-
-  useEffect(() => {
-    setSrc(getValidBanner(bannerImagePath));
-  }, [bannerImagePath]);
 
   useEffect(() => {
     const el = heroRef.current;
@@ -86,7 +88,7 @@ export function WorkshopPromoSection({ bannerImagePath }: { bannerImagePath?: st
             className="object-cover object-center"
             onError={() => {
               if (src !== DEFAULT_BANNER) {
-                setSrc(DEFAULT_BANNER);
+                setFailedSrc(candidateSrc);
               }
             }}
           />

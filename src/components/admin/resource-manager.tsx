@@ -17,7 +17,12 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
@@ -48,9 +53,13 @@ type ResourceFormState = {
   file: File | null;
 };
 
-const PDF_CATEGORY_OPTIONS = CMS_RESOURCE_CATEGORY_OPTIONS.filter((item) => item.value !== "quick-worksheets");
+const PDF_CATEGORY_OPTIONS = CMS_RESOURCE_CATEGORY_OPTIONS.filter(
+  (item) => item.value !== "quick-worksheets",
+);
 
-const emptyForm = (defaultCategory?: ResourceFormState["category"]): ResourceFormState => ({
+const emptyForm = (
+  defaultCategory?: ResourceFormState["category"],
+): ResourceFormState => ({
   title: "",
   category: defaultCategory ?? "general-notes",
   subCategory: "",
@@ -88,7 +97,7 @@ type ResourceManagerProps = {
 
 export function ResourceManager({ initialResources }: ResourceManagerProps) {
   const [resources, setResources] = useState<CmsResourceRecord[]>(() =>
-    Array.isArray(initialResources) ? initialResources : []
+    Array.isArray(initialResources) ? initialResources : [],
   );
   const [loading, setLoading] = useState(initialResources === undefined);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -97,25 +106,30 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
   const [search, setSearch] = useState("");
   const [form, setForm] = useState<ResourceFormState>(emptyForm());
   const [lastSaved, setLastSaved] = useState<string | null>(null);
-  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(new Set());
+  const [collapsedSections, setCollapsedSections] = useState<Set<string>>(
+    new Set(),
+  );
 
-  async function loadResources() {
-    try {
-      setLoading(true);
-      const response = await fetch("/api/admin/resources", { cache: "no-store" });
-      const data = response.ok ? await response.json() : null;
-      const list: CmsResourceRecord[] =
-        data && typeof data === "object" && Array.isArray((data as { resources?: unknown }).resources)
-          ? (data as { resources: CmsResourceRecord[] }).resources
-          : Array.isArray(data)
-            ? (data as CmsResourceRecord[])
-            : [];
-      setResources(list);
-    } catch {
-      setResources([]);
-    } finally {
-      setLoading(false);
-    }
+  function loadResources() {
+    return fetch("/api/admin/resources", { cache: "no-store" })
+      .then(async (response) => {
+        const data = response.ok ? await response.json() : null;
+        const list: CmsResourceRecord[] =
+          data &&
+          typeof data === "object" &&
+          Array.isArray((data as { resources?: unknown }).resources)
+            ? (data as { resources: CmsResourceRecord[] }).resources
+            : Array.isArray(data)
+              ? (data as CmsResourceRecord[])
+              : [];
+        setResources(list);
+      })
+      .catch(() => {
+        setResources([]);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }
 
   useEffect(() => {
@@ -165,7 +179,8 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       return;
     }
     try {
-      const newVis = resource.visibility === "published" ? "draft" : "published";
+      const newVis =
+        resource.visibility === "published" ? "draft" : "published";
       const body = new FormData();
       body.set("id", resource.id);
       body.set("title", resource.title ?? "");
@@ -178,15 +193,26 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       body.set("level", resource.level ?? "O Level");
       body.set("year", resource.year ?? "Practice");
       body.set("description", resource.description ?? "");
-      body.set("autoDetectSection", String(resource.autoDetectSection ?? false));
+      body.set(
+        "autoDetectSection",
+        String(resource.autoDetectSection ?? false),
+      );
 
-      const response = await fetch("/api/admin/resources", { method: "POST", body });
+      const response = await fetch("/api/admin/resources", {
+        method: "POST",
+        body,
+      });
       const data = await response.json();
       if (!response.ok) {
-        toast.error((data as { error?: string }).error ?? "Could not update visibility.");
+        toast.error(
+          (data as { error?: string }).error ?? "Could not update visibility.",
+        );
         return;
       }
-      toast.success(newVis === "published" ? "Resource published." : "Resource hidden.");
+      toast.success(
+        newVis === "published" ? "Resource published." : "Resource hidden.",
+      );
+      setLoading(true);
       await loadResources();
     } catch {
       toast.error("Network error — could not update visibility.");
@@ -209,10 +235,15 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
     });
     const data = await response.json();
     if (!response.ok) {
-      toast.error((data as { error?: string }).error ?? `Could not ${label} resource.`);
+      toast.error(
+        (data as { error?: string }).error ?? `Could not ${label} resource.`,
+      );
       return;
     }
-    toast.success(isStatic ? "Resource hidden from public." : "Resource deleted.");
+    toast.success(
+      isStatic ? "Resource hidden from public." : "Resource deleted.",
+    );
+    setLoading(true);
     await loadResources();
   }
 
@@ -221,7 +252,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
 
     // Client-side file size guard
     if (form.file && form.file.size > MAX_FILE_BYTES) {
-      toast.error(`File is too large (${(form.file.size / 1024 / 1024).toFixed(1)} MB). Max allowed: 20 MB.`);
+      toast.error(
+        `File is too large (${(form.file.size / 1024 / 1024).toFixed(1)} MB). Max allowed: 20 MB.`,
+      );
       return;
     }
 
@@ -280,17 +313,23 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
         xhr.send(body);
       });
     } else {
-      const response = await fetch("/api/admin/resources", { method: "POST", body });
+      const response = await fetch("/api/admin/resources", {
+        method: "POST",
+        body,
+      });
       const data = await response.json();
       setSaving(false);
       if (!response.ok) {
-        toast.error((data as { error?: string }).error ?? "Could not save resource.");
+        toast.error(
+          (data as { error?: string }).error ?? "Could not save resource.",
+        );
         return;
       }
       setLastSaved(form.title);
       toast.success(form.id ? "Resource updated." : "Resource added.");
       setDialogOpen(false);
       setForm(emptyForm());
+      setLoading(true);
       await loadResources();
     }
   }
@@ -305,7 +344,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
   }
 
   const totalCount = resources.filter((r) => !r.deleted).length;
-  const publishedCount = resources.filter((r) => !r.deleted && r.visibility === "published").length;
+  const publishedCount = resources.filter(
+    (r) => !r.deleted && r.visibility === "published",
+  ).length;
 
   return (
     <div className="space-y-6">
@@ -313,7 +354,8 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       {lastSaved && (
         <div className="flex items-center justify-between rounded-2xl border border-green-200 bg-green-50 px-5 py-3">
           <p className="text-sm font-medium text-green-700">
-            ✓ &ldquo;{lastSaved}&rdquo; saved successfully — live on site after next deploy.
+            ✓ &ldquo;{lastSaved}&rdquo; saved successfully — live on site after
+            next deploy.
           </p>
           <button
             type="button"
@@ -328,9 +370,12 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink">Resources Control Center</h1>
+          <h1 className="font-serif text-2xl font-semibold tracking-tight text-ink">
+            Resources Control Center
+          </h1>
           <p className="mt-1 text-sm text-slate">
-            {totalCount} resources · {publishedCount} published. Sections mirror the public Resources page layout.
+            {totalCount} resources · {publishedCount} published. Sections mirror
+            the public Resources page layout.
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -354,7 +399,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
       <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-white px-5 py-3 text-xs shadow-sm">
         <span className="font-medium text-slate">Badges:</span>
         <Badge variant="builtin">Built-in</Badge>
-        <span className="text-muted-foreground">= static resource (read-only)</span>
+        <span className="text-muted-foreground">
+          = static resource (read-only)
+        </span>
         <Badge variant="published">published</Badge>
         <span className="text-muted-foreground">= visible to students</span>
         <Badge variant="draft">draft</Badge>
@@ -363,18 +410,27 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
 
       {/* Section cards */}
       {loading ? (
-        <div className="p-12 text-center text-sm text-slate">Loading resources…</div>
+        <div className="p-12 text-center text-sm text-slate">
+          Loading resources…
+        </div>
       ) : (
         <div className="space-y-4">
           {SECTION_ORDER.map((category) => {
-            const sectionVisible = visibleResources.filter((r) => r.category === category && !r.deleted);
-            const hiddenCount = resources.filter((r) => r.category === category && r.deleted).length;
+            const sectionVisible = visibleResources.filter(
+              (r) => r.category === category && !r.deleted,
+            );
+            const hiddenCount = resources.filter(
+              (r) => r.category === category && r.deleted,
+            ).length;
             const label = CMS_RESOURCE_CATEGORY_LABELS[category];
             const collapsed = collapsedSections.has(category);
             const isQuickWorksheets = category === "quick-worksheets";
 
             return (
-              <div key={category} className="overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm">
+              <div
+                key={category}
+                className="overflow-hidden rounded-2xl border border-border/60 bg-white shadow-sm"
+              >
                 {/* Section header */}
                 <div className="flex items-center gap-3 border-b border-border/60 bg-cream/40 px-5 py-3.5">
                   <button
@@ -387,7 +443,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                     ) : (
                       <ChevronDown className="h-4 w-4 shrink-0 text-slate-light" />
                     )}
-                    <span className="font-serif text-base font-semibold tracking-tight text-ink">{label}</span>
+                    <span className="font-serif text-base font-semibold tracking-tight text-ink">
+                      {label}
+                    </span>
                     <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
                       {sectionVisible.length}
                     </span>
@@ -399,7 +457,11 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                   </button>
                   {isQuickWorksheets ? (
                     <Link href="/admin/mcq">
-                      <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-1.5 text-xs"
+                      >
                         <ExternalLink className="h-3.5 w-3.5" />
                         Open MCQ Builder
                       </Button>
@@ -409,7 +471,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                       variant="outline"
                       size="sm"
                       className="gap-1.5 text-xs"
-                      onClick={() => openCreate(category as ResourceFormState["category"])}
+                      onClick={() =>
+                        openCreate(category as ResourceFormState["category"])
+                      }
                     >
                       <Plus className="h-3.5 w-3.5" />
                       Add
@@ -423,7 +487,10 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                     {isQuickWorksheets ? (
                       <p className="py-2 text-sm text-slate">
                         Quick Worksheets (MCQ assessments) are managed from the{" "}
-                        <Link href="/admin/mcq" className="font-medium text-crimson hover:underline">
+                        <Link
+                          href="/admin/mcq"
+                          className="font-medium text-crimson hover:underline"
+                        >
                           MCQ Builder
                         </Link>
                         . Use that page to create, edit, and preview quizzes.
@@ -432,14 +499,20 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                       <div className="flex flex-col items-center gap-3 py-8 text-center">
                         <FileText className="h-8 w-8 text-muted-foreground/30" />
                         <p className="text-sm text-muted-foreground">
-                          {search ? "No matching resources in this section." : "No resources yet — add the first one."}
+                          {search
+                            ? "No matching resources in this section."
+                            : "No resources yet — add the first one."}
                         </p>
                         {!search && (
                           <Button
                             variant="outline"
                             size="sm"
                             className="gap-2"
-                            onClick={() => openCreate(category as ResourceFormState["category"])}
+                            onClick={() =>
+                              openCreate(
+                                category as ResourceFormState["category"],
+                              )
+                            }
                           >
                             <Plus className="h-3.5 w-3.5" />
                             Add Resource
@@ -476,12 +549,17 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
             </DialogTitle>
           </DialogHeader>
 
-          <form className="space-y-5" onSubmit={(event) => void handleSubmit(event)}>
+          <form
+            className="space-y-5"
+            onSubmit={(event) => void handleSubmit(event)}
+          >
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Title">
                 <Input
                   value={form.title}
-                  onChange={(event) => setForm((prev) => ({ ...prev, title: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, title: event.target.value }))
+                  }
                   required
                 />
               </Field>
@@ -490,12 +568,21 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                   <Input
                     type="file"
                     accept=".pdf"
-                    onChange={(event) => setForm((prev) => ({ ...prev, file: event.target.files?.[0] ?? null }))}
+                    onChange={(event) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        file: event.target.files?.[0] ?? null,
+                      }))
+                    }
                   />
                   {form.file && (
-                    <p className={`text-xs ${form.file.size > MAX_FILE_BYTES ? "text-red-600 font-medium" : "text-slate"}`}>
-                      {form.file.name} — {(form.file.size / 1024 / 1024).toFixed(1)} MB
-                      {form.file.size > MAX_FILE_BYTES && " (exceeds 20 MB limit)"}
+                    <p
+                      className={`text-xs ${form.file.size > MAX_FILE_BYTES ? "text-red-600 font-medium" : "text-slate"}`}
+                    >
+                      {form.file.name} —{" "}
+                      {(form.file.size / 1024 / 1024).toFixed(1)} MB
+                      {form.file.size > MAX_FILE_BYTES &&
+                        " (exceeds 20 MB limit)"}
                     </p>
                   )}
                 </div>
@@ -510,7 +597,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                     <Upload className="h-3.5 w-3.5" />
                     Uploading…
                   </span>
-                  <span className="tabular-nums font-medium text-ink">{uploadProgress}%</span>
+                  <span className="tabular-nums font-medium text-ink">
+                    {uploadProgress}%
+                  </span>
                 </div>
                 <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                   <div
@@ -525,7 +614,12 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
               <SelectField
                 label="Category"
                 value={form.category}
-                onChange={(value) => setForm((prev) => ({ ...prev, category: value as ResourceFormState["category"] }))}
+                onChange={(value) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    category: value as ResourceFormState["category"],
+                  }))
+                }
               >
                 {PDF_CATEGORY_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -538,7 +632,11 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                   className="w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm shadow-sm"
                   value={form.visibility}
                   onChange={(event) =>
-                    setForm((prev) => ({ ...prev, visibility: event.target.value as ResourceFormState["visibility"] }))
+                    setForm((prev) => ({
+                      ...prev,
+                      visibility: event.target
+                        .value as ResourceFormState["visibility"],
+                    }))
                   }
                 >
                   <option value="published">Published</option>
@@ -549,7 +647,12 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                 <select
                   className="w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm shadow-sm"
                   value={form.subCategory}
-                  onChange={(event) => setForm((prev) => ({ ...prev, subCategory: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      subCategory: event.target.value,
+                    }))
+                  }
                   disabled={form.category !== "general-notes"}
                 >
                   <option value="">Auto / none</option>
@@ -565,14 +668,19 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
             <div className="rounded-2xl border border-border/60 bg-cream p-4">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm font-medium text-ink">Auto-detect paper and section</p>
+                  <p className="text-sm font-medium text-ink">
+                    Auto-detect paper and section
+                  </p>
                   <p className="text-xs text-muted-foreground">
-                    Use title + filename keywords to classify Paper 1 / Paper 2 and section labels.
+                    Use title + filename keywords to classify Paper 1 / Paper 2
+                    and section labels.
                   </p>
                 </div>
                 <Switch
                   checked={form.autoDetectSection}
-                  onCheckedChange={(checked) => setForm((prev) => ({ ...prev, autoDetectSection: checked }))}
+                  onCheckedChange={(checked) =>
+                    setForm((prev) => ({ ...prev, autoDetectSection: checked }))
+                  }
                 />
               </div>
             </div>
@@ -582,7 +690,9 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                 <input
                   className="w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm shadow-sm"
                   value={form.paper}
-                  onChange={(event) => setForm((prev) => ({ ...prev, paper: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, paper: event.target.value }))
+                  }
                   placeholder="Paper 1"
                 />
               </Field>
@@ -590,14 +700,21 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
                 <input
                   className="w-full rounded-2xl border border-input bg-white px-3 py-2.5 text-sm shadow-sm"
                   value={form.section}
-                  onChange={(event) => setForm((prev) => ({ ...prev, section: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      section: event.target.value,
+                    }))
+                  }
                   placeholder="Comprehension"
                 />
               </Field>
               <Field label="Year / session">
                 <Input
                   value={form.year}
-                  onChange={(event) => setForm((prev) => ({ ...prev, year: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, year: event.target.value }))
+                  }
                 />
               </Field>
             </div>
@@ -606,13 +723,20 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
               <Field label="Subject">
                 <Input
                   value={form.subject}
-                  onChange={(event) => setForm((prev) => ({ ...prev, subject: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      subject: event.target.value,
+                    }))
+                  }
                 />
               </Field>
               <Field label="Level">
                 <Input
                   value={form.level}
-                  onChange={(event) => setForm((prev) => ({ ...prev, level: event.target.value }))}
+                  onChange={(event) =>
+                    setForm((prev) => ({ ...prev, level: event.target.value }))
+                  }
                 />
               </Field>
             </div>
@@ -621,21 +745,37 @@ export function ResourceManager({ initialResources }: ResourceManagerProps) {
               <Textarea
                 rows={4}
                 value={form.description}
-                onChange={(event) => setForm((prev) => ({ ...prev, description: event.target.value }))}
+                onChange={(event) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    description: event.target.value,
+                  }))
+                }
               />
             </Field>
 
             <div className="flex items-center justify-between rounded-2xl border border-border/60 bg-cream p-4">
               <p className="text-xs leading-relaxed text-muted-foreground">
                 Uploaded PDFs are saved into{" "}
-                <code className="rounded bg-white px-1.5 py-0.5">public/resources/&lt;category&gt;/</code> and served
-                locally. On Vercel, uploads require a writable storage backend.
+                <code className="rounded bg-white px-1.5 py-0.5">
+                  public/resources/&lt;category&gt;/
+                </code>{" "}
+                and served locally. On Vercel, uploads require a writable
+                storage backend.
               </p>
               <div className="flex items-center gap-3">
-                <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setDialogOpen(false)}
+                >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={saving} className="gap-2 shadow-sm">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="gap-2 shadow-sm"
+                >
                   {saving && uploadProgress !== null ? (
                     <>
                       <Upload className="h-4 w-4" />
@@ -682,7 +822,9 @@ function ResourceRow({
 
       {/* Info */}
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-medium text-ink">{resource.title}</p>
+        <p className="truncate text-sm font-medium text-ink">
+          {resource.title}
+        </p>
         <div className="mt-1 flex flex-wrap items-center gap-1.5">
           {resource.paper && (
             <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
@@ -690,7 +832,9 @@ function ResourceRow({
             </span>
           )}
           {resource.section && (
-            <span className="text-[11px] text-muted-foreground">{resource.section}</span>
+            <span className="text-[11px] text-muted-foreground">
+              {resource.section}
+            </span>
           )}
           <Badge variant={isPublished ? "published" : "draft"}>
             {isPublished ? "published" : "draft"}
@@ -724,7 +868,11 @@ function ResourceRow({
               aria-label={isPublished ? "Hide resource" : "Publish resource"}
               title={isPublished ? "Hide from public" : "Make public"}
             >
-              {isPublished ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {isPublished ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </button>
             {/* Edit */}
             <button
@@ -779,7 +927,7 @@ function Badge({
         "rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide",
         variant === "builtin" && "bg-blue-50 text-blue-600",
         variant === "published" && "bg-green-50 text-green-700",
-        variant === "draft" && "bg-amber-50 text-amber-700"
+        variant === "draft" && "bg-amber-50 text-amber-700",
       )}
     >
       {children}
@@ -787,7 +935,13 @@ function Badge({
   );
 }
 
-function Field({ label, children }: { label: string; children: React.ReactNode }) {
+function Field({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
     <label className="space-y-1.5">
       <Label>{label}</Label>

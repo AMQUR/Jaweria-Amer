@@ -10,7 +10,8 @@ declare global {
 }
 
 function hasPublicGaId(): boolean {
-  return Boolean(process.env.NEXT_PUBLIC_GA_ID?.trim());
+  const id = process.env.NEXT_PUBLIC_GA_ID?.trim() ?? "";
+  return /^G-[A-Z0-9]+$/.test(id) && !/^G-X+$/.test(id);
 }
 
 function sendGtag(...args: unknown[]) {
@@ -26,7 +27,10 @@ export function trackEvent(name: string, params?: Record<string, unknown>) {
   sendGtag("event", name, params ?? {});
 }
 
-export function trackWhatsAppClick(params?: { location?: string; variant?: "direct" | "group" }) {
+export function trackWhatsAppClick(params?: {
+  location?: string;
+  variant?: "direct" | "group";
+}) {
   trackEvent("whatsapp_click", {
     variant: params?.variant ?? "direct",
     ...(params?.location ? { location: params.location } : {}),
@@ -36,7 +40,7 @@ export function trackWhatsAppClick(params?: { location?: string; variant?: "dire
 export function trackResourceView(
   resourceId: string,
   resourceTitle?: string,
-  extra?: Record<string, unknown>
+  extra?: Record<string, unknown>,
 ) {
   trackEvent("resource_view", {
     resource_id: resourceId,

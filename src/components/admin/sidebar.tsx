@@ -26,6 +26,7 @@ const navItems = [
   { label: "Homepage", href: "/admin/homepage", icon: LibraryBig },
   { label: "Uploads", href: "/admin/uploads", icon: Image },
   { label: "Courses", href: "/admin/courses", icon: BookOpen },
+  { label: "Registration interest", href: "/admin/registrations", icon: Users },
   { label: "Leads", href: "/admin/leads", icon: Users },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
@@ -37,15 +38,25 @@ export function AdminSidebar() {
   const sidebar = (
     <div className="flex h-full flex-col bg-crimson-dark text-white">
       <div className="border-b border-white/10 p-6">
-        <Link href="/admin" className="flex flex-col" onClick={() => setMobileOpen(false)}>
-          <span className="font-serif text-lg font-semibold tracking-tight">Jaweria Amer</span>
-          <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase">Control Center</span>
+        <Link
+          href="/admin"
+          className="flex flex-col"
+          onClick={() => setMobileOpen(false)}
+        >
+          <span className="font-serif text-lg font-semibold tracking-tight">
+            Jaweria Amer
+          </span>
+          <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase">
+            Control Center
+          </span>
         </Link>
       </div>
 
       <nav className="flex-1 space-y-1 px-3 py-5">
         {navItems.map((item) => {
-          const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href));
+          const isActive =
+            pathname === item.href ||
+            (item.href !== "/admin" && pathname.startsWith(item.href));
           return (
             <Link
               key={item.href}
@@ -55,7 +66,7 @@ export function AdminSidebar() {
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
                 isActive
                   ? "bg-blush font-medium text-ink shadow-sm ring-1 ring-white/25"
-                  : "text-white/65 hover:bg-white/10 hover:text-white"
+                  : "text-white/65 hover:bg-white/10 hover:text-white",
               )}
             >
               <item.icon className="w-4.5 h-4.5" />
@@ -98,8 +109,13 @@ export function AdminSidebar() {
       {/* Mobile sidebar overlay */}
       {mobileOpen && (
         <>
-          <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={() => setMobileOpen(false)} />
-          <aside className="fixed inset-y-0 left-0 w-64 z-50 lg:hidden">{sidebar}</aside>
+          <div
+            className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+            onClick={() => setMobileOpen(false)}
+          />
+          <aside className="fixed inset-y-0 left-0 w-64 z-50 lg:hidden">
+            {sidebar}
+          </aside>
         </>
       )}
     </>

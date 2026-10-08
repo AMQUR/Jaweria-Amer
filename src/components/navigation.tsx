@@ -78,8 +78,6 @@ export function Navigation() {
             <div className="ml-1 flex items-center gap-2 border-l border-border/60 pl-8">
               <Link
                 href={ENROL_NOW_URL}
-                target="_blank"
-                rel="noopener noreferrer"
                 onClick={() =>
                   trackEvent("registration_cta_click", {
                     surface: "nav_desktop",
@@ -133,8 +131,6 @@ export function Navigation() {
                 <div className="mt-6 flex flex-col gap-2 border-t border-border/60 pt-6">
                   <Link
                     href={ENROL_NOW_URL}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     onClick={() => {
                       trackEvent("registration_cta_click", {
                         surface: "nav_mobile_sheet",

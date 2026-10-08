@@ -1,9 +1,20 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { X, CheckCircle2, Circle, ClipboardCheck, CheckCircle, XCircle } from "lucide-react";
-import { CARD_BASE, CARD_BUTTON, CARD_CONTENT } from "@/components/resource-card-system";
+import {
+  X,
+  CheckCircle2,
+  Circle,
+  ClipboardCheck,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
+import {
+  CARD_BASE,
+  CARD_BUTTON,
+  CARD_CONTENT,
+} from "@/components/resource-card-system";
 import {
   READINESS_QUIZ_SECTIONS,
   READINESS_QUIZ_THRESHOLD,
@@ -41,13 +52,17 @@ function loadSaved(): SavedProgress {
 }
 
 function persist(data: SavedProgress) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {
+    /* Progress still works when browser storage is unavailable. */
+  }
 }
 
 function computeScore(answers: Record<number, number>): number {
   return readinessQuizQuestions.reduce(
     (acc, q, i) => acc + (answers[i] === q.answer ? 1 : 0),
-    0
+    0,
   );
 }
 
@@ -59,12 +74,27 @@ export function Paper1ChecklistBanner() {
   const [rewardPercent, setRewardPercent] = useState(0);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const restored = useRef(false);
+  function openQuiz() {
+    if (restored.current) {
+      setQuizOpen(true);
+      return;
+    }
+    restored.current = true;
     const saved = loadSaved();
     const parsedAnswers: Record<number, number> = {};
     if (saved.answers) {
       for (const [key, value] of Object.entries(saved.answers)) {
-        parsedAnswers[Number(key)] = value;
+        const index = Number(key);
+        if (
+          Number.isInteger(index) &&
+          index >= 0 &&
+          index < readinessQuizQuestions.length &&
+          Number.isInteger(value) &&
+          value >= 0 &&
+          value < readinessQuizQuestions[index].options.length
+        )
+          parsedAnswers[index] = value;
       }
     }
     setAnswers(parsedAnswers);
@@ -73,13 +103,17 @@ export function Paper1ChecklistBanner() {
       const score = computeScore(parsedAnswers);
       setRewardPercent(Math.round((score / READINESS_QUIZ_TOTAL) * 100));
     }
-  }, []);
+    setQuizOpen(true);
+  }
 
   function selectAnswer(questionIndex: number, optionIndex: number) {
     if (submitted) return;
     setAnswers((prev) => {
       const next = { ...prev, [questionIndex]: optionIndex };
-      persist({ answers: Object.fromEntries(Object.entries(next)), submitted: false });
+      persist({
+        answers: Object.fromEntries(Object.entries(next)),
+        submitted: false,
+      });
       return next;
     });
   }
@@ -104,7 +138,10 @@ export function Paper1ChecklistBanner() {
   const rewardSrc = isReady ? POKEMON_HIGH : POKEMON_LOW;
 
   const questionsBySection = useMemo(() => {
-    const map = new Map<ReadinessQuizSectionId, { index: number; question: (typeof readinessQuizQuestions)[0] }[]>();
+    const map = new Map<
+      ReadinessQuizSectionId,
+      { index: number; question: (typeof readinessQuizQuestions)[0] }[]
+    >();
     for (const section of READINESS_QUIZ_SECTIONS) {
       map.set(section.id, []);
     }
@@ -132,12 +169,13 @@ export function Paper1ChecklistBanner() {
               Are you ready for the October/November batch?
             </h2>
             <p className="max-w-2xl text-sm leading-relaxed text-amber-800/70 sm:text-base">
-              Run the readiness check. Score 80% or more and you&apos;re set for Oct/Nov — below that and May/June is the smarter call.
+              Run the readiness check. Score 80% or more and you&apos;re set for
+              Oct/Nov — below that and May/June is the smarter call.
             </p>
           </div>
         </div>
         <button
-          onClick={() => setQuizOpen(true)}
+          onClick={openQuiz}
           className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-amber-500 text-white hover:bg-amber-600 sm:w-auto`}
         >
           Check my readiness
@@ -189,7 +227,9 @@ export function Paper1ChecklistBanner() {
                 <div className="h-2 w-full overflow-hidden rounded-full bg-white/20">
                   <div
                     className="h-full rounded-full bg-white transition-all duration-500 ease-out"
-                    style={{ width: `${submitted ? rewardPercent : progressPct}%` }}
+                    style={{
+                      width: `${submitted ? rewardPercent : progressPct}%`,
+                    }}
                   />
                 </div>
                 <p className="mt-1.5 text-[11px] text-amber-100/70">
@@ -221,7 +261,9 @@ export function Paper1ChecklistBanner() {
                         const selected = answers[index];
                         const isCorrect = submitted && selected === q.answer;
                         const isWrong =
-                          submitted && selected !== undefined && selected !== q.answer;
+                          submitted &&
+                          selected !== undefined &&
+                          selected !== q.answer;
 
                         return (
                           <li
@@ -230,7 +272,7 @@ export function Paper1ChecklistBanner() {
                               "rounded-xl border px-4 py-3 transition-all duration-150",
                               !submitted && "border-border/60 bg-white",
                               isCorrect && "border-green-200 bg-green-50/60",
-                              isWrong && "border-red-200 bg-red-50/60"
+                              isWrong && "border-red-200 bg-red-50/60",
                             )}
                           >
                             <div className="mb-3 flex items-start gap-2">
@@ -239,7 +281,7 @@ export function Paper1ChecklistBanner() {
                                   "flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[11px] font-bold text-white",
                                   !submitted && "bg-amber-500",
                                   isCorrect && "bg-green-600",
-                                  isWrong && "bg-red-600"
+                                  isWrong && "bg-red-600",
                                 )}
                               >
                                 {index + 1}
@@ -252,9 +294,12 @@ export function Paper1ChecklistBanner() {
                             <div className="space-y-2 pl-8" role="radiogroup">
                               {q.options.map((option, optIdx) => {
                                 const isSelected = selected === optIdx;
-                                const isCorrectOpt = submitted && optIdx === q.answer;
+                                const isCorrectOpt =
+                                  submitted && optIdx === q.answer;
                                 const isWrongSelected =
-                                  submitted && isSelected && optIdx !== q.answer;
+                                  submitted &&
+                                  isSelected &&
+                                  optIdx !== q.answer;
 
                                 return (
                                   <button
@@ -279,7 +324,7 @@ export function Paper1ChecklistBanner() {
                                       submitted &&
                                         !isSelected &&
                                         !isCorrectOpt &&
-                                        "border-border/40 opacity-60"
+                                        "border-border/40 opacity-60",
                                     )}
                                   >
                                     {!submitted ? (
@@ -321,7 +366,7 @@ export function Paper1ChecklistBanner() {
                                 className={cn(
                                   "mt-3 rounded-lg px-3 py-2 pl-8 text-xs leading-relaxed",
                                   isCorrect && "bg-green-100/70 text-green-900",
-                                  isWrong && "bg-red-100/70 text-red-900"
+                                  isWrong && "bg-red-100/70 text-red-900",
                                 )}
                               >
                                 <span className="font-semibold">
@@ -364,7 +409,7 @@ export function Paper1ChecklistBanner() {
                     "rounded-xl px-5 py-2 text-sm font-semibold text-white transition-colors active:scale-95",
                     allAnswered
                       ? "bg-amber-500 hover:bg-amber-600"
-                      : "cursor-not-allowed bg-slate-300"
+                      : "cursor-not-allowed bg-slate-300",
                   )}
                 >
                   Submit
@@ -423,7 +468,11 @@ export function Paper1ChecklistBanner() {
             >
               <Image
                 src={rewardSrc}
-                alt={isReady ? "Ready for the October/November batch!" : "Aim for the May/June batch"}
+                alt={
+                  isReady
+                    ? "Ready for the October/November batch!"
+                    : "Aim for the May/June batch"
+                }
                 width={520}
                 height={726}
                 className="w-full rounded-2xl"
