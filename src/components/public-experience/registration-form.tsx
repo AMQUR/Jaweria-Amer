@@ -2,13 +2,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { PUBLIC_ENGLISH_SYLLABUSES } from "@/lib/course-offerings";
+import { isOLevelRegistration } from "@/lib/registration/contracts";
 import { trackEvent } from "@/lib/analytics";
 import { getWhatsAppUrl } from "@/lib/contact";
 
 export function RegistrationForm({ ticket }: { ticket: string }) {
   const [pending, setPending] = useState(false);
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState<"pending_account" | "needs_review" | "received" | null>(null);
+  const [course, setCourse] = useState("");
   const [error, setError] = useState("");
+  const oLevel = isOLevelRegistration(course);
   if (saved)
     return (
       <div
@@ -16,12 +19,14 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
         className="rounded-3xl border border-crimson/20 bg-rose-50 p-7"
       >
         <h2 className="font-serif text-2xl text-ink">
-          Your interest has been received.
+          We&apos;ve received your registration.
         </h2>
         <p className="mt-4 leading-relaxed text-slate">
-          Miss Jay’s team can review your request and contact you at the email
-          you provided with batch details and next steps. This is an enquiry,
-          not a confirmed enrollment or payment.
+          {saved === "needs_review"
+            ? "We need to confirm the right batch before a place is assigned. Miss Jay’s team will contact you at the email you provided. This is not a confirmed enrollment."
+            : saved === "pending_account"
+              ? "Your batch preference is saved and will be applied when your place is confirmed. This is not a confirmed enrollment or payment."
+              : "Miss Jay’s team can review your request and contact you at the email you provided. This is an enquiry, not a confirmed enrollment or payment."}
         </p>
         <Link
           className="mt-6 inline-flex min-h-11 items-center font-semibold text-crimson underline"
@@ -50,6 +55,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
               name: form.get("name"),
               email: form.get("email"),
               course: form.get("course"),
+              ...(oLevel ? { batch: form.get("batch") } : {}),
               consent: form.get("consent"),
               website: form.get("website"),
               ticket,
@@ -59,7 +65,12 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
           const result = await response.json();
           if (!response.ok || result.saved !== true)
             throw new Error(result.error || "Please try again.");
-          setSaved(true);
+          setSaved(
+            result.enrollment === "pending_account" ||
+              result.enrollment === "needs_review"
+              ? result.enrollment
+              : "received",
+          );
           trackEvent("registration_complete", {
             surface: "first_party_interest",
           });
@@ -99,15 +110,34 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
       </label>
       <label className="block text-sm font-semibold text-ink">
         Your syllabus
-        <select className={inputClass} name="course" required defaultValue="">
+        <select
+          className={inputClass}
+          name="course"
+          required
+          value={course}
+          onChange={(event) => setCourse(event.target.value)}
+        >
           <option value="" disabled>
             Choose your course
           </option>
-          {PUBLIC_ENGLISH_SYLLABUSES.map((course) => (
-            <option key={course}>{course}</option>
+          {PUBLIC_ENGLISH_SYLLABUSES.map((option) => (
+            <option key={option}>{option}</option>
           ))}
         </select>
       </label>
+      {oLevel && (
+        <label className="block text-sm font-semibold text-ink">
+          Which batch do you wish to join?
+          <select className={inputClass} name="batch" required defaultValue="">
+            <option value="" disabled>
+              Choose a batch
+            </option>
+            <option value="A">Batch A</option>
+            <option value="B">Batch B</option>
+            <option value="C">Batch C</option>
+          </select>
+        </label>
+      )}
       <div className="hidden" aria-hidden="true">
         <label>
           Website
