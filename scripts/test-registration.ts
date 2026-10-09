@@ -19,6 +19,8 @@ async function main() {
       "test-registration-secret-at-least-32-characters";
     process.env.SUPABASE_URL = "https://example.supabase.co";
     process.env.SUPABASE_SERVICE_ROLE_KEY = "test-private-key";
+    delete process.env.LMS_REGISTRATION_INTENT_URL;
+    delete process.env.LMS_REGISTRATION_INTENT_SECRET;
     const { createRegistrationTicket, verifyRegistrationTicket } = await import(
       "../src/lib/registration/server"
     );
@@ -43,6 +45,7 @@ async function main() {
       name: "Test student",
       email: " PHASE2@EXAMPLE.INVALID ",
       course: "O Level English Language 1123",
+      batch: "A" as const,
       consent: "yes",
       website: "",
       ticket,
@@ -56,6 +59,27 @@ async function main() {
     assert(
       !registrationInput.safeParse({ ...input, course: "invented" }).success,
     );
+    assert(!registrationInput.safeParse({ ...input, batch: undefined }).success);
+    assert(
+      !registrationInput.safeParse({
+        ...input,
+        course: "IGCSE English as a First Language 0500",
+        batch: "C",
+      }).success,
+    );
+    assert(
+      registrationInput.safeParse({
+        ...input,
+        course: "IGCSE English as a Second Language 0510/0511",
+        batch: undefined,
+      }).success,
+    );
+    const withCohort = registrationInput.parse({
+      ...input,
+      cohortId: "11111111-1111-4111-8111-111111111111",
+    });
+    assert.equal("cohortId" in withCohort, false);
+    assert.equal(withCohort.batch, "A");
     const request = (
       body: unknown = input,
       origin = "https://jaweriaamer.com",
@@ -98,6 +122,9 @@ async function main() {
       );
       const body = JSON.parse(String(options?.body));
       assert.equal(body.student_email, "phase2@example.invalid");
+      assert.equal(body.batch_letter, "A");
+      assert.equal(body.routing_status, "pending_resolution");
+      assert.equal(body.destination_name, null);
       assert.equal(body.network_hash.length, 64);
       assert(!String(options?.body).includes("192.0.2.1"));
       return Response.json("saved");
@@ -105,7 +132,10 @@ async function main() {
     const response = await POST(request());
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("Cache-Control"), "no-store");
-    assert.deepEqual(await response.json(), { saved: true });
+    assert.deepEqual(await response.json(), {
+      saved: true,
+      enrollment: "received",
+    });
     assert.equal(writes, 1);
     globalThis.fetch = async () => Response.json("limited");
     assert.equal((await POST(request())).status, 429);
@@ -114,6 +144,33 @@ async function main() {
     const failed = await POST(request());
     assert.equal(failed.status, 503);
     assert(!(await failed.text()).includes("DB error"));
+    process.env.LMS_REGISTRATION_INTENT_URL =
+      "https://lms.example/api/registration/intent";
+    process.env.LMS_REGISTRATION_INTENT_SECRET = "intent-secret";
+    globalThis.fetch = async (url, options) => {
+      if (String(url).includes("/api/registration/intent")) {
+        const headers = new Headers(options?.headers);
+        assert.equal(headers.get("x-registration-secret"), "intent-secret");
+        const sent = JSON.parse(String(options?.body));
+        assert.equal(sent.selectedBatch, "B");
+        assert.equal("cohortId" in sent, false);
+        return Response.json({
+          ok: true,
+          enrollment: "pending_account",
+          cohortName: "Miss Jay May/June 2027 Online Batch — O Level 1123",
+        });
+      }
+      const stored = JSON.parse(String(options?.body));
+      assert.equal(stored.batch_letter, "B");
+      assert.equal(stored.routing_status, "pending_account");
+      return Response.json("saved");
+    };
+    const routed = await POST(request({ ...input, batch: "B" }));
+    assert.equal(routed.status, 200);
+    assert.deepEqual(await routed.json(), {
+      saved: true,
+      enrollment: "pending_account",
+    });
     console.log(
       "Registration contracts passed: signed expiring ticket, consent, honeypot, bounded body, CSRF, private persistence, rate limits, safe failures.",
     );

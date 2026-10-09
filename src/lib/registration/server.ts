@@ -57,10 +57,107 @@ export async function registrationRpc(
   if (!response.ok) throw new Error("registration_unavailable");
   return response.json();
 }
+export interface StoredRouting {
+  routingStatus:
+    | "received"
+    | "pending_account"
+    | "needs_review"
+    | "pending_resolution"
+    | "not_applicable";
+  destinationName: string | null;
+  enrollment: "pending_account" | "needs_review" | "received";
+}
+
+export async function forwardRegistration(
+  input: RegistrationInput,
+  requestId: string,
+): Promise<StoredRouting> {
+  if (input.course === "AS Level English Language 9093") {
+    return {
+      routingStatus: "not_applicable",
+      destinationName: null,
+      enrollment: "received",
+    };
+  }
+  const url = process.env.LMS_REGISTRATION_INTENT_URL?.trim();
+  const secret = process.env.LMS_REGISTRATION_INTENT_SECRET?.trim();
+  if (!url || !secret) {
+    return {
+      routingStatus: "pending_resolution",
+      destinationName: null,
+      enrollment: "received",
+    };
+  }
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      cache: "no-store",
+      signal: AbortSignal.timeout(8000),
+      headers: {
+        "Content-Type": "application/json",
+        "x-registration-secret": secret,
+      },
+      body: JSON.stringify({
+        requestId,
+        email: input.email,
+        name: input.name,
+        syllabusCode: input.course,
+        selectedBatch: input.batch ?? null,
+      }),
+    });
+    const payload: unknown = await response.json();
+    if (
+      !response.ok ||
+      !payload ||
+      typeof payload !== "object" ||
+      !("ok" in payload) ||
+      payload.ok !== true ||
+      !("enrollment" in payload)
+    ) {
+      return {
+        routingStatus: "pending_resolution",
+        destinationName: null,
+        enrollment: "received",
+      };
+    }
+    const enrollment = payload.enrollment;
+    const cohortName =
+      "cohortName" in payload && typeof payload.cohortName === "string"
+        ? payload.cohortName.slice(0, 160)
+        : null;
+    if (enrollment === "pending_account") {
+      return {
+        routingStatus: "pending_account",
+        destinationName: cohortName,
+        enrollment: "pending_account",
+      };
+    }
+    if (enrollment === "needs_review") {
+      return {
+        routingStatus: "needs_review",
+        destinationName: null,
+        enrollment: "needs_review",
+      };
+    }
+  } catch {
+    return {
+      routingStatus: "pending_resolution",
+      destinationName: null,
+      enrollment: "received",
+    };
+  }
+  return {
+    routingStatus: "pending_resolution",
+    destinationName: null,
+    enrollment: "received",
+  };
+}
+
 export async function saveRegistration(
   input: RegistrationInput,
   ip: string,
   requestId: string,
+  routing: StoredRouting,
 ) {
   const result: unknown = await registrationRpc(
     "submit_registration_interest",
@@ -70,6 +167,9 @@ export async function saveRegistration(
       syllabus: input.course,
       network_hash: hash(`ip:${ip}`),
       request_id: requestId,
+      batch_letter: input.batch ?? null,
+      destination_name: routing.destinationName,
+      routing_status: routing.routingStatus,
     },
   );
   if (result !== "saved" && result !== "limited")
@@ -82,6 +182,9 @@ export interface RegistrationLead {
   email: string;
   course: string;
   created_at: string;
+  batch_letter: string | null;
+  destination_name: string | null;
+  routing_status: string;
 }
 export async function listRegistrations(): Promise<RegistrationLead[]> {
   return registrationRpc("list_registration_interest", {});

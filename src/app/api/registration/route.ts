@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { registrationInput } from "@/lib/registration/contracts";
 import {
+  forwardRegistration,
   saveRegistration,
   verifyRegistrationTicket,
 } from "@/lib/registration/server";
@@ -71,7 +72,8 @@ export async function POST(request: NextRequest) {
         },
         503,
       );
-    const result = await saveRegistration(parsed.data, ip, requestId);
+    const routing = await forwardRegistration(parsed.data, requestId);
+    const result = await saveRegistration(parsed.data, ip, requestId, routing);
     if (result === "limited")
       return reply(
         {
@@ -80,7 +82,7 @@ export async function POST(request: NextRequest) {
         },
         429,
       );
-    return reply({ saved: true });
+    return reply({ saved: true, enrollment: routing.enrollment });
   } catch (error) {
     return reply(
       {
