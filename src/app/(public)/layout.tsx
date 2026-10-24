@@ -18,7 +18,7 @@ export default function PublicLayout({
     <>
       <ScrollToTop />
       <Navigation />
-      <StickyWorkshopBar active batch={getBatchAnnouncement()} />
+      <StickyWorkshopBar active={true} batch={getBatchAnnouncement()} />
       <main className="flex-1">{children}</main>
       <Footer />
       <BackToTop />

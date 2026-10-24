@@ -64,6 +64,15 @@ async function main() {
     assert(
       !getBatchAnnouncement(new Date("2027-01-01")).message.includes("October"),
     );
+    assert.equal(
+      getBatchAnnouncement(new Date("2027-01-01")).cta,
+      "Explore the Next Batch",
+    );
+    assert.equal(publicExperience.walkthrough.src, "");
+    assert.match(
+      publicExperience.walkthrough.reference,
+      /^https:\/\/www\.instagram\.com\//,
+    );
     const pdf = Buffer.from("%PDF-1.7\nplain text");
     assert.equal(
       validateAssignmentFile("../../answer.pdf", "application/pdf", pdf),
