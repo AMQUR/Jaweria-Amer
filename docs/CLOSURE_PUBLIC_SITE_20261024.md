@@ -87,3 +87,14 @@ Contract tests cover batch expiry, lesson config, walkthrough empty `src`, and e
 - No PDFs added to the repo; resources remain Supabase/CDN URLs.
 - No fabricated stats, testimonials, or pass rates.
 - Registration remains Google Form / internal interest capture; no invented merchant credentials.
+
+---
+
+## Addendum — 2026-10-25 final verification (Agent 8)
+
+- Free diagnostic remains **gated**: production has `FREE_EVALUATION_ENABLED=false`; `FREE_EVALUATION_PRIVACY_APPROVED=true` is set but no documented owner/provider-retention sign-off exists, so it was not switched on. `POST /api/free-evaluation` returns 503 and `/free-evaluation` shows "coming soon".
+- Both HLS lessons verified on production: all 272 + 198 segments return 200, both play in-browser and advance.
+- Hero "Enrolment Open" badge was a standing claim after the 2026-10-16 window ended; it now renders only inside the dated batch window (#9).
+- Page-level `openGraph` dropped the share image / `og:url`; fixed through `src/lib/seo.ts` (#9).
+- `/results` at 320px: long result names no longer widen the page (capsule truncates).
+- Spelling Bee: no references in `src/` (guarded by `scripts/test-public-claims.ts`).

@@ -310,6 +310,7 @@
   color: var(--results-cream); min-height: 3rem;
   transition: border-color 140ms ease-out, background-color 140ms ease-out, transform 140ms ease-out;
   cursor: pointer; text-align: left; white-space: nowrap; flex: none;
+  max-width: calc(100vw - 2rem); /* long names truncate instead of widening a 320px page */
 }
 .results-capsule:hover, .results-capsule:focus-visible { border-color: var(--results-pink); background: var(--results-card-2); }
 .results-capsule:focus-visible { outline: 2px solid var(--results-pink); outline-offset: 2px; }
