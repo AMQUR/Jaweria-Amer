@@ -52,8 +52,8 @@ export function ResultCapsule({
       tabIndex={dup ? -1 : undefined}
     >
       <ResultAvatar result={result} />
-      <span className="flex flex-col">
-        <span className="results-capsule-name">{result.displayName}</span>
+      <span className="flex min-w-0 flex-col">
+        <span className="results-capsule-name truncate">{result.displayName}</span>
         <span className="results-capsule-meta">
           <span className="results-grade-text" data-tone={gradeTone(result.grade)}>{result.grade}</span>
           {" · "}
