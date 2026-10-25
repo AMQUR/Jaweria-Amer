@@ -23,10 +23,13 @@ const btnEnrol =
 export function LiveSessionHero({
   bannerImagePath,
   announcementActive = false,
+  enrolmentOpen = false,
   heroContent,
 }: {
   bannerImagePath?: string;
   announcementActive?: boolean;
+  /** Only true while a dated batch window is open; never a standing claim. */
+  enrolmentOpen?: boolean;
   heroContent?: Pick<
     HomepageContent,
     "heroKicker" | "heroTitlePrimary" | "heroTitleSecondary" | "heroDescription"
@@ -242,16 +245,18 @@ export function LiveSessionHero({
           </div>
         </div>
 
-        {/* ── Badge ── */}
-        <div className="absolute right-3 top-3 z-20 sm:right-4 sm:top-4">
-          <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-2 py-[3px] text-[7.5px] font-semibold uppercase tracking-[0.15em] text-emerald-300/70 backdrop-blur-sm">
-            <span
-              className="h-[3.5px] w-[3.5px] shrink-0 rounded-full bg-emerald-400/70"
-              aria-hidden
-            />
-            Enrolment Open
-          </span>
-        </div>
+        {/* ── Badge: only while a dated batch window is open ── */}
+        {enrolmentOpen && (
+          <div className="absolute right-3 top-3 z-20 sm:right-4 sm:top-4">
+            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-2 py-[3px] text-[7.5px] font-semibold uppercase tracking-[0.15em] text-emerald-300/70 backdrop-blur-sm">
+              <span
+                className="h-[3.5px] w-[3.5px] shrink-0 rounded-full bg-emerald-400/70"
+                aria-hidden
+              />
+              Enrolment Open
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

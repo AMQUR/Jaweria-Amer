@@ -27,6 +27,8 @@ import {
 } from "@/lib/contact";
 import { CourseCard } from "@/components/course-card";
 import AnimatedCounter from "@/components/ui/animated-counter";
+import { socialMetadata } from "@/lib/seo";
+import { isBatchAnnouncementActive } from "@/lib/public-experience";
 import { LiveSessionHero } from "@/components/live-session-hero";
 
 import { HomePreview } from "@/components/public-experience/home-preview";
@@ -38,17 +40,11 @@ const stayConnectedLink =
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
-  openGraph: {
+  ...socialMetadata({
     title: siteConfig.title,
     description: siteConfig.description,
-    type: "website",
-    url: "/",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: siteConfig.title,
-    description: siteConfig.description,
-  },
+    path: "/",
+  }),
 };
 
 export const dynamic = "force-dynamic";
@@ -77,6 +73,7 @@ export default async function HomePage() {
         bannerImagePath={safeHomepageContent.bannerImagePath}
         heroContent={safeHomepageContent}
         announcementActive
+        enrolmentOpen={isBatchAnnouncementActive()}
       />
 
       {/* M/J 2026 proof block — the results are the proof, so they sit straight after the hero */}

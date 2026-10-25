@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { socialMetadata } from "@/lib/seo";
 import { LEGACY_ENROL_FORM_URL } from "@/lib/contact";
 import { RegistrationForm } from "@/components/public-experience/registration-form";
 import { createRegistrationTicket } from "@/lib/registration/server";
@@ -8,6 +9,12 @@ export const metadata: Metadata = {
   description:
     "Express interest in Miss Jay’s English courses. Receive batch details without signing into Google.",
   alternates: { canonical: "/register" },
+  ...socialMetadata({
+    title: "Join the Next Batch",
+    description:
+      "Express interest in Miss Jay’s English courses. Receive batch details without signing into Google.",
+    path: "/register",
+  }),
 };
 export default function RegistrationPage() {
   return (

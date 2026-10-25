@@ -1,3 +1,4 @@
+import { socialMetadata } from "@/lib/seo";
 import { Metadata } from "next";
 import {
   ArrowRight,
@@ -50,17 +51,12 @@ export const metadata: Metadata = {
   description:
     "Meet Jaweria Amer. Cambridge English mentor focused on rubric-driven practice, examiner-aligned feedback, and calm mentorship for O Level students.",
   alternates: { canonical: "/about" },
-  openGraph: {
+  ...socialMetadata({
     title: "About — Jaweria Amer",
     description:
       "Meet Jaweria Amer. Cambridge English mentor focused on rubric-driven practice, examiner-aligned feedback, and calm mentorship for O Level students.",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "About — Jaweria Amer",
-    description:
-      "Meet Jaweria Amer. Cambridge English mentor focused on rubric-driven practice, examiner-aligned feedback, and calm mentorship for O Level students.",
-  },
+    path: "/about",
+  }),
 };
 
 export default function AboutPage() {

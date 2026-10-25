@@ -1,3 +1,4 @@
+import { socialMetadata } from "@/lib/seo";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
@@ -14,12 +15,11 @@ export const metadata: Metadata = {
   title: "M/J 2026 Results",
   description: `${Math.round(h.aOrAStarPct)}% of ${h.sharedResults} shared May/June 2026 Cambridge English results were A or A* — ${h.aStar} A* and ${h.a} A. Every result shared with the student's permission.`,
   alternates: { canonical: "/results" },
-  openGraph: {
+  ...socialMetadata({
     title: "M/J 2026 Results — Jaweria Amer",
     description: `${h.aOrAStar} of ${h.sharedResults} shared May/June 2026 result records were A or A*.`,
-    type: "website",
-    url: "/results",
-  },
+    path: "/results",
+  }),
 };
 
 export default function ResultsPage() {
