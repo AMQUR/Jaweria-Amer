@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { socialMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ContactEmailLink } from "@/components/contact-email-link";
@@ -8,6 +9,12 @@ export const metadata: Metadata = {
   description:
     "How Jaweria Amer collects and uses contact information for course enrollment.",
   alternates: { canonical: "/privacy" },
+  ...socialMetadata({
+    title: "Privacy Policy",
+    description:
+      "How Jaweria Amer collects and uses contact information for course enrollment.",
+    path: "/privacy",
+  }),
 };
 
 export default function PrivacyPage() {

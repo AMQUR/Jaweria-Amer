@@ -56,7 +56,7 @@ export const metadata: Metadata = {
       "Cambridge English specialist helping students master O Level English 1123.",
     url: "/",
     siteName: "Jaweria Amer",
-    images: ["/icon.png"],
+    images: [{ url: "/opengraph-image.png", width: 1200, height: 630 }],
     type: "website",
   },
   twitter: {
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     title: "Jaweria Amer",
     description:
       "Cambridge English specialist helping students master O Level English 1123 with structured lessons, notes, and practice.",
-    images: ["/icon.png"],
+    images: ["/opengraph-image.png"],
   },
   ...(googleVerification
     ? { verification: { google: googleVerification } }

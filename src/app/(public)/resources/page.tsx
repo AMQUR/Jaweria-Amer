@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { socialMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 import { ArrowRight, ExternalLink, PlayCircle } from "lucide-react";
 import { TrackedOutboundLink } from "@/components/analytics/tracked-links";
@@ -20,19 +21,12 @@ export const metadata: Metadata = {
   description:
     "Free hub: notes, topicals, yearlies, scripts, marking schemes, and MCQ drills for Cambridge O Level English (1123).",
   alternates: { canonical: "/resources" },
-  openGraph: {
+  ...socialMetadata({
     title: `Resources — ${siteConfig.name}`,
     description:
       "Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised for purposeful practice.",
-    type: "website",
-    url: "/resources",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: `Resources — ${siteConfig.name}`,
-    description:
-      "Notes, topicals, yearlies, scripts, marking schemes, and MCQs — organised for purposeful practice.",
-  },
+    path: "/resources",
+  }),
 };
 
 export const dynamic = "force-dynamic";

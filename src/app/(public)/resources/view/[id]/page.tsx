@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
+import { socialMetadata } from "@/lib/seo";
 import { ResourceViewTracker } from "@/components/analytics/resource-view-tracker";
 import { McqViewer } from "@/components/mcq-viewer";
 import { ResourcePdfSlot } from "@/components/resource-pdf-slot";
@@ -22,17 +23,11 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     title: `${displayTitle} | Resources`,
     description: resource.description,
     alternates: { canonical: path },
-    openGraph: {
+    ...socialMetadata({
       title: `${displayTitle} | Resources`,
       description: resource.description,
-      type: "website",
-      url: path,
-    },
-    twitter: {
-      card: "summary_large_image",
-      title: `${displayTitle} | Resources`,
-      description: resource.description,
-    },
+      path,
+    }),
     robots: { index: true, follow: true },
   };
 }

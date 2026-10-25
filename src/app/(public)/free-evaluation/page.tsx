@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { socialMetadata } from "@/lib/seo";
 import { EvaluationForm } from "@/components/public-experience/evaluation-form";
 import { evaluationAvailable, evaluationLimit } from "@/lib/evaluation/server";
 export const dynamic = "force-dynamic";
@@ -7,6 +8,12 @@ export const metadata: Metadata = {
   description:
     "Discover what is strong in your English answer and what to improve next with our free assessment preview.",
   alternates: { canonical: "/free-evaluation" },
+  ...socialMetadata({
+    title: "Free English Evaluation — O Level 1123",
+    description:
+      "Discover what is strong in your English answer and what to improve next with our free assessment preview.",
+    path: "/free-evaluation",
+  }),
 };
 export default function FreeEvaluationPage() {
   return (

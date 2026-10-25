@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { socialMetadata } from "@/lib/seo";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { ContactEmailLink } from "@/components/contact-email-link";
@@ -8,6 +9,12 @@ export const metadata: Metadata = {
   description:
     "Terms of Service for Jaweria Amer: usage of the Free Vault, intellectual property, and how student contact data is handled.",
   alternates: { canonical: "/terms" },
+  ...socialMetadata({
+    title: "Terms of Service",
+    description:
+      "Terms of Service for Jaweria Amer: usage of the Free Vault, intellectual property, and how student contact data is handled.",
+    path: "/terms",
+  }),
 };
 
 export default function TermsPage() {
