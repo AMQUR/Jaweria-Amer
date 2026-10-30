@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { registrationInput } from "@/lib/registration/contracts";
+import { registrationCopy } from "@/lib/registration/outcome";
 import {
-  forwardRegistration,
-  saveRegistration,
+  submitPublicRegistration,
   verifyRegistrationTicket,
 } from "@/lib/registration/server";
 export const runtime = "nodejs";
+/** Stay above the 12s handler deadline without giving a slow LMS call the whole window. */
 export const maxDuration = 15;
 const MAX_BYTES = 4096;
 function reply(body: unknown, status = 200) {
@@ -72,24 +73,40 @@ export async function POST(request: NextRequest) {
         },
         503,
       );
-    const routing = await forwardRegistration(parsed.data, requestId);
-    const result = await saveRegistration(parsed.data, ip, requestId, routing);
-    if (result === "limited")
+    const outcome = await submitPublicRegistration(parsed.data, ip, requestId);
+    if (outcome.status === "limited")
+      return reply({ error: registrationCopy.rateLimit }, 429);
+    if (outcome.status === "saved")
+      return reply({ saved: true, enrollment: outcome.enrollment });
+    if (outcome.status === "timeout")
+      return reply(
+        { saved: false, outcome: "timeout", error: registrationCopy.timeout },
+        504,
+      );
+    if (outcome.status === "unconfirmed") {
+      console.error("[registration] unconfirmed");
       return reply(
         {
-          error:
-            "Please wait before sending another request. You can also contact Miss Jay directly.",
+          saved: false,
+          outcome: "unconfirmed",
+          error: registrationCopy.unconfirmed,
         },
-        429,
+        504,
       );
-    return reply({ saved: true, enrollment: routing.enrollment });
+    }
+    console.error("[registration] failed");
+    return reply(
+      { saved: false, outcome: "failed", error: registrationCopy.failed },
+      503,
+    );
   } catch (error) {
+    console.error("[registration] rejected");
     return reply(
       {
         error:
           error instanceof SyntaxError
             ? "Please check your submission."
-            : "We could not confirm your request. Please retry or contact Miss Jay directly.",
+            : registrationCopy.failed,
       },
       error instanceof SyntaxError ? 400 : 503,
     );

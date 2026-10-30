@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 };
 export default function RegistrationPage() {
   return (
-    <section className="bg-cream px-4 pb-20 pt-16 sm:px-6">
+    <section className="overflow-x-clip bg-cream px-4 pb-[max(7.5rem,calc(env(safe-area-inset-bottom)+6.5rem))] pt-16 sm:px-6 lg:pb-20">
       <div className="mx-auto max-w-xl">
         <p className="text-xs font-semibold uppercase tracking-widest text-crimson">
           Your next step
