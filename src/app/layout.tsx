@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { ContentAdvertising } from "@/components/analytics/content-advertising";
@@ -20,6 +20,12 @@ const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
 const validGaId = gaId && /^G-[A-Z0-9]+$/.test(gaId) && !/^G-X+$/.test(gaId);
 
 const googleVerification = process.env.GOOGLE_SITE_VERIFICATION?.trim();
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  interactiveWidget: "resizes-content",
+};
 
 export const metadata: Metadata = {
   metadataBase: getSiteUrl(),

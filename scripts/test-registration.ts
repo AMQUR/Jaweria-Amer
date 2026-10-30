@@ -1,6 +1,18 @@
 import assert from "node:assert/strict";
 import Module, { createRequire } from "node:module";
 import { registrationInput } from "../src/lib/registration/contracts";
+import {
+  FLOATING_CLEAR_MIN_WIDTH,
+  floatingControlsClearRegistration,
+  REGISTRATION_PATH,
+} from "../src/lib/registration/mobile";
+import {
+  createSubmissionLock,
+  interpretRegistrationFailure,
+  interpretRegistrationHttp,
+  registrationCopy,
+  withTimeout,
+} from "../src/lib/registration/outcome";
 const require = createRequire(import.meta.url);
 const internals = Module as unknown as {
   _resolveFilename: (id: string, ...args: unknown[]) => string;
@@ -11,9 +23,26 @@ internals._resolveFilename = function (id, ...args) {
     ? require.resolve("next/dist/compiled/server-only/empty.js")
     : originalResolve.call(this, id, ...args);
 };
+function hangUntilAbort(
+  _url: unknown,
+  options?: { signal?: AbortSignal | null },
+): Promise<Response> {
+  return new Promise<Response>((_resolve, reject) => {
+    const abort = () =>
+      reject(Object.assign(new Error("aborted"), { name: "AbortError" }));
+    const signal = options?.signal;
+    if (signal?.aborted) {
+      abort();
+      return;
+    }
+    signal?.addEventListener("abort", abort, { once: true });
+  });
+}
+
 async function main() {
   const originalEnv = { ...process.env },
     originalFetch = globalThis.fetch;
+  let restoreBudget = () => {};
   try {
     process.env.SESSION_SECRET =
       "test-registration-secret-at-least-32-characters";
@@ -21,9 +50,13 @@ async function main() {
     process.env.SUPABASE_SERVICE_ROLE_KEY = "test-private-key";
     delete process.env.LMS_REGISTRATION_INTENT_URL;
     delete process.env.LMS_REGISTRATION_INTENT_SECRET;
-    const { createRegistrationTicket, verifyRegistrationTicket } = await import(
-      "../src/lib/registration/server"
-    );
+    const {
+      createRegistrationTicket,
+      registrationBudget,
+      verifyRegistrationTicket,
+    } = await import("../src/lib/registration/server");
+    const budgetSnapshot = { ...registrationBudget };
+    restoreBudget = () => Object.assign(registrationBudget, budgetSnapshot);
     const { POST } = await import("../src/app/api/registration/route");
     const { NextRequest } = await import("next/server");
     const now = Date.now();
@@ -171,10 +204,210 @@ async function main() {
       saved: true,
       enrollment: "pending_account",
     });
+
+    globalThis.fetch = async (url, options) => {
+      if (String(url).includes("/api/registration/intent")) {
+        return Response.json({ ok: true, enrollment: "needs_review" });
+      }
+      const stored = JSON.parse(String(options?.body));
+      assert.equal(stored.routing_status, "needs_review");
+      assert.equal(stored.destination_name, null);
+      return Response.json("saved");
+    };
+    const review = await POST(request());
+    assert.equal(review.status, 200);
+    assert.deepEqual(await review.json(), {
+      saved: true,
+      enrollment: "needs_review",
+    });
+
+    globalThis.fetch = async (url, options) => {
+      if (String(url).includes("/api/registration/intent")) {
+        return new Response("<html>lms down</html>", {
+          status: 502,
+          headers: { "content-type": "text/html" },
+        });
+      }
+      const stored = JSON.parse(String(options?.body));
+      assert.equal(stored.routing_status, "pending_resolution");
+      return Response.json("saved");
+    };
+    const lmsDown = await POST(request());
+    assert.equal(lmsDown.status, 200);
+    assert.deepEqual(await lmsDown.json(), {
+      saved: true,
+      enrollment: "received",
+    });
+
+    registrationBudget.forwardMs = 80;
+    registrationBudget.deadlineMs = 3000;
+    registrationBudget.saveMs = 1000;
+    const slowStarted = Date.now();
+    globalThis.fetch = async (url, options) => {
+      if (String(url).includes("/api/registration/intent")) {
+        return hangUntilAbort(url, options);
+      }
+      const stored = JSON.parse(String(options?.body));
+      assert.equal(stored.routing_status, "pending_resolution");
+      return Response.json("saved");
+    };
+    const slowForward = await POST(request());
+    assert.equal(slowForward.status, 200);
+    assert.deepEqual(await slowForward.json(), {
+      saved: true,
+      enrollment: "received",
+    });
+    assert.ok(Date.now() - slowStarted < 1000);
+    restoreBudget();
+
+    delete process.env.LMS_REGISTRATION_INTENT_URL;
+    delete process.env.LMS_REGISTRATION_INTENT_SECRET;
+    registrationBudget.saveMs = 80;
+    registrationBudget.deadlineMs = 3000;
+    registrationBudget.forwardMs = 50;
+    const saveStarted = Date.now();
+    globalThis.fetch = (url, options) => hangUntilAbort(url, options);
+    const unconfirmed = await POST(request());
+    assert.equal(unconfirmed.status, 504);
+    const unconfirmedBody = await unconfirmed.json();
+    assert.equal(unconfirmedBody.saved, false);
+    assert.equal(unconfirmedBody.outcome, "unconfirmed");
+    assert.equal(unconfirmedBody.error, registrationCopy.unconfirmed);
+    assert.ok(Date.now() - saveStarted < 1000);
+    restoreBudget();
+
+    process.env.LMS_REGISTRATION_INTENT_URL =
+      "https://lms.example/api/registration/intent";
+    process.env.LMS_REGISTRATION_INTENT_SECRET = "intent-secret";
+    registrationBudget.forwardMs = 400;
+    registrationBudget.deadlineMs = 90;
+    registrationBudget.saveMs = 5000;
+    let savedDuringDeadline = 0;
+    globalThis.fetch = (url, options) => {
+      if (String(url).includes("supabase")) savedDuringDeadline += 1;
+      return hangUntilAbort(url, options);
+    };
+    const deadline = await POST(request());
+    assert.equal(deadline.status, 504);
+    assert.deepEqual(await deadline.json(), {
+      saved: false,
+      outcome: "timeout",
+      error: registrationCopy.timeout,
+    });
+    assert.equal(savedDuringDeadline, 0);
+    restoreBudget();
+
+    delete process.env.LMS_REGISTRATION_INTENT_URL;
+    delete process.env.LMS_REGISTRATION_INTENT_SECRET;
+    const requestIds: string[] = [];
+    globalThis.fetch = async (_url, options) => {
+      const stored = JSON.parse(String(options?.body));
+      requestIds.push(stored.request_id);
+      return Response.json("saved");
+    };
+    const first = await POST(request());
+    const second = await POST(request());
+    assert.equal(first.status, 200);
+    assert.equal(second.status, 200);
+    assert.equal(requestIds.length, 2);
+    assert.equal(requestIds[0], requestIds[1]);
+    assert.equal((await first.json()).saved, true);
+
+    globalThis.fetch = async () =>
+      new Response("<html>private table</html>", { status: 200 });
+    const messy = await POST(request());
+    assert.equal(messy.status, 504);
+    const messyText = await messy.text();
+    assert.equal(JSON.parse(messyText).saved, false);
+    assert.equal(messyText.includes("private table"), false);
+
+    const lock = createSubmissionLock();
+    assert.equal(lock.claim(), true);
+    assert.equal(lock.claim(), false);
+    lock.release();
+    assert.equal(lock.claim(), true);
+
+    const hung = Date.now();
+    await assert.rejects(
+      () => withTimeout(40, () => new Promise(() => undefined)),
+      (error: unknown) => error instanceof Error && error.name === "TimeoutError",
+    );
+    assert.ok(Date.now() - hung < 500);
+
+    const savedReview = interpretRegistrationHttp(
+      200,
+      JSON.stringify({ saved: true, enrollment: "needs_review" }),
+    );
+    assert.deepEqual(savedReview, { ok: true, enrollment: "needs_review" });
+    const notSaved = interpretRegistrationHttp(
+      200,
+      JSON.stringify({ saved: false }),
+    );
+    assert.equal(notSaved.ok, false);
+    const htmlOk = interpretRegistrationHttp(200, "<html>");
+    assert.equal(htmlOk.ok, false);
+    if (!htmlOk.ok) assert.equal(htmlOk.tone, "unconfirmed");
+    const limited = interpretRegistrationHttp(429, JSON.stringify({ error: "nope" }));
+    assert.equal(limited.ok, false);
+    if (!limited.ok) {
+      assert.equal(limited.tone, "rate");
+      assert.equal(limited.message, registrationCopy.rateLimit);
+    }
+    const timedOut = interpretRegistrationHttp(
+      504,
+      JSON.stringify({ saved: false, outcome: "timeout" }),
+    );
+    assert.equal(timedOut.ok, false);
+    if (!timedOut.ok) assert.equal(timedOut.tone, "timeout");
+    const gateway = interpretRegistrationHttp(502, "<html>");
+    assert.equal(gateway.ok, false);
+    if (!gateway.ok) assert.equal(gateway.tone, "unconfirmed");
+    const leaked = interpretRegistrationFailure(
+      new Error("supabase service role secret"),
+    );
+    assert.equal(leaked.ok, false);
+    if (!leaked.ok) {
+      assert.equal(leaked.message, registrationCopy.failed);
+      assert.equal(leaked.message.includes("secret"), false);
+    }
+    const offline = interpretRegistrationFailure(new TypeError("Failed to fetch"));
+    assert.equal(offline.ok, false);
+    if (!offline.ok) assert.equal(offline.tone, "offline");
+    const browserTimeout = interpretRegistrationFailure(
+      Object.assign(new Error("The operation was aborted."), { name: "AbortError" }),
+    );
+    assert.equal(browserTimeout.ok, false);
+    if (!browserTimeout.ok) assert.equal(browserTimeout.tone, "timeout");
+
+    for (const viewportWidth of [320, 375, 390, 430, 768]) {
+      assert.equal(
+        floatingControlsClearRegistration({
+          pathname: REGISTRATION_PATH,
+          viewportWidth,
+        }),
+        false,
+      );
+    }
+    for (const viewportWidth of [1024, 1280, 1440]) {
+      assert.equal(
+        floatingControlsClearRegistration({
+          pathname: REGISTRATION_PATH,
+          viewportWidth,
+        }),
+        true,
+      );
+    }
+    assert.equal(
+      floatingControlsClearRegistration({ pathname: "/", viewportWidth: 390 }),
+      true,
+    );
+    assert.equal(FLOATING_CLEAR_MIN_WIDTH, 1024);
+
     console.log(
-      "Registration contracts passed: signed expiring ticket, consent, honeypot, bounded body, CSRF, private persistence, rate limits, safe failures.",
+      "Registration contracts passed: signed expiring ticket, consent, honeypot, bounded body, CSRF, private persistence, rate limits, safe failures, capped forwarding, unconfirmed saves, duplicate retries, and mobile clearance.",
     );
   } finally {
+    restoreBudget();
     process.env = originalEnv;
     globalThis.fetch = originalFetch;
     internals._resolveFilename = originalResolve;
