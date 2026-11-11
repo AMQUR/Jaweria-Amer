@@ -52,6 +52,8 @@ export async function GET(request: NextRequest) {
       error instanceof Error ? error.message.slice(0, 80) : "",
     );
   }
-  await processEnquiryNotifications(10);
+  const run = await processEnquiryNotifications(10);
+  // Privacy-safe heartbeat for Vercel runtime logs: counts only, no enquiry data.
+  console.info("[registration] cron ok", `claimed=${run.claimed}`, `sent=${run.sent}`, `failed=${run.failed}`);
   return NextResponse.json({ ok: true }, { headers });
 }
