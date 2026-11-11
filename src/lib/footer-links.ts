@@ -12,10 +12,10 @@ export const FOOTER_HELP_LINKS: readonly {
   label: string;
   live: boolean;
 }[] = [
-  { href: "/class-timings", label: "Class Timings", live: false },
-  { href: "/faq", label: "FAQ", live: false },
-  { href: "/exam-countdown", label: "Exam Countdown", live: false },
-  { href: "/study-plan", label: "Free Study Plans", live: false },
+  { href: "/class-timings", label: "Class Timings", live: true },
+  { href: "/faq", label: "FAQ", live: true },
+  { href: "/exam-countdown", label: "Exam Countdown", live: true },
+  { href: "/study-plan", label: "Free Study Plans", live: true },
 ];
 
 export function liveFooterHelpLinks() {

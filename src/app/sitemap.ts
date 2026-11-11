@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { courses } from "@/lib/data";
 import { listMarketingCourses } from "@/lib/course-offerings";
 import { getPublicResources } from "@/lib/public-cms";
+import { SYLLABUSES } from "@/lib/exam/exam-dates";
 import { getSiteUrl } from "@/lib/site-url";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -17,6 +18,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/resources",
     "/free-evaluation",
     "/register",
+    "/class-timings",
+    "/faq",
+    "/exam-countdown",
+    "/study-plan",
     "/privacy",
     "/terms",
   ] as const;
@@ -27,6 +32,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: path === "" ? "weekly" : "monthly",
     priority: path === "" ? 1 : 0.85,
   }));
+
+  for (const s of SYLLABUSES) {
+    entries.push({ url: `${base}/study-plan/${s.key}`, lastModified, changeFrequency: "monthly", priority: 0.7 });
+  }
 
   for (const course of listMarketingCourses(courses)) {
     entries.push({
