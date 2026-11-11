@@ -226,6 +226,32 @@ async function main() {
     assert(!sheet.includes("<x>"));
     assert(sheet.includes("Needs review"));
 
+    // 11b. Characters XML 1.0 forbids are dropped, so one hostile name cannot corrupt the sheet.
+    const hostile = enquiriesToXlsx([
+      {
+        ...stored[1],
+        name: "Bad\u0000\u000B\uFFFE\uFFFF\uD800Name \u{1F600} ok",
+        email: "ok@example.com",
+      },
+    ]);
+    const hostileSheet = unzip(hostile)["xl/worksheets/sheet1.xml"];
+    assert(hostileSheet.includes("BadName \u{1F600} ok"));
+    for (const bad of ["\u0000", "\u000B", "\uFFFE", "\uFFFF", "\uD800"])
+      assert(!hostileSheet.includes(bad), "XML-invalid character survived");
+
+    // 11c. The admin list may be far larger than a save reply; it must not be cut mid-JSON.
+    const { listRegistrations } = await import("../src/lib/registration/server");
+    const many = Array.from({ length: 200 }, (_, i) => ({
+      ...stored[1],
+      id: String(i),
+      name: `Student ${i} ${"x".repeat(60)}`,
+    }));
+    assert(JSON.stringify(many).length > 8192 * 4);
+    globalThis.fetch = async () => Response.json(many);
+    assert.equal((await listRegistrations()).length, 200);
+    globalThis.fetch = async () => Response.json({ not: "a list" });
+    await assert.rejects(listRegistrations());
+
     // 12. Export route: no session, no data. With a session, a private no-store download.
     const { GET } = await import("../src/app/api/admin/registrations/export/route");
     const denied = await GET();

@@ -1,9 +1,16 @@
 import { crc32 } from "node:zlib";
 
 /** Minimal dependency-free .xlsx writer: one sheet, text cells, stored (uncompressed) zip. */
+/**
+ * Keep only characters XML 1.0 allows (tab, LF, CR, U+0020–U+D7FF,
+ * U+E000–U+FFFD and well-formed astral pairs). Anything else — control
+ * characters, lone surrogates, U+FFFE/U+FFFF — would make the whole sheet
+ * unreadable, so one hostile name could break the export for everyone.
+ */
+const XML_INVALID = /[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/gu;
 function esc(value: string) {
   return value
-    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+    .replace(XML_INVALID, "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")

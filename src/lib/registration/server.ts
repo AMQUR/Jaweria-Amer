@@ -61,7 +61,20 @@ export async function fetchWithCap(
   }
 }
 
-async function readBoundedText(response: Response, timeoutMs: number) {
+/** Small JSON replies (save, forward). */
+const DEFAULT_REPLY_CHARS = 8192;
+/**
+ * The admin list returns up to 200 enquiries (~300 characters each). The old
+ * shared 8 KB cap cut that reply mid-JSON once roughly 27 enquiries existed,
+ * so the inbox and the export failed to load. Bound it generously instead.
+ */
+const LIST_REPLY_CHARS = 1024 * 1024;
+
+async function readBoundedText(
+  response: Response,
+  timeoutMs: number,
+  maxChars = DEFAULT_REPLY_CHARS,
+) {
   const body = response.text();
   body.catch(() => undefined);
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -72,7 +85,7 @@ async function readBoundedText(response: Response, timeoutMs: number) {
         timer = setTimeout(() => reject(timeoutError()), timeoutMs);
       }),
     ]);
-    return text.length > 8192 ? text.slice(0, 8192) : text;
+    return text.length > maxChars ? text.slice(0, maxChars) : text;
   } finally {
     if (timer) clearTimeout(timer);
   }
@@ -108,6 +121,7 @@ export async function registrationRpc(
   name: string,
   body: Record<string, unknown>,
   timeoutMs = 10000,
+  maxReplyChars = DEFAULT_REPLY_CHARS,
 ) {
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!url || !process.env.SUPABASE_SERVICE_ROLE_KEY)
@@ -137,7 +151,11 @@ export async function registrationRpc(
   }
   let text = "";
   try {
-    text = await readBoundedText(response, Math.min(timeoutMs, 2000));
+    text = await readBoundedText(
+      response,
+      Math.min(timeoutMs, 2000),
+      maxReplyChars,
+    );
   } catch {
     throw new RegistrationAttemptError(response.ok ? "timeout" : "failed");
   }
@@ -332,5 +350,12 @@ export interface RegistrationLead {
   routing_status: string;
 }
 export async function listRegistrations(): Promise<RegistrationLead[]> {
-  return registrationRpc("list_registration_interest", {});
+  const rows: unknown = await registrationRpc(
+    "list_registration_interest",
+    {},
+    10000,
+    LIST_REPLY_CHARS,
+  );
+  if (!Array.isArray(rows)) throw new RegistrationAttemptError("failed");
+  return rows as RegistrationLead[];
 }
