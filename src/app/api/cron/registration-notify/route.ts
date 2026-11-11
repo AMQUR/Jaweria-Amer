@@ -42,8 +42,15 @@ export async function GET(request: NextRequest) {
   try {
     // Outcomes are recorded in Supabase (enquiry_exports / notify_status), not returned here.
     await sendHistoricalWorkbook();
-  } catch {
-    console.error("[registration] historical export failed");
+  } catch (error) {
+    // Error class and upstream status only: never enquiry data.
+    console.error(
+      "[registration] historical export failed",
+      error instanceof Error ? error.name : "unknown",
+      (error as { kind?: string; httpStatus?: number })?.kind ?? "",
+      (error as { httpStatus?: number })?.httpStatus ?? "",
+      error instanceof Error ? error.message.slice(0, 80) : "",
+    );
   }
   await processEnquiryNotifications(10);
   return NextResponse.json({ ok: true }, { headers });
