@@ -1,3 +1,4 @@
+import { evaluationPubliclyListed } from "@/lib/evaluation/visibility";
 import Link from "next/link";
 import type { SVGProps } from "react";
 import {
@@ -96,11 +97,13 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link href="/free-evaluation" className={footLink}>
-                  Free evaluation
-                </Link>
-              </li>
+              {evaluationPubliclyListed() && (
+                <li>
+                  <Link href="/free-evaluation" className={footLink}>
+                    Free evaluation
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -139,7 +142,7 @@ export function Footer() {
                   className={footLink}
                 >
                   <PlayCircle className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
-                  <span>YouTube — English with Jaweria</span>
+                  <span>YouTube — English with Miss Jay</span>
                 </TrackedOutboundLink>
               </li>
               <li>

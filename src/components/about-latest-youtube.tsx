@@ -25,7 +25,7 @@ export function AboutLatestYoutube() {
           <iframe
             className="absolute inset-0 z-0 h-full w-full"
             src={EMBED_SRC}
-            title="Featured lesson — English with Jaweria on YouTube"
+            title="Featured lesson — English with Miss Jay on YouTube"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             referrerPolicy="strict-origin-when-cross-origin"
             allowFullScreen

@@ -5,7 +5,9 @@ import { PageIntro } from "@/components/editorial/page-intro";
 import { getClassTimings } from "@/lib/class-timings";
 import { ENROL_NOW_URL, getWhatsAppUrl } from "@/lib/contact";
 
-export const revalidate = 300;
+// Rendered per request (the feed read is cached in-process for 5 minutes with a last-good fallback),
+// so a failed build-time or revalidation fetch can never freeze the "unavailable" message into the page.
+export const dynamic = "force-dynamic";
 
 const description =
   "Current online batches, session days and times in Pakistan Standard Time for Miss Jay's Cambridge English classes.";
@@ -28,7 +30,11 @@ export default async function ClassTimingsPage() {
       />
       <section className="ed-paper ed-margin pb-24">
         <div className="ed-wrap">
-          {timings ? (
+          {timings && timings.batches.length === 0 ? (
+            <p role="status" className="max-w-2xl border-l-4 border-ink/30 bg-ink/[0.04] p-5 text-ink">
+              No batch timings are published right now. Please message Miss Jay on WhatsApp for the latest schedule.
+            </p>
+          ) : timings ? (
             <>
               <ul className="border-t border-ink/15">
                 {timings.batches.map((b) => (

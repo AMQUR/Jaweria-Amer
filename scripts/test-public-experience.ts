@@ -33,6 +33,7 @@ async function main() {
     identityHash,
     reserveEvaluation,
   } = await import("../src/lib/evaluation/server");
+  const { evaluationPubliclyListed } = await import("../src/lib/evaluation/visibility");
   const originalFetch = globalThis.fetch;
   const originalEnv = { ...process.env };
   process.env.EVALUATION_IDENTITY_SECRET =
@@ -136,6 +137,10 @@ async function main() {
     );
     assert(!evaluationInput.safeParse({ ...data, course: "invented" }).success);
     assert(!evaluationInput.safeParse({ ...data, consent: "no" }).success);
+    // Complete environment but NOT publicly listed: the submission path stays disabled and hidden.
+    assert(!evaluationPubliclyListed());
+    assert(!evaluationAvailable(), "an API key alone never enables the feature");
+    process.env.FREE_EVALUATION_PUBLIC_LISTING = "true";
     assert(evaluationAvailable());
     delete process.env.OPENAI_API_KEY;
     assert(!evaluationAvailable());

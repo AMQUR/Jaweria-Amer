@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import { evaluationPubliclyListed } from "@/lib/evaluation/visibility";
 import { socialMetadata } from "@/lib/seo";
 import { PageIntro } from "@/components/editorial/page-intro";
 import { EvaluationForm } from "@/components/public-experience/evaluation-form";
 import { evaluationAvailable, evaluationLimit } from "@/lib/evaluation/server";
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
+  robots: evaluationPubliclyListed() ? undefined : { index: false, follow: false },
   title: "Free English Evaluation — O Level 1123",
   description:
     "Discover what is strong in your English answer and what to improve next with our free assessment preview.",
@@ -17,6 +20,7 @@ export const metadata: Metadata = {
   }),
 };
 export default function FreeEvaluationPage() {
+  if (!evaluationPubliclyListed()) notFound();
   return (
     <>
       <PageIntro

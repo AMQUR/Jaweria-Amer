@@ -38,13 +38,15 @@ export default async function StudyPlanPage({ params }: { params: Promise<{ syll
       <PageIntro label="Free study plan" title={s.short} size="md" lead={`${s.name}: November 2026 to your Cambridge ${EXAM_SERIES.label} papers.`} />
       <section className="ed-paper ed-margin pb-24">
         <div className="ed-wrap">
-          <StudyPlanChecklist syllabus={syllabus} weeks={buildWeeks(syllabus, papers)} papers={papers} approved={plan.approved} />
-          <h2 className="ed-h3 mt-16">Your paper dates</h2>
-          <p className="mt-2 mb-6 font-semibold text-ink">{EXAM_SERIES.centreNote}</p>
+          <h2 className="ed-h3">Your paper dates</h2>
+          <p className="mt-2 mb-4 font-semibold text-ink">{EXAM_SERIES.centreNote}</p>
           <CountdownList syllabus={syllabus} papers={papers} />
-          <p className="mt-10 text-slate">
+          <p className="mt-4 text-slate">
             <Link href="/exam-countdown" className="text-crimson underline underline-offset-4">Full exam countdown</Link>
           </p>
+          <div className="mt-12">
+            <StudyPlanChecklist syllabus={syllabus} weeks={buildWeeks(syllabus, papers)} papers={papers} approved={plan.approved} />
+          </div>
         </div>
       </section>
     </>

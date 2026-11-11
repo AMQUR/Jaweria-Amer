@@ -10,6 +10,14 @@ import {
 } from "@/components/editorial/interactive-course-row";
 import { RegistrationLink } from "@/components/public-experience/registration-link";
 
+/**
+ * Miss Jay's supplied 1600 x 1600 PNG (white background, unretouched), stored
+ * byte-for-byte in the public Supabase `resources` bucket. The file name carries
+ * the first 8 hex characters of its SHA-256 so the URL is safely immutable.
+ */
+export const HERO_PORTRAIT_SRC =
+  "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/site/miss-jay-hero-1600-b1544cd3.png";
+
 type HeroProof = {
   /** Rounded A/A* share of the publicly shared records. */
   pct: number;
@@ -42,7 +50,7 @@ export function LiveSessionHero({
   proof?: HeroProof;
   programmes?: Course[];
 }) {
-  const portraitSrc = bannerImagePath ?? "/assets/miss-jay.png";
+  const portraitSrc = bannerImagePath || HERO_PORTRAIT_SRC;
   const title = heroContent?.heroTitlePrimary ?? "Learn English with Miss Jay";
 
   return (
@@ -117,7 +125,7 @@ export function LiveSessionHero({
         {/* Portrait stage — one of the two surfaces allowed to tilt. */}
         <div className="relative lg:col-span-5 lg:self-end lg:pl-8">
           <div
-            className="ed-stage ed-rise relative mx-auto aspect-[5/6] w-full max-w-[21rem] lg:max-w-[30rem] lg:ml-auto"
+            className="ed-stage ed-rise relative mx-auto aspect-square w-full max-w-[21rem] lg:max-w-[30rem] lg:ml-auto"
             data-depth="tilt"
             style={{ ["--d" as string]: "0.2s" }}
           >
@@ -129,16 +137,20 @@ export function LiveSessionHero({
               }}
               aria-hidden
             />
-            <div className="ed-stage-figure absolute inset-0 overflow-hidden rounded-t-[999px]">
+            <div className="ed-stage-figure absolute inset-x-[4%] bottom-0 top-[8%] overflow-hidden rounded-t-[999px] bg-white">
+              {/* The supplied photo is square with a white background, so it is
+                  shown whole (never cropped or upscaled) inside a white arch.
+                  Intrinsic size 480 keeps the optimiser at <=1080px even on
+                  3x screens; it never requests the 3840px variant. */}
               <Image
                 src={portraitSrc}
                 alt="Miss Jay — O & A Level English teacher"
-                fill
+                width={480}
+                height={480}
                 loading="eager"
                 fetchPriority="high"
-                quality={80}
-                sizes="(min-width: 1024px) 30vw, 336px"
-                className="object-contain object-bottom"
+                quality={90}
+                className="absolute inset-x-0 bottom-0 h-auto w-full"
               />
             </div>
             {proof ? (
