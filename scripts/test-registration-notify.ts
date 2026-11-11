@@ -45,8 +45,10 @@ async function main() {
   const originalFetch = globalThis.fetch;
   const originalEnv = { ...process.env };
   const originalError = console.error;
+  const originalInfo = console.info;
   const logged: string[] = [];
   console.error = (...args: unknown[]) => void logged.push(args.join(" "));
+  console.info = (...args: unknown[]) => void logged.push(args.join(" "));
   process.env.SUPABASE_URL = "https://example.supabase.co";
   process.env.SUPABASE_SERVICE_ROLE_KEY = "test-service-key";
   process.env.SESSION_SECRET = "test-registration-secret-at-least-32-characters";
@@ -86,6 +88,8 @@ async function main() {
     let resendReplies: Array<number | "throw" | "hang"> = [];
     let sheetAvailable = true;
     globalThis.fetch = async (url, options) => {
+      if (String(url).includes("/rpc/list_registration_interest_page"))
+        return Response.json({ code: "PGRST202" }, { status: 404 });
       if (String(url).includes("/rpc/list_registration_interest")) {
         if (!sheetAvailable) return Response.json({}, { status: 500 });
         return Response.json(stored);
@@ -146,6 +150,13 @@ async function main() {
     const attachments = sent.body.attachments as { filename: string; content: string }[];
     assert.equal(attachments.length, 1);
     assert.match(attachments[0].filename, /^enquiries-\d{4}-\d{2}-\d{2}\.xlsx$/);
+
+    // 3b. The notice recaps earlier enquiries, so a missed notice surfaces with the next one,
+    //     and the provider's message id is logged against the enquiry's request id.
+    assert(html.includes("Previous enquiries"));
+    assert(html.includes("Aisha &#38; Co &#60;x&#62;"));
+    assert(html.includes("(2 enquiries)"));
+    assert(logged.some((l) => l.includes("notify accepted req-1 email_1")));
 
     // 4. Duplicate prevention: the same enquiry never produces a second request…
     assert.equal(await notifyTeacherOfEnquiry(enquiry, "req-1"), "duplicate");
@@ -252,6 +263,58 @@ async function main() {
     globalThis.fetch = async () => Response.json({ not: "a list" });
     await assert.rejects(listRegistrations());
 
+    // 11d. Full export. Without the paginated function it falls back to the newest 200
+    //      and says so; it never passes a capped list off as complete.
+    const { listAllRegistrations } = await import("../src/lib/registration/server");
+    const { INCOMPLETE_NOTICE, enquiryFilename } = await import(
+      "../src/lib/registration/export"
+    );
+    const lead = (i: number) => ({
+      ...stored[1],
+      id: `00000000-0000-4000-8000-${String(i).padStart(12, "0")}`,
+      name: `Student ${i}`,
+      created_at: new Date(Date.UTC(2026, 9, 1) + i * 60_000).toISOString(),
+    });
+    globalThis.fetch = async (url) =>
+      String(url).includes("_page")
+        ? Response.json({ code: "PGRST202" }, { status: 404 })
+        : Response.json(Array.from({ length: 200 }, (_, i) => lead(i)));
+    const capped = await listAllRegistrations();
+    assert.deepEqual([capped.source, capped.complete, capped.leads.length], ["legacy", false, 200]);
+    const cappedSheet = unzip(enquiriesToXlsx(capped.leads, { complete: capped.complete }))[
+      "xl/worksheets/sheet1.xml"
+    ];
+    assert(cappedSheet.includes(INCOMPLETE_NOTICE));
+    assert.match(enquiryFilename(new Date("2026-11-11"), false), /latest-200/);
+    globalThis.fetch = async (url) =>
+      String(url).includes("_page")
+        ? Response.json({ code: "PGRST202" }, { status: 404 })
+        : Response.json(Array.from({ length: 150 }, (_, i) => lead(i)));
+    const small = await listAllRegistrations();
+    assert.deepEqual([small.complete, small.leads.length], [true, 150]);
+    assert(!unzip(enquiriesToXlsx(small.leads, { complete: true }))["xl/worksheets/sheet1.xml"].includes("NOTE:"));
+    // With the paginated function present it walks every page by keyset and is complete.
+    const all = Array.from({ length: 1200 }, (_, i) => lead(i)).reverse(); // newest first
+    const pageCalls: Array<Record<string, unknown>> = [];
+    globalThis.fetch = async (url, options) => {
+      assert(String(url).includes("/rpc/list_registration_interest_page"));
+      const args = JSON.parse(String(options?.body));
+      pageCalls.push(args);
+      const start = args.before_id ? all.findIndex((l) => l.id === args.before_id) + 1 : 0;
+      return Response.json(all.slice(start, start + args.page_size));
+    };
+    const paged = await listAllRegistrations();
+    assert.deepEqual([paged.source, paged.complete, paged.leads.length], ["paged", true, 1200]);
+    assert.equal(new Set(paged.leads.map((l) => l.id)).size, 1200);
+    assert.equal(pageCalls.length, 3);
+    assert.equal(pageCalls[0].before_id, null);
+    assert.equal(pageCalls[1].before_created_at, all[499].created_at);
+    // A failing paginated call (not "missing") is an error, not a silent downgrade.
+    globalThis.fetch = async () => Response.json({}, { status: 500 });
+    await assert.rejects(listAllRegistrations());
+    const proposed = readFileSync("supabase/proposed/paginated_registration_list.sql", "utf8");
+    assert(proposed.includes("NOT APPLIED") && !/\b(alter|drop|delete|insert|update)\b/i.test(proposed.replace(/^--.*$/gm, "")));
+
     // 12. Export route: no session, no data. With a session, a private no-store download.
     const { GET } = await import("../src/app/api/admin/registrations/export/route");
     const denied = await GET();
@@ -276,6 +339,7 @@ async function main() {
     globalThis.fetch = originalFetch;
     process.env = originalEnv;
     console.error = originalError;
+    console.info = originalInfo;
     internals._resolveFilename = originalResolve;
   }
 }

@@ -1,6 +1,10 @@
 import "server-only";
 import { contact } from "@/lib/contact";
-import { fetchWithCap, listRegistrations } from "./server";
+import {
+  fetchWithCap,
+  listAllRegistrations,
+  type RegistrationLead,
+} from "./server";
 import { enquiriesToXlsx, enquiryFilename, formatPkt } from "./export";
 import type { RegistrationInput } from "./contracts";
 
@@ -14,7 +18,17 @@ import type { RegistrationInput } from "./contracts";
  *   set also short-circuits repeats on a warm instance.
  * - Bounded retries on network errors, 429 and 5xx only. A 4xx is a
  *   configuration problem and is not retried.
- * - Logs carry status codes and outcomes only — never a name or an address.
+ * - Logs carry status codes, the provider's message id and the enquiry's
+ *   request id (a random UUID, which is also the row id in the admin inbox) —
+ *   never a name or an address. A failed notice can therefore be traced to
+ *   the exact enquiry from the logs.
+ *
+ * What this is not: a durable outbox. `after()` and the in-process set do not
+ * survive a crashed or recycled function instance, so a notice whose retries
+ * all fail is not re-sent automatically. Two things bound the damage: the
+ * enquiry itself is always in the admin inbox, and every later notice lists
+ * the previous enquiries and attaches the full current sheet, so a missed
+ * notice surfaces with the next one that arrives.
  */
 export const notifyBudget = {
   attempts: 3,
@@ -64,17 +78,44 @@ export function notificationConfig() {
   return { apiKey, to, from };
 }
 
-async function buildSheetAttachment(createdAt: Date) {
+const RECAP_COUNT = 5;
+
+async function loadReport(requestId: string, createdAt: Date) {
   try {
-    const sheet = enquiriesToXlsx(await listRegistrations());
-    if (sheet.length > notifyBudget.maxAttachmentBytes) return [];
-    return [
-      { filename: enquiryFilename(createdAt), content: sheet.toString("base64") },
-    ];
+    const { leads, complete } = await listAllRegistrations();
+    const sheet = enquiriesToXlsx(leads, { complete });
+    const attachments =
+      sheet.length > notifyBudget.maxAttachmentBytes
+        ? []
+        : [
+            {
+              filename: enquiryFilename(createdAt, complete),
+              content: sheet.toString("base64"),
+            },
+          ];
+    const earlier = [...leads]
+      .filter((lead) => lead.id !== requestId)
+      .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at))
+      .slice(0, RECAP_COUNT);
+    return { attachments, earlier, complete, total: leads.length };
   } catch {
-    // The single-enquiry notice still goes out if the full sheet cannot be built.
-    return [];
+    // The single-enquiry notice still goes out if the report cannot be built.
+    return { attachments: [], earlier: [] as RegistrationLead[], complete: true, total: null };
   }
+}
+
+function recapHtml(earlier: RegistrationLead[]) {
+  if (!earlier.length) return "";
+  return (
+    `<p><b>Previous enquiries</b> (in case an earlier notice did not reach you):</p><ul>` +
+    earlier
+      .map(
+        (lead) =>
+          `<li>${esc(lead.name)} — ${esc(lead.course)} — ${esc(formatPkt(lead.created_at))}</li>`,
+      )
+      .join("") +
+    `</ul>`
+  );
 }
 
 export async function notifyTeacherOfEnquiry(
@@ -95,7 +136,10 @@ export async function notifyTeacherOfEnquiry(
   // Claim before the first await so two overlapping calls cannot both send.
   remember(requestId);
 
-  const attachments = await buildSheetAttachment(createdAt);
+  const { attachments, earlier, complete, total } = await loadReport(
+    requestId,
+    createdAt,
+  );
   const body = JSON.stringify({
     from,
     to: [to],
@@ -110,9 +154,13 @@ export async function notifyTeacherOfEnquiry(
       `<li><b>Batch preference:</b> ${input.batch ? `Batch ${esc(input.batch)}` : "n/a"}</li>` +
       `<li><b>Submitted:</b> ${esc(formatPkt(createdAt.toISOString()))}</li>` +
       `</ul>` +
+      recapHtml(earlier) +
       (attachments.length
-        ? `<p>The updated sheet of all enquiries is attached. The same sheet can be downloaded at any time from the website admin, under Registrations.</p>`
-        : `<p>The full sheet can be downloaded from the website admin, under Registrations.</p>`) +
+        ? `<p>The updated sheet${total === null ? "" : ` (${total} enquiries)`} is attached. The same sheet can be downloaded at any time from the website admin, under Registrations.</p>`
+        : `<p>The sheet can be downloaded from the website admin, under Registrations.</p>`) +
+      (complete
+        ? ""
+        : `<p><b>Note:</b> the sheet currently holds only the most recent 200 enquiries. Older ones are in earlier notification emails.</p>`) +
       `<p>This is an enquiry, not a confirmed enrollment or payment.</p>`,
     attachments,
   });
@@ -135,20 +183,30 @@ export async function notifyTeacherOfEnquiry(
         notifyBudget.attemptMs,
       );
       status = response.status;
-      if (response.ok) return "sent";
+      if (response.ok) {
+        const reply: unknown = await response.json().catch(() => null);
+        const messageId =
+          reply && typeof reply === "object" && "id" in reply
+            ? String(reply.id).slice(0, 64)
+            : "unknown";
+        // Accepted by the provider. Delivery to the inbox is reported by Resend, not here.
+        console.info("[registration] notify accepted", requestId, messageId);
+        return "sent";
+      }
     } catch {
       status = 0; // network error or timeout: retryable
     }
     const retryable = status === 0 || status === 429 || status >= 500;
     if (!retryable) {
       // Sender not verified, bad key, bad recipient… fix configuration; do not retry.
-      console.error("[registration] notify rejected", status);
+      console.error("[registration] notify rejected", requestId, status);
       recentlyNotified.delete(requestId);
       return "rejected";
     }
     if (attempt < notifyBudget.attempts)
       await wait(notifyBudget.backoffMs[attempt - 1] ?? 2_000);
-    else console.error("[registration] notify failed after retries", status);
+    else
+      console.error("[registration] notify failed after retries", requestId, status);
   }
   // Let a later retry of the same enquiry try again; the provider key still dedupes.
   recentlyNotified.delete(requestId);

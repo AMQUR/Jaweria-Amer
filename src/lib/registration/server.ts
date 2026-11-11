@@ -14,10 +14,13 @@ export const registrationBudget = {
 
 export class RegistrationAttemptError extends Error {
   readonly kind: "timeout" | "failed";
-  constructor(kind: "timeout" | "failed") {
+  /** HTTP status of the upstream reply, when there was one. */
+  readonly httpStatus?: number;
+  constructor(kind: "timeout" | "failed", httpStatus?: number) {
     super(kind);
     this.name = "RegistrationAttemptError";
     this.kind = kind;
+    this.httpStatus = httpStatus;
   }
 }
 
@@ -159,7 +162,8 @@ export async function registrationRpc(
   } catch {
     throw new RegistrationAttemptError(response.ok ? "timeout" : "failed");
   }
-  if (!response.ok) throw new RegistrationAttemptError("failed");
+  if (!response.ok)
+    throw new RegistrationAttemptError("failed", response.status);
   try {
     return text ? JSON.parse(text) : null;
   } catch {
@@ -358,4 +362,67 @@ export async function listRegistrations(): Promise<RegistrationLead[]> {
   );
   if (!Array.isArray(rows)) throw new RegistrationAttemptError("failed");
   return rows as RegistrationLead[];
+}
+
+/** Hard `limit 200` inside the deployed `list_registration_interest` function. */
+export const LEGACY_LIST_CAP = 200;
+const EXPORT_PAGE_SIZE = 500;
+const EXPORT_MAX_PAGES = 40;
+
+export interface RegistrationExportSet {
+  leads: RegistrationLead[];
+  /** False when older enquiries may exist that this set does not contain. */
+  complete: boolean;
+  source: "paged" | "legacy";
+}
+
+/**
+ * Every stored enquiry, for the Excel export and the e-mailed sheet.
+ *
+ * The deployed list function returns only the newest 200 rows and takes no
+ * arguments, and the private table is deliberately not exposed to the API, so
+ * there is nothing to page with today. This uses the keyset-paginated function
+ * `list_registration_interest_page` when it exists (see
+ * supabase/proposed/, which is NOT applied automatically and needs owner
+ * review), and otherwise falls back to the newest 200 and says so through
+ * `complete: false` once that cap is reached — never silently.
+ */
+export async function listAllRegistrations(): Promise<RegistrationExportSet> {
+  const leads: RegistrationLead[] = [];
+  let before: { created_at: string; id: string } | null = null;
+  for (let page = 0; page < EXPORT_MAX_PAGES; page++) {
+    let rows: unknown;
+    try {
+      rows = await registrationRpc(
+        "list_registration_interest_page",
+        {
+          page_size: EXPORT_PAGE_SIZE,
+          before_created_at: before?.created_at ?? null,
+          before_id: before?.id ?? null,
+        },
+        10000,
+        LIST_REPLY_CHARS,
+      );
+    } catch (error) {
+      const missing =
+        page === 0 &&
+        error instanceof RegistrationAttemptError &&
+        error.httpStatus === 404;
+      if (!missing) throw error;
+      const legacy = await listRegistrations();
+      return {
+        leads: legacy,
+        complete: legacy.length < LEGACY_LIST_CAP,
+        source: "legacy",
+      };
+    }
+    if (!Array.isArray(rows)) throw new RegistrationAttemptError("failed");
+    const batch = rows as RegistrationLead[];
+    leads.push(...batch);
+    if (batch.length < EXPORT_PAGE_SIZE)
+      return { leads, complete: true, source: "paged" };
+    const last = batch[batch.length - 1];
+    before = { created_at: last.created_at, id: last.id };
+  }
+  return { leads, complete: false, source: "paged" };
 }
