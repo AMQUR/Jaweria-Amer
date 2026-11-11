@@ -1,19 +1,34 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Playfair_Display } from "next/font/google";
+import { Bricolage_Grotesque, Literata, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
 import { ContentAdvertising } from "@/components/analytics/content-advertising";
 import { StructuredData } from "@/components/analytics/structured-data";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-sans",
+// Display: expressive variable grotesque (weight + width + optical size axes).
+const display = Bricolage_Grotesque({
+  variable: "--ff-display",
   subsets: ["latin"],
+  axes: ["opsz", "wdth"],
+  display: "swap",
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-serif",
+// Body / UI: bookish, quiet, highly legible at exam-instruction lengths.
+const body = Source_Sans_3({
+  variable: "--ff-body",
   subsets: ["latin"],
+  display: "swap",
+});
+
+// Editorial serif, italic only, used sparingly for the teacher's own words.
+const quote = Literata({
+  variable: "--ff-quote",
+  subsets: ["latin"],
+  style: ["italic"],
+  weight: ["400", "500"],
+  display: "swap",
+  preload: false,
 });
 
 const gaId = process.env.NEXT_PUBLIC_GA_ID?.trim();
@@ -85,7 +100,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
+      className={`${display.variable} ${body.variable} ${quote.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
         <ContentAdvertising />

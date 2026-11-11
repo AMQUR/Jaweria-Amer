@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Sparkles, X } from "lucide-react";
+import { X } from "lucide-react";
 import { publicExperience } from "@/lib/public-experience";
 import { trackEvent } from "@/lib/analytics";
+import { Arrow } from "@/components/editorial/arrow";
 
-/** Existing announcement surface, now in normal flow: never covers navigation or forms. */
+/** Announcement strip in normal flow under the fixed nav: never covers navigation or forms. */
 export function StickyWorkshopBar({
   active = false,
   batch = publicExperience.batch,
@@ -23,50 +24,39 @@ export function StickyWorkshopBar({
   if (!active) return null;
   return (
     <div className="pt-16 sm:pt-[4.25rem]">
-      <aside
-        aria-label="New batches"
-        className="border-y border-crimson/15 bg-rose-50"
-      >
-        <div className="mx-auto relative flex min-h-24 max-w-7xl flex-wrap items-center gap-3 px-4 py-3 sm:min-h-20 sm:flex-nowrap sm:px-6 lg:px-8">
-          {!dismissed && (
-            <>
-              <Sparkles
-                className="hidden h-6 w-6 shrink-0 text-crimson motion-safe:animate-pulse sm:block"
-                aria-hidden
-              />
-              <p className="min-w-0 basis-full pr-10 text-sm sm:basis-auto sm:flex-1 sm:pr-0 leading-relaxed text-ink">
-                <strong className="block sm:inline">{batch.headline} </strong>
-                {batch.message}
-              </p>
-              <a
-                href={batch.href}
-                className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-crimson px-4 py-2 text-xs font-semibold text-white hover:bg-crimson-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson"
-                onClick={() => {
-                  trackEvent("batch_banner_click");
-                  trackEvent("registration_cta_click", {
-                    surface: "batch_banner",
-                  });
-                }}
-              >
-                {batch.cta}
-                <ArrowUpRight className="h-4 w-4" aria-hidden />
-              </a>
-              <button
-                onClick={() => setDismissed(true)}
-                className="absolute right-2 top-2 flex h-11 w-11 shrink-0 sm:static items-center justify-center rounded-xl text-slate hover:bg-rose-100 focus-visible:outline-2 focus-visible:outline-crimson"
-                aria-label="Dismiss batch announcement"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </>
-          )}
-          {dismissed && (
-            <p className="text-sm text-slate">
-              English with Miss Jay · Learn. Practise. Improve.
+      {!dismissed && (
+        <aside aria-label="New batches" className="ed-ink">
+          <div className="ed-wrap flex min-h-12 items-center gap-x-5 gap-y-1 py-1.5 text-[0.9rem]">
+            <p className="min-w-0 flex-1 leading-snug text-paper/80 max-[359px]:sr-only">
+              <strong className="font-semibold text-paper">
+                {batch.headline}{" "}
+              </strong>
+              <span className="max-sm:hidden">{batch.message}</span>
             </p>
-          )}
-        </div>
-      </aside>
+            <a
+              href={batch.href}
+              className="ed-link shrink-0 text-[#f6c9c1] max-[359px]:mr-auto"
+              onClick={() => {
+                trackEvent("batch_banner_click");
+                trackEvent("registration_cta_click", {
+                  surface: "batch_banner",
+                });
+              }}
+            >
+              {batch.cta}
+              <Arrow />
+            </a>
+            <button
+              type="button"
+              onClick={() => setDismissed(true)}
+              className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-paper/70 hover:bg-paper/10 hover:text-paper focus-visible:outline-2 focus-visible:outline-paper"
+              aria-label="Dismiss batch announcement"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </aside>
+      )}
     </div>
   );
 }

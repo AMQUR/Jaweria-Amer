@@ -57,16 +57,16 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
     return (
       <div className="min-h-screen bg-cream">
         <ResourceViewTracker id={resource.id} title={displayTitle} />
-        <section className="border-b border-border/70 bg-crimson pb-8 pt-24 text-white sm:pt-28">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="ed-ink pb-8 pt-8 sm:pt-10">
+          <div className="ed-wrap">
             <Link
               href="/resources"
-              className="mb-6 inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-rose"
+              className="mb-5 inline-flex min-h-11 items-center gap-2 text-[0.9rem] font-semibold text-[#f0a79d] transition-colors hover:text-paper"
             >
               <ArrowLeft className="h-4 w-4" aria-hidden />
               Back to resources
             </Link>
-            <h1 className="font-serif text-2xl font-bold leading-snug sm:text-3xl">{displayTitle}</h1>
+            <h1 className="ed-h2 max-w-4xl text-[clamp(1.75rem,4vw,3rem)]">{displayTitle}</h1>
           </div>
         </section>
         <div className="p-6 text-center">
@@ -81,20 +81,20 @@ export default async function ResourceViewPage({ params }: { params: Params }) {
       <ResourceViewTracker id={resource.id} title={displayTitle} />
 
       {/* Page header */}
-      <section className="border-b border-border/70 bg-crimson pb-8 pt-24 text-white sm:pt-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="ed-ink pb-8 pt-8 sm:pt-10">
+        <div className="ed-wrap">
           <Link
             href="/resources"
-            className="mb-6 inline-flex items-center gap-2 text-sm text-white/70 transition-colors hover:text-rose"
+            className="mb-5 inline-flex min-h-11 items-center gap-2 text-[0.9rem] font-semibold text-[#f0a79d] transition-colors hover:text-paper"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden />
             Back to resources
           </Link>
-          <h1 className="font-serif text-2xl font-bold leading-snug sm:text-3xl">{displayTitle}</h1>
-          <p className="mt-2 text-sm text-white/60">{meta}</p>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-white/70">{resource.description}</p>
+          <h1 className="ed-h2 max-w-4xl text-[clamp(1.75rem,4vw,3rem)]">{displayTitle}</h1>
+          <p className="mt-3 text-[0.9rem] font-semibold tabular-nums text-paper/70">{meta}</p>
+          <p className="mt-3 max-w-3xl leading-relaxed text-paper/75">{resource.description}</p>
           {isMcq && mcq && (
-            <p className="mt-3 text-sm font-medium text-white/80">
+            <p className="mt-3 text-[0.9rem] font-semibold text-paper/85">
               {mcq.questions.length} questions
               {mcq.timeLimit
                 ? ` · ${mcq.timeLimit / 60} minutes`

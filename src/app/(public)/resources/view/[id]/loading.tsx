@@ -1,8 +1,8 @@
 export default function ResourceViewLoading() {
   return (
     <div className="min-h-screen bg-cream">
-      <section className="border-b border-border/70 bg-crimson pb-8 pt-24 text-white sm:pt-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="ed-ink pb-8 pt-8 sm:pt-10">
+        <div className="ed-wrap">
           <div className="mb-6 h-4 w-36 animate-pulse rounded bg-white/25" />
           <div className="h-9 max-w-xl animate-pulse rounded-lg bg-white/20 sm:h-10" />
           <div className="mt-4 h-4 w-56 animate-pulse rounded bg-white/15" />

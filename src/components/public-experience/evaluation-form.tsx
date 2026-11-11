@@ -100,9 +100,9 @@ export function EvaluationForm({
   }
   if (!available)
     return (
-      <div className="rounded-3xl border border-border bg-white p-6 shadow-sm sm:p-10">
+      <div className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-10">
         <FileText className="mb-6 h-8 w-8 text-crimson" aria-hidden />
-        <h2 className="font-serif text-2xl text-ink">
+        <h2 className="ed-h3 text-[1.6rem] text-ink">
           Free evaluations are coming soon
         </h2>
         <p className="mt-4 text-slate">
@@ -127,14 +127,14 @@ export function EvaluationForm({
   if (feedback)
     return (
       <div className="space-y-6">
-        <div className="rounded-3xl border border-border bg-white p-6 shadow-sm sm:p-10">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-crimson">
+        <div className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-10">
+          <p className="ed-label mb-3">
             A clear next step
           </p>
           <h2
             ref={headingRef}
             tabIndex={-1}
-            className="scroll-mt-24 font-serif text-3xl text-ink"
+            className="scroll-mt-24 ed-h2 text-[clamp(1.7rem,3.6vw,2.4rem)] text-ink"
           >
             {feedback.readable
               ? "Your feedback"
@@ -188,7 +188,7 @@ export function EvaluationForm({
               )}
             </>
           )}
-          <div className="mt-8 rounded-xl bg-rose-50 p-5">
+          <div className="mt-8 rounded-xl bg-crimson/5 p-5">
             <h3 className="font-semibold text-ink">Your next focus</h3>
             <p className="mt-2 text-slate">{feedback.nextFocus}</p>
           </div>
@@ -199,8 +199,8 @@ export function EvaluationForm({
             we do not save it.
           </p>
         </div>
-        <div className="rounded-3xl bg-cream p-6 sm:p-10">
-          <h2 className="font-serif text-2xl text-ink">
+        <div className="rounded-2xl bg-cream p-6 sm:p-10">
+          <h2 className="ed-h3 text-[1.6rem] text-ink">
             Keep the practice. Keep the progress.
           </h2>
           <p className="mt-3 text-slate">
@@ -231,7 +231,7 @@ export function EvaluationForm({
           move(step + 1);
         }
       }}
-      className="rounded-3xl border border-border bg-white p-6 shadow-sm sm:p-10"
+      className="rounded-2xl border border-border bg-white p-6 shadow-sm sm:p-10"
     >
       <ol aria-label="Evaluation steps" className="mb-8 grid grid-cols-3 gap-3">
         {stages.map((label, i) => (
@@ -248,7 +248,7 @@ export function EvaluationForm({
       <h2
         ref={headingRef}
         tabIndex={-1}
-        className="mb-6 scroll-mt-24 font-serif text-2xl text-ink"
+        className="mb-6 scroll-mt-24 ed-h3 text-[1.6rem] text-ink"
       >
         {stages[step]}
       </h2>
@@ -298,7 +298,7 @@ export function EvaluationForm({
               type="button"
               aria-pressed={mode === value}
               onClick={() => setMode(value)}
-              className={`min-h-11 rounded-xl border px-4 text-sm ${mode === value ? "border-crimson bg-rose-50 text-crimson" : "border-border text-slate"}`}
+              className={`min-h-11 rounded-xl border px-4 text-sm ${mode === value ? "border-crimson bg-crimson/5 text-crimson" : "border-border text-slate"}`}
             >
               {value === "text" ? "Paste answer" : "Upload work"}
             </button>
@@ -322,7 +322,7 @@ export function EvaluationForm({
         </label>
         <label
           hidden={mode !== "file"}
-          className="block rounded-xl border border-dashed border-crimson/40 bg-rose-50/50 p-5 text-sm font-medium text-ink"
+          className="block rounded-xl border border-dashed border-crimson/40 bg-crimson/[0.04] p-5 text-sm font-medium text-ink"
         >
           Choose one clear file
           <input
@@ -394,7 +394,7 @@ export function EvaluationForm({
       {error && (
         <p
           role="alert"
-          className="mt-5 rounded-xl border border-crimson/20 bg-rose-50 p-4 text-sm text-crimson"
+          className="mt-5 rounded-xl border border-crimson/20 bg-crimson/5 p-4 text-sm text-crimson"
         >
           {error}
         </p>

@@ -13,9 +13,13 @@ import {
   TrackedOutboundLink,
   TrackedWhatsAppLink,
 } from "@/components/analytics/tracked-links";
-import { siteConfig } from "@/lib/data";
+import { courses, siteConfig } from "@/lib/data";
+import { listMarketingCourses } from "@/lib/course-offerings";
+import { courseSyllabusCodes } from "@/components/editorial/interactive-course-row";
+import { Arrow } from "@/components/editorial/arrow";
+import { liveFooterHelpLinks } from "@/lib/footer-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
-import { contact, telUrl, whatsAppGroupUrl } from "@/lib/contact";
+import { contact, ENROL_NOW_URL, telUrl, whatsAppGroupUrl } from "@/lib/contact";
 
 const whatsappGroupHref = whatsAppGroupUrl();
 
@@ -27,36 +31,55 @@ function InstagramGlyph(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-export function Footer() {
-  return (
-    <footer className="bg-crimson text-white/75">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10">
-          <div className="space-y-4">
-            <Link href="/" className="group inline-block">
-              <p className="font-serif text-xl font-semibold tracking-tight text-white transition-colors group-hover:text-rose">
-                {siteConfig.name}
-              </p>
-            </Link>
-            <p className="max-w-xs text-sm leading-relaxed text-white/65">
-              Rubric-driven Cambridge English mentorship that builds clarity,
-              examiner-aligned skill, and independent thinking for O Level
-              students.
-            </p>
-          </div>
+const footLink =
+  "inline-flex min-h-9 items-center gap-2.5 text-[0.95rem] text-paper/70 transition-colors hover:text-paper";
+const footHead = "mb-4 text-[0.8125rem] font-semibold text-[#f0a79d]";
 
-          <div>
-            <h2 className="mb-5 font-serif text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
-              Quick Links
-            </h2>
-            <ul className="space-y-3">
-              {siteConfig.navigation.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className="text-sm text-white/70 transition-colors hover:text-rose"
-                  >
-                    {item.label}
+export function Footer() {
+  const programmes = listMarketingCourses(courses);
+  const helpLinks = liveFooterHelpLinks();
+  return (
+    <footer className="ed-ink">
+      <div className="ed-wrap pb-10 pt-16 sm:pt-24">
+        {/* Closing statement: the brand, then the single next step. */}
+        <div className="flex flex-col gap-8 border-b border-paper/15 pb-12 lg:flex-row lg:items-end lg:justify-between">
+          <Link href="/" className="group block">
+            <p
+              className="ed-display text-[clamp(3.2rem,13vw,10.5rem)] text-paper transition-colors duration-500 group-hover:text-[#f0a79d]"
+              aria-label={siteConfig.name}
+            >
+              Jaweria
+              <br />
+              Amer
+            </p>
+          </Link>
+          <div className="max-w-sm lg:pb-3">
+            <p className="ed-quote text-[1.35rem] text-paper/90">
+              Rubric-driven Cambridge English mentorship that builds clarity,
+              examiner-aligned skill, and independent thinking.
+            </p>
+            <TrackedOutboundLink
+              href={ENROL_NOW_URL}
+              channel="enrol"
+              className="ed-btn ed-btn-paper mt-6"
+            >
+              Join the Next Batch
+              <Arrow />
+            </TrackedOutboundLink>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 pt-12 lg:grid-cols-4">
+          <div className="col-span-2 lg:col-span-1">
+            <h2 className={footHead}>Programmes</h2>
+            <ul>
+              {programmes.map((course) => (
+                <li key={course.id}>
+                  <Link href={`/courses/${course.id}`} className={footLink}>
+                    <span className="ed-num w-[4.6rem] shrink-0 text-[0.95rem] text-paper">
+                      {courseSyllabusCodes(course).join("/")}
+                    </span>
+                    {course.title}
                   </Link>
                 </li>
               ))}
@@ -64,23 +87,33 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className="mb-5 font-serif text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
-              Contact
-            </h2>
-            <ul className="space-y-4 text-sm">
-              <li className="inline-flex items-start gap-2.5 text-sm">
-                <Mail
-                  className="mt-0.5 h-4 w-4 shrink-0 text-rose"
-                  aria-hidden
-                />
+            <h2 className={footHead}>Explore</h2>
+            <ul>
+              {siteConfig.navigation.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href} className={footLink}>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link href="/free-evaluation" className={footLink}>
+                  Free evaluation
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div className="col-span-2 sm:col-span-1">
+            <h2 className={footHead}>Contact</h2>
+            <ul>
+              <li className={footLink}>
+                <Mail className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
                 <ContactEmailLink variant="onDark" />
               </li>
               <li>
-                <a
-                  href={telUrl()}
-                  className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
-                >
-                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
+                <a href={telUrl()} className={footLink}>
+                  <Phone className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
                   <span>{contact.phone}</span>
                 </a>
               </li>
@@ -91,12 +124,9 @@ export function Footer() {
                   variant="group"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
+                  className={footLink}
                 >
-                  <UsersRound
-                    className="mt-0.5 h-4 w-4 shrink-0 text-rose"
-                    aria-hidden
-                  />
+                  <UsersRound className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
                   <span>Text us on WhatsApp</span>
                 </TrackedWhatsAppLink>
               </li>
@@ -106,12 +136,9 @@ export function Footer() {
                   channel="youtube"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
+                  className={footLink}
                 >
-                  <PlayCircle
-                    className="mt-0.5 h-4 w-4 shrink-0 text-rose"
-                    aria-hidden
-                  />
+                  <PlayCircle className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
                   <span>YouTube — English with Jaweria</span>
                 </TrackedOutboundLink>
               </li>
@@ -121,12 +148,9 @@ export function Footer() {
                   channel="instagram"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
+                  className={footLink}
                 >
-                  <Camera
-                    className="mt-0.5 h-4 w-4 shrink-0 text-rose"
-                    aria-hidden
-                  />
+                  <Camera className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
                   <span>Instagram — @englishwithmissjay</span>
                 </TrackedOutboundLink>
               </li>
@@ -137,72 +161,66 @@ export function Footer() {
                     channel="facebook"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-start gap-2.5 text-white/70 transition-colors hover:text-rose"
+                    className={footLink}
                   >
-                    <Newspaper
-                      className="mt-0.5 h-4 w-4 shrink-0 text-rose"
-                      aria-hidden
-                    />
+                    <Newspaper className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
                     <span>Facebook — Jaweria Amer</span>
                   </TrackedOutboundLink>
                 </li>
               ) : null}
-              <li className="flex items-start gap-2.5 text-white/70">
-                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-rose" />
+              <li className={footLink}>
+                <MapPin className="h-4 w-4 shrink-0 text-[#f0a79d]" aria-hidden />
                 <span>{contact.locationLine}</span>
               </li>
             </ul>
           </div>
 
           <div>
-            <h2 className="mb-5 font-serif text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
-              Legal
+            <h2 className={footHead}>
+              {helpLinks.length > 0 ? "Help & Legal" : "Legal"}
             </h2>
-            <ul className="space-y-3">
+            <ul>
+              {helpLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={footLink}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
               <li>
-                <Link
-                  href="/terms"
-                  className="text-sm text-white/70 transition-colors hover:text-rose"
-                >
+                <Link href="/terms" className={footLink}>
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/privacy"
-                  className="text-sm text-white/70 transition-colors hover:text-rose"
-                >
+                <Link href="/privacy" className={footLink}>
                   Privacy Policy
                 </Link>
               </li>
             </ul>
           </div>
         </div>
-      </div>
 
-      <div className="border-t border-white/10 bg-crimson-dark/80">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-center text-xs text-white/60 sm:text-left">
-              © 2026 Jaweria Amer. All Rights Reserved.
-            </p>
-            <TrackedOutboundLink
-              href={contact.instagram}
-              channel="instagram"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-rose/50 hover:text-rose"
-              aria-label="Follow on Instagram"
-            >
-              <InstagramGlyph className="h-5 w-5" />
-            </TrackedOutboundLink>
-          </div>
-          <p className="mt-4 max-w-4xl text-center text-[11px] leading-relaxed text-[rgb(200,160,165)]/95 sm:text-left">
-            CAIE™ and O Level™ are trademarks of Cambridge Assessment
-            International Education. This site is not affiliated with or
-            endorsed by Cambridge Assessment.
+        <div className="mt-12 flex flex-col gap-4 border-t border-paper/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[0.8125rem] text-paper/60">
+            © 2026 Jaweria Amer. All Rights Reserved.
           </p>
+          <TrackedOutboundLink
+            href={contact.instagram}
+            channel="instagram"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-paper/20 text-paper/70 transition-colors hover:border-paper/60 hover:text-paper"
+            aria-label="Follow on Instagram"
+          >
+            <InstagramGlyph className="h-5 w-5" />
+          </TrackedOutboundLink>
         </div>
+        <p className="mt-4 max-w-4xl pb-16 text-[0.75rem] leading-relaxed text-paper/55 sm:pb-0">
+          CAIE™ and O Level™ are trademarks of Cambridge Assessment
+          International Education. This site is not affiliated with or endorsed
+          by Cambridge Assessment.
+        </p>
       </div>
     </footer>
   );

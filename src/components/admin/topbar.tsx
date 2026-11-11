@@ -4,7 +4,7 @@ import { ExternalLink } from "lucide-react";
 
 export function AdminTopbar() {
   return (
-    <header className="h-14 shrink-0 flex items-center justify-between border-b border-blush bg-white px-4 sm:px-6 lg:px-8">
+    <header className="h-14 shrink-0 flex items-center justify-between border-b border-ink/10 bg-white px-4 sm:px-6 lg:px-8">
       <div className="lg:hidden w-10" />
       <div className="flex items-center gap-3">
         <Link
@@ -19,7 +19,7 @@ export function AdminTopbar() {
       <div className="flex items-center gap-3">
         <div className="text-right hidden sm:block">
           <p className="text-sm font-medium text-crimson">Jaweria Amer</p>
-          <p className="text-xs text-slate-light">Administrator</p>
+          <p className="text-xs text-slate">Administrator</p>
         </div>
         <Avatar className="w-8 h-8 bg-crimson text-white">
           <AvatarFallback className="bg-crimson text-white text-xs font-semibold">JA</AvatarFallback>

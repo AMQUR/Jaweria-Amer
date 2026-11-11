@@ -1,14 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BookOpen,
-  Target,
-  Users,
-  Award,
-  ChevronRight,
-  PlayCircle,
-} from "lucide-react";
 import { listMarketingCourses } from "@/lib/course-offerings";
 import { courses, siteConfig } from "@/lib/data";
 import { getSettings } from "@/lib/admin/store";
@@ -25,18 +16,20 @@ import {
   ENROL_NOW_URL,
   COMMUNITY_WHATSAPP_URL,
 } from "@/lib/contact";
-import { CourseCard } from "@/components/course-card";
-import AnimatedCounter from "@/components/ui/animated-counter";
 import { socialMetadata } from "@/lib/seo";
 import { isBatchAnnouncementActive } from "@/lib/public-experience";
 import { LiveSessionHero } from "@/components/live-session-hero";
-
-import { HomePreview } from "@/components/public-experience/home-preview";
+import {
+  LessonsSection,
+  ResourcesAndEvaluation,
+  StudentExperience,
+} from "@/components/public-experience/home-preview";
 import { evaluationAvailable } from "@/lib/evaluation/server";
 import { ResultsShowcase } from "@/components/results/results-showcase";
-
-const stayConnectedLink =
-  "inline-flex items-center justify-center gap-2 rounded-2xl border border-border/70 bg-white px-5 py-2.5 text-sm font-medium text-ink shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-crimson/25 hover:shadow-md active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-crimson/40 motion-reduce:hover:translate-y-0";
+import { getMj26Headline, SESSION_LABEL } from "@/lib/results/public";
+import { Arrow } from "@/components/editorial/arrow";
+import { PointerField } from "@/components/editorial/pointer-field";
+import { InteractiveCourseRow } from "@/components/editorial/interactive-course-row";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -49,23 +42,31 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-const sectionKicker =
-  "text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground";
-const sectionTitle =
-  "font-serif text-2xl font-semibold leading-[1.18] tracking-tight text-ink sm:text-3xl lg:text-[2.05rem] lg:leading-[1.16]";
-const bodyLead =
-  "text-sm leading-relaxed text-slate sm:text-base sm:leading-relaxed";
+const TEACHING_PRINCIPLES = [
+  {
+    title: "Rubric-aligned",
+    text: "Every exercise maps to CAIE marking criteria. No guesswork, no wasted effort.",
+  },
+  {
+    title: "Examiner insights",
+    text: "Feedback modelled on examiner reports. You learn what gains marks and what loses them.",
+  },
+  {
+    title: "Calm mentorship",
+    text: "Supportive, structured guidance that keeps confidence intact while raising standards.",
+  },
+];
 
 export default async function HomePage() {
-  const featuredCourses = listMarketingCourses(courses).filter(
-    (c) => c.featured,
-  );
+  const programmes = listMarketingCourses(courses);
+  const featuredCourses = programmes.filter((c) => c.featured);
   const [settings, homepageContent] = await Promise.all([
     getSettings(),
     getHomepageContent(),
   ]);
   const stats = settings?.stats ?? [];
   const safeHomepageContent = homepageContent ?? defaultHomepageContent;
+  const headline = getMj26Headline();
 
   return (
     <>
@@ -74,261 +75,214 @@ export default async function HomePage() {
         heroContent={safeHomepageContent}
         announcementActive
         enrolmentOpen={isBatchAnnouncementActive()}
+        programmes={programmes}
+        proof={{
+          pct: Math.round(headline.aOrAStarPct),
+          aOrAStar: headline.aOrAStar,
+          sharedResults: headline.sharedResults,
+          session: SESSION_LABEL,
+        }}
       />
 
       {/* M/J 2026 proof block — the results are the proof, so they sit straight after the hero */}
       <ResultsShowcase />
 
-      <HomePreview evaluationReady={evaluationAvailable()} />
-
-      {/* Stats — tighter vertical rhythm */}
-      <section className="border-b border-border/70 bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-          <div className="premium-reveal grid grid-cols-2 gap-10 lg:grid-cols-3 lg:gap-12">
-            {stats.map((stat, i) => (
-              <div
-                key={`ticker-${i}`}
-                className="text-center opacity-0 animate-fade-in-up"
-                style={{ animationDelay: `${i * 0.08}s` }}
-              >
-                <h3 className="mb-1.5 font-serif text-3xl font-semibold text-crimson sm:text-[2.1rem]">
-                  <AnimatedCounter
-                    value={String(stat.value ?? "")}
-                    delay={i * 100}
-                  />
-                </h3>
-                <p className="text-sm leading-snug text-slate">
-                  {String(stat.label ?? "")}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Value proposition — generous breathing room */}
-      <section className="bg-cream py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="premium-reveal mx-auto mb-14 max-w-2xl text-center sm:mb-20">
-            <p className={`${sectionKicker} mb-3`}>Why Students Choose Us</p>
-            <h2 className={`${sectionTitle} mb-5`}>Structure, Not Stress</h2>
-            <p className={bodyLead}>
+      {/* Who is Miss Jay — the teacher behind the results */}
+      <section className="ed-paper">
+        <div className="ed-wrap grid gap-12 py-16 sm:py-24 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-7">
+            <p className="ed-label">Your teacher</p>
+            <h2 className="ed-h2 mt-5">Structure, not stress.</h2>
+            <blockquote className="ed-quote mt-8 max-w-2xl text-[clamp(1.5rem,3vw,2.4rem)] text-ink">
+              “My approach is simple: reduce confusion and give students a
+              sense of control.”
+            </blockquote>
+            <p className="ed-lead mt-6">
               We don&apos;t do panic prep. We build repeatable exam thinking
               through a method that&apos;s rubric-led, feedback-rich, and
               designed around how Cambridge actually marks.
             </p>
+            <Link href="/about" className="ed-link mt-6 text-crimson">
+              Meet Miss Jay
+              <Arrow />
+            </Link>
           </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-4">
-            {[
-              {
-                icon: Target,
-                title: "Rubric-Aligned",
-                desc: "Every exercise maps to CAIE marking criteria. No guesswork, no wasted effort.",
-              },
-              {
-                icon: BookOpen,
-                title: "Examiner Insights",
-                desc: "Feedback modelled on examiner reports. You learn what gains marks and what loses them.",
-              },
-              {
-                icon: Users,
-                title: "Calm Mentorship",
-                desc: "Supportive, structured guidance that keeps confidence intact while raising standards.",
-              },
-              {
-                icon: Award,
-                title: "Proven Results",
-                desc: "Consistent A*/A outcomes across multiple exam sessions. The method works.",
-              },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="rounded-2xl border border-border/60 bg-white p-7 shadow-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-border hover:shadow-md motion-reduce:hover:translate-y-0"
-              >
-                <div className="mb-5 flex h-10 w-10 items-center justify-center rounded-lg bg-muted">
-                  <item.icon className="h-5 w-5 text-brand" aria-hidden />
-                </div>
-                <h3 className="mb-2 font-serif text-xl font-semibold tracking-tight text-ink">
-                  {item.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-slate sm:text-base">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
+          <div className="lg:col-span-5 lg:pt-12">
+            <ul className="border-t border-ink/15">
+              {TEACHING_PRINCIPLES.map((item) => (
+                <li key={item.title} className="border-b border-ink/15 py-5">
+                  <h3 className="ed-h3">{item.title}</h3>
+                  <p className="mt-1.5 leading-relaxed text-slate">
+                    {item.text}
+                  </p>
+                </li>
+              ))}
+            </ul>
+            {/* Stats — admin-editable figures; the A/A* stat is test-locked to the dataset */}
+            {stats.length > 0 ? (
+              <dl className="mt-8 grid grid-cols-3 gap-4">
+                {stats.map((stat, i) => (
+                  <div key={`stat-${i}`} className="flex flex-col">
+                    <dt className="order-2 mt-2 text-[0.8125rem] leading-snug text-slate">
+                      {String(stat.label ?? "")}
+                    </dt>
+                    <dd className="ed-num text-[clamp(2rem,4vw,3rem)] text-crimson">
+                      {String(stat.value ?? "")}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
           </div>
         </div>
       </section>
 
-      {/* Featured courses — slightly tighter than value block */}
-      <section className="bg-white py-16 sm:py-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="premium-reveal mb-12 flex items-end justify-between gap-6 sm:mb-16">
+      {/* Programmes — the signature interactive rows */}
+      <section className="ed-paper">
+        <div className="ed-wrap py-16 sm:py-24">
+          <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-4">
             <div>
-              <p className={`${sectionKicker} mb-3`}>Programmes</p>
-              <h2 className={sectionTitle}>Featured Courses</h2>
+              <p className="ed-label">Programmes</p>
+              <h2 className="ed-h2 mt-5">Choose your syllabus.</h2>
             </div>
-            <Link
-              href="/courses"
-              className="hidden items-center gap-1 text-sm font-medium text-ink/80 transition-colors hover:text-brand sm:flex"
-            >
-              View all
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="grid gap-6 sm:grid-cols-2 sm:gap-7 lg:grid-cols-3">
-            {featuredCourses.map((course) => (
-              <CourseCard key={course.id} course={course} />
-            ))}
-          </div>
-
-          <div className="mt-10 text-center sm:hidden">
-            <Link
-              href="/courses"
-              className="inline-flex items-center gap-1 text-sm font-medium text-ink/80 transition-colors hover:text-brand"
-            >
+            <Link href="/courses" className="ed-link text-crimson">
               View all courses
-              <ChevronRight className="h-4 w-4" />
+              <Arrow />
             </Link>
           </div>
+          <PointerField as="ul" className="ed-rows mt-10">
+            {featuredCourses.map((course) => (
+              <InteractiveCourseRow key={course.id} course={course} />
+            ))}
+          </PointerField>
         </div>
       </section>
 
-      {/* Roadmap */}
-      <section className="bg-cream py-20 sm:py-[6.75rem]">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="premium-reveal mx-auto mb-14 max-w-2xl text-center sm:mb-20">
-            <p className={`${sectionKicker} mb-3`}>The Method</p>
-            <h2 className={`${sectionTitle} mb-5`}>
-              Your Step-by-Step Roadmap
+      {/* The method — a real sequence, so it is numbered */}
+      <section className="border-y border-ink/10 bg-paper-deep">
+        <div className="ed-wrap grid gap-10 py-16 sm:py-24 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-5">
+            <div className="lg:sticky lg:top-28">
+              <p className="ed-label">The method</p>
+              <h2 className="ed-h2 mt-5">Your step‑by‑step roadmap.</h2>
+              <p className="ed-lead mt-5">
+                A clear, structured journey from diagnostic to exam day. Every
+                step is designed to build skill, confidence, and control.
+              </p>
+            </div>
+          </div>
+          <ol className="border-t border-ink/15 lg:col-span-7">
+            {siteConfig.roadmap.map((step) => (
+              <li
+                key={step.step}
+                className="grid grid-cols-[3.25rem_minmax(0,1fr)] gap-x-4 border-b border-ink/15 py-6 sm:grid-cols-[6rem_minmax(0,1fr)]"
+              >
+                <span
+                  className="ed-num text-[clamp(2.2rem,5vw,3.75rem)] text-crimson"
+                  aria-hidden
+                >
+                  {String(step.step).padStart(2, "0")}
+                </span>
+                <div>
+                  <h3 className="ed-h3">{step.title}</h3>
+                  <p className="mt-1.5 max-w-lg leading-relaxed text-slate">
+                    {step.description}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <LessonsSection />
+
+      <ResourcesAndEvaluation evaluationReady={evaluationAvailable()} />
+
+      <StudentExperience />
+
+      {/* How to get started */}
+      <section className="ed-crimson">
+        <PointerField className="ed-wrap grid gap-10 py-16 sm:py-24 lg:grid-cols-12 lg:items-end lg:gap-16">
+          <div className="lg:col-span-7">
+            <p className="ed-label">How to get started</p>
+            <h2 className="ed-display mt-5 text-[clamp(2.4rem,7vw,5.5rem)]">
+              Ready for structure, feedback &amp; real progress?
             </h2>
-            <p className={bodyLead}>
-              A clear, structured journey from diagnostic to exam day. Every
-              step is designed to build skill, confidence, and control.
+          </div>
+          <div className="lg:col-span-5">
+            <p className="text-[1.06rem] leading-relaxed text-paper/80">
+              Free resources help you practise. The live programme helps you
+              improve — with checked work, personalised feedback, biweekly
+              tests, and progress reports. Enrol when you&apos;re ready, or
+              book a short clarity call first. No pressure.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <TrackedOutboundLink
+                href={ENROL_NOW_URL}
+                channel="enrol"
+                className="ed-btn ed-btn-paper ed-btn-lg"
+                data-depth="magnet"
+              >
+                Enrol Now
+                <Arrow />
+              </TrackedOutboundLink>
+              <TrackedWhatsAppLink
+                href={whatsAppGroupUrl()}
+                location="home_footer_cta"
+                variant="group"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ed-btn ed-btn-ghost ed-btn-lg text-paper"
+              >
+                Book a call
+                <Arrow direction="up-right" />
+              </TrackedWhatsAppLink>
+            </div>
+            <p className="mt-5 text-[0.9rem] text-paper/70">
+              Or write to{" "}
+              <ContactEmailLink variant="onDark" className="font-medium" />
             </p>
           </div>
+        </PointerField>
 
-          <div className="relative mx-auto max-w-2xl">
-            <div
-              className="absolute bottom-2 left-[1.125rem] top-2 w-px bg-border sm:left-6"
-              aria-hidden
-            />
-            <div className="space-y-10 sm:space-y-12">
-              {siteConfig.roadmap.map((step) => (
-                <div key={step.step} className="relative flex gap-5 sm:gap-6">
-                  <div className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-crimson text-sm font-semibold text-white shadow-sm sm:h-11 sm:w-11 sm:text-base">
-                    {step.step}
-                  </div>
-                  <div className="min-w-0 pt-0.5 sm:pt-1">
-                    <h3 className="mb-2 font-serif text-lg font-semibold text-ink sm:text-xl">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-slate">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="border-t border-crimson-dark/20 bg-gradient-to-b from-crimson to-crimson-dark py-[4.75rem] sm:py-28">
-        <div className="premium-reveal mx-auto max-w-2xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="mb-4 font-serif text-xl font-semibold leading-[1.2] tracking-tight text-white sm:text-2xl lg:text-[2rem]">
-            Ready for Structure, Feedback &amp; Real Progress?
-          </h2>
-          <p className="mx-auto mb-4 max-w-lg text-sm leading-relaxed text-white/75 sm:text-base">
-            Free resources help you practise. The live programme helps you
-            improve — with checked work, personalised feedback, biweekly tests,
-            and progress reports. Enrol when you&apos;re ready, or book a short
-            clarity call first. No pressure.
-          </p>
-          <p className="mx-auto mb-10 max-w-lg text-sm text-white/55">
-            Or write to{" "}
-            <ContactEmailLink variant="onDark" className="font-medium" />
-          </p>
-          <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:justify-center">
+        {/* Stay connected — secondary to the enrolment journey */}
+        <div className="border-t border-paper/20">
+          <div className="ed-wrap flex flex-col gap-x-10 gap-y-2 py-6 sm:flex-row sm:flex-wrap sm:items-center">
+            <p className="mr-auto max-w-md text-[0.9rem] text-paper/75">
+              Stay connected: lessons, updates, and a student community —
+              useful alongside the programme, not instead of it.
+            </p>
             <TrackedOutboundLink
-              href={ENROL_NOW_URL}
-              channel="enrol"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-7 py-3.5 text-sm font-semibold text-crimson shadow-md transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:bg-white/90 hover:shadow-lg active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
-            >
-              Enrol Now
-              <ArrowRight className="h-4 w-4" />
-            </TrackedOutboundLink>
-            <TrackedWhatsAppLink
-              href={whatsAppGroupUrl()}
-              location="home_footer_cta"
-              variant="group"
+              href={contact.youtube}
+              channel="youtube"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/30 bg-white/10 px-7 py-3.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm transition-[transform,box-shadow,background-color,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/20 hover:shadow-md active:scale-[0.98] motion-reduce:hover:translate-y-0 sm:min-w-[200px]"
+              className="ed-link text-paper"
             >
-              Book a call
-              <ArrowRight className="h-4 w-4" />
-            </TrackedWhatsAppLink>
-          </div>
-          <p className="mt-8">
-            <Link
-              href="/courses"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-white/65 underline-offset-4 transition-colors hover:text-white"
+              YouTube
+              <Arrow direction="up-right" />
+            </TrackedOutboundLink>
+            <TrackedOutboundLink
+              href={COMMUNITY_WHATSAPP_URL}
+              channel="community"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ed-link text-paper"
             >
-              Browse courses
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-          </p>
-        </div>
-      </section>
-
-      {/* Stay Connected — secondary social/community actions (below primary enrolment journey) */}
-      <section className="border-t border-border/70 bg-cream py-14 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-xl text-center">
-            <p className={`${sectionKicker} mb-3`}>Community</p>
-            <h2 className={`${sectionTitle} mb-3`}>Stay Connected</h2>
-            <p className={`${bodyLead} mb-8`}>
-              Lessons, updates, and a student community — useful alongside the
-              programme, not instead of it.
-            </p>
-            <div className="flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:flex-wrap sm:items-center">
-              <TrackedOutboundLink
-                href={contact.youtube}
-                channel="youtube"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={stayConnectedLink}
-              >
-                <PlayCircle
-                  className="h-4 w-4 shrink-0 text-crimson"
-                  aria-hidden
-                />
-                YouTube
-              </TrackedOutboundLink>
-              <TrackedOutboundLink
-                href={COMMUNITY_WHATSAPP_URL}
-                channel="community"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={stayConnectedLink}
-              >
-                <Users className="h-4 w-4 shrink-0 text-crimson" aria-hidden />
-                Join Community
-              </TrackedOutboundLink>
-              <TrackedOutboundLink
-                href={contact.instagram}
-                channel="instagram"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={stayConnectedLink}
-              >
-                Instagram
-              </TrackedOutboundLink>
-            </div>
+              Join Community
+              <Arrow direction="up-right" />
+            </TrackedOutboundLink>
+            <TrackedOutboundLink
+              href={contact.instagram}
+              channel="instagram"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ed-link text-paper"
+            >
+              Instagram
+              <Arrow direction="up-right" />
+            </TrackedOutboundLink>
           </div>
         </div>
       </section>

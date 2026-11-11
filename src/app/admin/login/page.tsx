@@ -28,14 +28,14 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="min-h-screen bg-crimson flex items-center justify-center px-4">
+    <div className="min-h-screen bg-oxblood flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="w-14 h-14 rounded-xl bg-rose/20 flex items-center justify-center mx-auto mb-4">
             <Lock className="w-7 h-7 text-rose" />
           </div>
           <h1 className="font-serif text-2xl font-bold text-white">Admin Portal</h1>
-          <p className="mx-auto mt-1 text-sm text-white/50">{siteConfig.name}</p>
+          <p className="mx-auto mt-1 text-sm text-white/70">{siteConfig.name}</p>
         </div>
 
         <form action={action} className="bg-white rounded-xl p-6 shadow-xl space-y-4">

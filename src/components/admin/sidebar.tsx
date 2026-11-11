@@ -36,7 +36,7 @@ export function AdminSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const sidebar = (
-    <div className="flex h-full flex-col bg-crimson-dark text-white">
+    <div className="flex h-full flex-col bg-oxblood text-white">
       <div className="border-b border-white/10 p-6">
         <Link
           href="/admin"
@@ -46,7 +46,7 @@ export function AdminSidebar() {
           <span className="font-serif text-lg font-semibold tracking-tight">
             Jaweria Amer
           </span>
-          <span className="text-[10px] text-white/40 tracking-[0.2em] uppercase">
+          <span className="text-[11px] text-white/60 tracking-[0.16em] uppercase">
             Control Center
           </span>
         </Link>
@@ -80,7 +80,7 @@ export function AdminSidebar() {
         <form action={logoutAction}>
           <button
             type="submit"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/40 hover:text-white hover:bg-white/5 transition-colors w-full"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/65 hover:text-white hover:bg-white/5 transition-colors w-full"
           >
             <LogOut className="w-4.5 h-4.5" />
             Sign Out
@@ -100,7 +100,7 @@ export function AdminSidebar() {
       {/* Mobile toggle */}
       <button
         onClick={() => setMobileOpen(!mobileOpen)}
-        className="fixed left-4 top-4 z-50 rounded-lg bg-crimson-dark p-2 text-white shadow-md lg:hidden"
+        className="fixed left-4 top-4 z-50 rounded-lg bg-oxblood p-2 text-white shadow-md lg:hidden"
         aria-label="Toggle sidebar"
       >
         {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

@@ -19,7 +19,7 @@ export function AboutLatestYoutube() {
   }, []);
 
   return (
-    <div className="mx-auto mt-10 w-full max-w-3xl overflow-hidden rounded-2xl border border-border/70 bg-muted/30 shadow-[0_8px_32px_rgba(34,16,18,0.08)]">
+    <div className="w-full overflow-hidden rounded-xl bg-black/30 ring-1 ring-paper/15">
       <div className="relative aspect-video w-full">
         {!iframeFailed && (
           <iframe

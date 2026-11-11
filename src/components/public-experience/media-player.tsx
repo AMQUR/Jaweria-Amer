@@ -88,7 +88,7 @@ export function MediaPlayer({
   }, [playing, safe, src, failed]);
   return (
     <div ref={container}>
-      <div className="relative aspect-video overflow-hidden rounded-2xl bg-[#29181d] text-white">
+      <div className="relative aspect-video overflow-hidden rounded-xl bg-[#1c0c0f] text-white">
         {!safe || failed ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 p-5 text-center">
             <PlayCircle className="h-9 w-9 text-rose-200" aria-hidden />
@@ -118,19 +118,35 @@ export function MediaPlayer({
         ) : !playing ? (
           <button
             type="button"
-            className="relative flex h-full w-full items-center justify-center focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-rose-200"
+            className="group relative flex h-full w-full items-end text-left focus-visible:outline-4 focus-visible:-outline-offset-4 focus-visible:outline-paper"
             aria-label={`Watch ${title}`}
             onClick={() => setPlaying(true)}
           >
             {poster && /^https:\/\//.test(poster) && (
               <span
-                className="absolute inset-0 bg-cover bg-center opacity-50"
+                className="absolute inset-0 bg-cover bg-center opacity-75 transition-[scale,opacity] duration-700 group-hover:scale-[1.03] group-hover:opacity-90"
                 style={{ backgroundImage: `url(${JSON.stringify(poster)})` }}
+                aria-hidden
               />
             )}
-            <span className="relative flex flex-col items-center gap-3 px-4 text-center">
-              <PlayCircle className="h-14 w-14" aria-hidden />
-              <span className="text-sm font-semibold">Watch {title}</span>
+            <span
+              className="absolute inset-0 bg-gradient-to-t from-[#1c0c0f] via-[#1c0c0f]/25 to-transparent"
+              aria-hidden
+            />
+            <span className="relative flex w-full items-center gap-4 p-4 sm:p-5">
+              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-paper text-crimson transition-[scale] duration-500 group-hover:scale-110">
+                <svg
+                  viewBox="0 0 24 24"
+                  className="ml-0.5 h-5 w-5"
+                  fill="currentColor"
+                  aria-hidden
+                >
+                  <path d="M7 4.5v15l13-7.5z" />
+                </svg>
+              </span>
+              <span className="text-[1.05rem] font-semibold leading-snug">
+                Watch {title}
+              </span>
             </span>
           </button>
         ) : (
@@ -225,7 +241,7 @@ export function MediaPlayer({
         )}
       </div>
       {engaged && kind === "demo_lesson" && (
-        <div className="mt-4 rounded-xl bg-rose-50 p-4">
+        <div className="mt-4 rounded-xl bg-paper p-4">
           <p className="text-sm leading-relaxed text-ink">
             Enjoyed this lesson? Learn the complete syllabus with Miss Jay.
           </p>

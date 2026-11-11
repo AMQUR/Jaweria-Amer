@@ -9,7 +9,8 @@ export default function AnimatedCounter({
   value: string;
   delay?: number;
 }) {
-  const [display, setDisplay] = useState("0");
+  // The real figure is the server-rendered (and no-JS) state — never a meaningless "0".
+  const [display, setDisplay] = useState(value);
   const ref = useRef<HTMLSpanElement | null>(null);
   const hasAnimated = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -56,12 +57,20 @@ export default function AnimatedCounter({
     const el = ref.current;
     if (!el) return;
 
-    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Already on screen at load (or motion is unwelcome): leave the true value alone.
+    const alreadyVisible = el.getBoundingClientRect().top < window.innerHeight;
+    if (reduced || alreadyVisible) {
       const raf = requestAnimationFrame(() => {
         setDisplay(value);
       });
       return () => cancelAnimationFrame(raf);
     }
+
+    // Below the fold with scripts running: park at zero until it scrolls in.
+    const parkFrame = requestAnimationFrame(() => {
+      if (!hasAnimated.current && /\d/.test(value)) setDisplay(value.replace(/\d+/g, "0"));
+    });
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -81,6 +90,7 @@ export default function AnimatedCounter({
     );
     observer.observe(el);
     return () => {
+      cancelAnimationFrame(parkFrame);
       observer.disconnect();
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
