@@ -17,6 +17,7 @@ import { courses, siteConfig } from "@/lib/data";
 import { listMarketingCourses } from "@/lib/course-offerings";
 import { courseSyllabusCodes } from "@/components/editorial/interactive-course-row";
 import { Arrow } from "@/components/editorial/arrow";
+import { liveFooterHelpLinks } from "@/lib/footer-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
 import { contact, ENROL_NOW_URL, telUrl, whatsAppGroupUrl } from "@/lib/contact";
 
@@ -36,6 +37,7 @@ const footHead = "mb-4 text-[0.8125rem] font-semibold text-[#f0a79d]";
 
 export function Footer() {
   const programmes = listMarketingCourses(courses);
+  const helpLinks = liveFooterHelpLinks();
   return (
     <footer className="ed-ink">
       <div className="ed-wrap pb-10 pt-16 sm:pt-24">
@@ -174,8 +176,17 @@ export function Footer() {
           </div>
 
           <div>
-            <h2 className={footHead}>Legal</h2>
+            <h2 className={footHead}>
+              {helpLinks.length > 0 ? "Help & Legal" : "Legal"}
+            </h2>
             <ul>
+              {helpLinks.map((link) => (
+                <li key={link.href}>
+                  <Link href={link.href} className={footLink}>
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <Link href="/terms" className={footLink}>
                   Terms of Service

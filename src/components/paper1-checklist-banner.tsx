@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import {
   CARD_BASE,
-  CARD_BUTTON,
   CARD_CONTENT,
 } from "@/components/resource-card-system";
 import {
@@ -155,28 +154,30 @@ export function Paper1ChecklistBanner() {
     <>
       {/* ── CLEAN BANNER ── */}
       <div
-        className={`${CARD_BASE} flex-col gap-5 border border-amber-200/60 bg-gradient-to-r from-amber-50 via-yellow-50 to-amber-50 shadow-sm hover:scale-[1.015] hover:shadow-md sm:flex-row sm:gap-6`}
+        className={`${CARD_BASE} flex-col gap-5 rounded-xl border border-ink/12 border-l-4 border-l-crimson bg-white sm:flex-row sm:gap-6`}
       >
         <div className="min-w-0 flex-1 self-stretch sm:self-auto">
-          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-700">
+          <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-crimson/10 text-crimson">
             <ClipboardCheck className="h-6 w-6" aria-hidden />
           </div>
           <div className={CARD_CONTENT}>
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-600/80">
-              Batch readiness
+            <p className="text-[0.8125rem] font-semibold text-crimson">
+              Exam readiness check
             </p>
-            <h2 className="text-xl font-semibold text-amber-900 sm:text-2xl">
-              Are you ready for the October/November batch?
+            <h2 className="ed-h3 text-[1.5rem] text-ink sm:text-[1.75rem]">
+              How exam-ready is your English, honestly?
             </h2>
-            <p className="max-w-2xl text-sm leading-relaxed text-amber-800/70 sm:text-base">
-              Run the readiness check. Score 80% or more and you&apos;re set for
-              Oct/Nov — below that and May/June is the smarter call.
+            <p className="max-w-2xl text-sm leading-relaxed text-slate sm:text-base">
+              Tick off what you can already do across grammar, directed
+              writing and essays. Score 80% or more and you&apos;re on track
+              for your next Cambridge exam series — below that, you&apos;ll
+              see exactly what to revise first.
             </p>
           </div>
         </div>
         <button
           onClick={openQuiz}
-          className={`${CARD_BUTTON} w-full shrink-0 justify-center bg-amber-500 text-white hover:bg-amber-600 sm:w-auto`}
+          className="ed-btn w-full shrink-0 sm:w-auto"
         >
           Check my readiness
         </button>
@@ -188,7 +189,7 @@ export function Paper1ChecklistBanner() {
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
-          aria-label="October/November Readiness Quiz"
+          aria-label="Exam Readiness Quiz"
         >
           <div
             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -201,10 +202,10 @@ export function Paper1ChecklistBanner() {
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber-100/80">
-                    Batch readiness
+                    Exam readiness
                   </p>
                   <h2 className="mt-1 font-serif text-xl font-bold text-white">
-                    October/November Readiness Check
+                    Exam Readiness Check
                   </h2>
                 </div>
                 <button
@@ -447,13 +448,13 @@ export function Paper1ChecklistBanner() {
             </p>
             <h2 className="mt-3 text-xl font-bold text-ink">
               {isReady
-                ? "You are ready to appear in the October/November batch."
-                : "You should opt for the May/June batch."}
+                ? "You are on track for your next exam series."
+                : "Give yourself more preparation time."}
             </h2>
             <p className="mt-1 text-sm text-slate-500">
               {isReady
                 ? "Strong prep. Lock in your place and finish strong with the guided batch."
-                : "A little more time will pay off. Build your foundations and aim for May/June."}
+                : "A little more time will pay off. Build your foundations, then sit the series after."}
             </p>
 
             <div
@@ -470,8 +471,8 @@ export function Paper1ChecklistBanner() {
                 src={rewardSrc}
                 alt={
                   isReady
-                    ? "Ready for the October/November batch!"
-                    : "Aim for the May/June batch"
+                    ? "On track for your next exam series"
+                    : "More preparation time recommended"
                 }
                 width={520}
                 height={726}

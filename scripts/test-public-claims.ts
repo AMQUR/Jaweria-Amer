@@ -42,4 +42,22 @@ assert.deepEqual((meta.twitter as { images: string[] }).images, [
   "/opengraph-image.png",
 ]);
 
+// A footer help link may go live only once its page exists on this branch.
+const footerLinks = readFileSync("src/lib/footer-links.ts", "utf8");
+for (const match of footerLinks.matchAll(
+  /href: "(\/[a-z-]+)", label: "[^"]+", live: (true|false)/g,
+)) {
+  const [, href, live] = match;
+  if (live !== "true") continue;
+  assert(
+    statSync(`src/app/(public)${href}/page.tsx`, { throwIfNoEntry: false }),
+    `Footer links to ${href} but that page does not exist`,
+  );
+}
+assert.equal(
+  [...footerLinks.matchAll(/live: (true|false)/g)].length,
+  4,
+  "footer help link list changed shape; update this guard",
+);
+
 console.log("public claims tests passed");

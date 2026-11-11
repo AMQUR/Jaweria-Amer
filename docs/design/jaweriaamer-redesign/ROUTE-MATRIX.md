@@ -80,15 +80,18 @@ larger size. LCP/FCP are NOT MEASURED comparably (network vs localhost). Lightho
 2. **LMS walkthrough video.** `origin/main` still showed the Instagram placeholder. This branch adds the
    approved `GAQi9OgSpCI` embed using the same field name and component path as the uncommitted work in the
    main checkout, so the two converge. The separate LMS login page was not touched.
-3. **Stale claim to review.** `Paper1ChecklistBanner` on `/resources` still says "Are you ready for the
-   October/November batch?". It is pre-existing, tied to the gated checklist reward flow, and was left
-   untouched pending an owner decision on copy. The batch announcement itself is already on its neutral
-   post-window copy. Nothing paused or expired was re-published.
+3. **Stale October/November copy — fixed.** The readiness banner on `/resources`, its quiz dialog and its
+   result messages no longer name an exam month; they now speak about "your next Cambridge exam series".
+   The 80% threshold, questions, scoring and reward gating are unchanged. The results-page closing line
+   was made timeless the same way. No batch date was invented.
 4. **CMS persistence.** Admin writes go through `src/lib/admin/cms-store.ts` unchanged. Whether they persist
    on Vercel was not investigated (historical note only).
-5. **Merge note.** The main checkout has uncommitted edits to `footer.tsx`, `home-preview.tsx`,
-   `public-experience.ts` and `sitemap.ts`. This branch rewrites the first two, so whoever lands second
-   will need to re-apply the four footer links ("Help & Legal") by hand.
+5. **Footer help links — reconciled.** The four links from the uncommitted main checkout (Class Timings,
+   FAQ, Exam Countdown, Free Study Plans) are listed in `src/lib/footer-links.ts` with `live: false`, because
+   their pages are not on this branch and must not 404. When those pages land, set `live: true`; the column
+   heading becomes "Help & Legal" automatically. A guard in `scripts/test-public-claims.ts` fails if a link
+   goes live without its page. The main checkout's own edits to `footer.tsx` and `home-preview.tsx` will
+   still conflict textually with this branch and should be dropped in favour of this branch's versions.
 
 ## Not done
 

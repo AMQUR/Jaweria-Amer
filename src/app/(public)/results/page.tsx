@@ -71,7 +71,7 @@ export default function ResultsPage() {
           <div>
             <p className="results-eyebrow">Next series</p>
             <p className="mt-1 font-serif text-[1.25rem] font-semibold tracking-tight">
-              Preparing for October/November 2026 or May/June 2027?
+              Preparing for your next Cambridge exam series?
             </p>
             <p
               className="mt-1 text-[13.5px]"
