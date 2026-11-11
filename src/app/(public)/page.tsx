@@ -23,6 +23,7 @@ import {
   LessonsSection,
   ResourcesAndEvaluation,
   StudentExperience,
+  FreePlanningLinks,
 } from "@/components/public-experience/home-preview";
 import { evaluationAvailable } from "@/lib/evaluation/server";
 import { ResultsShowcase } from "@/components/results/results-showcase";
@@ -200,6 +201,7 @@ export default async function HomePage() {
       <ResourcesAndEvaluation evaluationReady={evaluationAvailable()} />
 
       <StudentExperience />
+      <FreePlanningLinks />
 
       {/* How to get started */}
       <section className="ed-crimson">

@@ -27,6 +27,7 @@ const navItems = [
   { label: "Uploads", href: "/admin/uploads", icon: Image },
   { label: "Courses", href: "/admin/courses", icon: BookOpen },
   { label: "Registration interest", href: "/admin/registrations", icon: Users },
+  { label: "Exam dates", href: "/admin/exam-dates", icon: BookOpen },
   { label: "Leads", href: "/admin/leads", icon: Users },
   { label: "Settings", href: "/admin/settings", icon: Settings },
 ];

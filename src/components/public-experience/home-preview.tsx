@@ -271,3 +271,31 @@ export function StudentExperience() {
     </section>
   );
 }
+
+/** Discovery links to the free planning pages. */
+export function FreePlanningLinks() {
+  const items = [
+    ["/exam-countdown", "Exam countdown", "Days left to each Cambridge paper."],
+    ["/study-plan", "Free study plans", "A monthly plan with tick boxes."],
+    ["/class-timings", "Class timings", "Current batches in Pakistan time."],
+    ["/faq", "FAQ", "Quick answers for students and parents."],
+  ] as const;
+  return (
+    <section className="ed-paper border-t border-ink/10" aria-labelledby="free-planning">
+      <div className="ed-wrap py-14 sm:py-20">
+        <p className="ed-label">Plan your preparation</p>
+        <h2 id="free-planning" className="ed-h2 mt-5">Free tools for every student</h2>
+        <ul className="mt-8 grid border-t border-ink/15 sm:grid-cols-2">
+          {items.map(([href, title, text]) => (
+            <li key={href} className="border-b border-ink/15 sm:odd:border-r sm:odd:pr-8 sm:even:pl-8">
+              <Link href={href} className="group block py-5">
+                <span className="ed-h3 block group-hover:text-crimson">{title}</span>
+                <span className="text-slate">{text}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
