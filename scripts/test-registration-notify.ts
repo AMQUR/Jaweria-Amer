@@ -312,8 +312,9 @@ async function main() {
     // A failing paginated call (not "missing") is an error, not a silent downgrade.
     globalThis.fetch = async () => Response.json({}, { status: 500 });
     await assert.rejects(listAllRegistrations());
-    const proposed = readFileSync("supabase/proposed/paginated_registration_list.sql", "utf8");
-    assert(proposed.includes("NOT APPLIED") && !/\b(alter|drop|delete|insert|update)\b/i.test(proposed.replace(/^--.*$/gm, "")));
+    const migration = readFileSync("supabase/migrations/20261111020000_registration_notification_outbox.sql", "utf8");
+    assert(migration.includes("list_registration_interest_page") && migration.includes("claim_registration_notifications"));
+    assert(!/drop (table|column)|delete from registration_private\.leads/i.test(migration), "migration is additive");
 
     // 12. Export route: no session, no data. With a session, a private no-store download.
     const { GET } = await import("../src/app/api/admin/registrations/export/route");
@@ -328,8 +329,11 @@ async function main() {
       route.indexOf('outcome.status === "saved"'),
       route.indexOf('outcome.status === "timeout"'),
     );
-    assert(savedBranch.includes("notifyTeacherOfEnquiry"));
-    assert.equal(route.split("notifyTeacherOfEnquiry").length - 1, 2, "import + one call site");
+    assert(savedBranch.includes("processEnquiryNotifications"));
+    assert.equal(route.split("processEnquiryNotifications").length - 1, 2, "import + one call site");
+    const cron = readFileSync("src/app/api/cron/registration-notify/route.ts", "utf8");
+    assert(cron.includes("CRON_SECRET") && cron.includes("timingSafeEqual"), "cron is secret-guarded");
+    assert(readFileSync("vercel.json", "utf8").includes("/api/cron/registration-notify"));
     assert(readFileSync("src/proxy.ts", "utf8").includes('"/api/admin/:path*"'));
 
     console.log(
