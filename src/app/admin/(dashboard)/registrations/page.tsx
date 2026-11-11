@@ -25,6 +25,12 @@ export default async function RegistrationsPage() {
         only when the school creates the LMS account. This inbox does not
         create accounts or enroll anyone. Records expire after 180 days.
       </p>
+      <a
+        href="/api/admin/registrations/export"
+        className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-crimson px-4 text-sm font-semibold text-white hover:bg-crimson-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson"
+      >
+        Download Excel sheet
+      </a>
       <div className="mt-6 space-y-4">
         {leads.length ? (
           leads.map((lead) => (
