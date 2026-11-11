@@ -1,5 +1,5 @@
 import { requireAuth } from "@/lib/admin/auth";
-import { listRegistrations } from "@/lib/registration/server";
+import { LEGACY_LIST_CAP, listRegistrations } from "@/lib/registration/server";
 import { retryRegistrationRouting } from "@/lib/registration/retry";
 export const dynamic = "force-dynamic";
 export default async function RegistrationsPage() {
@@ -25,6 +25,26 @@ export default async function RegistrationsPage() {
         only when the school creates the LMS account. This inbox does not
         create accounts or enroll anyone. Records expire after 180 days.
       </p>
+      <p className="mt-3 text-sm font-semibold text-ink">
+        Showing {leads.length} {leads.length === 1 ? "enquiry" : "enquiries"}.
+      </p>
+      {leads.length >= LEGACY_LIST_CAP && (
+        <p
+          role="status"
+          className="mt-3 rounded-lg border-l-4 border-crimson bg-crimson/5 p-4 text-sm text-ink"
+        >
+          This page and the Excel sheet can currently list only the most recent{" "}
+          {LEGACY_LIST_CAP} enquiries. Older enquiries are still stored (for
+          180 days) and appear in earlier notification emails, but are not
+          shown here until the paginated export is enabled.
+        </p>
+      )}
+      <a
+        href="/api/admin/registrations/export"
+        className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-crimson px-4 text-sm font-semibold text-white hover:bg-crimson-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crimson"
+      >
+        Download Excel sheet
+      </a>
       <div className="mt-6 space-y-4">
         {leads.length ? (
           leads.map((lead) => (

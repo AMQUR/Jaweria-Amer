@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import { after, NextRequest, NextResponse } from "next/server";
+import { notifyTeacherOfEnquiry } from "@/lib/registration/notify";
 import { registrationInput } from "@/lib/registration/contracts";
 import { registrationCopy } from "@/lib/registration/outcome";
 import {
@@ -6,8 +7,11 @@ import {
   verifyRegistrationTicket,
 } from "@/lib/registration/server";
 export const runtime = "nodejs";
-/** Stay above the 12s handler deadline without giving a slow LMS call the whole window. */
-export const maxDuration = 15;
+/**
+ * Stay above the 12s handler deadline without giving a slow LMS call the whole
+ * window, and leave room for the post-response teacher notification.
+ */
+export const maxDuration = 45;
 const MAX_BYTES = 4096;
 function reply(body: unknown, status = 200) {
   return NextResponse.json(body, {
@@ -76,8 +80,21 @@ export async function POST(request: NextRequest) {
     const outcome = await submitPublicRegistration(parsed.data, ip, requestId);
     if (outcome.status === "limited")
       return reply({ error: registrationCopy.rateLimit }, 429);
-    if (outcome.status === "saved")
+    if (outcome.status === "saved") {
+      // Only a confirmed durable save notifies the teacher; unconfirmed,
+      // limited, timed-out and failed outcomes never do.
+      const { name, email, course, batch } = parsed.data;
+      try {
+        after(() =>
+          notifyTeacherOfEnquiry({ name, email, course, batch }, requestId).catch(
+            () => undefined,
+          ),
+        );
+      } catch {
+        // No request scope (unit tests): the notice is best effort and never blocks the save.
+      }
       return reply({ saved: true, enrollment: outcome.enrollment });
+    }
     if (outcome.status === "timeout")
       return reply(
         { saved: false, outcome: "timeout", error: registrationCopy.timeout },
