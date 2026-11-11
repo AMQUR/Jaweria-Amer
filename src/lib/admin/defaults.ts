@@ -14,7 +14,9 @@ export const defaultHomepageContent: HomepageContent = {
   primaryCtaLink: "https://wa.me/923253708069",
   secondaryCtaText: "Text us",
   secondaryCtaLink: "https://wa.me/923253708069",
-  bannerImagePath: "/assets/miss-jay.png",
+  // Mirrors HERO_PORTRAIT_SRC (live-session-hero.tsx); client-safe so duplicated.
+  bannerImagePath:
+    "https://upyxhhbpdjlnbpraykow.supabase.co/storage/v1/object/public/resources/site/miss-jay-hero-1600-b1544cd3.png",
   updatedAt: STATIC_RECORD_TIMESTAMP,
 };
 

@@ -62,7 +62,7 @@ export default async function ResourcesPage() {
               >
                 <span className="ed-row-body">
                   <h2 className="ed-row-title">
-                    English with Jaweria on YouTube
+                    English with Miss Jay on YouTube
                   </h2>
                 </span>
                 <span className="ed-row-meta">

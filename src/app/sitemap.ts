@@ -1,3 +1,4 @@
+import { evaluationPubliclyListed } from "@/lib/evaluation/visibility";
 import type { MetadataRoute } from "next";
 import { courses } from "@/lib/data";
 import { listMarketingCourses } from "@/lib/course-offerings";
@@ -16,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/courses",
     "/results",
     "/resources",
-    "/free-evaluation",
+    ...(evaluationPubliclyListed() ? (["/free-evaluation"] as const) : []),
     "/register",
     "/class-timings",
     "/faq",

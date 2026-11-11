@@ -1,3 +1,4 @@
+import { evaluationPubliclyListed } from "@/lib/evaluation/visibility";
 import Link from "next/link";
 import { publicExperience } from "@/lib/public-experience";
 import { courses, RESOURCE_HUB_CATEGORIES } from "@/lib/data";
@@ -74,7 +75,7 @@ const HOME_RESOURCE_DOORS = [
   "quick-worksheets",
 ] as const;
 
-/** Try the resources: four category doors, then the free-evaluation path. */
+/** Try the resources: four category doors; the free-evaluation path only while it is publicly listed. */
 export function ResourcesAndEvaluation({
   evaluationReady,
 }: {
@@ -123,6 +124,7 @@ export function ResourcesAndEvaluation({
           <Arrow />
         </Link>
 
+        {evaluationPubliclyListed() && (
         <div
           id="try-it-free"
           className="mt-20 grid scroll-mt-24 gap-10 border-t border-ink/15 pt-14 lg:grid-cols-2 lg:gap-20"
@@ -175,6 +177,7 @@ export function ResourcesAndEvaluation({
             </ul>
           </div>
         </div>
+        )}
       </div>
     </section>
   );

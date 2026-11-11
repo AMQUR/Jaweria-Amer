@@ -16,7 +16,7 @@ export const COMMUNITY_WHATSAPP_URL =
 
 export const contact = {
   phone: "+923253708069",
-  youtube: "https://youtube.com/@englishwithmissjay",
+  youtube: "https://www.youtube.com/@englishwithmissjay",
   /** Stable featured lesson for the About page embed (`youtube.com/watch?v=…` ID). */
   youtubeFeaturedVideoId: "JKrLqtVcdso",
   // TODO: Replace with the real Instagram profile URL when supplied. The user temporarily

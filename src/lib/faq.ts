@@ -1,8 +1,8 @@
 /**
  * FAQ content, kept word-for-word consistent with https://englishwithmissjay.com/faq and
- * class-timings. Edit here. The canonical YouTube channel is https://youtube.com/@englishwithmissjay.
+ * class-timings. Edit here. The canonical YouTube channel is https://www.youtube.com/@englishwithmissjay.
  */
-export const YOUTUBE_CHANNEL_URL = "https://youtube.com/@englishwithmissjay";
+export const YOUTUBE_CHANNEL_URL = "https://www.youtube.com/@englishwithmissjay";
 
 export interface FaqGroup {
   title: string;
@@ -23,7 +23,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
     title: "Registration",
     items: [
       { q: "How do I enrol?", a: "Use the Join the Next Batch form on this website, or contact Miss Jay on WhatsApp or by email to ask about available seats. Pricing and scheduling details are shared in that conversation. Sending the form is an enquiry, not a confirmed enrolment." },
-      { q: "When do new cohorts start?", a: "Cohorts begin for the October/November 2026 and May/June 2027 examination series. Message Miss Jay on WhatsApp to check current availability." },
+      { q: "When do new cohorts start?", a: "Cohorts are planned for the May/June 2027 examination series and the series that follow it. Whether a batch is open for enrolment is confirmed by Miss Jay, so message her on WhatsApp to check current availability." },
       { q: "How much do the courses cost?", a: "Fees are discussed directly with Miss Jay. Message her on WhatsApp or send an email and she will share current pricing for the course you are interested in." },
       { q: "Can I join part-way through a programme?", a: "This depends on where the cohort is in the programme. Ask Miss Jay on WhatsApp whether joining part-way is possible for your course and intake." },
     ],

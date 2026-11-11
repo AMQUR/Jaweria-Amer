@@ -1,10 +1,12 @@
 import "server-only";
 import { createHmac, randomUUID, timingSafeEqual } from "node:crypto";
 import { evaluationFeedback } from "./contracts";
+import { evaluationPubliclyListed } from "./visibility";
 import { z } from "zod";
 
 export function evaluationAvailable(): boolean {
   return (
+    evaluationPubliclyListed() &&
     process.env.FREE_EVALUATION_ENABLED === "true" &&
     process.env.FREE_EVALUATION_PRIVACY_APPROVED === "true" &&
     Boolean(
