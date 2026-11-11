@@ -1,12 +1,20 @@
 import { requireAuth } from "@/lib/admin/auth";
-import { LEGACY_LIST_CAP, listRegistrations } from "@/lib/registration/server";
+import { LEGACY_LIST_CAP, listAllRegistrations, registrationRpc } from "@/lib/registration/server";
 import { retryRegistrationRouting } from "@/lib/registration/retry";
 export const dynamic = "force-dynamic";
 export default async function RegistrationsPage() {
   await requireAuth();
   let leads;
+  let total = 0;
+  let complete = true;
+  let health: { pending: number; failed: number; dead: number; sent: number; last_error: string | null } | null = null;
   try {
-    leads = await listRegistrations();
+    const set = await listAllRegistrations();
+    complete = set.complete;
+    leads = set.leads.slice(0, 200);
+    total = set.leads.length;
+    const rows: unknown = await registrationRpc("registration_notification_health", {}).catch(() => null);
+    if (Array.isArray(rows) && rows[0]) health = rows[0];
   } catch {
     return (
       <div>
@@ -21,14 +29,22 @@ export default async function RegistrationsPage() {
     <div>
       <h1 className="font-serif text-2xl text-ink">Registration interest</h1>
       <p className="mt-2 text-sm text-slate">
-        Latest 200 enquiries. A batch preference is saved for review and applied
+        Newest enquiries first (the page lists up to 200; the Excel sheet holds every saved enquiry). A batch preference is saved for review and applied
         only when the school creates the LMS account. This inbox does not
         create accounts or enroll anyone. Records expire after 180 days.
       </p>
       <p className="mt-3 text-sm font-semibold text-ink">
-        Showing {leads.length} {leads.length === 1 ? "enquiry" : "enquiries"}.
+        {total} saved {total === 1 ? "enquiry" : "enquiries"}; showing {leads.length}.
       </p>
-      {leads.length >= LEGACY_LIST_CAP && (
+      {health && (health.dead > 0 || health.failed > 0) ? (
+        <p role="alert" className="mt-3 rounded-lg border-l-4 border-crimson bg-crimson/5 p-4 text-sm text-ink">
+          Teacher e-mail needs attention: {health.dead} could not be delivered, {health.failed} waiting to retry
+          {health.last_error ? ` (last problem: ${health.last_error})` : ""}. Every enquiry is saved and is in the Excel sheet.
+        </p>
+      ) : health ? (
+        <p className="mt-2 text-sm text-slate">Teacher e-mail: {health.sent} sent, {health.pending} waiting.</p>
+      ) : null}
+      {!complete && leads.length >= LEGACY_LIST_CAP && (
         <p
           role="status"
           className="mt-3 rounded-lg border-l-4 border-crimson bg-crimson/5 p-4 text-sm text-ink"

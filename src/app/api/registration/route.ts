@@ -1,5 +1,5 @@
 import { after, NextRequest, NextResponse } from "next/server";
-import { notifyTeacherOfEnquiry } from "@/lib/registration/notify";
+import { processEnquiryNotifications } from "@/lib/registration/notify";
 import { registrationInput } from "@/lib/registration/contracts";
 import { registrationCopy } from "@/lib/registration/outcome";
 import {
@@ -81,17 +81,13 @@ export async function POST(request: NextRequest) {
     if (outcome.status === "limited")
       return reply({ error: registrationCopy.rateLimit }, 429);
     if (outcome.status === "saved") {
-      // Only a confirmed durable save notifies the teacher; unconfirmed,
-      // limited, timed-out and failed outcomes never do.
-      const { name, email, course, batch } = parsed.data;
+      // Only a confirmed durable save is queued (notify_status = 'pending' in the same row).
+      // This drains the queue promptly; if it fails or never runs, the cron retries from
+      // database state. Unconfirmed, limited, timed-out and failed outcomes never notify.
       try {
-        after(() =>
-          notifyTeacherOfEnquiry({ name, email, course, batch }, requestId).catch(
-            () => undefined,
-          ),
-        );
+        after(() => processEnquiryNotifications().catch(() => undefined));
       } catch {
-        // No request scope (unit tests): the notice is best effort and never blocks the save.
+        // No request scope (unit tests): the cron picks the pending row up.
       }
       return reply({ saved: true, enrollment: outcome.enrollment });
     }

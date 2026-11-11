@@ -3,6 +3,7 @@ import { contact } from "@/lib/contact";
 import {
   fetchWithCap,
   listAllRegistrations,
+  registrationRpc,
   type RegistrationLead,
 } from "./server";
 import { enquiriesToXlsx, enquiryFilename, formatPkt } from "./export";
@@ -71,10 +72,12 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export function notificationConfig() {
   const apiKey = process.env.RESEND_API_KEY?.trim() ?? "";
-  const to = process.env.REGISTRATION_NOTIFY_EMAIL?.trim() || contact.email;
-  const from =
-    process.env.RESEND_FROM?.trim() ||
-    "Jaweria Amer Website <onboarding@resend.dev>";
+  const to =
+    process.env.REGISTRATION_NOTIFY_EMAIL?.trim() ||
+    process.env.REGISTRATION_NOTIFICATION_EMAIL?.trim() ||
+    contact.email;
+  // The Resend sandbox sender cannot deliver to the teacher, so it is never a default.
+  const from = (process.env.RESEND_FROM || process.env.RESEND_FROM_EMAIL || "").trim();
   return { apiKey, to, from };
 }
 
@@ -118,20 +121,30 @@ function recapHtml(earlier: RegistrationLead[]) {
   );
 }
 
-export async function notifyTeacherOfEnquiry(
+export interface NoticeResult {
+  outcome: NotifyOutcome;
+  /** Provider message id when the provider accepted the request. Acceptance is not inbox delivery. */
+  messageId: string | null;
+}
+
+async function sendEnquiryNotice(
   input: Pick<RegistrationInput, "name" | "email" | "course" | "batch">,
   requestId: string,
-  createdAt = new Date(),
-): Promise<NotifyOutcome> {
-  if (recentlyNotified.has(requestId)) return "duplicate";
+  createdAt: Date,
+): Promise<NoticeResult> {
+  if (recentlyNotified.has(requestId)) return { outcome: "duplicate", messageId: null };
   const { apiKey, to, from } = notificationConfig();
   if (!apiKey) {
     console.error("[registration] notify skipped: RESEND_API_KEY missing");
-    return "not_configured";
+    return { outcome: "not_configured", messageId: null };
+  }
+  if (!from || /@resend\.dev/i.test(from)) {
+    console.error("[registration] notify skipped: verified RESEND_FROM sender missing");
+    return { outcome: "not_configured", messageId: null };
   }
   if (!EMAIL.test(to)) {
     console.error("[registration] notify skipped: recipient is not a valid address");
-    return "invalid_recipient";
+    return { outcome: "invalid_recipient", messageId: null };
   }
   // Claim before the first await so two overlapping calls cannot both send.
   remember(requestId);
@@ -191,7 +204,7 @@ export async function notifyTeacherOfEnquiry(
             : "unknown";
         // Accepted by the provider. Delivery to the inbox is reported by Resend, not here.
         console.info("[registration] notify accepted", requestId, messageId);
-        return "sent";
+        return { outcome: "sent", messageId };
       }
     } catch {
       status = 0; // network error or timeout: retryable
@@ -201,7 +214,7 @@ export async function notifyTeacherOfEnquiry(
       // Sender not verified, bad key, bad recipient… fix configuration; do not retry.
       console.error("[registration] notify rejected", requestId, status);
       recentlyNotified.delete(requestId);
-      return "rejected";
+      return { outcome: "rejected", messageId: null };
     }
     if (attempt < notifyBudget.attempts)
       await wait(notifyBudget.backoffMs[attempt - 1] ?? 2_000);
@@ -210,10 +223,178 @@ export async function notifyTeacherOfEnquiry(
   }
   // Let a later retry of the same enquiry try again; the provider key still dedupes.
   recentlyNotified.delete(requestId);
-  return "failed";
+  return { outcome: "failed", messageId: null };
+}
+
+/** Send the notice for one enquiry (compat wrapper; see processEnquiryNotifications for the durable path). */
+export async function notifyTeacherOfEnquiry(
+  input: Pick<RegistrationInput, "name" | "email" | "course" | "batch">,
+  requestId: string,
+  createdAt = new Date(),
+): Promise<NotifyOutcome> {
+  return (await sendEnquiryNotice(input, requestId, createdAt)).outcome;
+}
+
+interface ClaimedLead {
+  id: string;
+  name: string;
+  email: string;
+  course: string;
+  created_at: string;
+  batch_letter: string | null;
+  notify_attempts: number;
+}
+
+export interface NotifyRunResult {
+  claimed: number;
+  sent: number;
+  failed: number;
+}
+
+/**
+ * Durable delivery. Each saved enquiry has a notify_status row in Supabase
+ * (pending -> sending -> sent, or failed -> retried with back-off -> dead after 8 attempts).
+ * This leases due rows (skip-locked, 2 minute lease, so overlapping runs and crashed
+ * instances are safe), sends one notice per enquiry with the enquiry id as the provider
+ * Idempotency-Key, and records the provider outcome. Called right after a save and by the
+ * 10-minute cron. Never throws: a notice failure can never affect a saved enquiry.
+ */
+export async function processEnquiryNotifications(max = 10): Promise<NotifyRunResult> {
+  const result: NotifyRunResult = { claimed: 0, sent: 0, failed: 0 };
+  let claimed: ClaimedLead[] = [];
+  try {
+    const rows: unknown = await registrationRpc(
+      "claim_registration_notifications",
+      { max_rows: max, lease_seconds: 120 },
+      10_000,
+      512 * 1024,
+    );
+    claimed = Array.isArray(rows) ? (rows as ClaimedLead[]) : [];
+  } catch {
+    console.error("[registration] notify claim failed");
+    return result;
+  }
+  result.claimed = claimed.length;
+  for (const lead of claimed) {
+    let accepted = false;
+    let messageId: string | null = null;
+    let failure: string | null = null;
+    try {
+      const sent = await sendEnquiryNotice(
+        {
+          name: lead.name,
+          email: lead.email,
+          course: lead.course as RegistrationInput["course"],
+          batch: (lead.batch_letter ?? undefined) as RegistrationInput["batch"],
+        },
+        lead.id,
+        new Date(lead.created_at),
+      );
+      accepted = sent.outcome === "sent" || sent.outcome === "duplicate";
+      messageId = sent.messageId;
+      failure = accepted ? null : sent.outcome;
+    } catch {
+      failure = "exception";
+    }
+    try {
+      await registrationRpc("finish_registration_notifications", {
+        lead_ids: [lead.id],
+        accepted,
+        provider_id: messageId,
+        failure,
+      });
+    } catch {
+      // Lease expiry re-queues it; the provider idempotency key prevents a second email.
+      console.error("[registration] notify outcome not recorded", lead.id);
+    }
+    if (accepted) result.sent += 1;
+    else result.failed += 1;
+  }
+  return result;
 }
 
 /** Test hook: forget in-process dedupe state. */
 export function resetNotifyState() {
   recentlyNotified.clear();
+}
+
+export interface HistoricalResult {
+  count: number;
+  complete: boolean;
+  accepted: boolean;
+  messageId: string | null;
+  /** Masked recipient and sender address only; never the API key. */
+  recipient: string;
+  sender: string;
+  alreadyDone: boolean;
+  failure: string | null;
+}
+
+function maskEmail(email: string) {
+  const [local = "", domain = ""] = email.split("@");
+  return `${local.slice(0, 2)}***@${domain}`;
+}
+
+/**
+ * One consolidated workbook of every saved enquiry (not one email per enquiry).
+ * Runs once: after the provider has accepted it, repeat calls report alreadyDone.
+ * The outcome (count + provider acceptance) is recorded in registration_private.enquiry_exports.
+ * Provider acceptance is not proof of inbox delivery.
+ */
+export async function sendHistoricalWorkbook(): Promise<HistoricalResult | { error: string }> {
+  const { apiKey, to, from } = notificationConfig();
+  if (!apiKey) return { error: "RESEND_API_KEY missing" };
+  if (!from || /@resend\.dev/i.test(from)) return { error: "verified RESEND_FROM sender missing" };
+  if (!EMAIL.test(to)) return { error: "invalid recipient" };
+  const base = {
+    recipient: maskEmail(to),
+    sender: from.replace(/^.*</, "").replace(/>.*$/, ""),
+  };
+  const done: unknown = await registrationRpc("historical_export_done", {});
+  const { leads, complete } = await listAllRegistrations();
+  if (done === true)
+    return { ...base, count: leads.length, complete, accepted: true, messageId: null, alreadyDone: true, failure: null };
+  if (!complete) return { error: "enquiry list incomplete; refusing to send a partial history" };
+  const sheet = enquiriesToXlsx(leads, { complete });
+  let accepted = false;
+  let messageId: string | null = null;
+  let failure: string | null = null;
+  try {
+    const response = await fetchWithCap(
+      RESEND_URL,
+      {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "Idempotency-Key": "enquiries-historical-v1",
+        },
+        body: JSON.stringify({
+          from,
+          to: [to],
+          subject: `All website enquiries so far (${leads.length})`,
+          html:
+            `<p>This is the complete list of enquiries saved by the website so far: <b>${leads.length}</b>, oldest first.</p>` +
+            `<p>From now on you will receive an email for each new enquiry, with this sheet updated and attached.</p>`,
+          attachments: [{ filename: enquiryFilename(new Date(), complete), content: sheet.toString("base64") }],
+        }),
+      },
+      30_000,
+    );
+    accepted = response.ok;
+    const reply: unknown = await response.json().catch(() => null);
+    if (accepted && reply && typeof reply === "object" && "id" in reply) messageId = String(reply.id).slice(0, 64);
+    if (!accepted) failure = `resend ${response.status}`;
+  } catch {
+    failure = "send error";
+  }
+  await registrationRpc("log_enquiry_export", {
+    export_kind: "historical",
+    export_count: leads.length,
+    accepted,
+    export_provider_id: messageId,
+    export_detail: failure,
+  }).catch(() => undefined);
+  return { ...base, count: leads.length, complete, accepted, messageId, alreadyDone: false, failure };
 }
