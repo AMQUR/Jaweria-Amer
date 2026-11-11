@@ -17,13 +17,13 @@
 |---|---|
 | Storage | The website's existing Supabase project. Private schema `admin_private`, not exposed to the API. Access only through five `security invoker` functions executable by `service_role`; `anon` and `authenticated` have no access to the schema, tables or functions. RLS is enabled on every table with no policies. |
 | What is stored | One scrypt hash + salt (`scrypt-16384-8-1-64`), SHA-256 hashes of reset tokens, and rate-limit counters keyed by a keyed hash of the caller's network address. Never a plaintext password, a usable token, or an IP address. |
-| Token | 256 bits from the OS CSPRNG, e-mailed once, valid 20 minutes, single use. Issuing a new link retires earlier unused links. |
+| Token | 256 bits from the OS CSPRNG, e-mailed once, valid 20 minutes, single use. A later request does not cancel an earlier link (the form is unauthenticated and the admin address is public, so that would let anyone block recovery). All outstanding links are retired when one is redeemed. |
 | Redemption | One database function claims the token (`UPDATE … WHERE used_at IS NULL AND expires_at > now()`) and writes the new hash in the same transaction. Concurrent calls contend on the row lock; exactly one wins and the rest get `used`. There is no check-then-act sequence in the application. |
 | Sessions | Each session cookie carries the credential version it was issued under. A reset increments the version. The proxy and `getSession` both reject a session whose version is not current. The version is cached for 30 seconds per server instance; the instance that performs the reset drops its cache at once. |
 | `ADMIN_PASSWORD` | Still the password until the first reset completes (no stored row). Once a row exists it is the only accepted password and `ADMIN_PASSWORD` is ignored. |
 | Store unreachable | Sign-in is refused and sessions are rejected (a version read in the last 10 minutes is reused). It never falls back to `ADMIN_PASSWORD`, because the store may hold a newer password. |
 | Migration not applied | The functions do not exist (PostgREST `PGRST202`). Sign-in works with `ADMIN_PASSWORD` as today; reset requests do nothing and reset attempts say the feature is unavailable. So the code is safe to deploy before the migration. |
-| Rate limits | Reset requests: 3 an hour per network, 6 an hour in total. Redemption attempts: 10 per network per 15 minutes. Enforced in the database. |
+| Rate limits | Reset requests: 3 an hour per network, 10 an hour in total (this also caps e-mails to the admin address). Redemption attempts: 10 per network per 15 minutes. Enforced in the database. |
 | Account discovery | The request form gives the same reply for every address, and the store call and e-mail run after the response is sent, so timing does not depend on the address. |
 | Logging | Outcomes only (`link issued`, `request rate limited`, `redemption refused: used`, `password changed`, `sign-in failed`). No address, token, password or key. |
 | E-mail | Unchanged provider and variables (`RESEND_API_KEY`, `RESEND_FROM`). An 8-second timeout was added and the provider's reply body is no longer logged. |
@@ -75,6 +75,11 @@ drop schema if exists admin_private cascade;
   validation in SQL.
 
 ## Known limits (not changed here)
+
+- Someone using many networks could use up the hourly total of reset requests and so delay a
+  legitimate request until the next hour (links already issued keep working). If that ever
+  happens, the owner can still recover by running the rollback statement's `credential` cleanup
+  (`delete from admin_private.credential;`), which makes `ADMIN_PASSWORD` the password again.
 
 - Sign-in itself is not rate limited.
 - Admin server actions rely on the proxy for authorisation rather than checking the session

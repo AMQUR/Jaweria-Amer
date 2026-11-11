@@ -67,8 +67,11 @@ language sql stable security invoker set search_path = '' as $$
 $$;
 
 -- Issue a reset token. Returns 'created' or 'limited'.
--- Limits: 3 requests an hour per network, 6 an hour in total.
--- Issuing a new link retires every earlier unused link.
+-- Limits: 3 requests an hour per network, 10 an hour in total (which also
+-- bounds how many e-mails can be sent to the admin address).
+-- A new request does NOT retire earlier links: the form is unauthenticated and
+-- the admin address is public, so anyone could otherwise keep cancelling the
+-- real owner's link. Outstanding links are retired only when one is redeemed.
 create function public.admin_request_password_reset(
   new_token_hash text,
   network_hash text,
@@ -92,14 +95,13 @@ begin
   net_key := 'reset-request:net:' || network_hash || ':' || hour_key;
   all_key := 'reset-request:all:' || hour_key;
   if coalesce((select attempts from admin_private.counters where key = net_key), 0) >= 3
-     or coalesce((select attempts from admin_private.counters where key = all_key), 0) >= 6
+     or coalesce((select attempts from admin_private.counters where key = all_key), 0) >= 10
   then
     return 'limited';
   end if;
   insert into admin_private.counters (key, attempts, expires_at)
   values (net_key, 1, now() + interval '2 hours'), (all_key, 1, now() + interval '2 hours')
   on conflict (key) do update set attempts = admin_private.counters.attempts + 1;
-  update admin_private.reset_tokens set used_at = now() where used_at is null;
   insert into admin_private.reset_tokens (token_hash, expires_at)
   values (new_token_hash, now() + make_interval(secs => ttl_seconds));
   return 'created';

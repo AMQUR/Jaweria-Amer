@@ -37,11 +37,11 @@ begin
   if public.admin_redeem_password_reset(repeat('f', 64), h, s, k, net) <> 'invalid' then raise exception 'unknown redeem'; end if;
   if public.admin_credential_version() <> 0 then raise exception 'failed redeem changed credential'; end if;
 
-  -- issue, then a newer link retires the older one
+  -- issue; a later request must NOT cancel an earlier, still-valid link
   if public.admin_request_password_reset(t1, net) <> 'created' then raise exception 'issue 1'; end if;
   if public.admin_reset_token_status(t1) <> 'ok' then raise exception 'status 1'; end if;
   if public.admin_request_password_reset(t2, net) <> 'created' then raise exception 'issue 2'; end if;
-  if public.admin_reset_token_status(t1) <> 'used' then raise exception 'older link not retired'; end if;
+  if public.admin_reset_token_status(t1) <> 'ok' then raise exception 'a new request cancelled an earlier valid link'; end if;
 
   -- expiry
   update admin_private.reset_tokens set expires_at = now() - interval '1 second' where token_hash = t2;
@@ -55,6 +55,8 @@ begin
   if public.admin_credential_version() <> 1 then raise exception 'version not bumped'; end if;
   if (select c.password_hash from public.admin_credential() c) <> h then raise exception 'hash not stored'; end if;
   if (select used_at from admin_private.reset_tokens where token_hash = t3) is null then raise exception 'token not consumed'; end if;
+  -- a completed reset retires every other outstanding link
+  if public.admin_reset_token_status(t1) <> 'used' then raise exception 'outstanding link survived a completed reset'; end if;
   -- replay
   if public.admin_redeem_password_reset(t3, h, s, k, net) <> 'used' then raise exception 'replay accepted'; end if;
   if public.admin_credential_version() <> 1 then raise exception 'replay bumped version'; end if;
@@ -62,10 +64,13 @@ begin
   -- request rate limit: 3 an hour per network (3 already used above)
   if public.admin_request_password_reset(repeat('4', 64), net) <> 'limited' then raise exception 'network request cap missed'; end if;
   if exists (select 1 from admin_private.reset_tokens where token_hash = repeat('4', 64)) then raise exception 'limited request stored a token'; end if;
-  -- another network still works until the global cap of 6
+  -- other networks still work until the global cap of 10
   if public.admin_request_password_reset(repeat('5', 64), net2) <> 'created' then raise exception 'second network blocked'; end if;
   if public.admin_request_password_reset(repeat('6', 64), net2) <> 'created' then raise exception 'second network blocked 2'; end if;
   if public.admin_request_password_reset(repeat('7', 64), net2) <> 'created' then raise exception 'second network blocked 3'; end if;
+  for n in 1..4 loop
+    if public.admin_request_password_reset(lpad(to_hex(n), 64, '9'), lpad(to_hex(n), 64, 'e')) <> 'created' then raise exception 'network % blocked before the global cap', n; end if;
+  end loop;
   if public.admin_request_password_reset(repeat('8', 64), repeat('c', 64)) <> 'limited' then raise exception 'global request cap missed'; end if;
 
   -- a second successful reset bumps the version again and retires other links

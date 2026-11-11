@@ -48,9 +48,8 @@ function fakeStore() {
         return state.credential ? [state.credential] : [];
       case "admin_request_password_reset": {
         const net = `req:${a.network_hash}:${hour()}`, all = `req:all:${hour()}`;
-        if ((state.counters.get(net) ?? 0) >= 3 || (state.counters.get(all) ?? 0) >= 6) return "limited";
+        if ((state.counters.get(net) ?? 0) >= 3 || (state.counters.get(all) ?? 0) >= 10) return "limited";
         bump(net); bump(all);
-        for (const t of state.tokens.values()) t.used = true;
         state.tokens.set(String(a.new_token_hash), { expires: Date.now() + 1_200_000, used: false });
         return "created";
       }
@@ -212,14 +211,16 @@ async function scenarios(b: Backend) {
     // The signature alone is still valid: it is the version check that rejects it.
     assert(verifyAdminSessionToken(sessionV0));
 
-    // 9. A second reset: version 2, previous password and sessions rejected, older links retired.
+    // 9. A second reset: version 2, previous password and sessions rejected.
+    //    A later request (which anyone can make) must not cancel an earlier valid link;
+    //    links are retired only when one of them is actually redeemed.
     assert.equal(await issueAdminPasswordReset("admin@example.invalid", net(7)), "sent");
     const tokenC = lastToken();
     assert.equal(await issueAdminPasswordReset("admin@example.invalid", net(8)), "sent");
     const tokenD = lastToken();
     secrets.push(tokenC, tokenD, "second-password-Qw7!");
-    assert.equal(await completeAdminPasswordReset(tokenC, "x-password-000", net(9)), "used", "a newer link retires the older one");
-    assert.equal(await completeAdminPasswordReset(tokenD, "second-password-Qw7!", net(9)), "ok");
+    assert.equal(await completeAdminPasswordReset(tokenC, "second-password-Qw7!", net(9)), "ok", "an earlier link survives a later request");
+    assert.equal(await completeAdminPasswordReset(tokenD, "x-password-000", net(9)), "used", "a completed reset retires the other outstanding links");
     assert.deepEqual(await verifyAdminPassword("second-password-Qw7!"), { ok: true, version: 2 });
     assert.equal((await verifyAdminPassword(winner)).ok, false);
     // A stale cache holding version 1 must not accept the v1 session for long, and must accept v2 at once.
@@ -227,7 +228,11 @@ async function scenarios(b: Backend) {
     assert(await isAdminSessionCurrent(sessionV2), "newer token forces a re-read");
     assert(!(await isAdminSessionCurrent(sessionV1)));
 
-    // 10. Request rate limit (6 an hour in total were used above): no token, no e-mail.
+    // 10. Request rate limit, 3 an hour per network: no token, no e-mail once exceeded.
+    assert.equal(await issueAdminPasswordReset("admin@example.invalid", net(10)), "sent");
+    assert.equal(await issueAdminPasswordReset("admin@example.invalid", net(10)), "sent");
+    assert.equal(await issueAdminPasswordReset("admin@example.invalid", net(10)), "sent");
+    secrets.push(lastToken());
     const mailCount = mails.length;
     assert.equal(await issueAdminPasswordReset("admin@example.invalid", net(10)), "limited");
     assert.equal(mails.length, mailCount);
