@@ -2,34 +2,25 @@ import { socialMetadata } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import {
-  ArrowRight,
-  Clock,
-  CalendarDays,
-  CheckCircle2,
-  ArrowLeft,
-} from "lucide-react";
 import { courses } from "@/lib/data";
 import { getPublicCoursePriceLabel } from "@/lib/pricing-display";
 import { isCourseCategoryOffered, listMarketingCourses } from "@/lib/course-offerings";
 import { TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
 import { whatsAppGroupUrl } from "@/lib/contact";
-import { Badge } from "@/components/ui/badge";
+import { Arrow } from "@/components/editorial/arrow";
+import { PageIntro } from "@/components/editorial/page-intro";
+import {
+  courseSyllabusCodes,
+  SyllabusCode,
+} from "@/components/editorial/interactive-course-row";
+import { RegistrationLink } from "@/components/public-experience/registration-link";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-
-const categoryColors: Record<string, string> = {
-  "o-level": "border-crimson/15 bg-crimson/8 text-crimson",
-  igcse: "border-rose/15 bg-rose/8 text-rose-dark",
-  "a-level": "border-rose/20 bg-rose/10 text-rose-dark",
-  literature: "border-border bg-brand-soft/80 text-brand",
-  "creative-writing": "border-border bg-muted text-ink-muted",
-};
 
 type Params = Promise<{ id: string }>;
 
@@ -60,87 +51,100 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
   const course = courses.find((c) => c.id === id);
   if (!course || !isCourseCategoryOffered(course.category)) notFound();
 
+  const codes = courseSyllabusCodes(course);
+
   return (
     <>
-      {/* Header */}
-      <section className="bg-gradient-to-b from-crimson to-crimson-dark pb-14 pt-28 sm:pb-20 sm:pt-36">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Link
-            href="/courses"
-            className="mb-8 inline-flex items-center gap-1.5 text-sm text-white/60 transition-colors hover:text-white"
-          >
-            <ArrowLeft className="h-4 w-4" />
+      <PageIntro
+        size="md"
+        label={
+          <Link href="/courses" className="inline-flex items-center gap-2 hover:underline">
+            <Arrow direction="left" />
             All courses
           </Link>
-          <div className="mb-4 flex flex-wrap items-center gap-3">
-            <Badge variant="outline" className={categoryColors[course.category] ?? "border-border"}>
-              {course.categoryLabel}
-            </Badge>
+        }
+        title={course.title}
+        lead={course.description}
+        aside={
+          <div className="lg:text-right">
+            <p className="ed-num text-[clamp(4.5rem,13vw,10rem)] text-crimson" aria-hidden="true">
+              <SyllabusCode codes={codes} />
+            </p>
+            <p className="mt-2 text-[0.95rem] font-semibold text-ink">
+              {course.categoryLabel} · {course.subtitle}
+            </p>
           </div>
-          <h1 className="mb-2 max-w-3xl font-serif text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl lg:text-[2.35rem]">
-            {course.title}
-          </h1>
-          <p className="mb-5 text-sm text-white/55">{course.subtitle}</p>
-          <p className="max-w-2xl text-sm leading-relaxed text-white/72 sm:text-base">{course.description}</p>
-        </div>
-      </section>
+        }
+      >
+        <dl className="flex flex-wrap gap-x-10 gap-y-3 border-t border-ink/15 pt-5">
+          <div>
+            <dt className="text-[0.8125rem] text-slate">Duration</dt>
+            <dd className="font-semibold text-ink">{course.duration}</dd>
+          </div>
+          <div>
+            <dt className="text-[0.8125rem] text-slate">Schedule</dt>
+            <dd className="font-semibold text-ink">{course.schedule}</dd>
+          </div>
+          <div>
+            <dt className="text-[0.8125rem] text-slate">Syllabus</dt>
+            <dd className="font-semibold tabular-nums text-ink">Cambridge {codes.join(" / ")}</dd>
+          </div>
+        </dl>
+      </PageIntro>
 
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
-          <div className="space-y-14 lg:col-span-2">
-            <div>
-              <h2 className="mb-5 font-serif text-xl font-semibold text-ink sm:text-2xl">What you will learn</h2>
-              <div className="space-y-3.5">
+      <div className="ed-paper border-t border-ink/10">
+        <div className="ed-wrap grid gap-14 py-14 sm:py-20 lg:grid-cols-12 lg:gap-16">
+          <div className="space-y-16 lg:col-span-8">
+            <section aria-labelledby="outcomes-heading">
+              <h2 id="outcomes-heading" className="ed-h2">What you will learn</h2>
+              <ul className="mt-8 border-t border-ink/15">
                 {course.outcomes.map((outcome) => (
-                  <div key={outcome} className="flex gap-3">
-                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-brand" aria-hidden />
-                    <span className="text-slate text-sm leading-relaxed">
-                      {outcome}
-                    </span>
-                  </div>
+                  <li key={outcome} className="flex gap-4 border-b border-ink/15 py-4">
+                    <svg viewBox="0 0 24 24" className="mt-1 h-5 w-5 shrink-0 text-crimson" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M4 12.5 9.5 18 20 6.5" />
+                    </svg>
+                    <span className="text-[1.06rem] leading-relaxed text-ink-muted">{outcome}</span>
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
 
-            <div>
-              <h2 className="mb-5 font-serif text-xl font-semibold text-ink sm:text-2xl">Syllabus coverage</h2>
-              <div className="grid gap-3 sm:grid-cols-2">
+            <section aria-labelledby="coverage-heading">
+              <h2 id="coverage-heading" className="ed-h2">Syllabus coverage</h2>
+              <ul className="mt-8 grid border-t border-ink/15 sm:grid-cols-2 sm:gap-x-10">
                 {course.syllabus.map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-xl border border-border/70 bg-cream px-4 py-3.5 text-sm text-ink"
-                  >
+                  <li key={item} className="border-b border-ink/15 py-3.5 font-semibold text-ink">
                     {item}
-                  </div>
+                  </li>
                 ))}
-              </div>
-            </div>
+              </ul>
+            </section>
 
-            <div>
-              <h2 className="mb-5 font-serif text-xl font-semibold text-ink sm:text-2xl">Curriculum</h2>
-              <Accordion className="space-y-3">
+            <section aria-labelledby="curriculum-heading">
+              <h2 id="curriculum-heading" className="ed-h2">Curriculum</h2>
+              <Accordion className="mt-8 border-t border-ink/15">
                 {course.curriculum.map((module, i) => (
                   <AccordionItem
                     key={i}
                     value={`module-${i}`}
-                    className="overflow-hidden rounded-xl border border-border/70 bg-white px-5 shadow-[0_1px_2px_rgba(34,16,18,0.04)]"
+                    className="border-b border-ink/15"
                   >
-                    <AccordionTrigger className="py-4 text-sm font-medium text-ink hover:no-underline">
-                      <span className="flex items-center gap-3">
-                        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-semibold text-brand">
-                          {i + 1}
+                    <AccordionTrigger className="min-h-14 py-4 text-left hover:no-underline">
+                      <span className="flex items-baseline gap-5">
+                        <span className="ed-num w-9 shrink-0 text-[1.6rem] text-crimson" aria-hidden="true">
+                          {String(i + 1).padStart(2, "0")}
                         </span>
-                        {module.title}
+                        <span className="ed-h3">{module.title}</span>
                       </span>
                     </AccordionTrigger>
-                    <AccordionContent className="pb-4">
-                      <ul className="space-y-2 pl-11">
+                    <AccordionContent className="pb-5">
+                      <ul className="space-y-2 pl-14">
                         {module.topics.map((topic) => (
                           <li
                             key={topic}
-                            className="flex items-start gap-2 text-sm text-slate"
+                            className="flex items-start gap-3 leading-relaxed text-slate"
                           >
-                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand/50" />
+                            <span className="mt-[0.7em] h-px w-3 shrink-0 bg-crimson" aria-hidden="true" />
                             {topic}
                           </li>
                         ))}
@@ -149,54 +153,49 @@ export default async function CourseDetailPage({ params }: { params: Params }) {
                   </AccordionItem>
                 ))}
               </Accordion>
-            </div>
+            </section>
           </div>
 
-          <div>
-            <div className="sticky top-24 space-y-6 rounded-xl border border-border/70 bg-white p-7 shadow-[0_1px_3px_rgba(34,16,18,0.05)]">
-              <div>
-                <p className="font-serif text-lg font-semibold leading-snug text-ink sm:text-xl">
+          <aside className="lg:col-span-4" aria-label="Enquire about this course">
+            <div className="sticky top-24 border-t-2 border-crimson pt-6">
+              <h2 className="ed-h3">Enquire about {course.categoryLabel} {codes.join(" / ")}</h2>
+              <p className="mt-3 leading-relaxed text-slate">
+                Tell us you&apos;re interested and we&apos;ll follow up with batch
+                details. This is an enquiry, not a payment or a confirmed seat.
+              </p>
+              <RegistrationLink surface="course_detail" className="ed-btn ed-btn-lg mt-6 w-full">
+                Join the Next Batch
+                <Arrow />
+              </RegistrationLink>
+              <TrackedWhatsAppLink
+                href={whatsAppGroupUrl()}
+                location="course_detail"
+                variant="group"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ed-btn ed-btn-ghost mt-3 w-full text-ink"
+              >
+                Text us
+                <Arrow direction="up-right" />
+              </TrackedWhatsAppLink>
+
+              <div className="mt-8 border-t border-ink/15 pt-5">
+                <p className="font-semibold text-ink">
                   {getPublicCoursePriceLabel(course)}
                 </p>
-                <p className="mt-2 text-xs leading-relaxed text-muted-foreground">
+                <p className="mt-1.5 text-[0.875rem] leading-relaxed text-slate">
                   Programme fee is confirmed after a short conversation about your goals and timeline.
                 </p>
               </div>
-
-              <div className="space-y-3 border-t border-border pt-6">
-                <TrackedWhatsAppLink
-                  href={whatsAppGroupUrl()}
-                  location="course_detail"
-                  variant="group"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground shadow-[0_1px_2px_rgba(34,16,18,0.08)] transition-all hover:bg-brand-accent hover:shadow-[0_4px_14px_rgba(112,20,20,0.15)]"
-                >
-                  Text us
-                  <ArrowRight className="h-4 w-4" />
-                </TrackedWhatsAppLink>
-              </div>
-
-              <div className="space-y-3 border-t border-border pt-6 text-sm text-slate">
-                <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 shrink-0 text-brand" aria-hidden />
-                  {course.duration}
-                </div>
-                <div className="flex items-center gap-2">
-                  <CalendarDays className="h-4 w-4 shrink-0 text-brand" aria-hidden />
-                  {course.schedule}
-                </div>
-              </div>
-
-              <p className="text-xs leading-relaxed text-muted-foreground">
+              <p className="mt-5 text-[0.875rem] leading-relaxed text-slate">
                 Not sure if this is the right fit? Book a free 15-minute call.
                 We&apos;ll assess your level and recommend a plan.
               </p>
-              <p className="text-xs leading-relaxed text-slate">
-                Email: <ContactEmailLink className="text-xs font-medium" />
+              <p className="mt-3 text-[0.875rem] leading-relaxed text-slate">
+                Email: <ContactEmailLink className="font-medium" />
               </p>
             </div>
-          </div>
+          </aside>
         </div>
       </div>
     </>

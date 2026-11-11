@@ -18,31 +18,50 @@ export const metadata: Metadata = {
 };
 export default function RegistrationPage() {
   return (
-    <section className="overflow-x-clip bg-cream px-4 pb-[max(7.5rem,calc(env(safe-area-inset-bottom)+6.5rem))] pt-16 sm:px-6 lg:pb-20">
-      <div className="mx-auto max-w-xl">
-        <p className="text-xs font-semibold uppercase tracking-widest text-crimson">
-          Your next step
-        </p>
-        <h1 className="mt-3 font-serif text-4xl text-ink">
-          Learn with Miss Jay.
-        </h1>
-        <p className="mb-8 mt-5 leading-relaxed text-slate">
-          Tell us which English course you’re interested in. We’ll follow up by
-          email with batch details, availability and how to enroll.
-        </p>
-        <RegistrationForm ticket={createRegistrationTicket()} />
-        <p className="mt-6 text-xs text-slate">
-          Already using the detailed enrollment form?{" "}
-          <a
-            href={LEGACY_ENROL_FORM_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-crimson underline"
-          >
-            Continue with the existing Google Form
-          </a>{" "}
-          (Google sign-in may be required).
-        </p>
+    <section className="ed-paper ed-margin overflow-x-clip pb-[max(7.5rem,calc(env(safe-area-inset-bottom)+6.5rem))] lg:pb-24">
+      <div className="ed-wrap grid gap-10 pt-10 sm:pt-16 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-6">
+          <p className="ed-label">Your next step</p>
+          <h1 className="ed-display mt-5 text-[clamp(2.6rem,8vw,5.75rem)]">
+            Learn with Miss Jay.
+          </h1>
+          <p className="ed-lead mt-6">
+            Tell us which English course you’re interested in. We’ll follow up
+            by email with batch details, availability and how to enroll.
+          </p>
+          <ol className="mt-10 hidden border-t border-ink/15 lg:block">
+            {[
+              ["Send your interest", "Name, email and syllabus. No Google account, payment or LMS account is needed."],
+              ["We reply by email", "Miss Jay’s team follows up with batch details and availability."],
+              ["You decide", "An enquiry is not an enrollment. Nothing is confirmed until you choose to join."],
+            ].map(([title, text], i) => (
+              <li key={title} className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-4 border-b border-ink/15 py-5">
+                <span className="ed-num text-[2rem] text-crimson" aria-hidden="true">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <div>
+                  <h2 className="ed-h3">{title}</h2>
+                  <p className="mt-1 leading-relaxed text-slate">{text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+        <div className="min-w-0 lg:col-span-6 lg:pt-4">
+          <RegistrationForm ticket={createRegistrationTicket()} />
+          <p className="mt-6 text-[0.875rem] leading-relaxed text-slate">
+            Already using the detailed enrollment form?{" "}
+            <a
+              href={LEGACY_ENROL_FORM_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-crimson underline underline-offset-4"
+            >
+              Continue with the existing Google Form
+            </a>{" "}
+            (Google sign-in may be required).
+          </p>
+        </div>
       </div>
     </section>
   );

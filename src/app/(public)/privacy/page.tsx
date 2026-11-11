@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { socialMetadata } from "@/lib/seo";
 import Link from "next/link";
+import { PageIntro } from "@/components/editorial/page-intro";
 import { ArrowLeft } from "lucide-react";
 import { ContactEmailLink } from "@/components/contact-email-link";
 
@@ -20,23 +21,16 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <>
-      <section className="bg-gradient-to-b from-crimson to-crimson-dark pb-12 pt-28 sm:pb-16 sm:pt-36">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-white/70 sm:text-xs">
-            Legal
-          </p>
-          <h1 className="font-serif text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl">
-            Privacy Policy
-          </h1>
-          <p className="mt-3 text-sm text-white/60">
-            Last updated: October 8, 2026
-          </p>
-        </div>
-      </section>
+      <PageIntro
+        size="md"
+        label="Legal"
+        title="Privacy Policy"
+        lead="Last updated: October 8, 2026"
+      />
 
-      <section className="bg-cream py-16 sm:py-20">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <article className="space-y-8 text-sm leading-relaxed text-slate sm:text-base">
+      <section className="ed-paper border-t border-ink/10 py-12 sm:py-16">
+        <div className="ed-wrap">
+          <article className="max-w-[42rem] space-y-8 text-[1.0625rem] leading-[1.7] text-ink-muted">
             <p>
               Jaweria Amer uses the contact details you provide (including email
               addresses and WhatsApp numbers) only to respond to enquiries,
@@ -50,7 +44,7 @@ export default function PrivacyPage() {
             <section aria-labelledby="registration-privacy">
               <h2
                 id="registration-privacy"
-                className="mb-3 font-serif text-2xl text-ink"
+                className="ed-h3 mb-3 border-t border-ink/15 pt-7 text-[1.5rem]"
               >
                 Registration interest
               </h2>
@@ -71,7 +65,7 @@ export default function PrivacyPage() {
             <section aria-labelledby="evaluation-privacy">
               <h2
                 id="evaluation-privacy"
-                className="mb-3 font-serif text-2xl text-ink"
+                className="ed-h3 mb-3 border-t border-ink/15 pt-7 text-[1.5rem]"
               >
                 Free evaluation preview
               </h2>
@@ -91,7 +85,7 @@ export default function PrivacyPage() {
                   href="https://developers.openai.com/api/docs/guides/your-data"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-crimson underline"
+                  className="text-crimson underline underline-offset-4"
                 >
                   data policy
                 </a>
@@ -137,7 +131,7 @@ export default function PrivacyPage() {
 
           <Link
             href="/"
-            className="mt-12 inline-flex items-center gap-2 text-sm font-medium text-ink transition-colors hover:text-brand-accent"
+            className="ed-link mt-12 text-crimson"
           >
             <ArrowLeft className="h-4 w-4" aria-hidden />
             Back to Home

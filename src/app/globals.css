@@ -11,12 +11,21 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-serif: var(--font-serif);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-serif);
+  --font-sans: var(--ff-body), ui-sans-serif, system-ui, sans-serif;
+  /* Every existing `font-serif` heading now resolves to the display grotesque. */
+  --font-serif: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+  /* Editorial serif: Miss Jay's own words only (quotes, asides). */
+  --font-quote: var(--ff-quote), ui-serif, Georgia, serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-heading: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
   /* Deep ink: headings & nav on light surfaces */
-  --color-ink: #221012;
+  --color-ink: #1f0e11;
+  --color-paper: #f7f2e9;
+  --color-paper-deep: #efe7d9;
+  --color-oxblood: #2a0a0d;
+  --color-brass: #a07a3f;
+  --color-rule: rgba(31, 14, 17, 0.14);
   --color-ink-muted: #4a383c;
   --color-crimson: #701414;
   --color-crimson-light: #8a2424;
@@ -31,8 +40,8 @@
   --color-brand: #701414;
   --color-brand-accent: #a84562;
   --color-brand-soft: #fdf5f6;
-  --color-cream: #faf9f8;
-  --color-cream-dark: #f3efef;
+  --color-cream: #f7f2e9;
+  --color-cream-dark: #efe7d9;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -72,7 +81,7 @@
 }
 
 :root {
-  --background: #fafaf9;
+  --background: #f7f2e9;
   /* Slightly softer than pure ink — calmer body hierarchy */
   --foreground: #34262a;
   --card: #ffffff;
@@ -88,8 +97,8 @@
   --accent: #fdf5f6;
   --accent-foreground: #2d181c;
   --destructive: oklch(0.52 0.2 25);
-  --border: #e8e1e2;
-  --input: #e0d8d9;
+  --border: #e4dccf;
+  --input: #d9d0c2;
   --ring: #a84562;
   --chart-1: #701414;
   --chart-2: #221012;
@@ -116,19 +125,25 @@
   }
   html {
     @apply font-sans scroll-smooth;
+    /* Source Sans 3 runs small; 17px keeps exam-length reading comfortable. */
+    font-size: 106.25%;
+    text-size-adjust: 100%;
   }
   h1,
   h2,
   h3,
   h4 {
-    @apply font-serif text-ink tracking-tight;
+    @apply font-serif text-ink;
+    font-variation-settings: "wdth" 92;
+    letter-spacing: -0.022em;
   }
-  h1 {
+  h1,
+  h2 {
     @apply text-balance;
   }
-  h2,
-  h3 {
-    letter-spacing: -0.02em;
+  ::selection {
+    background: var(--color-crimson);
+    color: var(--color-paper);
   }
 
   [id$="-section"] {
@@ -264,11 +279,12 @@
    Self-contained tokens so the light site theme cannot wash it out.
    ───────────────────────────────────────────────────────────── */
 .results-ink {
-  --results-bg: #0c0a0b;
-  --results-bg-2: #151215;
-  --results-pink: #ff3d8f; /* 6.3:1 on --results-bg — large text / accents */
-  --results-pink-2: #ff7ab5; /* softer pink for small type on dark */
-  --results-cream: #f6efe4;
+  /* Re-toned to the brand: oxblood-black ground, examiner-pen rose accent. */
+  --results-bg: #150809;
+  --results-bg-2: #211012;
+  --results-pink: #ff5d6c; /* 6.6:1 on --results-bg — large text / accents */
+  --results-pink-2: #ff9aa3; /* softer rose for small type on dark */
+  --results-cream: #f7f2e9;
   --results-mute: rgba(246, 239, 228, 0.68);
   --results-line: rgba(246, 239, 228, 0.12);
   --results-card: rgba(246, 239, 228, 0.045);
@@ -288,9 +304,10 @@
   mask-image: radial-gradient(ellipse at 50% 30%, black 35%, transparent 80%);
 }
 .results-display {
-  font-family: var(--font-serif);
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+  font-variation-settings: "wdth" 78;
+  font-weight: 750;
+  letter-spacing: -0.035em;
   line-height: 0.92;
   text-transform: uppercase;
   font-size: clamp(3.25rem, 11vw, 9.5rem);
@@ -327,7 +344,7 @@
   display: grid; place-items: center; font-weight: 700; font-size: 0.78rem; color: var(--results-pink-2);
   font-variant-numeric: tabular-nums;
 }
-.results-avatar[data-anonymous] { border-color: rgba(255, 122, 181, 0.45); color: var(--results-mute); font-size: 0.66rem; letter-spacing: 0.02em; }
+.results-avatar[data-anonymous] { border-color: rgba(255, 154, 163, 0.45); color: var(--results-mute); font-size: 0.66rem; letter-spacing: 0.02em; }
 .results-avatar-lg { width: 4.5rem; height: 4.5rem; font-size: 1.375rem; }
 .results-avatar-lg[data-anonymous] { font-size: 1.1rem; }
 .results-grade {
@@ -371,4 +388,593 @@
   .results-segment { flex-wrap: wrap; justify-content: center; padding-right: 0; width: 100%; }
   .results-segment[data-dup] { display: none; }
   .results-row { mask-image: none; }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   EDITORIAL LAYER — public marketing site (2026-11 redesign)
+   The idea: a marked exam script. Ivory paper, ink, the examiner's
+   crimson pen, a ruled margin, syllabus codes set like dates.
+   Everything lives in `components` so Tailwind utilities still win.
+   Motion: transform/opacity/translate only; one easing; all of it
+   is switched off under prefers-reduced-motion at the bottom.
+   ───────────────────────────────────────────────────────────── */
+@layer components {
+  .ed-shell {
+    --ed-ease: cubic-bezier(0.32, 0.72, 0, 1);
+    --ed-gutter: clamp(1rem, 4vw, 3.5rem);
+    --ed-max: 82rem;
+  }
+  .ed-wrap {
+    width: 100%;
+    max-width: var(--ed-max, 82rem);
+    margin-inline: auto;
+    padding-inline: var(--ed-gutter, clamp(1rem, 4vw, 3.5rem));
+  }
+
+  /* Type */
+  .ed-display {
+    font-family: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "wdth" 84;
+    font-weight: 750;
+    line-height: 0.92;
+    letter-spacing: -0.026em;
+    text-wrap: balance;
+  }
+  .ed-h2 {
+    font-family: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "wdth" 86;
+    font-weight: 700;
+    font-size: clamp(2rem, 4.6vw, 3.75rem);
+    line-height: 1;
+    letter-spacing: -0.024em;
+    text-wrap: balance;
+  }
+  .ed-h3 {
+    font-family: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "wdth" 90;
+    font-weight: 650;
+    font-size: clamp(1.25rem, 2vw, 1.6rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+  }
+  .ed-lead {
+    font-size: clamp(1.06rem, 1.5vw, 1.3rem);
+    line-height: 1.5;
+    color: var(--color-ink-muted);
+    max-width: 38rem;
+  }
+  .ed-quote {
+    font-family: var(--ff-quote), ui-serif, Georgia, serif;
+    font-style: italic;
+    font-weight: 400;
+    line-height: 1.32;
+    letter-spacing: -0.01em;
+  }
+  /* Short ruled label. Sentence case on purpose: it names the section, it does not shout. */
+  .ed-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 650;
+    letter-spacing: 0.01em;
+    color: var(--color-crimson);
+  }
+  .ed-label::before {
+    content: "";
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+  }
+  .ed-ink .ed-label,
+  .ed-crimson .ed-label {
+    color: #f3c9c2;
+  }
+  .ed-num {
+    font-family: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "wdth" 75;
+    font-variant-numeric: tabular-nums lining-nums;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 0.9;
+  }
+
+  /* Surfaces */
+  .ed-paper {
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+  .ed-ink {
+    background: var(--color-oxblood);
+    color: var(--color-paper);
+  }
+  .ed-crimson {
+    background: var(--color-crimson);
+    color: var(--color-paper);
+  }
+  .ed-ink :is(h1, h2, h3, h4),
+  .ed-crimson :is(h1, h2, h3, h4) {
+    color: var(--color-paper);
+  }
+  .ed-ink .ed-lead,
+  .ed-crimson .ed-lead {
+    color: rgba(247, 242, 233, 0.78);
+  }
+  /* The ruled exam-paper margin: one crimson hairline down the left gutter. */
+  .ed-margin {
+    position: relative;
+  }
+  .ed-margin::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: max(calc(var(--ed-gutter, 1rem) - 1rem), 0.5rem);
+    width: 1px;
+    background: color-mix(in srgb, var(--color-crimson) 55%, transparent);
+    pointer-events: none;
+  }
+  @media (min-width: 1400px) {
+    .ed-margin::before {
+      left: calc((100vw - var(--ed-max, 82rem)) / 2 + var(--ed-gutter, 3.5rem) - 1.5rem);
+    }
+  }
+  .ed-rule {
+    border: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+  .ed-ink .ed-rule {
+    border-color: rgba(247, 242, 233, 0.16);
+  }
+
+  /* Buttons — one shape, four inks. Press and hover use `scale`/shadow so the
+     magnetic `translate` can never cancel them. */
+  .ed-btn {
+    --btn-bg: var(--color-crimson);
+    --btn-fg: var(--color-paper);
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    min-height: 3rem;
+    padding: 0.7rem 1.5rem;
+    border-radius: 999px;
+    background: var(--btn-bg);
+    color: var(--btn-fg);
+    font-weight: 650;
+    font-size: 0.95rem;
+    line-height: 1.1;
+    text-align: center;
+    text-decoration: none;
+    translate: var(--tx, 0) var(--ty, 0);
+    transition:
+      translate 0.5s var(--ed-ease, ease),
+      scale 0.25s var(--ed-ease, ease),
+      box-shadow 0.4s var(--ed-ease, ease),
+      background-color 0.3s var(--ed-ease, ease),
+      color 0.3s var(--ed-ease, ease);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+  .ed-btn:hover {
+    box-shadow: 0 14px 28px -14px color-mix(in srgb, var(--btn-bg) 85%, black);
+  }
+  .ed-btn:active {
+    scale: 0.975;
+  }
+  .ed-btn:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--btn-bg) 35%, transparent);
+  }
+  .ed-btn[aria-disabled="true"],
+  .ed-btn:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .ed-btn-ink {
+    --btn-bg: var(--color-ink);
+    --btn-fg: var(--color-paper);
+  }
+  .ed-btn-paper {
+    --btn-bg: var(--color-paper);
+    --btn-fg: var(--color-crimson);
+  }
+  .ed-btn-ghost {
+    --btn-bg: transparent;
+    --btn-fg: currentColor;
+    box-shadow: inset 0 0 0 1.5px currentColor;
+  }
+  .ed-btn-ghost:hover {
+    box-shadow: inset 0 0 0 2px currentColor;
+  }
+  .ed-btn-lg {
+    min-height: 3.5rem;
+    padding-inline: 1.9rem;
+    font-size: 1.02rem;
+  }
+  /* Arrow that travels with the action it belongs to. */
+  .ed-arrow {
+    flex: none;
+    width: 1em;
+    height: 1em;
+    transition: translate 0.45s var(--ed-ease, ease);
+  }
+  :is(a, button):hover > .ed-arrow,
+  :is(a, button):focus-visible > .ed-arrow {
+    translate: 4px 0;
+  }
+  /* Text link with a rule that draws in from the left. */
+  .ed-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    font-weight: 650;
+    color: inherit;
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) left calc(100% - 0.55rem) / 100% 1px no-repeat;
+    transition: background-size 0.5s var(--ed-ease, ease);
+  }
+  .ed-link:hover {
+    background-size: 0% 1px;
+    background-position: right calc(100% - 0.55rem);
+  }
+  .ed-link:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  /* ── Interactive rows — the signature. A syllabus code where a date would
+        be, the course name as the typographic event, facts on the right. ── */
+  .ed-rows {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--color-rule);
+  }
+  .ed-row {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "code arrow" "title title" "meta meta";
+    align-items: center;
+    column-gap: 1.25rem;
+    row-gap: 0.5rem;
+    padding: 1.4rem 0 1.5rem;
+    border-bottom: 1px solid var(--color-rule);
+    color: var(--color-ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    transition: color 0.35s var(--ed-ease, ease), opacity 0.45s var(--ed-ease, ease);
+  }
+  /* The wash: full-bleed crimson that rises from the rule the row sits on. */
+  .ed-row::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -1px calc(-1 * var(--ed-gutter, 1rem));
+    background:
+      radial-gradient(34rem circle at var(--mx, 30%) var(--my, 50%), rgba(255, 214, 204, 0.2), transparent 60%),
+      var(--color-crimson);
+    transform: scaleY(0);
+    transform-origin: 50% 100%;
+    transition: transform 0.55s var(--ed-ease, ease);
+  }
+  .ed-row-code {
+    grid-area: code;
+    font-size: clamp(2.4rem, 11vw, 3.4rem);
+    color: var(--color-crimson);
+    transition: color 0.35s var(--ed-ease, ease);
+    white-space: nowrap;
+  }
+  .ed-row-code small {
+    font-size: 0.42em;
+    letter-spacing: -0.01em;
+    opacity: 0.7;
+    margin-left: 0.12em;
+  }
+  .ed-row-body {
+    grid-area: title;
+    min-width: 0;
+    transition: translate 0.55s var(--ed-ease, ease);
+  }
+  .ed-row-title {
+    display: block;
+    color: inherit;
+    font-family: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "wdth" 84;
+    font-weight: 700;
+    font-size: clamp(1.45rem, 5.4vw, 2.7rem);
+    line-height: 1.02;
+    letter-spacing: -0.024em;
+    text-wrap: balance;
+  }
+  .ed-row-sub {
+    display: block;
+    margin-top: 0.45rem;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    color: var(--color-ink-muted);
+    transition: color 0.35s var(--ed-ease, ease);
+    max-width: 34rem;
+  }
+  .ed-row-meta {
+    grid-area: meta;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-ink-muted);
+    transition: color 0.35s var(--ed-ease, ease);
+  }
+  .ed-row-arrow {
+    grid-area: arrow;
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1.5px currentColor;
+    transition:
+      translate 0.55s var(--ed-ease, ease),
+      background-color 0.35s var(--ed-ease, ease),
+      color 0.35s var(--ed-ease, ease),
+      box-shadow 0.35s var(--ed-ease, ease);
+  }
+  .ed-row-arrow svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  @media (min-width: 768px) {
+    .ed-row {
+      grid-template-columns: minmax(8.5rem, 0.9fr) minmax(0, 3fr) minmax(8rem, auto) auto;
+      grid-template-areas: "code title meta arrow";
+      column-gap: clamp(1.25rem, 3vw, 3rem);
+      padding: clamp(1.6rem, 2.6vw, 2.4rem) 0;
+    }
+    .ed-row-code {
+      font-size: clamp(2.6rem, 5vw, 4.5rem);
+    }
+    .ed-row-meta {
+      flex-direction: column;
+      gap: 0.2rem;
+      text-align: right;
+      align-items: flex-end;
+    }
+    .ed-row-arrow {
+      width: 3.25rem;
+      height: 3.25rem;
+    }
+  }
+  /* Lit state: keyboard focus always; pointer hover only where hover is real. */
+  .ed-row:focus-visible {
+    outline: none;
+  }
+  .ed-row:focus-visible,
+  .ed-row:active {
+    color: var(--color-paper);
+  }
+  .ed-row:focus-visible::before,
+  .ed-row:active::before {
+    transform: scaleY(1);
+  }
+  .ed-row:focus-visible :is(.ed-row-code, .ed-row-sub, .ed-row-meta),
+  .ed-row:active :is(.ed-row-code, .ed-row-sub, .ed-row-meta) {
+    color: rgba(247, 242, 233, 0.86);
+  }
+  .ed-row:focus-visible .ed-row-arrow,
+  .ed-row:active .ed-row-arrow {
+    background: var(--color-paper);
+    color: var(--color-crimson);
+    box-shadow: none;
+  }
+  .ed-row:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-paper), 0 0 0 5px var(--color-crimson);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .ed-row:hover {
+      color: var(--color-paper);
+    }
+    .ed-row:hover::before {
+      transform: scaleY(1);
+    }
+    .ed-row:hover :is(.ed-row-code, .ed-row-sub, .ed-row-meta) {
+      color: rgba(247, 242, 233, 0.86);
+    }
+    .ed-row:hover .ed-row-body {
+      translate: 0.9rem 0;
+    }
+    .ed-row:hover .ed-row-arrow {
+      translate: 0.5rem 0;
+      background: var(--color-paper);
+      color: var(--color-crimson);
+      box-shadow: none;
+    }
+    /* Siblings step back so the lit row reads as the only event. */
+    .ed-rows:has(.ed-row:hover) .ed-row:not(:hover) {
+      opacity: 0.42;
+    }
+    /* Bounded pointer depth. --px/--py are −1…1, written by <PointerField>. */
+    @media (min-width: 768px) {
+      .ed-row {
+        transform: perspective(1400px) rotateX(calc(var(--py, 0) * -1.1deg)) rotateY(calc(var(--px, 0) * 0.7deg));
+        transition:
+          color 0.35s var(--ed-ease, ease),
+          opacity 0.45s var(--ed-ease, ease),
+          transform 0.6s var(--ed-ease, ease);
+      }
+    }
+  }
+  /* Rows on dark grounds */
+  .ed-ink .ed-rows,
+  .ed-ink .ed-row {
+    border-color: rgba(247, 242, 233, 0.16);
+  }
+  .ed-ink .ed-row {
+    color: var(--color-paper);
+  }
+  .ed-ink .ed-row-code {
+    color: #f0a79d;
+  }
+  .ed-ink :is(.ed-row-sub, .ed-row-meta) {
+    color: rgba(247, 242, 233, 0.66);
+  }
+  /* Compact variant: category doors and curated collections (no code cell). */
+  .ed-row-compact {
+    grid-template-areas: "title arrow" "meta meta";
+    padding-block: 1.1rem;
+  }
+  .ed-row-compact .ed-row-title {
+    font-size: clamp(1.35rem, 3.2vw, 1.9rem);
+  }
+  .ed-row-compact .ed-row-meta {
+    font-weight: 400;
+    font-size: 0.95rem;
+    line-height: 1.45;
+  }
+  @media (min-width: 768px) {
+    .ed-row-compact {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr) auto;
+      grid-template-areas: "title meta arrow";
+      padding-block: 1.35rem;
+    }
+    .ed-row-compact .ed-row-meta {
+      text-align: left;
+      align-items: flex-start;
+    }
+    .ed-row-compact .ed-row-arrow {
+      width: 2.75rem;
+      height: 2.75rem;
+    }
+  }
+
+  /* Art-directed portrait stage: the second (and last) tilting surface. */
+  .ed-stage {
+    position: relative;
+    transform: perspective(1500px) rotateX(calc(var(--py, 0) * -2deg)) rotateY(calc(var(--px, 0) * 2.4deg));
+    transition: transform 0.7s var(--ed-ease, ease);
+    transform-style: preserve-3d;
+  }
+  .ed-stage-figure {
+    translate: calc(var(--px, 0) * -8px) calc(var(--py, 0) * -5px);
+    transition: translate 0.7s var(--ed-ease, ease);
+  }
+
+  /* One orchestrated page-load moment for intros. CSS-only: content is
+     never hidden when scripts fail, and it ends in the resting state. */
+  @keyframes ed-rise {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 1.1rem, 0);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes ed-line {
+    from {
+      transform: translate3d(0, 105%, 0);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes ed-draw {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+  .ed-rise {
+    animation: ed-rise 0.9s var(--ed-ease, ease) both;
+    animation-delay: var(--d, 0s);
+  }
+  .ed-line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.12em;
+    margin-bottom: -0.12em;
+  }
+  .ed-line > span {
+    display: inline-block;
+    animation: ed-line 0.95s var(--ed-ease, ease) both;
+    animation-delay: var(--d, 0s);
+  }
+
+  /* Long-form reading (privacy, terms): plain, quiet, generous. */
+  .ed-prose {
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: var(--color-ink-muted);
+  }
+  .ed-prose :is(h2, h3) {
+    font-family: var(--ff-display), ui-sans-serif, system-ui, sans-serif;
+    font-variation-settings: "wdth" 90;
+    font-weight: 650;
+    font-size: 1.5rem;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: 0 0 0.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-rule);
+  }
+  .ed-prose a {
+    color: var(--color-crimson);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Form field shared by registration + evaluation. No motion on purpose. */
+  .ed-field {
+    margin-top: 0.5rem;
+    min-height: 3.25rem;
+    width: 100%;
+    max-width: 100%;
+    border: 1.5px solid var(--color-input);
+    border-radius: 0.6rem;
+    background: #fff;
+    padding: 0 1rem;
+    font-size: 1rem;
+    color: var(--color-ink);
+  }
+  .ed-field:focus {
+    outline: 2px solid var(--color-crimson);
+    outline-offset: 1px;
+    border-color: var(--color-crimson);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ed-shell *,
+  .ed-shell *::before,
+  .ed-shell *::after {
+    animation: none !important;
+    transition-duration: 0.001s !important;
+  }
+  .ed-row,
+  .ed-stage,
+  .ed-stage-figure,
+  .ed-btn {
+    transform: none !important;
+    translate: none !important;
+  }
+  .ed-row .ed-row-body,
+  .ed-row .ed-row-arrow {
+    translate: none !important;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

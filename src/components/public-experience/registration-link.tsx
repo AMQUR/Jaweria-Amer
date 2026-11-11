@@ -3,7 +3,7 @@ import type { AnchorHTMLAttributes } from "react";
 import { ENROL_NOW_URL } from "@/lib/contact";
 import { trackEvent } from "@/lib/analytics";
 export const registrationButton =
-  "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-crimson px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-crimson-dark focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-crimson";
+  "ed-btn";
 export function RegistrationLink({
   surface,
   children,

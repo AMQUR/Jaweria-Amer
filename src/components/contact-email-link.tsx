@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils";
 
 const variants = {
   default:
-    "text-[#0B1D3A] hover:text-[#c62839] transition-colors duration-200 hover:underline underline-offset-4",
+    "text-crimson underline underline-offset-4 transition-colors duration-200 hover:text-crimson-dark",
   onDark:
-    "text-white/75 hover:text-[#c62839] transition-colors duration-200 hover:underline underline-offset-4",
+    "text-paper/80 underline decoration-paper/30 underline-offset-4 transition-colors duration-200 hover:text-paper hover:decoration-paper",
 };
 
 type ContactEmailLinkProps = {

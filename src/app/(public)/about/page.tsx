@@ -1,26 +1,16 @@
 import { socialMetadata } from "@/lib/seo";
 import { Metadata } from "next";
-import {
-  ArrowRight,
-  GraduationCap,
-  Globe,
-  BookOpen,
-  Heart,
-  CheckCircle2,
-  ExternalLink,
-  Newspaper,
-} from "lucide-react";
+import Image from "next/image";
+import { Newspaper } from "lucide-react";
 import { TrackedOutboundLink, TrackedWhatsAppLink } from "@/components/analytics/tracked-links";
 import { ContactEmailLink } from "@/components/contact-email-link";
 import { AboutLatestYoutube } from "@/components/about-latest-youtube";
 import { contact, whatsAppGroupUrl } from "@/lib/contact";
 import { siteConfig } from "@/lib/data";
-import { cn } from "@/lib/utils";
-
-const channelCardBase =
-  "group flex flex-col rounded-2xl p-7 transition-all duration-300 ease-out sm:p-8 hover:-translate-y-1 hover:shadow-[0_12px_36px_rgba(34,16,18,0.08)] motion-reduce:hover:translate-y-0 motion-reduce:hover:shadow-none";
-const CONNECT_CARD_CLASS =
-  "bg-[#fef2f2] border border-[#fecaca] hover:border-[#fca5a5] shadow-sm hover:shadow-md rounded-2xl p-6 transition-all duration-200 hover:scale-[1.02]";
+import { Arrow } from "@/components/editorial/arrow";
+import { PageIntro } from "@/components/editorial/page-intro";
+import { PointerField } from "@/components/editorial/pointer-field";
+import { RegistrationLink } from "@/components/public-experience/registration-link";
 
 function IconWhatsApp({ className }: { className?: string }) {
   return (
@@ -59,300 +49,317 @@ export const metadata: Metadata = {
   }),
 };
 
+const EXPERTISE = [
+  {
+    title: "Pedagogical Expertise",
+    desc: "Trained in flipped classrooms, active learning strategies, and medical education innovation.",
+  },
+  {
+    title: "International Experience",
+    desc: "Experience across multiple education systems, bringing a global perspective to student learning and academic pathways.",
+  },
+  {
+    title: "Cambridge Specialist",
+    desc: "Deep expertise in CAIE English Language (1123, 9093) and Literature syllabi.",
+  },
+  {
+    title: "Student-Centred",
+    desc: "Mentorship that prioritises well-being alongside academic rigour. No shortcuts, no burnout.",
+  },
+];
+
+const DIFFERENCES = [
+  "Rubric-driven instruction aligned to how Cambridge actually marks",
+  "Examiner-style feedback on every piece of work",
+  "Structured programmes, not ad-hoc sessions",
+  "Calm, supportive mentorship that builds independence",
+  "Transparent method: diagnostic, plan, practice, feedback",
+  "No grade guarantees, no inflated claims. Just honest, consistent work",
+];
+
 export default function AboutPage() {
+  const channels = [
+    {
+      key: "whatsapp",
+      icon: <IconWhatsApp className="h-5 w-5" />,
+      title: "WhatsApp",
+      text: "Text us with questions or to get updates",
+    },
+    {
+      key: "youtube",
+      icon: <IconYouTube className="h-5 w-5" />,
+      title: "YouTube",
+      text: "Watch full lessons and breakdowns",
+    },
+    {
+      key: "instagram",
+      icon: <IconInstagram className="h-5 w-5" />,
+      title: "Instagram",
+      text: "Daily tips and writing insights",
+    },
+  ];
+  const rowInner = (c: (typeof channels)[number]) => (
+    <>
+      <span className="ed-row-body">
+        <span className="ed-row-title flex items-center gap-3">
+          {c.icon}
+          {c.title}
+        </span>
+      </span>
+      <span className="ed-row-meta">
+        <span>{c.text}</span>
+      </span>
+      <span className="ed-row-arrow" aria-hidden="true">
+        <Arrow direction="up-right" />
+      </span>
+    </>
+  );
+
   return (
     <>
-      <section className="bg-gradient-to-b from-crimson to-crimson-dark pb-20 pt-28 sm:pb-24 sm:pt-36">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <p className="premium-reveal mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/70 sm:text-xs">
-            About
-          </p>
-          <h1 className="premium-reveal premium-reveal-delay-1 mb-5 max-w-3xl font-serif text-3xl font-semibold leading-[1.12] tracking-tight text-white sm:text-[2.35rem] sm:leading-[1.1] lg:text-[2.65rem] lg:leading-[1.08]">
-            {siteConfig.name}
-          </h1>
-          <p className="premium-reveal premium-reveal-delay-2 max-w-xl text-base leading-[1.65] text-white/72 sm:text-lg sm:leading-[1.62]">
-            Cambridge English mentor with international education experience,
-            dedicated to structured mentorship that builds independent thinkers.
-          </p>
-        </div>
-      </section>
+      <PageIntro
+        label="About"
+        title={siteConfig.name}
+        lead="Cambridge English mentor with international education experience, dedicated to structured mentorship that builds independent thinkers."
+      />
 
-      <section className="bg-cream py-20 sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-5 lg:gap-20">
-            {/* Portrait placeholder */}
-            <div className="lg:col-span-2">
-              <div className="flex aspect-[3/4] items-center justify-center rounded-2xl border border-border/60 bg-crimson/5 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-shadow duration-300 hover:shadow-[0_8px_28px_rgba(34,16,18,0.07)]">
-                <div className="text-center px-8">
-                  <div className="w-24 h-24 rounded-full bg-crimson/10 flex items-center justify-center mx-auto mb-4">
-                    <span className="font-serif text-3xl font-bold text-crimson">
-                      JA
-                    </span>
-                  </div>
-                  <p className="font-serif text-lg font-semibold text-ink">
-                    {siteConfig.name}
-                  </p>
-                  <p className="mt-1 text-xs leading-snug text-slate-light">
-                    Cambridge English mentor
-                  </p>
+      <section className="ed-paper border-t border-ink/10">
+        <div className="ed-wrap grid gap-12 py-16 sm:py-24 lg:grid-cols-12 lg:gap-16">
+          {/* Portrait — the real photograph, art-directed on the brand crimson */}
+          <PointerField className="lg:col-span-5">
+            <div className="lg:sticky lg:top-28">
+              <div
+                className="ed-stage relative mx-auto aspect-[4/5] w-full max-w-[26rem] overflow-hidden rounded-t-[999px] bg-crimson"
+                data-depth="tilt"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(120% 80% at 50% 12%, rgba(255,196,186,0.34), transparent 60%)",
+                }}
+              >
+                <div className="ed-stage-figure absolute inset-0">
+                  <Image
+                    src="/assets/miss-jay.png"
+                    alt="Jaweria Amer, Cambridge English teacher"
+                    fill
+                    sizes="(min-width: 1024px) 34vw, 416px"
+                    className="object-contain object-bottom"
+                  />
                 </div>
               </div>
+              <p className="mx-auto mt-4 max-w-[26rem] border-t border-ink/15 pt-3 text-[0.875rem] text-slate">
+                {siteConfig.name} — Miss Jay to her students. Karachi, Pakistan.
+              </p>
             </div>
+          </PointerField>
 
-            {/* Bio */}
-            <div className="lg:col-span-3 space-y-8">
-              <div>
-                <h2 className="mb-4 font-serif text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-                  Teaching Philosophy
-                </h2>
-                <div className="space-y-5 text-slate">
-                  <p className="border-l-2 border-rose/25 pl-5 text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
-                    My approach is simple: reduce confusion and give students a sense of control. We work with real paper patterns, build repeatable writing structures, and practise under timed conditions — all while keeping confidence intact.
-                  </p>
-                  <p className="text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
-                    Having achieved 9A<span className="relative -top-[1px] text-[0.9em]">*</span>s &amp; 1A in O Levels and 3A<span className="relative -top-[1px] text-[0.9em]">*</span>s and 2As, I know the exact pressure students face in an exam. I&apos;ve experienced it firsthand, which is why my focus is not just on teaching content, but on helping students stay composed and perform under pressure.
-                  </p>
-                  <p className="text-sm leading-[1.7] sm:text-base sm:leading-[1.68]">
-                    I teach English the way high-performing students actually need it: clear structures, precise feedback, and habits that hold up on exam day. Every session is built around Cambridge marking criteria, so students learn how to think like examiners and turn their writing into marks.
-                  </p>
-                </div>
+          <div className="space-y-16 lg:col-span-7">
+            <section aria-labelledby="philosophy-heading">
+              <p className="ed-label">Teaching philosophy</p>
+              <h2 id="philosophy-heading" className="sr-only">
+                Teaching Philosophy
+              </h2>
+              <blockquote className="ed-quote mt-6 text-[clamp(1.5rem,3.1vw,2.5rem)] text-ink">
+                “My approach is simple: reduce confusion and give students a
+                sense of control.”
+              </blockquote>
+              <div className="mt-8 max-w-2xl space-y-5 text-[1.06rem] leading-[1.7] text-ink-muted">
+                <p>
+                  We work with real paper patterns, build repeatable writing
+                  structures, and practise under timed conditions — all while
+                  keeping confidence intact.
+                </p>
+                <p>
+                  Having achieved 9A*s &amp; 1A in O Levels and 3A*s and 2As, I
+                  know the exact pressure students face in an exam. I&apos;ve
+                  experienced it firsthand, which is why my focus is not just
+                  on teaching content, but on helping students stay composed
+                  and perform under pressure.
+                </p>
+                <p>
+                  I teach English the way high-performing students actually
+                  need it: clear structures, precise feedback, and habits that
+                  hold up on exam day. Every session is built around Cambridge
+                  marking criteria, so students learn how to think like
+                  examiners and turn their writing into marks.
+                </p>
               </div>
+            </section>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  {
-                    icon: GraduationCap,
-                    title: "Pedagogical Expertise",
-                    desc: "Trained in flipped classrooms, active learning strategies, and medical education innovation.",
-                  },
-                  {
-                    icon: Globe,
-                    title: "International Experience",
-                    desc: "Experience across multiple education systems, bringing a global perspective to student learning and academic pathways.",
-                  },
-                  {
-                    icon: BookOpen,
-                    title: "Cambridge Specialist",
-                    desc: "Deep expertise in CAIE English Language (1123, 9093) and Literature syllabi.",
-                  },
-                  {
-                    icon: Heart,
-                    title: "Student-Centred",
-                    desc: "Mentorship that prioritises well-being alongside academic rigour. No shortcuts, no burnout.",
-                  },
-                ].map((item) => (
-                  <div
-                    key={item.title}
-                    className="rounded-xl border border-border/60 bg-white p-5 shadow-[0_1px_3px_rgba(34,16,18,0.04)] transition-all duration-300 ease-out hover:-translate-y-1 hover:border-border/80 hover:shadow-[0_10px_32px_rgba(34,16,18,0.08)] motion-reduce:hover:translate-y-0"
-                  >
-                    <item.icon className="w-5 h-5 text-rose mb-3" />
-                    <h3 className="mb-1.5 font-serif text-sm font-semibold text-ink">
-                      {item.title}
-                    </h3>
-                    <p className="text-xs text-slate leading-relaxed">
+            <section aria-label="Background">
+              <dl className="grid border-t border-ink/15 sm:grid-cols-2 sm:gap-x-12">
+                {EXPERTISE.map((item) => (
+                  <div key={item.title} className="border-b border-ink/15 py-5">
+                    <dt className="ed-h3">{item.title}</dt>
+                    <dd className="mt-1.5 leading-relaxed text-slate">
                       {item.desc}
-                    </p>
+                    </dd>
                   </div>
                 ))}
-              </div>
+              </dl>
+            </section>
 
-              <div>
-                <h2 className="mb-4 font-serif text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-                  What Sets This Apart
-                </h2>
-                <div className="space-y-3.5">
-                  {[
-                    "Rubric-driven instruction aligned to how Cambridge actually marks",
-                    "Examiner-style feedback on every piece of work",
-                    "Structured programmes, not ad-hoc sessions",
-                    "Calm, supportive mentorship that builds independence",
-                    "Transparent method: diagnostic, plan, practice, feedback",
-                    "No grade guarantees, no inflated claims. Just honest, consistent work",
-                  ].map((item) => (
-                    <div key={item} className="flex gap-3">
-                      <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-rose" />
-                      <span className="text-sm leading-relaxed text-slate">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <section aria-labelledby="apart-heading">
+              <h2 id="apart-heading" className="ed-h2">
+                What sets this apart
+              </h2>
+              <ul className="mt-8 border-t border-ink/15">
+                {DIFFERENCES.map((item) => (
+                  <li
+                    key={item}
+                    className="flex gap-4 border-b border-ink/15 py-4"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      className="mt-1 h-5 w-5 shrink-0 text-crimson"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4 12.5 9.5 18 20 6.5" />
+                    </svg>
+                    <span className="text-[1.06rem] leading-relaxed text-ink-muted">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
           </div>
         </div>
       </section>
 
-      {/* YouTube — authority */}
-      <section className="border-t border-border/70 bg-white pb-24 pt-20 sm:pb-28 sm:pt-24">
-        <div className="premium-reveal mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="font-serif text-2xl font-semibold leading-[1.2] tracking-tight text-ink sm:text-3xl">
-            Learn directly from Jaweria
-          </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-[1.65] text-slate sm:text-base sm:leading-[1.68]">
-            Full lessons and paper-style breakdowns on YouTube — structured, calm, and aligned to how
-            Cambridge marks.
-          </p>
-          <AboutLatestYoutube />
-          <p className="mx-auto mt-5 max-w-lg text-center text-xs leading-relaxed text-slate-light sm:mt-6 sm:text-sm">
-            Used by students preparing for Cambridge O Level English exams
-          </p>
-          <TrackedOutboundLink
-            href={contact.youtube}
-            channel="youtube"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-crimson underline-offset-4 transition-colors hover:text-rose sm:mt-6"
-          >
-            Open full channel
-            <ExternalLink className="h-4 w-4 opacity-80" aria-hidden />
-          </TrackedOutboundLink>
-        </div>
-      </section>
-
-      {/* Multi-channel connect — extra top padding separates from YouTube block */}
-      <section className="border-t border-rose/10 bg-cream pb-16 pt-16 sm:pb-20 sm:pt-20 lg:pb-24 lg:pt-24">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-ink sm:text-3xl">Connect</h2>
-            <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-light sm:text-[0.9375rem]">
-              Choose how you want to learn and stay updated
+      {/* YouTube — see the teaching */}
+      <section className="ed-ink">
+        <div className="ed-wrap grid gap-10 py-16 sm:py-24 lg:grid-cols-12 lg:items-center lg:gap-16">
+          <div className="lg:col-span-5">
+            <p className="ed-label">On YouTube</p>
+            <h2 className="ed-h2 mt-5">Learn directly from Jaweria</h2>
+            <p className="ed-lead mt-5">
+              Full lessons and paper-style breakdowns on YouTube — structured,
+              calm, and aligned to how Cambridge marks.
             </p>
-          </div>
-
-          <div
-            className={cn(
-              "mx-auto mt-12 grid max-w-5xl gap-6 sm:grid-cols-2 sm:gap-7",
-              contact.facebook.trim() ? "lg:max-w-none lg:grid-cols-4" : "lg:mx-auto lg:max-w-5xl lg:grid-cols-3"
-            )}
-          >
-            <TrackedWhatsAppLink
-              href={whatsAppGroupUrl()}
-              location="about_connect"
-              variant="group"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                channelCardBase,
-                CONNECT_CARD_CLASS,
-                "p-7 sm:p-8"
-              )}
-            >
-              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
-                <IconWhatsApp className="h-5 w-5" />
-              </span>
-              <h3 className="flex-1 font-serif text-base font-semibold leading-snug text-ink sm:text-lg">
-                Text us with questions or to get updates
-              </h3>
-              <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-semibold text-crimson">
-                Text us
-                <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" aria-hidden />
-              </span>
-            </TrackedWhatsAppLink>
-
+            <p className="mt-4 text-[0.9rem] text-paper/65">
+              Used by students preparing for Cambridge O Level English exams
+            </p>
             <TrackedOutboundLink
               href={contact.youtube}
               channel="youtube"
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(
-                channelCardBase,
-                "cursor-pointer",
-                CONNECT_CARD_CLASS,
-                "p-7 sm:p-8"
-              )}
+              className="ed-link mt-6 text-paper"
             >
-              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
-                <IconYouTube className="h-5 w-5" />
-              </span>
-              <h3 className="font-serif text-lg font-semibold text-ink">YouTube</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
-                Watch full lessons and breakdowns
-              </p>
-              <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-crimson">
-                Visit channel
-                <ExternalLink className="h-4 w-4 opacity-70" aria-hidden />
-              </span>
+              Open full channel
+              <Arrow direction="up-right" />
             </TrackedOutboundLink>
-
-            <TrackedOutboundLink
-              href={contact.instagram}
-              channel="instagram"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                channelCardBase,
-                "cursor-pointer",
-                CONNECT_CARD_CLASS,
-                "p-7 sm:p-8"
-              )}
-            >
-              <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
-                <IconInstagram className="h-5 w-5" />
-              </span>
-              <h3 className="font-serif text-lg font-semibold text-ink">Instagram</h3>
-              <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
-                Daily tips and writing insights
-              </p>
-              <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-crimson">
-                Follow on Instagram
-                <ExternalLink className="h-4 w-4 opacity-70" aria-hidden />
-              </span>
-            </TrackedOutboundLink>
-
-            {contact.facebook.trim() ? (
-              <TrackedOutboundLink
-                href={contact.facebook.trim()}
-                channel="facebook"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={cn(
-                  channelCardBase,
-                  CONNECT_CARD_CLASS,
-                  "p-7 sm:p-8"
-                )}
-              >
-                <span className="mb-5 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-[#dc2626] shadow-sm">
-                  <Newspaper className="h-5 w-5" aria-hidden />
-                </span>
-                <h3 className="font-serif text-lg font-semibold text-ink">Facebook</h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
-                  Updates and announcements
-                </p>
-                <span className="mt-auto inline-flex items-center gap-1.5 pt-6 text-sm font-medium text-crimson">
-                  Open Facebook
-                  <ExternalLink className="h-4 w-4 opacity-70" aria-hidden />
-                </span>
-              </TrackedOutboundLink>
-            ) : null}
+          </div>
+          <div className="lg:col-span-7">
+            <AboutLatestYoutube />
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="bg-gradient-to-b from-crimson to-crimson-dark py-[4.5rem] sm:py-24">
-        <div className="premium-reveal mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <h2 className="mb-4 font-serif text-2xl font-semibold leading-[1.2] tracking-tight text-white sm:text-3xl">
-            Let&apos;s Start with a Conversation
+      {/* Connect */}
+      <section className="ed-paper">
+        <div className="ed-wrap py-16 sm:py-24">
+          <p className="ed-label">Connect</p>
+          <h2 className="ed-h2 mt-5">
+            Choose how you want to learn and stay updated
           </h2>
-          <p className="mx-auto mb-6 max-w-lg leading-[1.65] text-white/70">
-            A short call to understand where you are, where you want to be, and
-            whether this is the right fit. No obligation.
-          </p>
-          <p className="mb-8 text-sm text-white/65 max-w-lg mx-auto">
-            Prefer email?{" "}
-            <ContactEmailLink variant="onDark" className="font-medium" />
-          </p>
-          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <TrackedWhatsAppLink
-              href={whatsAppGroupUrl()}
-              location="about_footer_cta"
-              variant="group"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl bg-rose px-7 py-3.5 text-sm font-medium text-white shadow-sm transition-all duration-200 ease-out hover:scale-[1.02] hover:bg-rose-dark hover:shadow-md active:scale-100 motion-reduce:hover:scale-100 sm:w-auto"
-            >
-              Text us
-              <ArrowRight className="w-4 h-4" />
-            </TrackedWhatsAppLink>
+          <PointerField as="ul" className="ed-rows mt-10">
+            <li>
+              <TrackedWhatsAppLink
+                href={whatsAppGroupUrl()}
+                location="about_connect"
+                variant="group"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ed-row ed-row-compact"
+              >
+                {rowInner(channels[0])}
+              </TrackedWhatsAppLink>
+            </li>
+            <li>
+              <TrackedOutboundLink
+                href={contact.youtube}
+                channel="youtube"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ed-row ed-row-compact"
+              >
+                {rowInner(channels[1])}
+              </TrackedOutboundLink>
+            </li>
+            <li>
+              <TrackedOutboundLink
+                href={contact.instagram}
+                channel="instagram"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ed-row ed-row-compact"
+              >
+                {rowInner(channels[2])}
+              </TrackedOutboundLink>
+            </li>
+            {contact.facebook.trim() ? (
+              <li>
+                <TrackedOutboundLink
+                  href={contact.facebook.trim()}
+                  channel="facebook"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ed-row ed-row-compact"
+                >
+                  {rowInner({
+                    key: "facebook",
+                    icon: <Newspaper className="h-5 w-5" aria-hidden />,
+                    title: "Facebook",
+                    text: "Updates and announcements",
+                  })}
+                </TrackedOutboundLink>
+              </li>
+            ) : null}
+          </PointerField>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="ed-crimson">
+        <div className="ed-wrap grid gap-8 py-16 sm:py-24 lg:grid-cols-12 lg:items-end lg:gap-16">
+          <h2 className="ed-display text-[clamp(2.4rem,7vw,5.5rem)] lg:col-span-7">
+            Let&apos;s start with a conversation
+          </h2>
+          <div className="lg:col-span-5">
+            <p className="text-[1.06rem] leading-relaxed text-paper/80">
+              A short call to understand where you are, where you want to be,
+              and whether this is the right fit. No obligation.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+              <TrackedWhatsAppLink
+                href={whatsAppGroupUrl()}
+                location="about_footer_cta"
+                variant="group"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ed-btn ed-btn-paper ed-btn-lg"
+              >
+                Text us
+                <Arrow direction="up-right" />
+              </TrackedWhatsAppLink>
+              <RegistrationLink
+                surface="about_footer_cta"
+                className="ed-btn ed-btn-ghost ed-btn-lg text-paper"
+              >
+                Join the Next Batch
+                <Arrow />
+              </RegistrationLink>
+            </div>
+            <p className="mt-5 text-[0.9rem] text-paper/70">
+              Prefer email?{" "}
+              <ContactEmailLink variant="onDark" className="font-medium" />
+            </p>
           </div>
         </div>
       </section>

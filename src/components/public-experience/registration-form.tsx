@@ -41,7 +41,7 @@ async function postRegistration(body: unknown) {
 function SupportLink() {
   return (
     <a
-      className="inline-flex min-h-11 items-center font-semibold text-crimson underline"
+      className="inline-flex min-h-11 items-center font-semibold text-crimson underline underline-offset-4"
       href={getWhatsAppUrl()}
       target="_blank"
       rel="noopener noreferrer"
@@ -74,12 +74,12 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
       <div
         data-registration-form
         role="status"
-        className="rounded-3xl border border-crimson/20 bg-rose-50 p-5 sm:p-7"
+        className="rounded-2xl border-t-4 border-crimson bg-white p-5 shadow-[0_24px_60px_-40px_rgba(31,14,17,0.5)] ring-1 ring-ink/10 sm:p-8"
       >
         <h2
           ref={statusRef}
           tabIndex={-1}
-          className="font-serif text-2xl text-ink outline-none"
+          className="ed-h2 text-[clamp(1.6rem,3.4vw,2.25rem)] text-ink outline-none"
         >
           We&apos;ve received your registration.
         </h2>
@@ -102,12 +102,12 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
       </div>
     );
   const inputClass =
-    "mt-2 min-h-12 w-full max-w-full scroll-mb-32 rounded-xl border border-border bg-white px-4 text-base text-ink focus:outline-2 focus:outline-crimson";
+    "ed-field scroll-mb-32";
   return (
     <form
       data-registration-form
       aria-busy={pending}
-      className="min-w-0 max-w-full space-y-6 overflow-x-clip rounded-3xl border border-border bg-white p-4 sm:p-8"
+      className="min-w-0 max-w-full space-y-6 overflow-x-clip rounded-2xl border-t-4 border-crimson bg-white p-4 shadow-[0_24px_60px_-40px_rgba(31,14,17,0.5)] ring-1 ring-ink/10 sm:p-8"
       onSubmit={async (event) => {
         event.preventDefault();
         if (!lock.current.claim()) return;
@@ -142,7 +142,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
         }
       }}
     >
-      <label className="block text-sm font-semibold text-ink">
+      <label className="block text-[0.95rem] font-semibold text-ink">
         Your name
         <input
           className={inputClass}
@@ -153,7 +153,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
           required
         />
       </label>
-      <label className="block text-sm font-semibold text-ink">
+      <label className="block text-[0.95rem] font-semibold text-ink">
         Email for batch details
         <input
           className={inputClass}
@@ -166,7 +166,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
           required
         />
       </label>
-      <label className="block text-sm font-semibold text-ink">
+      <label className="block text-[0.95rem] font-semibold text-ink">
         Your syllabus
         <select
           className={inputClass}
@@ -184,7 +184,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
         </select>
       </label>
       {oLevel && (
-        <label className="block text-sm font-semibold text-ink">
+        <label className="block text-[0.95rem] font-semibold text-ink">
           Which batch do you wish to join?
           <select className={inputClass} name="batch" required defaultValue="">
             <option value="" disabled>
@@ -213,7 +213,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
         <span>
           I agree to be contacted about this course enquiry. My details will be
           kept privately for course follow-up, as described in the{" "}
-          <Link className="text-crimson underline" href="/privacy">
+          <Link className="text-crimson underline underline-offset-4" href="/privacy">
             privacy policy
           </Link>
           .
@@ -224,7 +224,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
           ref={errorRef}
           tabIndex={-1}
           role="alert"
-          className="rounded-xl bg-rose-50 p-4 text-sm text-crimson outline-none"
+          className="rounded-lg border-l-4 border-crimson bg-crimson/5 p-4 text-[0.95rem] font-medium text-crimson-dark outline-none"
         >
           {error}
         </p>
@@ -244,7 +244,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="min-h-12 w-full scroll-mb-32 touch-manipulation rounded-xl bg-crimson px-5 py-3 font-semibold text-white hover:bg-crimson-dark disabled:opacity-60"
+        className="ed-btn ed-btn-lg w-full scroll-mb-32"
       >
         {pending ? "Sending your request…" : "Send My Interest"}
       </button>

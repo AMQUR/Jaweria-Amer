@@ -1,32 +1,37 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import type { HomepageContent } from "@/lib/admin/cms-types";
-import { trackEvent } from "@/lib/analytics";
-import { ENROL_NOW_URL } from "@/lib/contact";
+import type { Course } from "@/lib/data";
+import { Arrow } from "@/components/editorial/arrow";
+import { PointerField } from "@/components/editorial/pointer-field";
+import {
+  courseSyllabusCodes,
+  SyllabusCode,
+} from "@/components/editorial/interactive-course-row";
+import { RegistrationLink } from "@/components/public-experience/registration-link";
 
-/** Programme USPs shown as benefit chips in the enrolment cover. */
-const USPS = [
-  "LMS Portal Access",
-  "Personalised feedback on assignments",
-  "Live syllabus coverage + recorded lectures",
-  "Biweekly progress reports & attendance",
-];
+type HeroProof = {
+  /** Rounded A/A* share of the publicly shared records. */
+  pct: number;
+  aOrAStar: number;
+  sharedResults: number;
+  session: string;
+};
 
-const GRID_PATTERN = `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cpath d='M40 0v40M0 0v40M0 0h40M0 40h40' stroke='%23ffffff' stroke-width='0.4' fill='none'/%3E%3C/svg%3E")`;
-const HERO_GRAIN_FILTER_ID = "live-session-hero-grain";
-
-const btnEnrol =
-  "inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-amber-300 via-amber-200 to-amber-100 px-8 py-3.5 text-[0.9rem] font-extrabold text-rose-900 shadow-[0_8px_24px_rgba(251,191,36,0.35)] transition-all duration-200 hover:scale-[1.03] hover:shadow-[0_10px_30px_rgba(251,191,36,0.5)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70";
-
+/**
+ * Homepage hero. Server-rendered: the headline, portrait and proof line are in
+ * the first HTML response; only the CTA tracking and the bounded pointer depth
+ * hydrate. Copy comes from the homepage CMS, figures from the results dataset.
+ */
 export function LiveSessionHero({
   bannerImagePath,
-  announcementActive = false,
   enrolmentOpen = false,
   heroContent,
+  proof,
+  programmes = [],
 }: {
   bannerImagePath?: string;
+  /** Kept for callers; the announcement strip now owns the nav offset. */
   announcementActive?: boolean;
   /** Only true while a dated batch window is open; never a standing claim. */
   enrolmentOpen?: boolean;
@@ -34,230 +39,163 @@ export function LiveSessionHero({
     HomepageContent,
     "heroKicker" | "heroTitlePrimary" | "heroTitleSecondary" | "heroDescription"
   >;
+  proof?: HeroProof;
+  programmes?: Course[];
 }) {
-  // Portrait is served from the local cutout asset. TODO: upload a high-res Jaweria
-  // portrait to Supabase Storage and pass its public URL via `bannerImagePath`
-  // (CMS homepage banner) so the hero image is hosted off-repo.
-  const cutoutSrc = bannerImagePath ?? "/assets/miss-jay.png";
+  const portraitSrc = bannerImagePath ?? "/assets/miss-jay.png";
+  const title = heroContent?.heroTitlePrimary ?? "Learn English with Miss Jay";
 
   return (
-    <div
-      className={`mx-auto w-full max-w-[1280px] px-4 pb-10 sm:px-6 lg:px-12 ${announcementActive ? "pt-8 sm:pt-10" : "pt-24 sm:pt-28"}`}
+    <section
+      className="ed-paper ed-margin relative overflow-x-clip"
+      aria-label="Miss Jay — O & A Level English"
     >
-      <div
-        className="premium-reveal relative overflow-hidden rounded-3xl border border-white/[0.08] shadow-xl"
-        role="region"
-        aria-label="Miss Jay — O & A Level English"
-      >
-        {/* ── LAYER 1: Base gradient — no person baked in ── */}
-        <div
-          className="absolute inset-0 bg-gradient-to-br from-[#7f1d1d] via-[#9f1239] to-[#be123c]"
-          aria-hidden
-        />
-
-        {/* ── LAYER 2: Radial glow on right behind subject ── */}
-        <div
-          className="pointer-events-none absolute right-0 top-0 z-0 h-full w-[55%] opacity-40"
-          style={{
-            background:
-              "radial-gradient(ellipse 80% 90% at 85% 55%, #fda4af 0%, rgba(253,164,175,0.35) 45%, transparent 72%)",
-          }}
-          aria-hidden
-        />
-
-        {/* ── LAYER 3: Left-side readability veil ── */}
-        <div
-          className="pointer-events-none absolute inset-y-0 left-0 z-[1] w-[70%] bg-gradient-to-r from-black/30 via-black/10 to-transparent sm:w-[60%]"
-          aria-hidden
-        />
-
-        {/* ── LAYER 4: Fine grid + film grain ── */}
-        <div
-          className="pointer-events-none absolute inset-0 z-[2] opacity-[0.028]"
-          style={{ backgroundImage: GRID_PATTERN }}
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute inset-0 z-[2] mix-blend-overlay opacity-[0.055]"
-          aria-hidden
-        >
-          <svg
-            className="h-full w-full"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden
-          >
-            <defs>
-              <filter
-                id={HERO_GRAIN_FILTER_ID}
-                x="-10%"
-                y="-10%"
-                width="120%"
-                height="120%"
-              >
-                <feTurbulence
-                  type="fractalNoise"
-                  baseFrequency="0.8"
-                  numOctaves="4"
-                  stitchTiles="stitch"
-                  result="noise"
-                />
-                <feColorMatrix
-                  in="noise"
-                  type="saturate"
-                  values="0"
-                  result="mono"
-                />
-              </filter>
-            </defs>
-            <rect
-              width="100%"
-              height="100%"
-              fill="#ffffff"
-              filter={`url(#${HERO_GRAIN_FILTER_ID})`}
-            />
-          </svg>
-        </div>
-
-        {/* ── CONTENT: text left + cutout right ── */}
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_440px]">
-          {/* ── LEFT: Text content ── */}
-          <div className="flex flex-col justify-center py-10 pl-6 pr-6 sm:py-12 sm:pl-10 lg:py-14 lg:pl-12 lg:pr-4 xl:pl-14">
-            <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-white/85">
+      <PointerField className="ed-wrap grid gap-x-10 gap-y-8 pt-8 sm:pt-10 lg:grid-cols-12 lg:gap-y-0 lg:pt-12">
+        <div className="relative z-10 min-w-0 lg:col-span-7 lg:pb-14">
+          <div className="ed-rise flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p className="ed-label">
               {heroContent?.heroKicker ??
                 "O Levels · IGCSE · A Levels · English"}
             </p>
-
-            <h1 className="mb-3 font-serif tracking-tight">
-              <span className="block text-[clamp(2.3rem,4.6vw,3.9rem)] font-bold leading-[1.05] text-white">
-                {heroContent?.heroTitlePrimary ?? "Learn English with Miss Jay"}
-              </span>
-              <span className="mt-1 block text-[clamp(1rem,2vw,1.35rem)] font-semibold leading-snug text-white/80">
-                {heroContent?.heroTitleSecondary ??
-                  "A guided live programme — structure, feedback & real accountability"}
-              </span>
-            </h1>
-
-            <p className="mb-2 text-[clamp(0.75rem,1.5vw,0.9rem)] font-medium leading-snug text-white/80">
-              {heroContent?.heroDescription ??
-                "Complete preparation for O Level, IGCSE & A Level English with checked work and progress you can track."}
-            </p>
-            <p className="mb-5 flex items-center gap-1.5 text-[11px] font-semibold text-rose-200/90">
-              <span
-                className="h-[5px] w-[5px] rounded-full bg-emerald-400"
-                aria-hidden
-              />
-              O Level 1123 · IGCSE 0500 / 0510 / 0511 · AS Level 9093
-            </p>
-
-            {/* Primary CTA — social/community links live lower on the page */}
-            <div className="mb-6">
-              <a
-                href={ENROL_NOW_URL}
-                onClick={() =>
-                  trackEvent("registration_cta_click", { surface: "home_hero" })
-                }
-                className={`${btnEnrol} w-full sm:w-fit`}
-              >
-                Join the Next Batch
-                <svg
-                  viewBox="0 0 24 24"
-                  className="h-[14px] w-[14px] shrink-0 fill-rose-900"
+            {enrolmentOpen && (
+              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-800/25 bg-emerald-700/10 px-3 py-1 text-[0.8125rem] font-semibold text-emerald-900">
+                <span
+                  className="h-1.5 w-1.5 rounded-full bg-emerald-600"
                   aria-hidden
-                >
-                  <path d="M13.025 1l-2.847 2.828 6.176 6.176h-16.354v3.992h16.354l-6.176 6.176 2.847 2.828 10.975-11z" />
-                </svg>
-              </a>
-              <Link
-                href="#free-lessons"
-                className="mt-4 flex min-h-11 w-fit items-center text-sm font-semibold text-white underline decoration-white/40 underline-offset-4"
-              >
-                Try the learning experience →
-              </Link>
-              <p className="mt-2.5 max-w-sm text-[11px] font-medium leading-snug text-white/75">
-                Share your interest. No Google sign-in required.
-              </p>
-            </div>
-
-            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-white/75">
-              What&apos;s included
-            </p>
-            <ul className="grid grid-cols-2 gap-x-5 gap-y-2.5">
-              {USPS.map((b) => (
-                <li
-                  key={b}
-                  className="flex items-start gap-1.5 text-[0.7rem] font-medium leading-snug tracking-tight text-white/80"
-                >
-                  <span
-                    className="mt-[4px] h-[3px] w-[3px] shrink-0 rounded-full bg-amber-300/80"
-                    aria-hidden
-                  />
-                  <span>{b}</span>
-                </li>
-              ))}
-            </ul>
+                />
+                Enrolment Open
+              </span>
+            )}
           </div>
 
-          {/* ── RIGHT: Cutout — desktop only ── */}
-          <div className="relative hidden items-end justify-center overflow-hidden lg:flex">
-            {/* Bottom fade mask */}
-            <div
-              className="relative h-full w-full drop-shadow-2xl"
-              style={{
-                WebkitMaskImage:
-                  "linear-gradient(to top, transparent 0%, black 10%, black 100%)",
-                maskImage:
-                  "linear-gradient(to top, transparent 0%, black 10%, black 100%)",
-              }}
+          <h1 className="ed-display mt-5 text-[clamp(3rem,10.6vw,8.6rem)] text-ink lg:-mr-10">
+            <span className="ed-line">
+              <span>{title}</span>
+            </span>
+          </h1>
+
+          <p
+            className="ed-quote ed-rise mt-6 max-w-xl text-[clamp(1.3rem,2.4vw,1.9rem)] text-crimson"
+            style={{ ["--d" as string]: "0.18s" }}
+          >
+            {heroContent?.heroTitleSecondary ??
+              "A guided live programme — structure, feedback & real accountability"}
+          </p>
+          <p
+            className="ed-lead ed-rise mt-4"
+            style={{ ["--d" as string]: "0.26s" }}
+          >
+            {heroContent?.heroDescription ??
+              "Complete preparation for O Level, IGCSE & A Level English with checked work and progress you can track."}
+          </p>
+
+          <div
+            className="ed-rise mt-8 flex flex-col gap-x-7 gap-y-2 sm:flex-row sm:items-center"
+            style={{ ["--d" as string]: "0.34s" }}
+          >
+            <RegistrationLink
+              surface="home_hero"
+              className="ed-btn ed-btn-lg w-full sm:w-auto"
+              data-depth="magnet"
             >
+              Join the Next Batch
+              <Arrow />
+            </RegistrationLink>
+            <Link href="#free-lessons" className="ed-link self-start text-ink">
+              Watch a full lesson first
+              <Arrow direction="down" />
+            </Link>
+          </div>
+          <p
+            className="ed-rise mt-3 text-[0.875rem] text-slate"
+            style={{ ["--d" as string]: "0.4s" }}
+          >
+            Share your interest. No Google sign-in required.
+          </p>
+        </div>
+
+        {/* Portrait stage — one of the two surfaces allowed to tilt. */}
+        <div className="relative lg:col-span-5 lg:self-end lg:pl-8">
+          <div
+            className="ed-stage ed-rise relative mx-auto aspect-[5/6] w-full max-w-[21rem] lg:max-w-[30rem] lg:ml-auto"
+            data-depth="tilt"
+            style={{ ["--d" as string]: "0.2s" }}
+          >
+            <div
+              className="absolute inset-x-0 bottom-0 top-[8%] rounded-t-[999px] bg-crimson"
+              style={{
+                backgroundImage:
+                  "radial-gradient(120% 80% at 50% 12%, rgba(255,196,186,0.34), transparent 60%)",
+              }}
+              aria-hidden
+            />
+            <div className="ed-stage-figure absolute inset-0 overflow-hidden rounded-t-[999px]">
               <Image
-                src={cutoutSrc}
+                src={portraitSrc}
                 alt="Miss Jay — O & A Level English teacher"
                 fill
                 loading="eager"
-                quality={75}
-                sizes="(min-width: 1024px) 320px, 1px"
+                fetchPriority="high"
+                quality={80}
+                sizes="(min-width: 1024px) 30vw, 336px"
                 className="object-contain object-bottom"
               />
             </div>
+            {proof ? (
+              <Link
+                href="/results"
+                className="group absolute -left-2 bottom-5 z-10 max-w-[13.5rem] rounded-xl bg-paper p-4 text-ink shadow-[0_18px_40px_-18px_rgba(31,14,17,0.55)] ring-1 ring-ink/10 transition-[translate] duration-500 hover:-translate-y-1 sm:-left-8 lg:-left-12"
+              >
+                <span className="ed-num block text-[3.1rem] text-crimson">
+                  {proof.pct}%
+                </span>
+                <span className="mt-1 block text-[0.875rem] font-semibold leading-snug">
+                  A or A* — {proof.aOrAStar} of {proof.sharedResults} results
+                  shared with permission, {proof.session}
+                </span>
+                <span className="mt-2 inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold text-crimson">
+                  See every result
+                  <Arrow />
+                </span>
+              </Link>
+            ) : null}
           </div>
         </div>
+      </PointerField>
 
-        {/* ── MOBILE: Cutout below text ── */}
-        <div className="relative mx-auto flex max-h-[180px] w-full max-w-xs items-end justify-center overflow-hidden lg:hidden">
-          <div
-            className="relative h-[180px] w-full drop-shadow-xl"
-            style={{
-              WebkitMaskImage:
-                "linear-gradient(to top, transparent 0%, black 15%, black 100%)",
-              maskImage:
-                "linear-gradient(to top, transparent 0%, black 15%, black 100%)",
-            }}
-          >
-            <Image
-              src={cutoutSrc}
-              alt="Miss Jay — O & A Level English teacher"
-              fill
-              loading="eager"
-              quality={75}
-              sizes="(min-width: 1024px) 1px, 100px"
-              className="object-contain object-bottom"
-            />
-          </div>
-        </div>
-
-        {/* ── Badge: only while a dated batch window is open ── */}
-        {enrolmentOpen && (
-          <div className="absolute right-3 top-3 z-20 sm:right-4 sm:top-4">
-            <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/[0.08] px-2 py-[3px] text-[7.5px] font-semibold uppercase tracking-[0.15em] text-emerald-300/70 backdrop-blur-sm">
-              <span
-                className="h-[3.5px] w-[3.5px] shrink-0 rounded-full bg-emerald-400/70"
-                aria-hidden
-              />
-              Enrolment Open
-            </span>
-          </div>
-        )}
-      </div>
-    </div>
+      {/* Syllabus index: the four offered tracks, set like a fixture list. */}
+      {programmes.length > 0 ? (
+        <nav
+          aria-label="Programmes by syllabus code"
+          className="relative z-10 border-y border-ink/15"
+        >
+          <ul className="ed-wrap grid grid-cols-2 lg:grid-cols-4">
+            {programmes.map((course, i) => (
+              <li
+                key={course.id}
+                className={
+                  "border-ink/15 " +
+                  (i % 2 === 1 ? "border-l " : "") +
+                  (i >= 2 ? "max-lg:border-t " : "") +
+                  (i > 0 ? "lg:border-l" : "")
+                }
+              >
+                <Link
+                  href={`/courses/${course.id}`}
+                  className="group flex h-full min-h-24 flex-col justify-between gap-2 px-3 py-4 transition-colors duration-300 hover:bg-crimson hover:text-paper focus-visible:bg-crimson focus-visible:text-paper focus-visible:outline-none sm:px-5 lg:py-6"
+                >
+                  <span className="ed-num text-[clamp(1.7rem,3.4vw,2.9rem)] text-crimson transition-colors duration-300 group-hover:text-paper group-focus-visible:text-paper">
+                    <SyllabusCode codes={courseSyllabusCodes(course)} />
+                  </span>
+                  <span className="text-[0.875rem] font-semibold leading-snug">
+                    {course.title}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ) : null}
+    </section>
   );
 }

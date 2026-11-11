@@ -38,6 +38,8 @@ export const publicExperience = {
   walkthrough: {
     src: "",
     poster: "",
+    /** "How to navigate the LMS" recording (https://youtu.be/GAQi9OgSpCI). */
+    youtubeId: "GAQi9OgSpCI",
     reference: "https://www.instagram.com/p/DeNJh7uDAni/",
   },
 } as const;

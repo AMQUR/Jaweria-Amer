@@ -69,6 +69,7 @@ async function main() {
       "Explore the Next Batch",
     );
     assert.equal(publicExperience.walkthrough.src, "");
+    assert.equal(publicExperience.walkthrough.youtubeId, "GAQi9OgSpCI");
     assert.match(
       publicExperience.walkthrough.reference,
       /^https:\/\/www\.instagram\.com\//,
