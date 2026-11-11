@@ -20,7 +20,7 @@ export async function sendAdminPasswordResetEmail(to: string, token: string): Pr
     return { ok: false };
   }
 
-  const from = process.env.RESEND_FROM?.trim() ?? "Jaweria Amer Admin <onboarding@resend.dev>";
+  const from = process.env.RESEND_FROM?.trim() || "Jaweria Amer Admin <onboarding@resend.dev>";
   const subject = "Reset your admin password";
   const html = `
     <p>You requested a password reset for the admin portal.</p>
@@ -29,20 +29,24 @@ export async function sendAdminPasswordResetEmail(to: string, token: string): Pr
     <p>If you did not request this, you can ignore this email.</p>
   `;
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ from, to: [to], subject, html }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    console.error("[admin password reset] Resend error:", res.status, text);
+  try {
+    const res = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ from, to: [to], subject, html }),
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) {
+      // Status only: the provider's reply can echo addresses.
+      console.error("[admin password reset] email provider rejected the message", res.status);
+      return { ok: false };
+    }
+    return { ok: true };
+  } catch {
+    console.error("[admin password reset] email provider unreachable");
     return { ok: false };
   }
-
-  return { ok: true };
 }

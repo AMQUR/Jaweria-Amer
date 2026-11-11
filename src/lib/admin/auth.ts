@@ -6,8 +6,8 @@ import {
   generateAdminSessionToken,
   getAdminSessionCookieOptions,
   getExpiredAdminSessionCookieOptions,
-  verifyAdminSessionToken,
 } from "./session";
+import { isAdminSessionCurrent } from "./session-guard";
 
 export function normalizeAdminEmail(email: string): string {
   return email.trim().toLowerCase();
@@ -19,11 +19,21 @@ export async function login(email: string, password: string): Promise<{ success:
     return { success: false, error: "Invalid credentials" };
   }
 
-  if (!(await verifyAdminPassword(password))) {
+  let check;
+  try {
+    check = await verifyAdminPassword(password);
+  } catch {
+    // The store may hold a newer password than ADMIN_PASSWORD, so an unreadable
+    // store must refuse the sign-in rather than fall back to the old value.
+    console.error("[admin auth] sign-in refused: credential store unavailable");
+    return { success: false, error: "Sign-in is temporarily unavailable. Please try again shortly." };
+  }
+  if (!check.ok) {
+    console.warn("[admin auth] sign-in failed");
     return { success: false, error: "Invalid credentials" };
   }
 
-  const token = generateAdminSessionToken(email);
+  const token = generateAdminSessionToken(email, Date.now(), check.version);
   const cookieStore = await cookies();
   cookieStore.set(ADMIN_SESSION_COOKIE, token, getAdminSessionCookieOptions());
 
@@ -40,7 +50,7 @@ export async function getSession(): Promise<{ authenticated: boolean }> {
     const cookieStore = await cookies();
     const token = cookieStore.get(ADMIN_SESSION_COOKIE)?.value;
     if (!token) return { authenticated: false };
-    const authenticated = verifyAdminSessionToken(token);
+    const authenticated = await isAdminSessionCurrent(token);
     if (!authenticated) {
       cookieStore.set(ADMIN_SESSION_COOKIE, "", getExpiredAdminSessionCookieOptions());
     }

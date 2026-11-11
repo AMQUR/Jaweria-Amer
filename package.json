@@ -18,7 +18,8 @@
     "ingest:resources": "tsx scripts/ingest-resources.ts",
     "results:build": "tsx scripts/results/build-mj26-results.ts",
     "results:portraits": "tsx scripts/results/import-mj26-portraits.ts",
-    "test:public-experience": "tsx scripts/test-public-experience.ts"
+    "test:public-experience": "tsx scripts/test-public-experience.ts",
+    "posttest": "tsx scripts/test-admin-password-reset.ts"
   },
   "engines": {
     "node": ">=20.9.0"
