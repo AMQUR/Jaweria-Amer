@@ -23,8 +23,8 @@ Production deployment on 10 Nov 2026). Labels: VERIFIED · VERIFIED REPO · INFE
 | `/free-evaluation` | page intro + form classes | ✔ | ✔ | ✔ | ✔ | VERIFIED | Stays gated; API 503 |
 | `/privacy`, `/terms` | intro + reading measure | ✔ | ✔ | ✔ | ✔ | VERIFIED | Text unchanged |
 | `/sitemap.xml`, `/robots.txt` | — | ✔ | | | | VERIFIED | Unchanged |
-| `/admin/login` | background + contrast classes | | | | | VERIFIED REPO | noindex header and redirect verified; visual check NOT TESTED with a session |
-| `/admin/*` dashboard | sidebar/topbar/background classes | | | | | NOT TESTED | No staff credentials used. Auth, cookies, APIs untouched (`/api/admin/leads` → 401 verified) |
+| `/admin/login` | background + contrast classes | ✔ | | ✔ | | VERIFIED | noindex header, redirect, wrong credentials rejected (local production build, test credentials) |
+| `/admin/*` dashboard | sidebar/topbar/background classes | ✔ | | ✔ | | VERIFIED | Nine admin pages load when signed in with local test credentials; logout returns to login. Auth, cookies, APIs untouched. `/admin/resources` overflows at 390px here (160px) and on `main` (178px) — pre-existing |
 
 The uncommitted work in the main checkout adds `/class-timings`, `/exam-countdown`, `/faq`, `/study-plan`.
 Those routes are not on `origin/main`, so they are out of scope here and will need the new shell applied
@@ -49,6 +49,9 @@ byte-identical; only `className` strings changed.
 | Playwright QA script, production build | 68 / 69. The one miss is the script's "no console errors" check catching the browser's own 404 log for the two deliberate not-found probes |
 
 | Same Playwright script on the Vercel preview of `6e627a4` (11 Nov 2026) | 68 / 69, same single miss. 14 routes × 320 / 390 / 768 / 1440 clean; PDF 200/206, MCQ, results dialog, category deep links, mobile menu, admin redirect/401 all pass. A valid registration submit was deliberately skipped on the preview because it would write a real enquiry |
+| Same script on the Vercel preview of `84420b1` (11 Nov 2026) | 68 / 69, same single miss |
+| LMS walkthrough video on that preview, real Chrome, 1440 and 390 (mobile emulation) | plays; playback position advances (6m48s video) |
+| Announcement strip on that preview | headline visible at 390px, compact at 320px, no overflow |
 
 Baseline failures: none found on `origin/main`.
 
@@ -70,13 +73,9 @@ larger size. LCP/FCP are NOT MEASURED comparably (network vs localhost). Lightho
 
 ## Operational items (not fixed here, by design)
 
-1. **Enquiry delivery — release-relevant.** At `4a85de86` (deployed), `/api/registration` saves the enquiry
-   through a Supabase RPC and optionally forwards to the LMS intent endpoint. There is **no code path that
-   emails the teacher**; `RESEND_*` is used only for admin password resets. So "saved but not in the
-   inbox" is the expected behaviour of the deployed code, not an intermittent fault. An uncommitted hotfix
-   (`src/lib/registration/notify.ts`, export route, admin page) exists in the main checkout. It should ship
-   as its own narrow PR with its own review of recipients and secrets. Whether production rows are visible
-   in website admin: NOT TESTED (no admin session, no production data access in this task).
+1. **Enquiry delivery — handled in PR #15, not here.** Two faults were found on `main`: the admin enquiry
+   inbox fails to load once the list reply exceeds 8 KB (so saved enquiries could not be seen), and no code
+   path e-mails the teacher. Both are fixed in #15, which shares no files with this branch.
 2. **LMS walkthrough video.** `origin/main` still showed the Instagram placeholder. This branch adds the
    approved `GAQi9OgSpCI` embed using the same field name and component path as the uncommitted work in the
    main checkout, so the two converge. The separate LMS login page was not touched.
