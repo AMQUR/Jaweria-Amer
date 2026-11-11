@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/admin/constants";
-import { clearAdminSessionCookie, verifyAdminSessionToken } from "@/lib/admin/session";
+import { clearAdminSessionCookie } from "@/lib/admin/session";
+import { isAdminSessionCurrent } from "@/lib/admin/session-guard";
 
 const PUBLIC_ADMIN_PATHS = new Set([
   "/admin/login",
@@ -9,15 +10,18 @@ const PUBLIC_ADMIN_PATHS = new Set([
   "/admin/reset-password",
 ]);
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
-  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
-  const hasSessionCookie = Boolean(sessionToken);
-  const hasValidSession = sessionToken ? verifyAdminSessionToken(sessionToken) : false;
 
   if (!pathname.startsWith("/admin") && !pathname.startsWith("/api/admin")) {
     return NextResponse.next();
   }
+
+  const sessionToken = request.cookies.get(ADMIN_SESSION_COOKIE)?.value;
+  const hasSessionCookie = Boolean(sessionToken);
+  // Signature and expiry, plus "issued under the current password version":
+  // a completed password reset invalidates every earlier session.
+  const hasValidSession = sessionToken ? await isAdminSessionCurrent(sessionToken) : false;
 
   if ([...PUBLIC_ADMIN_PATHS].some((path) => pathname === path || pathname.startsWith(`${path}/`))) {
     const response = NextResponse.next();

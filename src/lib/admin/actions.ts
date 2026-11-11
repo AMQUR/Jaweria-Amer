@@ -4,9 +4,13 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { login, logout, normalizeAdminEmail } from "./auth";
-import { setAdminPassword } from "./password-store";
-import { createPasswordResetToken, validatePasswordResetToken, consumePasswordResetToken } from "./reset-tokens";
-import { sendAdminPasswordResetEmail } from "./reset-mail";
+import { after } from "next/server";
+import { headers } from "next/headers";
+import { hashNetwork } from "./reset-tokens";
+import {
+  completeAdminPasswordReset,
+  issueAdminPasswordReset,
+} from "./password-reset";
 import { ADMIN_COURSE_LEVELS_ALL } from "@/lib/course-offerings";
 import {
   saveCourse,
@@ -57,6 +61,18 @@ const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
 });
 
+/** Keyed hash of the caller's address; never the address itself. */
+async function callerNetworkHash(): Promise<string> {
+  let address = "";
+  try {
+    const h = await headers();
+    address = h.get("x-vercel-forwarded-for")?.split(",")[0]?.trim() ?? "";
+  } catch {
+    // No request scope (tests).
+  }
+  return hashNetwork(address || (process.env.NODE_ENV !== "production" ? "local" : "unknown"));
+}
+
 export async function requestPasswordResetAction(_prev: unknown, formData: FormData) {
   const parsed = forgotPasswordSchema.safeParse({ email: formData.get("email") });
   if (!parsed.success) {
@@ -65,10 +81,15 @@ export async function requestPasswordResetAction(_prev: unknown, formData: FormD
 
   const adminEmail = process.env.ADMIN_EMAIL?.trim();
   if (adminEmail && normalizeAdminEmail(parsed.data.email) === normalizeAdminEmail(adminEmail)) {
-    const token = await createPasswordResetToken();
-    await sendAdminPasswordResetEmail(adminEmail, token);
+    // The store call and the e-mail run after the response, so the reply and
+    // its timing are the same whether or not the address matched.
+    const networkHash = await callerNetworkHash();
+    after(() => issueAdminPasswordReset(adminEmail, networkHash));
+  } else {
+    console.warn("[admin password reset] request for an address that is not the admin");
   }
 
+  // Same reply whether or not the address matched, was limited, or the e-mail failed.
   return { success: true as const };
 }
 
@@ -92,23 +113,30 @@ export async function resetPasswordAction(_prev: unknown, formData: FormData) {
     return { error: issue?.message ?? "Invalid input" };
   }
 
-  const status = await validatePasswordResetToken(parsed.data.token);
-  if (status !== "ok") {
-    const msg =
-      status === "expired"
-        ? "This reset link has expired. Request a new one."
-        : status === "used"
-          ? "This reset link was already used. Request a new one."
-          : "This reset link is invalid. Request a new one.";
-    return { error: msg };
+  const result = await completeAdminPasswordReset(
+    parsed.data.token,
+    parsed.data.password,
+    await callerNetworkHash(),
+  );
+  if (result !== "ok") {
+    return {
+      error:
+        result === "expired"
+          ? "This reset link has expired. Request a new one."
+          : result === "used"
+            ? "This reset link was already used. Request a new one."
+            : result === "limited"
+              ? "Too many attempts. Please wait a few minutes and try again."
+              : result === "unavailable"
+                ? "Password reset is not available right now. Please contact the site administrator."
+                : result === "store_error"
+                  ? "Password reset is temporarily unavailable. Please try again shortly."
+                  : "This reset link is invalid. Request a new one.",
+    };
   }
 
-  await setAdminPassword(parsed.data.password);
-  const consumed = await consumePasswordResetToken(parsed.data.token);
-  if (!consumed) {
-    console.error("[admin password reset] Could not mark token as used after password update");
-  }
-
+  // Whoever completed the reset signs in again with the new password.
+  await logout();
   redirect("/admin/login?reset=1");
 }
 
