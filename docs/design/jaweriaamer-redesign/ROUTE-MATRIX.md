@@ -48,6 +48,8 @@ byte-identical; only `className` strings changed.
 | `npm run build` | pass, including `prebuild` and `postbuild` results verification (126 built files scanned) |
 | Playwright QA script, production build | 68 / 69. The one miss is the script's "no console errors" check catching the browser's own 404 log for the two deliberate not-found probes |
 
+| Same Playwright script on the Vercel preview of `6e627a4` (11 Nov 2026) | 68 / 69, same single miss. 14 routes × 320 / 390 / 768 / 1440 clean; PDF 200/206, MCQ, results dialog, category deep links, mobile menu, admin redirect/401 all pass. A valid registration submit was deliberately skipped on the preview because it would write a real enquiry |
+
 Baseline failures: none found on `origin/main`.
 
 One existing test was extended (`scripts/test-public-experience.ts` now asserts the approved walkthrough
@@ -93,7 +95,6 @@ larger size. LCP/FCP are NOT MEASURED comparably (network vs localhost). Lightho
 - No text search was added to the resources hub (existing category, paper, year and section filters kept).
 - Individual resource cards keep their card form; only hover scale/lift was removed and colours aligned.
 - Results components were re-toned and re-typeset through CSS; their markup is unchanged.
-- No Vercel preview was created from this session; all browser checks ran on a local production build.
 
 ## Rollback
 

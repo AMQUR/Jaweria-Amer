@@ -27,7 +27,7 @@ export function StickyWorkshopBar({
       {!dismissed && (
         <aside aria-label="New batches" className="ed-ink">
           <div className="ed-wrap flex min-h-12 items-center gap-x-5 gap-y-1 py-1.5 text-[0.9rem]">
-            <p className="min-w-0 flex-1 leading-snug text-paper/80 max-[400px]:sr-only">
+            <p className="min-w-0 flex-1 leading-snug text-paper/80 max-[359px]:sr-only">
               <strong className="font-semibold text-paper">
                 {batch.headline}{" "}
               </strong>
@@ -35,7 +35,7 @@ export function StickyWorkshopBar({
             </p>
             <a
               href={batch.href}
-              className="ed-link shrink-0 text-[#f6c9c1] max-[400px]:mr-auto"
+              className="ed-link shrink-0 text-[#f6c9c1] max-[359px]:mr-auto"
               onClick={() => {
                 trackEvent("batch_banner_click");
                 trackEvent("registration_cta_click", {
