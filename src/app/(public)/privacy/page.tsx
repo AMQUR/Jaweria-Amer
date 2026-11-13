@@ -25,7 +25,7 @@ export default function PrivacyPage() {
         size="md"
         label="Legal"
         title="Privacy Policy"
-        lead="Last updated: October 8, 2026"
+        lead="Last updated: November 13, 2026"
       />
 
       <section className="ed-paper border-t border-ink/10 py-12 sm:py-16">
@@ -49,10 +49,15 @@ export default function PrivacyPage() {
                 Registration interest
               </h2>
               <p>
-                We privately store your name, email, selected course and enquiry
-                date in Supabase so Miss Jay’s team can contact you by email
+                We privately store your name, email, WhatsApp or phone number
+                (required), selected course and enquiry date in Supabase so
+                Miss Jay’s team can contact you by phone, WhatsApp or email
                 about batch details and enrollment. Only authorized website
-                administrators can review these requests. No payment or LMS
+                administrators can review these requests, and the teacher
+                receives each new enquiry, including your phone number, by
+                email together with an Excel list of enquiries. Your phone
+                number is not shown on any public page, is not sent to analytics
+                and is not used for marketing to anyone else. No payment or LMS
                 account is created. Records older than 180 days are removed when
                 the inbox is reviewed or another enquiry arrives. A keyed
                 network fingerprint and short-lived counters help prevent spam;

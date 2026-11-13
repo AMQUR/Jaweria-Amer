@@ -27,12 +27,13 @@ export default function RegistrationPage() {
           </h1>
           <p className="ed-lead mt-6">
             Tell us which English course you’re interested in. We’ll follow up
-            by email with batch details, availability and how to enroll.
+            by phone, WhatsApp or email with batch details, availability and
+            how to enroll.
           </p>
           <ol className="mt-10 hidden border-t border-ink/15 lg:block">
             {[
-              ["Send your interest", "Name, email and syllabus. No Google account, payment or LMS account is needed."],
-              ["We reply by email", "Miss Jay’s team follows up with batch details and availability."],
+              ["Send your interest", "Name, email, phone number and syllabus. No Google account, payment or LMS account is needed."],
+              ["We get in touch", "Miss Jay’s team follows up by phone, WhatsApp or email with batch details and availability."],
               ["You decide", "An enquiry is not an enrollment. Nothing is confirmed until you choose to join."],
             ].map(([title, text], i) => (
               <li key={title} className="grid grid-cols-[3.5rem_minmax(0,1fr)] gap-x-4 border-b border-ink/15 py-5">

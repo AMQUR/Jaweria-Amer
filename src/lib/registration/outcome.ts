@@ -15,7 +15,7 @@ export const registrationCopy = {
   rateLimit:
     "Please wait before sending another request. You can also contact Miss Jay directly.",
   invalid:
-    "Please check your name, email, course and consent.",
+    "Please check your name, email, phone number, course and consent.",
 } as const;
 
 export type SavedEnrollment = "pending_account" | "needs_review" | "received";
