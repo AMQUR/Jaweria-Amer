@@ -121,6 +121,12 @@ function recapHtml(earlier: RegistrationLead[]) {
   );
 }
 
+/** Phone is absent for enquiries saved before phone numbers were collected. */
+export type NoticeInput = Pick<
+  RegistrationInput,
+  "name" | "email" | "course" | "batch"
+> & { phone?: string | null };
+
 export interface NoticeResult {
   outcome: NotifyOutcome;
   /** Provider message id when the provider accepted the request. Acceptance is not inbox delivery. */
@@ -128,7 +134,7 @@ export interface NoticeResult {
 }
 
 async function sendEnquiryNotice(
-  input: Pick<RegistrationInput, "name" | "email" | "course" | "batch">,
+  input: NoticeInput,
   requestId: string,
   createdAt: Date,
 ): Promise<NoticeResult> {
@@ -163,6 +169,7 @@ async function sendEnquiryNotice(
       `<ul>` +
       `<li><b>Name:</b> ${esc(input.name)}</li>` +
       `<li><b>Email:</b> ${esc(input.email)}</li>` +
+      `<li><b>Phone / WhatsApp:</b> ${input.phone ? esc(input.phone) : "Not provided"}</li>` +
       `<li><b>Course:</b> ${esc(input.course)}</li>` +
       `<li><b>Batch preference:</b> ${input.batch ? `Batch ${esc(input.batch)}` : "n/a"}</li>` +
       `<li><b>Submitted:</b> ${esc(formatPkt(createdAt.toISOString()))}</li>` +
@@ -228,7 +235,7 @@ async function sendEnquiryNotice(
 
 /** Send the notice for one enquiry (compat wrapper; see processEnquiryNotifications for the durable path). */
 export async function notifyTeacherOfEnquiry(
-  input: Pick<RegistrationInput, "name" | "email" | "course" | "batch">,
+  input: NoticeInput,
   requestId: string,
   createdAt = new Date(),
 ): Promise<NotifyOutcome> {
@@ -239,6 +246,7 @@ interface ClaimedLead {
   id: string;
   name: string;
   email: string;
+  phone: string | null;
   course: string;
   created_at: string;
   batch_letter: string | null;
@@ -264,7 +272,7 @@ export async function processEnquiryNotifications(max = 10): Promise<NotifyRunRe
   let claimed: ClaimedLead[] = [];
   try {
     const rows: unknown = await registrationRpc(
-      "claim_registration_notifications",
+      "claim_registration_notifications_v2",
       { max_rows: max, lease_seconds: 120 },
       10_000,
       512 * 1024,
@@ -284,6 +292,7 @@ export async function processEnquiryNotifications(max = 10): Promise<NotifyRunRe
         {
           name: lead.name,
           email: lead.email,
+          phone: lead.phone,
           course: lead.course as RegistrationInput["course"],
           batch: (lead.batch_letter ?? undefined) as RegistrationInput["batch"],
         },

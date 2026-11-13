@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireAuth } from "@/lib/admin/auth";
-import { registrationInput } from "@/lib/registration/contracts";
+import { PUBLIC_ENGLISH_SYLLABUSES } from "@/lib/course-offerings";
 import {
   forwardRegistration,
   listRegistrations,
@@ -16,17 +16,18 @@ export async function retryRegistrationRouting(formData: FormData) {
   const leads = await listRegistrations();
   const lead = leads.find((item) => item.id === id);
   if (!lead || lead.routing_status !== "pending_resolution") return;
-  const parsed = registrationInput.safeParse({
-    name: lead.name,
-    email: lead.email,
-    course: lead.course,
-    batch: lead.batch_letter ?? undefined,
-    consent: "yes",
-    website: "",
-    ticket: "retry-ticket-is-not-used-for-the-lms-request",
-  });
-  if (!parsed.success) return;
-  const routing = await forwardRegistration(parsed.data, lead.id);
+  // Historical enquiries have no phone number, and routing never needs one.
+  const course = PUBLIC_ENGLISH_SYLLABUSES.find((item) => item === lead.course);
+  if (!course) return;
+  const routing = await forwardRegistration(
+    {
+      name: lead.name,
+      email: lead.email,
+      course,
+      batch: (lead.batch_letter ?? undefined) as "A" | "B" | "C" | undefined,
+    },
+    lead.id,
+  );
   await registrationRpc("update_registration_routing", {
     lead_id: lead.id,
     next_destination: routing.destinationName,

@@ -37,6 +37,7 @@ function unzip(buffer: Buffer): Record<string, string> {
 const enquiry = {
   name: 'Sam <b>"Test"</b>',
   email: "sam@example.com",
+  phone: "+923001234567",
   course: "O Level English Language 1123" as const,
   batch: "B" as const,
 };
@@ -66,6 +67,7 @@ async function main() {
         id: "1",
         name: "=HYPERLINK(\"http://evil\")",
         email: "+danger@example.com",
+        phone: null, // historical enquiry saved before phone numbers were collected
         course: "IGCSE English as a First Language 0500",
         created_at: "2026-11-02T09:00:00Z",
         batch_letter: null,
@@ -76,6 +78,7 @@ async function main() {
         id: "2",
         name: "Aisha & Co <x>",
         email: "aisha@example.com",
+        phone: "+442079460958",
         course: "O Level English Language 1123",
         created_at: "2026-11-01T09:00:00Z",
         batch_letter: "A",
@@ -145,6 +148,7 @@ async function main() {
     assert(!html.includes("<b>\"Test\"</b>"), "visitor HTML must be escaped");
     assert(html.includes("&#60;b&#62;"));
     assert(html.includes("Batch B"));
+    assert(html.includes("<b>Phone / WhatsApp:</b> +923001234567"), "phone in the enquiry email");
     assert(html.includes("not a confirmed enrollment"));
     assert(!/[\r\n]/.test(String(sent.body.subject)));
     const attachments = sent.body.attachments as { filename: string; content: string }[];
@@ -211,7 +215,7 @@ async function main() {
     await notifyTeacherOfEnquiry(enquiry, "req-8");
     const logText = logged.join("\n");
     assert(logged.length >= 2);
-    for (const secret of ["sam@example.com", "Sam", "teacher@example.org", "re_test_key"])
+    for (const secret of ["sam@example.com", "Sam", "teacher@example.org", "re_test_key", "923001234567", "442079460958"])
       assert(!logText.includes(secret), `log leaked ${secret}`);
 
     // 11. Excel export: a real .xlsx package, oldest first, formulas neutralised, XML escaped.
@@ -236,6 +240,17 @@ async function main() {
     assert(sheet.includes("Aisha &amp; Co &lt;x&gt;"));
     assert(!sheet.includes("<x>"));
     assert(sheet.includes("Needs review"));
+    // Phone column: header between Email and Course, value stored as text with the + intact,
+    // historical NULL left blank, and a "Text" (@) format on the column.
+    assert.deepEqual([...ENQUIRY_HEADERS].slice(0, 4), ["Name", "Email", "Phone / WhatsApp", "Course"]);
+    assert.equal(ENQUIRY_HEADERS.length, 7);
+    assert(sheet.includes('<c r="C2" t="inlineStr" s="2"><is><t xml:space="preserve">+442079460958</t>'), "phone is an inline text cell");
+    assert(sheet.includes('<c r="C3" t="inlineStr" s="2"><is><t xml:space="preserve"></t>'), "historical NULL phone is blank");
+    assert(parts["xl/styles.xml"].includes('numFmtId="49"'), "text number format present");
+    assert(!sheet.includes("<f>"), "no formula cells");
+    // A stored value that is not a plain number is still formula-neutralised.
+    const odd = unzip(enquiriesToXlsx([{ ...stored[1], phone: "=1+1" }]))["xl/worksheets/sheet1.xml"];
+    assert(odd.includes(">'=1+1<"));
 
     // 11b. Characters XML 1.0 forbids are dropped, so one hostile name cannot corrupt the sheet.
     const hostile = enquiriesToXlsx([
@@ -312,9 +327,43 @@ async function main() {
     // A failing paginated call (not "missing") is an error, not a silent downgrade.
     globalThis.fetch = async () => Response.json({}, { status: 500 });
     await assert.rejects(listAllRegistrations());
+    const phoneMigration = readFileSync("supabase/migrations/20261113010000_registration_phone.sql", "utf8");
+    assert(/add column if not exists phone text;/i.test(phoneMigration), "phone column is nullable");
+    assert(!/phone text not null|set not null|drop (table|column)|delete from registration_private\.leads\s*;|update registration_private\.leads\s+set phone/i.test(phoneMigration.replace(/--.*$/gm, "")), "phone migration is additive and invents nothing");
+    assert(phoneMigration.includes("student_phone !~"), "new enquiries must carry a valid phone");
+    assert(phoneMigration.includes("interval '180 days'"), "retention rule unchanged");
+    assert(/grant execute on function public\.submit_registration_interest_v2[^;]*to service_role/.test(phoneMigration));
+    assert(!/to (anon|authenticated|public)/.test(phoneMigration.replace(/--.*$/gm, "")), "functions are not granted to public roles");
     const migration = readFileSync("supabase/migrations/20261111020000_registration_notification_outbox.sql", "utf8");
     assert(migration.includes("list_registration_interest_page") && migration.includes("claim_registration_notifications"));
     assert(!/drop (table|column)|delete from registration_private\.leads/i.test(migration), "migration is additive");
+
+    // 11e. Durable path: the protected claim returns the phone and the email carries it.
+    {
+      reset();
+      const { processEnquiryNotifications } = await import("../src/lib/registration/notify");
+      const rpcCalls: string[] = [];
+      const claimed = [
+        { id: "a1", name: "Phone Person", email: "pp@example.com", phone: "+923001234567", course: "O Level English Language 1123", created_at: "2026-11-12T09:00:00Z", batch_letter: "A", notify_attempts: 1 },
+        { id: "a2", name: "Old Row", email: "old@example.com", phone: null, course: "O Level English Language 1123", created_at: "2026-10-12T09:00:00Z", batch_letter: null, notify_attempts: 1 },
+      ];
+      globalThis.fetch = async (url, options) => {
+        const u = String(url);
+        if (u.includes("/rpc/")) rpcCalls.push(u.split("/rpc/")[1]);
+        if (u.includes("/rpc/claim_registration_notifications_v2")) return Response.json(claimed);
+        if (u.includes("/rpc/finish_registration_notifications")) return Response.json(1);
+        if (u.includes("/rpc/list_registration_interest_page_v2")) return Response.json(claimed.map((c) => ({ ...c, destination_name: null, routing_status: "received" })));
+        resendCalls.push({ url: u, headers: new Headers(options?.headers), body: JSON.parse(String(options?.body)) });
+        return Response.json({ id: "email_dur" });
+      };
+      const run = await processEnquiryNotifications();
+      assert.deepEqual([run.claimed, run.sent, run.failed], [2, 2, 0]);
+      assert(rpcCalls.includes("claim_registration_notifications_v2"));
+      assert(String(resendCalls[0].body.html).includes("+923001234567"));
+      assert(String(resendCalls[1].body.html).includes("<b>Phone / WhatsApp:</b> Not provided"), "NULL phone does not crash the notice");
+      assert(resendCalls.every((c) => c.headers.get("idempotency-key")?.startsWith("enquiry-")));
+      assert(!logged.join("\n").includes("923001234567"));
+    }
 
     // 12. Export route: no session, no data. With a session, a private no-store download.
     const { GET } = await import("../src/app/api/admin/registrations/export/route");
@@ -322,6 +371,15 @@ async function main() {
     assert.equal(denied.status, 401);
     assert.equal(denied.headers.get("cache-control"), "no-store, private");
     assert(!(await denied.text()).includes("example.com"));
+
+    // 12b. Form, admin inbox and privacy wiring for the phone number.
+    const form = readFileSync("src/components/public-experience/registration-form.tsx", "utf8");
+    assert(form.includes("WhatsApp / Phone number") && form.includes('type="tel"') && form.includes('autoComplete="tel"') && /name="phone"[\s\S]*required/.test(form));
+    assert(form.indexOf('name="email"') < form.indexOf('name="phone"') && form.indexOf('name="phone"') < form.indexOf('name="course"'), "phone sits between email and syllabus");
+    const inbox = readFileSync("src/app/admin/(dashboard)/registrations/page.tsx", "utf8");
+    assert(inbox.includes("Phone / WhatsApp") && inbox.includes("Not provided") && inbox.includes("requireAuth"));
+    assert(/phone/i.test(readFileSync("src/app/(public)/privacy/page.tsx", "utf8")));
+    assert(!/trackEvent\([^)]*phone/i.test(form), "phone is never sent to analytics");
 
     // 13. Wiring: only a confirmed save notifies; the export sits behind the admin guard.
     const route = readFileSync("src/app/api/registration/route.ts", "utf8");

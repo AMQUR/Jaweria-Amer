@@ -1,6 +1,6 @@
 import { after, NextRequest, NextResponse } from "next/server";
 import { processEnquiryNotifications } from "@/lib/registration/notify";
-import { registrationInput } from "@/lib/registration/contracts";
+import { PHONE_ERROR, registrationInput } from "@/lib/registration/contracts";
 import { registrationCopy } from "@/lib/registration/outcome";
 import {
   submitPublicRegistration,
@@ -54,7 +54,11 @@ export async function POST(request: NextRequest) {
     );
     if (!parsed.success)
       return reply(
-        { error: "Please check your name, email, course and consent." },
+        {
+          error: parsed.error.issues.some((issue) => issue.path[0] === "phone")
+            ? PHONE_ERROR
+            : registrationCopy.invalid,
+        },
         400,
       );
     const requestId = verifyRegistrationTicket(parsed.data.ticket);

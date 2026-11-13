@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import Module, { createRequire } from "node:module";
-import { registrationInput } from "../src/lib/registration/contracts";
+import { normalizePhone, registrationInput } from "../src/lib/registration/contracts";
 import {
   FLOATING_CLEAR_MIN_WIDTH,
   floatingControlsClearRegistration,
@@ -77,6 +77,7 @@ async function main() {
     const input = {
       name: "Test student",
       email: " PHASE2@EXAMPLE.INVALID ",
+      phone: "+92 300 1234567",
       course: "O Level English Language 1123",
       batch: "A" as const,
       consent: "yes",
@@ -87,6 +88,29 @@ async function main() {
       registrationInput.parse(input).email,
       "phase2@example.invalid",
     );
+    // Phone: required, normalised to E.164, implausible or malformed values rejected.
+    assert.equal(registrationInput.parse(input).phone, "+923001234567");
+    for (const [raw, expected] of [
+      ["+92 300 1234567", "+923001234567"],
+      ["  +1 (415) 555-2671 ", "+14155552671"],
+      ["0044 20 7946 0958", "+442079460958"],
+      ["+971-50-123-4567", "+971501234567"],
+      ["+44.7911.123456", "+447911123456"],
+    ] as const) {
+      assert.equal(normalizePhone(raw), expected, raw);
+      assert.equal(registrationInput.parse({ ...input, phone: raw }).phone, expected);
+    }
+    const withoutPhone: Record<string, unknown> = { ...input };
+    delete withoutPhone.phone;
+    assert(!registrationInput.safeParse(withoutPhone).success, "missing phone");
+    for (const bad of [
+      "", "   ", "abc", "03001234567", "300 1234567", "+92 300 12", "+0 300 1234567",
+      "+92 300 1234567 ext 5", "+92 (300", "+92+300+1234567", "92+3001234567",
+      "+1111111111", "+9230012345678901", "=+923001234567", "+92 300 1234567; DROP",
+      "<script>", null, 923001234567, {},
+    ]) {
+      assert(!registrationInput.safeParse({ ...input, phone: bad }).success, `accepted ${String(bad)}`);
+    }
     assert(!registrationInput.safeParse({ ...input, website: "spam" }).success);
     assert(!registrationInput.safeParse({ ...input, consent: "no" }).success);
     assert(
@@ -136,6 +160,13 @@ async function main() {
       415,
     );
     assert.equal((await POST(request({ ...input, name: "" }))).status, 400);
+    for (const bad of [undefined, "", "not a number", "03001234567"]) {
+      const rejected = await POST(request({ ...input, phone: bad }));
+      assert.equal(rejected.status, 400, `phone ${String(bad)}`);
+      const rejectedText = await rejected.text();
+      assert(rejectedText.includes("country code"), "accessible phone message");
+      assert(!rejectedText.includes("03001234567"), "phone value is never echoed");
+    }
     assert.equal(
       (await POST(request({ ...input, website: "spam" }))).status,
       400,
@@ -151,10 +182,11 @@ async function main() {
       writes++;
       assert.equal(
         url,
-        "https://example.supabase.co/rest/v1/rpc/submit_registration_interest",
+        "https://example.supabase.co/rest/v1/rpc/submit_registration_interest_v2",
       );
       const body = JSON.parse(String(options?.body));
       assert.equal(body.student_email, "phase2@example.invalid");
+      assert.equal(body.student_phone, "+923001234567", "normalised phone is saved with the enquiry");
       assert.equal(body.batch_letter, "A");
       assert.equal(body.routing_status, "pending_resolution");
       assert.equal(body.destination_name, null);
@@ -187,6 +219,7 @@ async function main() {
         const sent = JSON.parse(String(options?.body));
         assert.equal(sent.selectedBatch, "B");
         assert.equal("cohortId" in sent, false);
+        assert(!JSON.stringify(sent).includes("923001234567"), "phone is not forwarded to the LMS");
         return Response.json({
           ok: true,
           enrollment: "pending_account",
@@ -321,6 +354,26 @@ async function main() {
     assert.equal(JSON.parse(messyText).saved, false);
     assert.equal(messyText.includes("private table"), false);
 
+    // Phone numbers never reach server logs, even on failures.
+    const logged: string[] = [];
+    const originalLog = { error: console.error, info: console.info, warn: console.warn, log: console.log };
+    for (const level of ["error", "info", "warn", "log"] as const)
+      console[level] = (...args: unknown[]) => void logged.push(args.join(" "));
+    try {
+      globalThis.fetch = async () => Response.json({ code: "x" }, { status: 500 });
+      await POST(request());
+      globalThis.fetch = (url, options) => hangUntilAbort(url, options);
+      registrationBudget.saveMs = 50;
+      await POST(request());
+      restoreBudget();
+      await POST(request({ ...input, phone: "bad" }));
+    } finally {
+      Object.assign(console, originalLog);
+    }
+    assert(logged.length > 0);
+    assert(!logged.join("\n").includes("923001234567"), "log leaked phone");
+    restoreBudget();
+
     const lock = createSubmissionLock();
     assert.equal(lock.claim(), true);
     assert.equal(lock.claim(), false);
@@ -404,7 +457,7 @@ async function main() {
     assert.equal(FLOATING_CLEAR_MIN_WIDTH, 1024);
 
     console.log(
-      "Registration contracts passed: signed expiring ticket, consent, honeypot, bounded body, CSRF, private persistence, rate limits, safe failures, capped forwarding, unconfirmed saves, duplicate retries, and mobile clearance.",
+      "Registration contracts passed: signed expiring ticket, required normalised phone, consent, honeypot, bounded body, CSRF, private persistence, rate limits, safe failures, capped forwarding, unconfirmed saves, duplicate retries, and mobile clearance.",
     );
   } finally {
     restoreBudget();

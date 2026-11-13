@@ -70,6 +70,14 @@ export default async function RegistrationsPage() {
             >
               <h2 className="font-semibold text-ink">{lead.name}</h2>
               <p className="mt-2 break-all text-sm text-slate">{lead.email}</p>
+              <p className="mt-2 break-all text-sm text-ink">
+                <span className="font-semibold">Phone / WhatsApp:</span>{" "}
+                {lead.phone ? (
+                  <span dir="ltr">{lead.phone}</span>
+                ) : (
+                  <span className="text-slate">Not provided</span>
+                )}
+              </p>
               <p className="mt-2 text-sm text-ink">
                 {lead.course}
                 {lead.batch_letter ? ` · Batch ${lead.batch_letter}` : ""}

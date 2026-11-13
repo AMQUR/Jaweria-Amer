@@ -2,7 +2,11 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { PUBLIC_ENGLISH_SYLLABUSES } from "@/lib/course-offerings";
-import { isOLevelRegistration } from "@/lib/registration/contracts";
+import {
+  isOLevelRegistration,
+  normalizePhone,
+  PHONE_ERROR,
+} from "@/lib/registration/contracts";
 import {
   createSubmissionLock,
   interpretRegistrationFailure,
@@ -57,6 +61,8 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
   const [saved, setSaved] = useState<SavedEnrollment | null>(null);
   const [course, setCourse] = useState("");
   const [error, setError] = useState("");
+  const [phoneError, setPhoneError] = useState("");
+  const phoneRef = useRef<HTMLInputElement>(null);
   const lock = useRef(createSubmissionLock());
   const statusRef = useRef<HTMLHeadingElement>(null);
   const errorRef = useRef<HTMLParagraphElement>(null);
@@ -110,16 +116,24 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
       className="min-w-0 max-w-full space-y-6 overflow-x-clip rounded-2xl border-t-4 border-crimson bg-white p-4 shadow-[0_24px_60px_-40px_rgba(31,14,17,0.5)] ring-1 ring-ink/10 sm:p-8"
       onSubmit={async (event) => {
         event.preventDefault();
+        const form = new FormData(event.currentTarget);
+        const phone = normalizePhone(form.get("phone"));
+        if (!phone) {
+          setPhoneError(PHONE_ERROR);
+          phoneRef.current?.focus();
+          return;
+        }
         if (!lock.current.claim()) return;
         setPending(true);
         setSlow(false);
         setError("");
-        const form = new FormData(event.currentTarget);
+        setPhoneError("");
         const slowTimer = window.setTimeout(() => setSlow(true), 4000);
         try {
           const result = await postRegistration({
             name: form.get("name"),
             email: form.get("email"),
+            phone,
             course: form.get("course"),
             ...(oLevel ? { batch: form.get("batch") } : {}),
             consent: form.get("consent"),
@@ -133,7 +147,10 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
             });
             return;
           }
-          setError(result.message);
+          if (result.message === PHONE_ERROR) {
+            setPhoneError(PHONE_ERROR);
+            phoneRef.current?.focus();
+          } else setError(result.message);
         } finally {
           window.clearTimeout(slowTimer);
           lock.current.release();
@@ -166,6 +183,49 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
           required
         />
       </label>
+      <div>
+        <label
+          htmlFor="registration-phone"
+          className="block text-[0.95rem] font-semibold text-ink"
+        >
+          WhatsApp / Phone number
+        </label>
+        <input
+          ref={phoneRef}
+          id="registration-phone"
+          className={inputClass}
+          type="tel"
+          name="phone"
+          inputMode="tel"
+          autoComplete="tel"
+          placeholder="+92 300 1234567"
+          maxLength={32}
+          required
+          aria-invalid={phoneError ? true : undefined}
+          aria-describedby={
+            phoneError
+              ? "registration-phone-hint registration-phone-error"
+              : "registration-phone-hint"
+          }
+          onChange={() => phoneError && setPhoneError("")}
+        />
+        <p
+          id="registration-phone-hint"
+          className="mt-2 text-sm leading-relaxed text-slate"
+        >
+          Include your country code, for example +92 300 1234567. Miss Jay’s
+          team may follow up by phone, WhatsApp or email.
+        </p>
+        {phoneError && (
+          <p
+            id="registration-phone-error"
+            role="alert"
+            className="mt-2 text-sm font-semibold text-crimson-dark"
+          >
+            {phoneError}
+          </p>
+        )}
+      </div>
       <label className="block text-[0.95rem] font-semibold text-ink">
         Your syllabus
         <select
@@ -211,7 +271,7 @@ export function RegistrationForm({ ticket }: { ticket: string }) {
           required
         />
         <span>
-          I agree to be contacted about this course enquiry. My details will be
+          I agree to be contacted by email, phone or WhatsApp about this course enquiry. My details will be
           kept privately for course follow-up, as described in the{" "}
           <Link className="text-crimson underline underline-offset-4" href="/privacy">
             privacy policy

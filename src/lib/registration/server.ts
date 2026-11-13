@@ -181,8 +181,14 @@ export interface StoredRouting {
   enrollment: "pending_account" | "needs_review" | "received";
 }
 
+/** What the LMS intent call and the routing retry need. The phone number is not forwarded. */
+export type RoutingInput = Pick<
+  RegistrationInput,
+  "name" | "email" | "course" | "batch"
+>;
+
 export async function forwardRegistration(
-  input: RegistrationInput,
+  input: RoutingInput,
   requestId: string,
   timeoutMs = 8000,
 ): Promise<StoredRouting> {
@@ -279,10 +285,11 @@ export async function saveRegistration(
   timeoutMs = 10000,
 ) {
   const result: unknown = await registrationRpc(
-    "submit_registration_interest",
+    "submit_registration_interest_v2",
     {
       student_name: input.name,
       student_email: input.email,
+      student_phone: input.phone,
       syllabus: input.course,
       network_hash: hash(`ip:${ip}`),
       request_id: requestId,
@@ -347,6 +354,8 @@ export interface RegistrationLead {
   id: string;
   name: string;
   email: string;
+  /** Normalised E.164 number; null for enquiries saved before phone numbers were collected. */
+  phone?: string | null;
   course: string;
   created_at: string;
   batch_letter: string | null;
@@ -355,7 +364,7 @@ export interface RegistrationLead {
 }
 export async function listRegistrations(): Promise<RegistrationLead[]> {
   const rows: unknown = await registrationRpc(
-    "list_registration_interest",
+    "list_registration_interest_v2",
     {},
     10000,
     LIST_REPLY_CHARS,
@@ -364,7 +373,7 @@ export async function listRegistrations(): Promise<RegistrationLead[]> {
   return rows as RegistrationLead[];
 }
 
-/** Hard `limit 200` inside the deployed `list_registration_interest` function. */
+/** Hard `limit 200` inside the deployed `list_registration_interest_v2` function. */
 export const LEGACY_LIST_CAP = 200;
 const EXPORT_PAGE_SIZE = 500;
 const EXPORT_MAX_PAGES = 40;
@@ -394,7 +403,7 @@ export async function listAllRegistrations(): Promise<RegistrationExportSet> {
     let rows: unknown;
     try {
       rows = await registrationRpc(
-        "list_registration_interest_page",
+        "list_registration_interest_page_v2",
         {
           page_size: EXPORT_PAGE_SIZE,
           before_created_at: before?.created_at ?? null,
